@@ -6,9 +6,14 @@ module DatabaseCleaner
 
   module ActiveRecord
     def self.available_strategies
-      ['truncation', 'transaction']
+      %w[truncation transaction]
     end
+  end
 
+  module DataMapper
+    def self.available_strategies
+      %w[]
+    end
   end
 
   class << self
@@ -17,12 +22,8 @@ module DatabaseCleaner
        if strategy.is_a?(Symbol)
           @strategy = orm_strategy(strategy).new(*strategy_args)
        else
-        raise UnknownStrategySpecified, "need good error message"
+         @strategy = strategy
        end
-    end
-
-    def clear_strategy
-      @strategy = nil
     end
 
     def start

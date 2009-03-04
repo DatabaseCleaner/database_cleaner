@@ -6,7 +6,7 @@ describe DatabaseCleaner do
   before(:each) do
     DatabaseCleaner::ActiveRecord::Transaction.stub!(:new).and_return(@strategy = mock('strategy'))
     Object.const_set('ActiveRecord', "just mocking out the constant here...") unless defined?(::ActiveRecord)
-    DatabaseCleaner.clear_strategy
+    DatabaseCleaner.strategy = nil
   end
 
   describe ".strategy=" do
@@ -30,7 +30,11 @@ describe DatabaseCleaner do
 
     it "should raise an error when the specified strategy is not found" do
       running { DatabaseCleaner.strategy = :foo }.should raise_error(DatabaseCleaner::UnknownStrategySpecified)
-      running { DatabaseCleaner.strategy = Array }.should raise_error(DatabaseCleaner::UnknownStrategySpecified)
+    end
+
+    it "should allow any object to be set as the strategy" do
+      mock_strategy = mock('strategy')
+      running { DatabaseCleaner.strategy = mock_strategy }.should_not raise_error
     end
 
   end
