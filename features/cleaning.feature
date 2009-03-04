@@ -13,3 +13,4 @@ Feature: database cleaning
   Examples:
     | ORM          | Strategy      |
     | ActiveRecord | transaction   |
+    | ActiveRecord | truncation    |

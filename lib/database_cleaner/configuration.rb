@@ -4,6 +4,13 @@ module DatabaseCleaner
   class NoORMDetected < StandardError;   end
   class UnknownStrategySpecified < ArgumentError;   end
 
+  module ActiveRecord
+    def self.available_strategies
+      ['truncation', 'transaction']
+    end
+
+  end
+
   class << self
     def strategy=(args)
       strategy, *strategy_args = args
@@ -37,7 +44,7 @@ module DatabaseCleaner
       require "database_cleaner/#{orm}/#{strategy}"
       orm_module.const_get(strategy.to_s.capitalize)
     rescue LoadError => e
-      raise UnknownStrategySpecified, "foo"
+      raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!  Available strategies: #{orm_module.available_strategies.join(', ')}"
     end
 
 
