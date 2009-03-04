@@ -1,19 +1,16 @@
 require 'rubygems'
 require 'spec/expectations'
 
-require 'activerecord'
-require '../../lib/database_cleaner'
+begin
+  require "#{File.dirname(__FILE__)}/../../lib/#{ENV['ORM']}"
+rescue LoadError
+  raise "I don't have the setup for the '#{ENV['ORM']}' ORM!"
+end
+
+$:.unshift(File.dirname(__FILE__) + '/../../../lib')
+require 'database_cleaner'
 require 'database_cleaner/cucumber'
 
-DatabaseCleaner.strategy = :transaction #DatabaseCleaner::ActiveRecord::Transaction.new
+DatabaseCleaner.strategy = ENV['STRATEGY'].to_sym
 
-ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :dbfile => ":memory:")
 
-ActiveRecord::Schema.define(:version => 1) do
-  create_table :widgets do |t|
-    t.string :name
-  end
-end
-
-class Widget < ActiveRecord::Base
-end

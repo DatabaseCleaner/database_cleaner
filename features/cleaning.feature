@@ -1,9 +1,15 @@
-Feature: something something
-  In order to something something
-  A user something something
-  something something something
+Feature: database cleaning
+  In order to ease example and feature writing
+  As a developer
+  I want to have my database in a clean state
 
-  Scenario: something something
-    Given inspiration
-    When I create a sweet new gem
-    Then everyone should see how awesome I am
+  Scenario Outline: ruby app
+    Given I am using <ORM>
+    And the <Strategy> cleaning strategy
+
+    When I run my scenarios that rely on a clean database
+    Then I should see all green
+
+  Examples:
+    | ORM          | Strategy      |
+    | ActiveRecord | transaction   |
