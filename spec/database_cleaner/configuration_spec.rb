@@ -7,6 +7,7 @@ describe DatabaseCleaner do
     DatabaseCleaner::ActiveRecord::Transaction.stub!(:new).and_return(@strategy = mock('strategy'))
     Object.const_set('ActiveRecord', "just mocking out the constant here...") unless defined?(::ActiveRecord)
     DatabaseCleaner.strategy = nil
+    DatabaseCleaner.orm = nil
   end
 
   describe ".strategy=" do
@@ -16,6 +17,7 @@ describe DatabaseCleaner do
 
       Object.send(:remove_const, 'ActiveRecord')
       Object.const_set('DataMapper', "just mocking out the constant here...")
+      DatabaseCleaner.orm = nil
 
       DatabaseCleaner::DataMapper::Transaction.should_receive(:new).with(no_args)
       DatabaseCleaner.strategy = :transaction
@@ -26,6 +28,13 @@ describe DatabaseCleaner do
       Object.send(:remove_const, 'DataMapper') if defined?(::DataMapper)
 
       running { DatabaseCleaner.strategy = :transaction }.should raise_error(DatabaseCleaner::NoORMDetected)
+    end
+
+    it "should use the strategy version of the ORM specified with #orm=" do
+      DatabaseCleaner.orm = 'data_mapper'
+      DatabaseCleaner::DataMapper::Transaction.should_receive(:new)
+
+      DatabaseCleaner.strategy = :transaction
     end
 
     it "should raise an error when the specified strategy is not found" do

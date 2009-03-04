@@ -26,6 +26,10 @@ module DatabaseCleaner
        end
     end
 
+    def orm=(orm_string)
+      @orm = orm_string
+    end
+
     def start
       strategy.start
     end
@@ -50,13 +54,15 @@ module DatabaseCleaner
 
 
     def orm
-      if defined? ::ActiveRecord
-        'active_record'
-      elsif defined? ::DataMapper
-        'data_mapper'
-      else
-        raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord or DataMapper loaded?"
-      end
+      @orm ||=begin
+                 if defined? ::ActiveRecord
+                  'active_record'
+                elsif defined? ::DataMapper
+                  'data_mapper'
+                else
+                  raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord or DataMapper loaded?"
+                end
+              end
     end
 
 
