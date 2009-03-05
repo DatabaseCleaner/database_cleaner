@@ -1,0 +1,16 @@
+(In Git)
+
+ === New features 
+
+ === Bufixes
+
+== 0.1.2 2009-03-05
+ === New features
+  * JDBC Adapter to enable AR truncation strategy to work. (Kamal Fariz Mahyuddin)
+
+== 0.1.1 2009-03-04 - Initial Release ( Ben Mabey )
+  * Basic infrastructure
+  * Features, RSpec code examples
+  * ActiveRecord strategies
+    * Truncation - with MySQL, and SQLite3 adapters.
+    * Transaction - wrap your modifications and roll them back.
