@@ -3,6 +3,16 @@ require 'database_cleaner/active_record/transaction'
 require 'database_cleaner/data_mapper/transaction'
 
 describe DatabaseCleaner do
+
+  # These examples muck around with the constants for autodetection so we need to clean up....
+  before(:all) do
+    TempAR = ActiveRecord unless defined?(TempAR)
+    # need to add one for each ORM that we load in the spec helper...
+  end
+  after(:all) do
+    ActiveRecord = TempAR
+  end
+
   before(:each) do
     DatabaseCleaner::ActiveRecord::Transaction.stub!(:new).and_return(@strategy = mock('strategy'))
     Object.const_set('ActiveRecord', "just mocking out the constant here...") unless defined?(::ActiveRecord)
@@ -64,4 +74,5 @@ describe DatabaseCleaner do
         end
       end
     end
+
 end
