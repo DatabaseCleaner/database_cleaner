@@ -13,6 +13,12 @@ module ActiveRecord
       end
     end
 
+    class JdbcAdapter
+      def truncate_table(table_name)
+        execute("TRUNCATE TABLE #{table_name};")
+      end
+    end
+
   end
 
 end
