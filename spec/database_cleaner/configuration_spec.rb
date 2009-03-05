@@ -10,6 +10,7 @@ describe DatabaseCleaner do
     # need to add one for each ORM that we load in the spec helper...
   end
   after(:all) do
+    Object.send(:remove_const, 'ActiveRecord') if defined?(::ActiveRecord) #want to make sure we have the real one...
     ActiveRecord = TempAR
   end
 
@@ -18,6 +19,15 @@ describe DatabaseCleaner do
     Object.const_set('ActiveRecord', "just mocking out the constant here...") unless defined?(::ActiveRecord)
     DatabaseCleaner.strategy = nil
     DatabaseCleaner.orm = nil
+  end
+
+  describe ".create_strategy ( DatabaseCleaner() )" do
+    it "should initialize and return the appropirate strategy based on the ORM adapter detected" do
+      DatabaseCleaner::ActiveRecord::Transaction.should_receive(:new).with('options' => 'hash')
+      result = DatabaseCleaner(:transaction, {'options' => 'hash'})
+
+      result.should == @strategy
+    end
   end
 
   describe ".strategy=" do
@@ -45,6 +55,10 @@ describe DatabaseCleaner do
       DatabaseCleaner::DataMapper::Transaction.should_receive(:new)
 
       DatabaseCleaner.strategy = :transaction
+    end
+
+    it "should raise an error when multiple args is passed in and the first is not a symbol" do
+      running { DatabaseCleaner.strategy=Object.new, {:foo => 'bar'} }.should raise_error(ArgumentError)
     end
 
     it "should raise an error when the specified strategy is not found" do

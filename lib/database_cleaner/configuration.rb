@@ -17,12 +17,20 @@ module DatabaseCleaner
   end
 
   class << self
+
+    def create_strategy(*args)
+      strategy, *strategy_args = args
+      orm_strategy(strategy).new(*strategy_args)
+    end
+
     def strategy=(args)
       strategy, *strategy_args = args
        if strategy.is_a?(Symbol)
-          @strategy = orm_strategy(strategy).new(*strategy_args)
-       else
+          @strategy = create_strategy(*args)
+       elsif strategy_args.empty?
          @strategy = strategy
+       else
+         raise ArgumentError, "You must provide a strategy object, or a symbol for a know strategy along with initialization params."
        end
     end
 
