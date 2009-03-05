@@ -1,15 +1,15 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 require 'database_cleaner/active_record/truncation'
 require 'active_record'
-#module ActiveRecord
-  #module ConnectionAdapters
-    #[MysqlAdapter, SQLite3Adapter].each do |adapter|
-      #describe adapter, "#truncate_table" do
-        #it "should truncate the table"
-      #end
-    #end
-  #end
-#end
+module ActiveRecord
+  module ConnectionAdapters
+    [MysqlAdapter, SQLite3Adapter].each do |adapter|
+      describe adapter, "#truncate_table" do
+        it "should truncate the table"
+      end
+    end
+  end
+end
 
 module DatabaseCleaner
   module ActiveRecord

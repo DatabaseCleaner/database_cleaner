@@ -8,6 +8,7 @@ begin
     s.email = "ben@benmabey.com"
     s.homepage = "http://github.com/bmabey/database_cleaner"
     s.description = "TODO"
+    s.files = FileList["[A-Z]*.*", "{examples,lib,features,spec}/**/*", "Rakefile", "cucumber.yml"]
     s.authors = ["Ben Mabey"]
   end
 rescue LoadError
