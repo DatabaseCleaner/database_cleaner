@@ -22,11 +22,20 @@ describe DatabaseCleaner do
   end
 
   describe ".create_strategy ( DatabaseCleaner() )" do
-    it "should initialize and return the appropirate strategy based on the ORM adapter detected" do
+    it "should initialize and return the appropirate strategy" do
       DatabaseCleaner::ActiveRecord::Transaction.should_receive(:new).with('options' => 'hash')
       result = DatabaseCleaner(:transaction, {'options' => 'hash'})
 
       result.should == @strategy
+    end
+  end
+
+  describe ".clean_with" do
+    it "should initialize the appropirate strategy and clean with it" do
+      DatabaseCleaner::ActiveRecord::Transaction.should_receive(:new).with('options' => 'hash')
+      @strategy.should_receive(:clean)
+
+      DatabaseCleaner.clean_with(:transaction, 'options' => 'hash')
     end
   end
 

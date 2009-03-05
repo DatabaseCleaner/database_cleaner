@@ -23,6 +23,12 @@ module DatabaseCleaner
       orm_strategy(strategy).new(*strategy_args)
     end
 
+    def clean_with(*args)
+      strategy = create_strategy(*args)
+      strategy.clean
+      strategy
+    end
+
     def strategy=(args)
       strategy, *strategy_args = args
        if strategy.is_a?(Symbol)
