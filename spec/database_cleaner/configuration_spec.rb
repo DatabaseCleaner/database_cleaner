@@ -21,10 +21,10 @@ describe DatabaseCleaner do
     DatabaseCleaner.orm = nil
   end
 
-  describe ".create_strategy ( DatabaseCleaner() )" do
+  describe ".create_strategy" do
     it "should initialize and return the appropirate strategy" do
       DatabaseCleaner::ActiveRecord::Transaction.should_receive(:new).with('options' => 'hash')
-      result = DatabaseCleaner(:transaction, {'options' => 'hash'})
+      result = DatabaseCleaner.create_strategy(:transaction, {'options' => 'hash'})
 
       result.should == @strategy
     end
