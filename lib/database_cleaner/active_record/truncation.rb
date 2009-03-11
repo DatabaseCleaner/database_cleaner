@@ -19,6 +19,13 @@ module ActiveRecord
       end
     end
 
+    class PostgreSQLAdapter
+      def truncate_table(table_name)
+        execute("TRUNCATE TABLE #{table_name};")
+      end
+    end
+
+
   end
 
 end
