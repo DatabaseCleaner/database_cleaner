@@ -56,6 +56,27 @@ strategy the remaining time.  To accomplish this you can say:
   # then make the DatabaseCleaner.start and DatabaseCleaner.clean calls appropriately
 </pre>
 
+Example usage with RSpec:
+
+<pre>
+Spec::Runner.configure do |config|
+
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.before(:all) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:all) do
+    DatabaseCleaner.clean
+  end
+
+end
+</pre>
+
 For use in Cucumber please see the section below.
 
 
