@@ -1,7 +1,7 @@
 (In Git)
 
  === New features 
-
+  * PostgresSQLAdapter for AR to support the truncation strategy. (Alberto Perdomo)
  === Bufixes
 
 == 0.1.2 2009-03-05
