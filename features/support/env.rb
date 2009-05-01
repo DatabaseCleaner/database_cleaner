@@ -5,7 +5,3 @@ require 'spec/expectations'
 
 require 'test/unit/assertions'
 
-World do |world|
-  
-  world
-end
