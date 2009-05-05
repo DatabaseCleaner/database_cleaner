@@ -14,3 +14,5 @@ Feature: database cleaning
     | ORM          | Strategy      |
     | ActiveRecord | transaction   |
     | ActiveRecord | truncation    |
+    | DataMapper   | transaction   |
+    | DataMapper   | truncation    |

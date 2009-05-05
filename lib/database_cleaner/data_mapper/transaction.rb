@@ -1,6 +1,23 @@
 module DatabaseCleaner::DataMapper
   class Transaction
 
-  end
+    def start(repo = :default)
+      repository(repo) do |r|
+        transaction = DataMapper::Transaction.new(r)
+        transaction.begin
+        r.adapter.push_transaction(transaction)
+      end
+    end
 
+    def clean(repo = :default)
+      repository(repo) do |r|
+        adapter = r.adapter
+        while adapter.current_transaction
+          adapter.current_transaction.rollback
+          adapter.pop_transaction
+        end
+      end
+    end
+
+  end
 end

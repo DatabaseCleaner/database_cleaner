@@ -12,7 +12,7 @@ module DatabaseCleaner
 
   module DataMapper
     def self.available_strategies
-      %w[]
+      %w[truncation transaction]
     end
   end
 
@@ -69,14 +69,14 @@ module DatabaseCleaner
 
     def orm
       @orm ||=begin
-                 if defined? ::ActiveRecord
-                  'active_record'
-                elsif defined? ::DataMapper
-                  'data_mapper'
-                else
-                  raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord or DataMapper loaded?"
-                end
-              end
+        if defined? ::ActiveRecord
+          'active_record'
+        elsif defined? ::DataMapper
+          'data_mapper'
+        else
+          raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord or DataMapper loaded?"
+        end
+      end
     end
 
 
