@@ -1,0 +1,2 @@
+* add support for dm-is-remixable (storage_names needs to be smarter)
+* add specs for datamapper strategies
