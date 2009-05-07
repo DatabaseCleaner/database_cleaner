@@ -1,17 +1,12 @@
 module DataMapper
   module Adapters
     
-    class DataObjectsAdapter
-      
-      # make an equivalent to activerecord's Connection#tables method available
-      # dunno if there is a better/other way than this, or if this even works :)
-      def storage_names(repository = :default)
-        DataMapper::Resource.descendants.map { |model| model.storage_name(repository)}
-      end
-      
-    end
-    
     class MysqlAdapter < DataObjectsAdapter
+      
+      # taken from http://github.com/godfat/dm-mapping/tree/master
+      def storage_names(repository = :default)
+        query 'SHOW TABLES'
+      end
       
       def truncate_table(table_name)
         execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
@@ -31,6 +26,18 @@ module DataMapper
     end
 
     class Sqlite3Adapter < DataObjectsAdapter
+      
+      # taken from http://github.com/godfat/dm-mapping/tree/master
+      def storage_names(repository = :default)
+        # activerecord-2.1.0/lib/active_record/connection_adapters/sqlite_adapter.rb: 177
+        sql = <<-SQL.compress_lines
+          SELECT name
+          FROM sqlite_master
+          WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+        SQL
+        # activerecord-2.1.0/lib/active_record/connection_adapters/sqlite_adapter.rb: 181
+        query sql
+      end
       
       def truncate_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)};")
@@ -52,6 +59,15 @@ module DataMapper
     # anyways, i don't have postgres available, so i won't be the one to write this.
     # maybe the stub codes below gets some postgres/datamapper user going, though.
     class PostgresAdapter < DataObjectsAdapter
+      
+      # taken from http://github.com/godfat/dm-mapping/tree/master
+      def storages
+        sql = <<-SQL.compress_lines
+          SELECT table_name FROM "information_schema"."tables"
+          WHERE table_schema = current_schema()
+        SQL
+        query(sql)
+      end
       
       def truncate_table(table_name)
         execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
