@@ -110,30 +110,12 @@ module DataMapper
     end
 
   end
-  
 end
 
 
 module DatabaseCleaner::DataMapper
-  class Truncation
-
-    def initialize(options={})
-      if !options.empty? && !(options.keys - [:only, :except]).empty?
-        raise ArgumentError, "The only valid options are :only and :except. You specified #{options.keys.join(',')}."
-      end
-      if options.has_key?(:only) && options.has_key?(:except)
-        raise ArgumentError, "You may only specify either :only or :either.  Doing both doesn't really make sense does it?" 
-      end
-
-      @only = options[:only]
-      @tables_to_exclude = (options[:except] || []) << 'migration_info' # dm-migrations calls it like so
-    end
+  class Truncation < ::DatabaseCleaner::TruncationBase
     
-    
-    def start(repository = :default)
-      # no-op
-    end
-
     def clean(repository = :default)
       adapter = DataMapper.repository(repository).adapter
       adapter.disable_referential_integrity do
@@ -141,14 +123,18 @@ module DatabaseCleaner::DataMapper
           adapter.truncate_table table_name
         end
       end
-  end
-
-  private
-
+    end
+    
+    private
+    
     def tables_to_truncate(repository = :default)
       (@only || DataMapper.repository(repository).adapter.storage_names(repository)) - @tables_to_exclude
     end
-
+    
+    # overwritten
+    def migration_storage_name
+      'migration_info'
+    end
+    
   end
-
 end
