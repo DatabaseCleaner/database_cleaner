@@ -2,7 +2,7 @@ module DatabaseCleaner::DataMapper
   class Transaction
 
     def start(repo = :default)
-      repository(repo) do |r|
+      DataMapper.repository(repo) do |r|
         transaction = DataMapper::Transaction.new(r)
         transaction.begin
         r.adapter.push_transaction(transaction)
@@ -10,7 +10,7 @@ module DatabaseCleaner::DataMapper
     end
 
     def clean(repo = :default)
-      repository(repo) do |r|
+      DataMapper.repository(repo) do |r|
         adapter = r.adapter
         while adapter.current_transaction
           adapter.current_transaction.rollback
