@@ -1,6 +1,14 @@
 module DataMapper
   module Adapters
     
+    class DataObjectsAdapter
+      
+      def storage_names(repository = :default)
+        raise NotImplementedError
+      end
+      
+    end
+    
     class MysqlAdapter < DataObjectsAdapter
       
       # taken from http://github.com/godfat/dm-mapping/tree/master
@@ -54,14 +62,14 @@ module DataMapper
 
 
     # FIXME
-    # this definitely won't work!!!
-    # i basically just copied activerecord code to get a rough idea what they do
-    # anyways, i don't have postgres available, so i won't be the one to write this.
-    # maybe the stub codes below gets some postgres/datamapper user going, though.
+    # i don't know if this works
+    # i basically just copied activerecord code to get a rough idea what they do.
+    # i don't have postgres available, so i won't be the one to write this.
+    # maybe codes below gets some postgres/datamapper user going, though.
     class PostgresAdapter < DataObjectsAdapter
       
       # taken from http://github.com/godfat/dm-mapping/tree/master
-      def storages
+      def storage_names(repository = :default)
         sql = <<-SQL.compress_lines
           SELECT table_name FROM "information_schema"."tables"
           WHERE table_schema = current_schema()
@@ -137,7 +145,6 @@ module DatabaseCleaner::DataMapper
 
   private
 
-    # no idea if this works
     def tables_to_truncate(repository = :default)
       (@only || DataMapper.repository(repository).adapter.storage_names(repository)) - @tables_to_exclude
     end
