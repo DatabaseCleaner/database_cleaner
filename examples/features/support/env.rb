@@ -1,16 +1,23 @@
 require 'rubygems'
 require 'spec/expectations'
 
-begin
-  require "#{File.dirname(__FILE__)}/../../lib/#{ENV['ORM']}"
-rescue LoadError
-  raise "I don't have the setup for the '#{ENV['ORM']}' ORM!"
+orm      = ENV['ORM']
+strategy = ENV['STRATEGY']
+
+if orm && strategy
+  
+  begin
+    require "#{File.dirname(__FILE__)}/../../lib/#{orm}"
+  rescue LoadError
+    raise "You don't have the #{orm} ORM installed"
+  end
+
+  $:.unshift(File.dirname(__FILE__) + '/../../../lib')
+  require 'database_cleaner'
+  require 'database_cleaner/cucumber'
+
+  DatabaseCleaner.strategy = strategy.to_sym
+  
+else
+  raise "Run 'ORM=activerecord|datamapper STRATEGY=transaction|truncation cucumber examples/features'"
 end
-
-$:.unshift(File.dirname(__FILE__) + '/../../../lib')
-require 'database_cleaner'
-require 'database_cleaner/cucumber'
-
-DatabaseCleaner.strategy = ENV['STRATEGY'].to_sym
-
-
