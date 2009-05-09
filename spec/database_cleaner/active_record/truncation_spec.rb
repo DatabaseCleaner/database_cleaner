@@ -13,7 +13,7 @@ end
 
 module DatabaseCleaner
   module ActiveRecord
-    
+
     describe Truncation do
       before(:each) do
         @connection = mock('connection')
@@ -50,7 +50,7 @@ module DatabaseCleaner
       end
 
       it "should raise an error when :only and :except options are used" do
-        running { 
+        running {
           Truncation.new(:except => ['widgets'], :only => ['widgets'])
         }.should raise_error(ArgumentError)
       end
