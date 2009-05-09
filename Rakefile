@@ -4,10 +4,10 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |s|
     s.name = "database_cleaner"
-    s.summary = %Q{TODO}
+    s.summary = %Q{Strategies for cleaning databases.  Can be used to ensure a clean state for testing.}
     s.email = "ben@benmabey.com"
     s.homepage = "http://github.com/bmabey/database_cleaner"
-    s.description = "TODO"
+    s.description = "Strategies for cleaning databases.  Can be used to ensure a clean state for testing."
     s.files = FileList["[A-Z]*.*", "{examples,lib,features,spec}/**/*", "Rakefile", "cucumber.yml"]
     s.authors = ["Ben Mabey"]
   end

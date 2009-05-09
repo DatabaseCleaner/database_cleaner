@@ -1,6 +1,9 @@
-(In Git)
+0.2.x (In Git)
 
+== 0.2.2 2009-05-08
  === Bufixes
+  * Added proper gemspec description and summary. (Ben Mabey, thanks to Martin Gamsjaeger)
+
  === New features
 
 == 0.2.1 2009-05-08
