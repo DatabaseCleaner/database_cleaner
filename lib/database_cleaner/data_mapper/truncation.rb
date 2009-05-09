@@ -1,3 +1,5 @@
+require "database_cleaner/truncation_base"
+
 module DataMapper
   module Adapters
 

@@ -92,8 +92,6 @@ module DatabaseCleaner
   end
 
 
-  # common base class for truncation strategies
-
   class TruncationBase
 
     def initialize(options = {})
