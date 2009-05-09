@@ -1,25 +1,25 @@
 module DataMapper
   module Adapters
-    
+
     class DataObjectsAdapter
-      
+
       def storage_names(repository = :default)
         raise NotImplementedError
       end
-      
+
     end
-    
+
     class MysqlAdapter < DataObjectsAdapter
-      
+
       # taken from http://github.com/godfat/dm-mapping/tree/master
       def storage_names(repository = :default)
         query 'SHOW TABLES'
       end
-      
+
       def truncate_table(table_name)
         execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
       end
-      
+
       # copied from activerecord
       def disable_referential_integrity
         old = query("SELECT @@FOREIGN_KEY_CHECKS;")
@@ -30,11 +30,11 @@ module DataMapper
           execute("SET FOREIGN_KEY_CHECKS = #{old};")
         end
       end
-    
+
     end
 
     class Sqlite3Adapter < DataObjectsAdapter
-      
+
       # taken from http://github.com/godfat/dm-mapping/tree/master
       def storage_names(repository = :default)
         # activerecord-2.1.0/lib/active_record/connection_adapters/sqlite_adapter.rb: 177
@@ -46,18 +46,18 @@ module DataMapper
         # activerecord-2.1.0/lib/active_record/connection_adapters/sqlite_adapter.rb: 181
         query sql
       end
-      
+
       def truncate_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)};")
       end
-      
+
       # this is a no-op copied from activerecord
       # i didn't find out if/how this is possible
       # activerecord also doesn't do more here
       def disable_referential_integrity
         yield
       end
-      
+
     end
 
 
@@ -67,7 +67,7 @@ module DataMapper
     # i don't have postgres available, so i won't be the one to write this.
     # maybe codes below gets some postgres/datamapper user going, though.
     class PostgresAdapter < DataObjectsAdapter
-      
+
       # taken from http://github.com/godfat/dm-mapping/tree/master
       def storage_names(repository = :default)
         sql = <<-SQL.compress_lines
@@ -76,11 +76,11 @@ module DataMapper
         SQL
         query(sql)
       end
-      
+
       def truncate_table(table_name)
         execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
       end
-      
+
       # FIXME
       # copied from activerecord
       def supports_disable_referential_integrity?
@@ -89,24 +89,24 @@ module DataMapper
       rescue
         return false
       end
- 
+
       # FIXME
       # copied unchanged from activerecord
       def disable_referential_integrity(repository = :default)
         if supports_disable_referential_integrity? then
-          execute(storage_names(repository).collect do |name| 
-            "ALTER TABLE #{quote_table_name(name)} DISABLE TRIGGER ALL" 
+          execute(storage_names(repository).collect do |name|
+            "ALTER TABLE #{quote_table_name(name)} DISABLE TRIGGER ALL"
           end.join(";"))
         end
         yield
       ensure
         if supports_disable_referential_integrity? then
-          execute(storage_names(repository).collect do |name| 
-            "ALTER TABLE #{quote_table_name(name)} ENABLE TRIGGER ALL" 
+          execute(storage_names(repository).collect do |name|
+            "ALTER TABLE #{quote_table_name(name)} ENABLE TRIGGER ALL"
           end.join(";"))
         end
       end
-      
+
     end
 
   end
@@ -115,7 +115,7 @@ end
 
 module DatabaseCleaner::DataMapper
   class Truncation < ::DatabaseCleaner::TruncationBase
-    
+
     def clean(repository = :default)
       adapter = DataMapper.repository(repository).adapter
       adapter.disable_referential_integrity do
@@ -124,17 +124,17 @@ module DatabaseCleaner::DataMapper
         end
       end
     end
-    
+
     private
-    
+
     def tables_to_truncate(repository = :default)
       (@only || DataMapper.repository(repository).adapter.storage_names(repository)) - @tables_to_exclude
     end
-    
+
     # overwritten
     def migration_storage_name
       'migration_info'
     end
-    
+
   end
 end

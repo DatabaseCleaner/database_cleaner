@@ -1,7 +1,7 @@
 
 module ActiveRecord
   module ConnectionAdapters
-    
+
     class MysqlAdapter
       def truncate_table(table_name)
         execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
@@ -50,7 +50,7 @@ module DatabaseCleaner::ActiveRecord
     def connection
       ::ActiveRecord::Base.connection
     end
-    
+
     # overwritten
     def migration_storage_name
       'schema_migrations'
