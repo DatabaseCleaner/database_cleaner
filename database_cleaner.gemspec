@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ben Mabey"]
   s.date = %q{2009-05-08}
-  s.description = %q{TODO}
+  s.description = %q{Strategies for cleaning databases in Ruby.  Can be used to ensure a clean state for testing.}
   s.email = %q{ben@benmabey.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -45,7 +45,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.2}
-  s.summary = %q{TODO}
+  s.summary = %q{Strategies for cleaning databases in Ruby.  Can be used to ensure a clean state for testing.}
   s.test_files = [
     "spec/database_cleaner/active_record/truncation_spec.rb",
     "spec/database_cleaner/configuration_spec.rb",
