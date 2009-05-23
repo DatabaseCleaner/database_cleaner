@@ -19,7 +19,7 @@ module DataMapper
       end
 
       def truncate_table(table_name)
-        execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
+        execute("TRUNCATE TABLE #{quote_name(table_name)};")
       end
 
       # copied from activerecord
@@ -50,7 +50,7 @@ module DataMapper
       end
 
       def truncate_table(table_name)
-        execute("DELETE FROM #{quote_table_name(table_name)};")
+        execute("DELETE FROM #{quote_name(table_name)};")
       end
 
       # this is a no-op copied from activerecord
@@ -80,7 +80,7 @@ module DataMapper
       end
 
       def truncate_table(table_name)
-        execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
+        execute("TRUNCATE TABLE #{quote_name(table_name)};")
       end
 
       # FIXME
@@ -97,14 +97,14 @@ module DataMapper
       def disable_referential_integrity(repository = :default)
         if supports_disable_referential_integrity? then
           execute(storage_names(repository).collect do |name|
-            "ALTER TABLE #{quote_table_name(name)} DISABLE TRIGGER ALL"
+            "ALTER TABLE #{quote_name(name)} DISABLE TRIGGER ALL"
           end.join(";"))
         end
         yield
       ensure
         if supports_disable_referential_integrity? then
           execute(storage_names(repository).collect do |name|
-            "ALTER TABLE #{quote_table_name(name)} ENABLE TRIGGER ALL"
+            "ALTER TABLE #{quote_name(name)} ENABLE TRIGGER ALL"
           end.join(";"))
         end
       end
