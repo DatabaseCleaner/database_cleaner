@@ -1,5 +1,10 @@
 0.2.x (In Git)
 
+== 0.2.3 2009-05-30
+
+ === New features
+  * Support for SQL Server truncation
+
 == 0.2.2 2009-05-08
  === Bufixes
   * Added proper gemspec description and summary. (Ben Mabey, thanks to Martin Gamsjaeger)
