@@ -3,7 +3,7 @@
 == 0.2.3 2009-05-30
 
  === New features
-  * Support for SQL Server truncation
+  * Support for SQL Server truncation (Adam Meehan)
 
 == 0.2.2 2009-05-08
  === Bufixes
