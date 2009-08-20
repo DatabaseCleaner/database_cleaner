@@ -23,7 +23,7 @@ module ActiveRecord
 
     class PostgreSQLAdapter
       def truncate_table(table_name)
-        execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
+        execute("TRUNCATE TABLE #{quote_table_name(table_name)} CASCADE;")
       end
     end
 
