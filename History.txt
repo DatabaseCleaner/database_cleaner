@@ -1,4 +1,11 @@
-0.2.x (In Git)
+0.3.x (In Git)
+
+== 0.3.0 2009-12-20
+
+ === New features
+  * DataMapper 0.10.0 Compatible. (Martin Gamsjaeger)
+ === Bufixes
+  * Postgres tables with FKs now truncate (added TRUNCADE CASCADE). (Vika - yozhyk on github)
 
 == 0.2.3 2009-05-30
 
@@ -24,7 +31,7 @@
 
 == 0.1.3 2009-04-30
 
- === New features 
+ === New features
   * PostgresSQLAdapter for AR to support the truncation strategy. (Alberto Perdomo)
  === Bufixes
   * Added missing quotes around table names in truncation calls. (Michael MacDonald)
