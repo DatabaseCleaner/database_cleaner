@@ -19,5 +19,5 @@ if orm && strategy
   DatabaseCleaner.strategy = strategy.to_sym
   
 else
-  raise "Run 'ORM=activerecord|datamapper STRATEGY=transaction|truncation cucumber examples/features'"
+  raise "Run 'ORM=activerecord|datamapper|mongomapper STRATEGY=transaction|truncation cucumber examples/features'"
 end

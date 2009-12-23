@@ -15,6 +15,12 @@ module DatabaseCleaner
       %w[truncation transaction]
     end
   end
+  
+  module MongoMapper
+    def self.available_strategies
+      %w[truncation]
+    end
+  end
 
   class << self
 
@@ -73,6 +79,8 @@ module DatabaseCleaner
           'active_record'
         elsif defined? ::DataMapper
           'data_mapper'
+        elsif defined? ::MongoMapper
+          'mongo_mapper'
         else
           raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord or DataMapper loaded?"
         end
@@ -86,6 +94,8 @@ module DatabaseCleaner
         DatabaseCleaner::ActiveRecord
       when 'data_mapper'
         DatabaseCleaner::DataMapper
+      when 'mongo_mapper'
+        DatabaseCleaner::MongoMapper
       end
     end
 

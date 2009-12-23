@@ -16,3 +16,4 @@ Feature: database cleaning
     | ActiveRecord | truncation    |
     | DataMapper   | transaction   |
     | DataMapper   | truncation    |
+    | MongoMapper  | truncation    |

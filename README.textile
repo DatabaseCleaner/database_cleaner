@@ -5,7 +5,7 @@ The original use case was to ensure a clean state during tests.  Each strategy
 is a small amount of code but is code that is usually needed in any ruby app
 that is testing with a database.
 
-Both ActiveRecord and DataMapper are supported.
+ActiveRecord, DataMapper and MongoMapper are supported.
 
 h2. How to use
 
