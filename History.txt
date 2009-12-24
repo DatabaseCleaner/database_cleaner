@@ -1,4 +1,9 @@
-0.3.x (In Git)
+0.4.x (In Git)
+
+== 0.4.0 2009-12-23 (The MongoMapper Edition)
+
+ === New features
+  * MongoMapper support for the truncation strategy. (Aubrey Holland)
 
 == 0.3.0 2009-12-20
 
