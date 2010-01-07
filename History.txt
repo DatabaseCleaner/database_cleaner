@@ -1,5 +1,10 @@
 0.4.x (In Git)
 
+== 0.4.1 2010-01-07
+
+ === Bufixes
+  * Postgres tables with FKs now truncate (added TRUNCADE CASCADE) using Datamapper. (Ben Mabey)
+
 == 0.4.0 2009-12-23 (The MongoMapper Edition)
 
  === New features
