@@ -80,7 +80,7 @@ module DataMapper
       end
 
       def truncate_table(table_name)
-        execute("TRUNCATE TABLE #{quote_name(table_name)};")
+        execute("TRUNCATE TABLE #{quote_name(table_name)} CASCADE;")
       end
 
       # FIXME
