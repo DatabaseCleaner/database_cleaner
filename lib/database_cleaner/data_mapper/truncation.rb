@@ -15,7 +15,7 @@ module DataMapper
 
       # taken from http://github.com/godfat/dm-mapping/tree/master
       def storage_names(repository = :default)
-        query 'SHOW TABLES'
+        select 'SHOW TABLES'
       end
 
       def truncate_table(table_name)
@@ -24,7 +24,7 @@ module DataMapper
 
       # copied from activerecord
       def disable_referential_integrity
-        old = query("SELECT @@FOREIGN_KEY_CHECKS;")
+        old = select("SELECT @@FOREIGN_KEY_CHECKS;")
         begin
           execute("SET FOREIGN_KEY_CHECKS = 0;")
           yield
@@ -46,7 +46,7 @@ module DataMapper
           WHERE type = 'table' AND NOT name = 'sqlite_sequence'
         SQL
         # activerecord-2.1.0/lib/active_record/connection_adapters/sqlite_adapter.rb: 181
-        query sql
+        select sql
       end
 
       def truncate_table(table_name)
@@ -76,7 +76,7 @@ module DataMapper
           SELECT table_name FROM "information_schema"."tables"
           WHERE table_schema = current_schema()
         SQL
-        query(sql)
+        select(sql)
       end
 
       def truncate_table(table_name)
@@ -86,7 +86,7 @@ module DataMapper
       # FIXME
       # copied from activerecord
       def supports_disable_referential_integrity?
-        version = query("SHOW server_version")[0][0].split('.')
+        version = select("SHOW server_version")[0][0].split('.')
         (version[0].to_i >= 8 && version[1].to_i >= 1) ? true : false
       rescue
         return false
