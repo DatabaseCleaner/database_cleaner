@@ -1,5 +1,10 @@
 0.4.x (In Git)
 
+== 0.4.2 2010-01-12
+
+ === Bufixes
+  * Datamapper truncation now uses 'select' instead of deprecated the 'query' method. (Steve Tooke)
+
 == 0.4.1 2010-01-07
 
  === Bufixes
