@@ -1,5 +1,10 @@
 0.4.x (In Git)
 
+== 0.4.3 2010-01-17
+
+ === New features
+    Truncation for ActiveRecord oracle_enhanced adapter. (Edgars Beigarts)
+
 == 0.4.2 2010-01-12
 
  === Bufixes
