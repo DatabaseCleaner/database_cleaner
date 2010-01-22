@@ -82,7 +82,7 @@ module DatabaseCleaner
         elsif defined? ::MongoMapper
           'mongo_mapper'
         else
-          raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord or DataMapper loaded?"
+          raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, or MongoMapper loaded?"
         end
       end
     end
