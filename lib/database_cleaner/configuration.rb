@@ -22,6 +22,12 @@ module DatabaseCleaner
     end
   end
 
+  module CouchPotato
+    def self.available_strategies
+      %w[truncation]
+    end
+  end
+
   class << self
 
     def create_strategy(*args)
@@ -81,8 +87,10 @@ module DatabaseCleaner
           'data_mapper'
         elsif defined? ::MongoMapper
           'mongo_mapper'
+        elsif defined? ::CouchPotato
+          'couch_potato'
         else
-          raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, or MongoMapper loaded?"
+          raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper or CouchPotato loaded?"
         end
       end
     end
@@ -96,6 +104,8 @@ module DatabaseCleaner
         DatabaseCleaner::DataMapper
       when 'mongo_mapper'
         DatabaseCleaner::MongoMapper
+      when 'couch_potato'
+        DatabaseCleaner::CouchPotato
       end
     end
 

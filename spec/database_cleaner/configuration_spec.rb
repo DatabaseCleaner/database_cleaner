@@ -55,6 +55,7 @@ describe DatabaseCleaner do
     it "should raise an error when no ORM is detected" do
       Object.send(:remove_const, 'ActiveRecord') if defined?(::ActiveRecord)
       Object.send(:remove_const, 'DataMapper') if defined?(::DataMapper)
+      Object.send(:remove_const, 'CouchPotato') if defined?(::CouchPotato)
 
       running { DatabaseCleaner.strategy = :transaction }.should raise_error(DatabaseCleaner::NoORMDetected)
     end

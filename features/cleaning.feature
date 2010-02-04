@@ -17,3 +17,4 @@ Feature: database cleaning
     | DataMapper   | transaction   |
     | DataMapper   | truncation    |
     | MongoMapper  | truncation    |
+    | CouchPotato  | truncation    |
