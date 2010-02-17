@@ -1,6 +1,6 @@
-require 'activerecord'
+require 'active_record'
 
-ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :dbfile => ":memory:")
+ActiveRecord::Base.establish_connection(:adapter => "#{"jdbc" if defined?(JRUBY_VERSION)}sqlite3", :database => ":memory:")
 
 ActiveRecord::Schema.define(:version => 1) do
   create_table :widgets do |t|

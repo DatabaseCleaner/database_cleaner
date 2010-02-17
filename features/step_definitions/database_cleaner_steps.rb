@@ -11,7 +11,7 @@ When "I run my scenarios that rely on a clean database" do
   Dir.chdir(full_dir) do
     ENV['ORM'] = @orm.downcase
     ENV['STRATEGY'] = @strategy
-    @out = `cucumber features`
+    @out = `#{"jruby -S " if defined?(JRUBY_VERSION)}cucumber features`
     @status = $?.exitstatus
   end
 end
