@@ -1,9 +1,14 @@
 0.4.x (In Git)
 
+ === New features
+  * Basic truncation support for CouchPotato / CouchDB. (Martin Rehfeld)
+  * SQLite3 on JRuby will fall back to delete if truncate doesn't work. (Darrin Holst)
+  * JDBC is used for ActiveRecord automaticaly when JRuby is detected. (Darrin Holst)
+
 == 0.4.3 2010-01-17
 
  === New features
-    Truncation for ActiveRecord oracle_enhanced adapter. (Edgars Beigarts)
+  * Truncation for ActiveRecord oracle_enhanced adapter. (Edgars Beigarts)
 
 == 0.4.2 2010-01-12
 
