@@ -5,9 +5,9 @@ orm      = ENV['ORM']
 strategy = ENV['STRATEGY']
 
 if orm && strategy
-  
+
   begin
-    require "#{File.dirname(__FILE__)}/../../lib/#{orm}"
+    require "#{File.dirname(__FILE__)}/../../lib/#{orm}_models"
   rescue LoadError
     raise "You don't have the #{orm} ORM installed"
   end
