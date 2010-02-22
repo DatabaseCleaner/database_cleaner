@@ -2,16 +2,20 @@ require File.dirname(__FILE__) + '/../spec_helper'
 require 'database_cleaner/active_record/transaction'
 require 'database_cleaner/data_mapper/transaction'
 
+
 describe DatabaseCleaner do
 
   # These examples muck around with the constants for autodetection so we need to clean up....
   before(:all) do
     TempAR = ActiveRecord unless defined?(TempAR)
+    TempMM = MongoMapper unless defined?(TempMM)
+    Object.send(:remove_const, 'MongoMapper') if defined?(::MongoMapper)
     # need to add one for each ORM that we load in the spec helper...
   end
   after(:all) do
     Object.send(:remove_const, 'ActiveRecord') if defined?(::ActiveRecord) #want to make sure we have the real one...
     ActiveRecord = TempAR
+    MongoMapper = TempMM
   end
 
   before(:each) do
@@ -25,7 +29,6 @@ describe DatabaseCleaner do
     it "should initialize and return the appropirate strategy" do
       DatabaseCleaner::ActiveRecord::Transaction.should_receive(:new).with('options' => 'hash')
       result = DatabaseCleaner.create_strategy(:transaction, {'options' => 'hash'})
-
       result.should == @strategy
     end
   end
@@ -34,7 +37,6 @@ describe DatabaseCleaner do
     it "should initialize the appropirate strategy and clean with it" do
       DatabaseCleaner::ActiveRecord::Transaction.should_receive(:new).with('options' => 'hash')
       @strategy.should_receive(:clean)
-
       DatabaseCleaner.clean_with(:transaction, 'options' => 'hash')
     end
   end

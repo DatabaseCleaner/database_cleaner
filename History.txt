@@ -5,6 +5,9 @@
   * SQLite3 on JRuby will fall back to delete if truncate doesn't work. (Darrin Holst)
   * JDBC is used for ActiveRecord automaticaly when JRuby is detected. (Darrin Holst)
 
+ === Bufixes
+  * MongoMapper truncation strategy now works with :only and :except options. (Ben Mabey)
+
 == 0.4.3 2010-01-17
 
  === New features
