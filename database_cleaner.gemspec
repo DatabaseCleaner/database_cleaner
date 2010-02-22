@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{database_cleaner}
-  s.version = "0.4.3"
+  s.version = "0.5.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ben Mabey"]
-  s.date = %q{2010-01-17}
+  s.date = %q{2010-02-22}
   s.description = %q{Strategies for cleaning databases.  Can be used to ensure a clean state for testing.}
   s.email = %q{ben@benmabey.com}
   s.extra_rdoc_files = [
@@ -26,9 +26,10 @@ Gem::Specification.new do |s|
      "examples/features/example.feature",
      "examples/features/step_definitions/example_steps.rb",
      "examples/features/support/env.rb",
-     "examples/lib/activerecord.rb",
-     "examples/lib/datamapper.rb",
-     "examples/lib/mongomapper.rb",
+     "examples/lib/activerecord_models.rb",
+     "examples/lib/couchpotato_models.rb",
+     "examples/lib/datamapper_models.rb",
+     "examples/lib/mongomapper_models.rb",
      "features/cleaning.feature",
      "features/step_definitions/database_cleaner_steps.rb",
      "features/support/env.rb",
@@ -36,6 +37,7 @@ Gem::Specification.new do |s|
      "lib/database_cleaner/active_record/transaction.rb",
      "lib/database_cleaner/active_record/truncation.rb",
      "lib/database_cleaner/configuration.rb",
+     "lib/database_cleaner/couch_potato/truncation.rb",
      "lib/database_cleaner/cucumber.rb",
      "lib/database_cleaner/data_mapper/transaction.rb",
      "lib/database_cleaner/data_mapper/truncation.rb",
@@ -43,6 +45,8 @@ Gem::Specification.new do |s|
      "lib/database_cleaner/truncation_base.rb",
      "spec/database_cleaner/active_record/truncation_spec.rb",
      "spec/database_cleaner/configuration_spec.rb",
+     "spec/database_cleaner/couch_potato/truncation_spec.rb",
+     "spec/database_cleaner/mongo_mapper/truncation_spec.rb",
      "spec/spec.opts",
      "spec/spec_helper.rb"
   ]
@@ -54,12 +58,15 @@ Gem::Specification.new do |s|
   s.test_files = [
     "spec/database_cleaner/active_record/truncation_spec.rb",
      "spec/database_cleaner/configuration_spec.rb",
+     "spec/database_cleaner/couch_potato/truncation_spec.rb",
+     "spec/database_cleaner/mongo_mapper/truncation_spec.rb",
      "spec/spec_helper.rb",
      "examples/features/step_definitions/example_steps.rb",
      "examples/features/support/env.rb",
-     "examples/lib/activerecord.rb",
-     "examples/lib/datamapper.rb",
-     "examples/lib/mongomapper.rb"
+     "examples/lib/activerecord_models.rb",
+     "examples/lib/couchpotato_models.rb",
+     "examples/lib/datamapper_models.rb",
+     "examples/lib/mongomapper_models.rb"
   ]
 
   if s.respond_to? :specification_version then
