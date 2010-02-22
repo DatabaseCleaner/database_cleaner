@@ -1,4 +1,6 @@
-0.4.x (In Git)
+0.5.x (In Git)
+
+== 0.5.0 2010-02-22 - The CouchPotato Release
 
  === New features
   * Basic truncation support for CouchPotato / CouchDB. (Martin Rehfeld)
