@@ -41,6 +41,8 @@ module DatabaseCleaner
       strategy
     end
 
+    alias clean_with! clean_with
+
     def strategy=(args)
       strategy, *strategy_args = args
        if strategy.is_a?(Symbol)
@@ -63,6 +65,8 @@ module DatabaseCleaner
     def clean
       strategy.clean
     end
+
+    alias clean! clean
 
     private
 
