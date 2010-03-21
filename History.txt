@@ -1,10 +1,11 @@
 0.5.x (In Git)
 
  === New features
-  * clean and clean_with methods are now aliased to clean! and clean_with!. (Ben Mabey)
+  * Clean and clean_with methods are now aliased to clean! and clean_with!. (Ben Mabey)
 
 === Bugfixes
-  * check PostgreSQL version >= 8.2 before using TRUNCATE CASCADE (James B. Byrne)
+  * Check PostgreSQL version >= 8.2 before using TRUNCATE CASCADE (James B. Byrne)
+  * Correct superclass is used in ActiveRecord connection adapters. (johnathan, Aslak Hellesoy, Ben Mabey)
 
 == 0.5.0 2010-02-22 - The CouchPotato Release
 

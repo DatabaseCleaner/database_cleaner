@@ -3,19 +3,25 @@ require "database_cleaner/truncation_base"
 module ActiveRecord
   module ConnectionAdapters
 
-    class MysqlAdapter
+    class AbstractAdapter
+    end
+
+    class SQLiteAdapter < AbstractAdapter
+    end
+
+    class MysqlAdapter < AbstractAdapter
       def truncate_table(table_name)
         execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
       end
     end
 
-    class SQLite3Adapter
+    class SQLite3Adapter < SQLiteAdapter
       def truncate_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)};")
       end
     end
 
-    class JdbcAdapter
+    class JdbcAdapter < AbstractAdapter
       def truncate_table(table_name)
         begin
           execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
@@ -25,7 +31,7 @@ module ActiveRecord
       end
     end
 
-    class PostgreSQLAdapter
+    class PostgreSQLAdapter < AbstractAdapter
 
       def self.db_version
         @db_version ||= ActiveRecord::Base.connection.select_values(
@@ -44,13 +50,13 @@ module ActiveRecord
 
     end
 
-    class SQLServerAdapter
+    class SQLServerAdapter < AbstractAdapter
       def truncate_table(table_name)
         execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
       end
     end
 
-    class OracleEnhancedAdapter
+    class OracleEnhancedAdapter < AbstractAdapter
       def truncate_table(table_name)
         execute("TRUNCATE TABLE #{quote_table_name(table_name)}")
       end
