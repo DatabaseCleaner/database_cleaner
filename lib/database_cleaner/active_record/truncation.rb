@@ -26,9 +26,22 @@ module ActiveRecord
     end
 
     class PostgreSQLAdapter
-      def truncate_table(table_name)
-        execute("TRUNCATE TABLE #{quote_table_name(table_name)} CASCADE;")
+
+      def self.db_version
+        @db_version ||= ActiveRecord::Base.connection.select_values(
+          "SELECT CHARACTER_VALUE 
+            FROM INFORMATION_SCHEMA.SQL_IMPLEMENTATION_INFO 
+            WHERE IMPLEMENTATION_INFO_NAME = 'DBMS VERSION' ").to_s
       end
+
+      def self.cascade
+        @cascade ||= db_version >=  "08.02" ? "CASCADE" : ""
+      end
+
+      def truncate_table(table_name)
+        execute("TRUNCATE TABLE #{quote_table_name(table_name)} #{self.class.cascade};")
+      end
+
     end
 
     class SQLServerAdapter
