@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'spec'
-require 'activerecord'
+require 'active_record'
 
 $:.unshift(File.dirname(__FILE__) + '/../lib')
 require 'database_cleaner'
