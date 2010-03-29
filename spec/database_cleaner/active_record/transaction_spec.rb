@@ -11,7 +11,7 @@ module DatabaseCleaner
         ::ActiveRecord::Base.stub!(:connection).and_return(connection)
       end
 
-      describe "start" do
+      describe "#start" do
         it "should increment open transactions if possible" do
           connection.stub!(:respond_to?).with(:increment_open_transactions).and_return(true)
           connection.stub!(:begin_db_transaction)
@@ -36,7 +36,7 @@ module DatabaseCleaner
         end
       end
 
-      describe "clean" do
+      describe "#clean" do
         it "should start a transaction" do
             connection.stub!(:decrement_open_transactions)
 
