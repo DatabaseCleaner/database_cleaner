@@ -8,6 +8,15 @@ module DatabaseCleaner
     def self.available_strategies
       %w[truncation transaction]
     end
+    
+    def self.connection_klasses
+      @klasses || [::ActiveRecord::Base]
+    end
+    
+    def self.connection_klasses=(other)
+      other.concat [::ActiveRecord::Base] unless other.include? ::ActiveRecord::Base
+      @klasses = other
+    end
   end
 
   module DataMapper

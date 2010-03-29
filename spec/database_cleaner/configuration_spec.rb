@@ -5,6 +5,20 @@ require 'database_cleaner/data_mapper/transaction'
 
 describe DatabaseCleaner do
 
+  describe ActiveRecord do
+    describe "connections" do
+      it "should return an array of classes containing ActiveRecord::Base by default" do
+        ::DatabaseCleaner::ActiveRecord.connection_klasses.should == [::ActiveRecord::Base]
+      end
+      it "should merge in an array of classes to get connections from" do
+        model = mock("model")
+        ::DatabaseCleaner::ActiveRecord.connection_klasses = [model]
+        ::DatabaseCleaner::ActiveRecord.connection_klasses.should include model
+        ::DatabaseCleaner::ActiveRecord.connection_klasses.should include ::ActiveRecord::Base
+      end
+    end    
+  end
+
   # These examples muck around with the constants for autodetection so we need to clean up....
   before(:all) do
     TempAR = ActiveRecord unless defined?(TempAR)
@@ -24,7 +38,7 @@ describe DatabaseCleaner do
     DatabaseCleaner.strategy = nil
     DatabaseCleaner.orm = nil
   end
-
+  
   describe ".create_strategy" do
     it "should initialize and return the appropirate strategy" do
       DatabaseCleaner::ActiveRecord::Transaction.should_receive(:new).with('options' => 'hash')
