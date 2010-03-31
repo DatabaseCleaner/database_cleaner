@@ -58,6 +58,7 @@ describe DatabaseCleaner do
     it "should give me a default (autodetection) databasecleaner by default" do
       ::DatabaseCleaner.connections.should have (1).items
       ::DatabaseCleaner.connections.first.should be_a ::DatabaseCleaner::Base
+      ::DatabaseCleaner.connections.first.auto_detected.should be_true
     end
   end
   
@@ -135,7 +136,7 @@ describe DatabaseCleaner do
      end
   end
 
-  context "single orm" do
+  context "single orm single connection" do
     let (:connection) { ::DatabaseCleaner.connections.first }
     it "should proxy strategy=" do
       stratagum = mock("stratagum")
@@ -165,12 +166,47 @@ describe DatabaseCleaner do
       ::DatabaseCleaner.clean_with stratagem
     end
   end
+  
+  context "multiple orms single connection per orm" do
+    context "proxy methods" do
+      let(:active_record) { mock("active_mock") }
+      let(:data_mapper)   { mock("data_mock")   }
+    
+      before(:each) do
+        ::DatabaseCleaner.stub!(:connections).and_return([active_record,data_mapper])
+      end
+    
+      it "should proxy start to all connections" do
+        active_record.should_receive(:start)
+        data_mapper.should_receive(:start)
+        
+        ::DatabaseCleaner.start
+      end
+      
+      it "should proxy clean to all connections" do
+        active_record.should_receive(:clean)
+        data_mapper.should_receive(:clean)
+        
+        ::DatabaseCleaner.clean
+      end
+      
+      it "should proxy clean_with to all connections" do
+        stratagem = mock("stratgem")
+        active_record.should_receive(:clean_with).with(stratagem)
+        data_mapper.should_receive(:clean_with).with(stratagem)
+        
+        ::DatabaseCleaner.clean_with stratagem
+      end
+    end
+    context "more contentious proxy methods" do
+      it "should proxy orm to all connections and remove duplicate connections" do
+        
+         ::DatabaseCleaner.orm = :active_record
+      end
+    end
+  end
     
   describe ::DatabaseCleaner::Base do
-    
-    describe "orm_module" do
-      it "should proxy to the class method"
-    end
     
     let(:strategy) { mock("stratagum") }
     
@@ -184,7 +220,7 @@ describe DatabaseCleaner do
       end
   
       describe ".create_strategy" do
-        it "should initialize and return the appropirate strategy" do
+        it "should initialize and return the appropriate strategy" do
           DatabaseCleaner::ActiveRecord::Transaction.should_receive(:new).with('options' => 'hash')
           result = cleaner.create_strategy(:transaction, {'options' => 'hash'})
           result.should == strategy

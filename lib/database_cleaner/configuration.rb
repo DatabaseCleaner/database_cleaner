@@ -56,15 +56,15 @@ module DatabaseCleaner
     end
     
     def start
-      self.connections.first.start
+      self.connections.each { |connection| connection.start }
     end
     
     def clean
-      self.connections.first.clean
+      self.connections.each { |connection| connection.clean }
     end
     
     def clean_with(stratagem)
-      self.connections.first.clean_with stratagem
+      self.connections.each { |connection| connection.clean_with stratagem }
     end
   end       
   
