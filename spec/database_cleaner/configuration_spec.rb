@@ -9,9 +9,10 @@ module DatabaseCleaner
     end
   end
 end
-describe DatabaseCleaner do
-  
+
+describe DatabaseCleaner do  
   before (:each) { ::DatabaseCleaner.reset }
+  
   describe ActiveRecord do
     describe "connections" do
       it "should return an array of classes containing ActiveRecord::Base by default" do
@@ -27,7 +28,6 @@ describe DatabaseCleaner do
   end
   
   context "orm specification" do
-
     it "should not accept unrecognised orms" do
       lambda { ::DatabaseCleaner[nil] }.should raise_error ::DatabaseCleaner::NoORMDetected
     end
@@ -36,24 +36,36 @@ describe DatabaseCleaner do
       cleaner = ::DatabaseCleaner[:active_record]
       cleaner.should be_a ::DatabaseCleaner::Base
       cleaner.orm.should == :active_record
+      ::DatabaseCleaner.connections.size.should == 1
     end
     
     it "should accept :data_mapper" do
       cleaner = ::DatabaseCleaner[:data_mapper]
       cleaner.should be_a ::DatabaseCleaner::Base
       cleaner.orm.should == :data_mapper
+      ::DatabaseCleaner.connections.size.should == 1
     end
     
     it "should accept :mongo_mapper" do
       cleaner = ::DatabaseCleaner[:mongo_mapper]
       cleaner.should be_a ::DatabaseCleaner::Base
       cleaner.orm.should == :mongo_mapper
+      ::DatabaseCleaner.connections.size.should == 1
     end
     
     it "should accept :couch_potato" do
       cleaner = ::DatabaseCleaner[:couch_potato]
       cleaner.should be_a ::DatabaseCleaner::Base
       cleaner.orm.should == :couch_potato
+      ::DatabaseCleaner.connections.size.should == 1
+    end
+    
+    it "should accept multiple orm's" do
+      ::DatabaseCleaner[:couch_potato]
+      ::DatabaseCleaner[:data_mapper]
+      ::DatabaseCleaner.connections.size.should == 2
+      ::DatabaseCleaner.connections[0].orm.should == :couch_potato
+      ::DatabaseCleaner.connections[1].orm.should == :data_mapper
     end
   end
   
@@ -64,6 +76,36 @@ describe DatabaseCleaner do
       cleaner.orm.should == :active_record
       cleaner.db.should == :first_connection
     end
+    it "should accept multiple connections for a single orm" do
+      ::DatabaseCleaner[:data_mapper,{:connection => :first_db}]
+      ::DatabaseCleaner[:data_mapper,{:connection => :second_db}]
+      ::DatabaseCleaner.connections.size.should == 2
+      ::DatabaseCleaner.connections[0].orm.should == :data_mapper
+      ::DatabaseCleaner.connections[0].db.should  == :first_db
+      ::DatabaseCleaner.connections[1].orm.should == :data_mapper
+      ::DatabaseCleaner.connections[1].db.should  == :second_db
+    end
+    it "should accept multiple connections and multiple orms" do
+      ::DatabaseCleaner[:data_mapper,  {:connection => :first_db} ]
+      ::DatabaseCleaner[:active_record,{:connection => :second_db}]
+      ::DatabaseCleaner[:active_record,{:connection => :first_db} ]
+      ::DatabaseCleaner[:data_mapper,  {:connection => :second_db}]
+      
+      ::DatabaseCleaner.connections.size.should == 4
+      
+      ::DatabaseCleaner.connections[0].orm.should == :data_mapper
+      ::DatabaseCleaner.connections[0].db.should  == :first_db
+      
+      ::DatabaseCleaner.connections[1].orm.should == :active_record
+      ::DatabaseCleaner.connections[1].db.should  == :second_db
+      
+      ::DatabaseCleaner.connections[2].orm.should == :active_record
+      ::DatabaseCleaner.connections[2].db.should  == :first_db
+      
+      ::DatabaseCleaner.connections[3].orm.should == :data_mapper
+      ::DatabaseCleaner.connections[3].db.should  == :second_db
+      
+    end
   end
   
   context "class methods" do
@@ -72,88 +114,17 @@ describe DatabaseCleaner do
     end
     
     it "should give me a default (autodetection) databasecleaner by default" do
+      cleaner = mock("cleaner").as_null_object
+      ::DatabaseCleaner::Base.should_receive(:new).with().and_return(cleaner)
+      
       ::DatabaseCleaner.connections.should have(1).items
-      ::DatabaseCleaner.connections.first.should be_a ::DatabaseCleaner::Base
-      ::DatabaseCleaner.connections.first.auto_detected.should be_true
+      ::DatabaseCleaner.connections.first.should == cleaner
     end
-  end
-  
-  context "instance methods" do
-    it "should default to autodetect upon initalisation" do
-      cleaner = ::DatabaseCleaner::Base.new
-      cleaner.auto_detected.should == true
-    end
-    
-     context "autodetect" do
-       before(:all) do
-         Temp_AR = ActiveRecord if defined?(::ActiveRecord) and not defined?(Temp_AR)
-         Temp_DM = DataMapper   if defined?(::DataMapper)   and not defined?(Temp_DM)
-         Temp_MM = MongoMapper  if defined?(::MongoMapper)  and not defined?(Temp_MM)
-         Temp_CP = CouchPotato  if defined?(::CouchPotato)  and not defined?(Temp_CP)
-       end
-       
-       before(:each) do
-         # Remove ORM consts for these tests
-         Object.send(:remove_const, 'ActiveRecord') if defined?(::ActiveRecord)
-         Object.send(:remove_const, 'DataMapper')   if defined?(::DataMapper)
-         Object.send(:remove_const, 'MongoMapper')  if defined?(::MongoMapper)
-         Object.send(:remove_const, 'CouchPotato')  if defined?(::CouchPotato)
-       end
-       
-
-       it "should raise an error when no ORM is detected" do
-         running { DatabaseCleaner::Base.new(:autodetect)  }.should raise_error(DatabaseCleaner::NoORMDetected)
-       end
-       
-       it "should detect ActiveRecord first" do
-         Object.const_set('ActiveRecord','Actively mocking records.')
-         Object.const_set('DataMapper',  'Mapping data mocks')
-         Object.const_set('MongoMapper', 'Mapping mock mongos')
-         Object.const_set('CouchPotato', 'Couching mock potatos')
-         
-         cleaner = DatabaseCleaner::Base.new :autodetect
-         cleaner.orm.should == :active_record
-       end
-       it "should detect DataMapper second" do
-         Object.const_set('DataMapper',  'Mapping data mocks')
-         Object.const_set('MongoMapper', 'Mapping mock mongos')
-         Object.const_set('CouchPotato', 'Couching mock potatos')
-
-          cleaner = DatabaseCleaner::Base.new :autodetect
-          cleaner.orm.should == :data_mapper
-       end
-       it "should detect MongoMapper third" do
-         Object.const_set('MongoMapper', 'Mapping mock mongos')
-         Object.const_set('CouchPotato', 'Couching mock potatos')
-
-          cleaner = DatabaseCleaner::Base.new :autodetect
-          cleaner.orm.should == :mongo_mapper
-       end
-       
-       it "should detect CouchPotato last" do
-         Object.const_set('CouchPotato', 'Couching mock potatos')
-
-          cleaner = DatabaseCleaner::Base.new :autodetect
-          cleaner.orm.should == :couch_potato
-       end
-       
-       after(:all) do
-         Object.send(:remove_const, 'ActiveRecord') if defined?(::ActiveRecord)
-         Object.send(:remove_const, 'DataMapper')   if defined?(::DataMapper)
-         Object.send(:remove_const, 'MongoMapper')  if defined?(::MongoMapper)
-         Object.send(:remove_const, 'CouchPotato')  if defined?(::CouchPotato)
-         
-         # Restore ORMs
-         ActiveRecord = Temp_AR if defined? Temp_AR
-         DataMapper   = Temp_DM if defined? Temp_DM
-         MongoMapper  = Temp_MM if defined? Temp_MM
-         CouchPotato  = Temp_CP if defined? Temp_CP
-       end
-     end
   end
 
   context "single orm single connection" do
     let (:connection) { ::DatabaseCleaner.connections.first }
+    
     it "should proxy strategy=" do
       stratagum = mock("stratagum")
       connection.should_receive(:strategy=).with(stratagum)
@@ -232,173 +203,15 @@ describe DatabaseCleaner do
       
     end
   end
-    
-  describe ::DatabaseCleaner::Base do
-    
-    let(:strategy) { mock("stratagum") }
-    
-    context "active record" do 
-      let(:cleaner)  { ::DatabaseCleaner::Base.new(:active_record) }
-      
-      before(:each) do
-        ::DatabaseCleaner::ActiveRecord::Transaction.stub!(:new).and_return(strategy)
-        #Object.const_set('ActiveRecord', "just mocking out the constant here...") unless defined?(::ActiveRecord)
-        cleaner.strategy = nil
-      end
-  
-      describe ".create_strategy" do
-        it "should initialize and return the appropriate strategy" do
-          DatabaseCleaner::ActiveRecord::Transaction.should_receive(:new).with('options' => 'hash')
-          result = cleaner.create_strategy(:transaction, {'options' => 'hash'})
-          result.should == strategy
-        end
-      end
 
-      describe ".clean_with" do
-        it "should initialize the appropirate strategy and clean with it" do
-          DatabaseCleaner::ActiveRecord::Transaction.should_receive(:new).with('options' => 'hash')
-          strategy.should_receive(:clean)
-          cleaner.clean_with(:transaction, 'options' => 'hash')
-        end
-      end
-
-      describe ".strategy=" do
-        it "should initialize the appropirate strategy for active record" do
-          DatabaseCleaner::ActiveRecord::Transaction.should_receive(:new).with('options' => 'hash')
-          cleaner.strategy = :transaction, {'options' => 'hash'}
-        end
-        
-        it "should allow any object to be set as the strategy" do
-          mock_strategy = mock('strategy')
-          running { DatabaseCleaner.strategy = mock_strategy }.should_not raise_error
-        end
-        
-        it "should raise an error when the specified strategy is not found" do
-          running { DatabaseCleaner.strategy = :foo }.should raise_error(DatabaseCleaner::UnknownStrategySpecified)
-        end
-        
-        it "should raise an error when multiple args is passed in and the first is not a symbol" do
-          running { DatabaseCleaner.strategy=Object.new, {:foo => 'bar'} }.should raise_error(ArgumentError)
-        end
-      end
-      
-      %w[start clean].each do |strategy_method|
-        describe ".#{strategy_method}" do
-          it "should be delgated to the strategy set with strategy=" do
-            cleaner.strategy = :transaction
-
-            strategy.should_receive(strategy_method)
-
-            cleaner.send(strategy_method)
-          end
-
-          it "should raise en error when no strategy has been set" do
-            running { cleaner.send(strategy_method) }.should raise_error(DatabaseCleaner::NoStrategySetError)
-          end
-        end
-      end
+  describe "remove_duplicates" do
+    it "should remove duplicates if they are identical" do
+      ::DatabaseCleaner[:active_record, {:connection => :one}].strategy = :truncation
+      ::DatabaseCleaner[:active_record, {:connection => :one}].strategy = :truncation
+      ::DatabaseCleaner[:active_record, {:connection => :one}].strategy = :truncation
+      ::DatabaseCleaner.connections.size.should == 3
+      ::DatabaseCleaner.remove_duplicates
+      ::DatabaseCleaner.connections.size.should == 1
     end
-
-    context "data mapper" do
-      let(:cleaner)  { ::DatabaseCleaner::Base.new(:data_mapper) }
-      
-      before(:each) do
-        ::DatabaseCleaner::DataMapper::Transaction.stub!(:new).and_return(strategy)
-        #Object.const_set('ActiveRecord', "just mocking out the constant here...") unless defined?(::ActiveRecord)
-        cleaner.strategy = nil
-      end
-  
-      describe ".create_strategy" do
-        it "should initialize and return the appropirate strategy" do
-          DatabaseCleaner::DataMapper::Transaction.should_receive(:new)
-          result = cleaner.create_strategy(:transaction)
-          result.should == strategy
-        end
-      end
-
-      describe ".clean_with" do
-        it "should initialize the appropirate strategy and clean with it" do
-          DatabaseCleaner::DataMapper::Transaction.should_receive(:new)
-          strategy.should_receive(:clean)
-          cleaner.clean_with(:transaction)
-        end
-      end
-      
-      describe ".strategy=" do
-        it "should initalize the appropriate strategy for data mapper" do
-          DatabaseCleaner::DataMapper::Transaction.should_receive(:new).with(no_args)
-          cleaner.strategy = :transaction
-        end
-        
-        it "should allow any object to be set as the strategy" do
-          mock_strategy = mock('strategy')
-          running { cleaner.strategy = mock_strategy }.should_not raise_error
-        end
-        
-        it "should raise an error when the specified strategy is not found" do
-          running { cleaner.strategy = :foo }.should raise_error(DatabaseCleaner::UnknownStrategySpecified)
-        end
-        
-        it "should raise an error when multiple args is passed in and the first is not a symbol" do
-          running { cleaner.strategy=Object.new, {:foo => 'bar'} }.should raise_error(ArgumentError)
-        end
-      end
-      
-      %w[start clean].each do |strategy_method|
-        describe ".#{strategy_method}" do
-          it "should be delgated to the strategy set with strategy=" do
-            cleaner.strategy = :transaction
-
-            strategy.should_receive(strategy_method)
-
-            cleaner.send(strategy_method)
-          end
-
-          it "should raise en error when no strategy has been set" do
-            running { cleaner.send(strategy_method) }.should raise_error(DatabaseCleaner::NoStrategySetError)
-          end
-        end
-      end
-    end
-
-      # it "should raise an error when no ORM is detected" do
-      #   Object.send(:remove_const, 'ActiveRecord') if defined?(::ActiveRecord)
-      #   Object.send(:remove_const, 'DataMapper') if defined?(::DataMapper)
-      #   Object.send(:remove_const, 'CouchPotato') if defined?(::CouchPotato)
-      # 
-      #   running { DatabaseCleaner.strategy = :transaction }.should raise_error(DatabaseCleaner::NoORMDetected)
-      # end
-
-      # it "should use the strategy version of the ORM specified with #orm=" do
-      #   DatabaseCleaner.orm = 'data_mapper'
-      #   DatabaseCleaner::DataMapper::Transaction.should_receive(:new)
-      # 
-      #   DatabaseCleaner.strategy = :transaction
-      # end
-    describe "comparison" do
-      it "should be equal if orm, connection and strategy are the same" do
-        strategy = :truncation
-        
-        one = DatabaseCleaner::Base.new(:active_record,:connection => :one)
-        one.strategy = strategy
-        
-        two = DatabaseCleaner::Base.new(:active_record,:connection => :one)
-        two.strategy = strategy
-        
-        one.should == two
-        two.should == one
-      end
-    end
-    
-    describe "remove_duplicates" do
-      it "should remove duplicates if they are identical" do
-        ::DatabaseCleaner[:active_record, {:connection => :one}].strategy = :truncation
-        ::DatabaseCleaner[:active_record, {:connection => :one}].strategy = :truncation
-        ::DatabaseCleaner[:active_record, {:connection => :one}].strategy = :truncation
-        ::DatabaseCleaner.connections.size.should == 3
-        ::DatabaseCleaner.remove_duplicates
-        ::DatabaseCleaner.connections.size.should == 1
-      end
-    end
-  end 
+  end
 end
