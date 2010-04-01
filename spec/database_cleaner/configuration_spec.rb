@@ -2,9 +2,16 @@ require File.dirname(__FILE__) + '/../spec_helper'
 require 'database_cleaner/active_record/transaction'
 require 'database_cleaner/data_mapper/transaction'
 
-
+module DatabaseCleaner
+  class << self
+    def reset
+      @connections = nil
+    end
+  end
+end
 describe DatabaseCleaner do
-
+  
+  before (:each) { ::DatabaseCleaner.reset }
   describe ActiveRecord do
     describe "connections" do
       it "should return an array of classes containing ActiveRecord::Base by default" do
@@ -50,13 +57,22 @@ describe DatabaseCleaner do
     end
   end
   
+  context "connection/db specification" do
+    it "should accept a connection parameter and store it" do
+      cleaner = ::DatabaseCleaner[:active_record, {:connection => :first_connection}]
+      cleaner.should be_a ::DatabaseCleaner::Base
+      cleaner.orm.should == :active_record
+      cleaner.db.should == :first_connection
+    end
+  end
+  
   context "class methods" do
     it "should have array of connections (orm agnostic)" do
       ::DatabaseCleaner.connections.should respond_to(:each)
     end
     
     it "should give me a default (autodetection) databasecleaner by default" do
-      ::DatabaseCleaner.connections.should have (1).items
+      ::DatabaseCleaner.connections.should have(1).items
       ::DatabaseCleaner.connections.first.should be_a ::DatabaseCleaner::Base
       ::DatabaseCleaner.connections.first.auto_detected.should be_true
     end
@@ -167,8 +183,11 @@ describe DatabaseCleaner do
     end
   end
   
-  context "multiple orms single connection per orm" do
-    context "proxy methods" do
+  context "multiple connections" do
+    
+    #these are relativly simple, all we need to do is make sure all connections are cleaned/started/cleaned_with appropriatly.
+    context "simple proxy methods" do
+      
       let(:active_record) { mock("active_mock") }
       let(:data_mapper)   { mock("data_mock")   }
     
@@ -198,11 +217,19 @@ describe DatabaseCleaner do
         ::DatabaseCleaner.clean_with stratagem
       end
     end
-    context "more contentious proxy methods" do
+    
+    # ah now we have some difficulty, we mustn't allow duplicate connections to exist, but they could 
+    # plausably want to force orm/strategy change on two sets of orm that differ only on db
+    context "multiple orm proxy methods" do
+      let(:active_record_1) { mock("active_mock_on_db_one") }
+      let(:active_record_2) { mock("active_mock_on_db_two") }
+      let(:data_mapper_1)   { mock("data_mock_on_db_one") }  
+      
       it "should proxy orm to all connections and remove duplicate connections" do
-        
-         ::DatabaseCleaner.orm = :active_record
+        pending
       end
+      it "should proxy strategy to all connections and remove duplicate connections"
+      
     end
   end
     
@@ -348,6 +375,30 @@ describe DatabaseCleaner do
       # 
       #   DatabaseCleaner.strategy = :transaction
       # end
-
+    describe "comparison" do
+      it "should be equal if orm, connection and strategy are the same" do
+        strategy = :truncation
+        
+        one = DatabaseCleaner::Base.new(:active_record,:connection => :one)
+        one.strategy = strategy
+        
+        two = DatabaseCleaner::Base.new(:active_record,:connection => :one)
+        two.strategy = strategy
+        
+        one.should == two
+        two.should == one
+      end
+    end
+    
+    describe "remove_duplicates" do
+      it "should remove duplicates if they are identical" do
+        ::DatabaseCleaner[:active_record, {:connection => :one}].strategy = :truncation
+        ::DatabaseCleaner[:active_record, {:connection => :one}].strategy = :truncation
+        ::DatabaseCleaner[:active_record, {:connection => :one}].strategy = :truncation
+        ::DatabaseCleaner.connections.size.should == 3
+        ::DatabaseCleaner.remove_duplicates
+        ::DatabaseCleaner.connections.size.should == 1
+      end
+    end
   end 
 end
