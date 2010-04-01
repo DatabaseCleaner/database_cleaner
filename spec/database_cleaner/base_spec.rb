@@ -29,10 +29,10 @@ module DatabaseCleaner
          Object.send(:remove_const, 'CouchPotato')  if defined?(::CouchPotato)
 
          # Restore ORMs
-         ActiveRecord = Temp_AR if defined? Temp_AR
-         DataMapper   = Temp_DM if defined? Temp_DM
-         MongoMapper  = Temp_MM if defined? Temp_MM
-         CouchPotato  = Temp_CP if defined? Temp_CP
+         ::ActiveRecord = Temp_AR if defined? Temp_AR
+         ::DataMapper   = Temp_DM if defined? Temp_DM
+         ::MongoMapper  = Temp_MM if defined? Temp_MM
+         ::CouchPotato  = Temp_CP if defined? Temp_CP
        end
              
        #reset the orm mocks
