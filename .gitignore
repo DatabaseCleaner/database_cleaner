@@ -2,3 +2,6 @@
 .DS_Store
 coverage
 pkg
+.bundle
+bundled_gems/
+Gemfile
