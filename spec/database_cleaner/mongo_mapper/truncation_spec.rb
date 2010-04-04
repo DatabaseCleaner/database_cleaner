@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
-require 'mongomapper'
+require 'mongo_mapper'
 require 'database_cleaner/mongo_mapper/truncation'
 
 MongoMapper.connection = Mongo::Connection.new('127.0.0.1')
