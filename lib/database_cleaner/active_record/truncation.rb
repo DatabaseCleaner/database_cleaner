@@ -1,6 +1,7 @@
 require 'active_record/base'
 require 'active_record/connection_adapters/abstract_adapter'
 require "database_cleaner/truncation_base"
+require 'database_cleaner/active_record/adaptor'
 
 module ActiveRecord
   module ConnectionAdapters
@@ -36,7 +37,7 @@ module ActiveRecord
     class PostgreSQLAdapter < AbstractAdapter
 
       def self.db_version
-        @db_version ||= ActiveRecord::Base.connection.select_values(
+        @db_version ||= connection.select_values(
           "SELECT CHARACTER_VALUE 
             FROM INFORMATION_SCHEMA.SQL_IMPLEMENTATION_INFO 
             WHERE IMPLEMENTATION_INFO_NAME = 'DBMS VERSION' ").to_s
@@ -70,35 +71,27 @@ end
 
 module DatabaseCleaner::ActiveRecord
   class Truncation < ::DatabaseCleaner::TruncationBase
-
+    include ::DatabaseCleaner::ActiveRecord::Adaptor
+    
     def clean
-      connections.each do |connection|
-        connection.disable_referential_integrity do
-          tables_to_truncate_for_connection(connection).each do |table_name|
-            connection.truncate_table table_name
-          end
+      connection.disable_referential_integrity do
+        tables_to_truncate.each do |table_name|
+          connection.truncate_table table_name
         end
       end
     end
 
     private
-
-    def tables_to_truncate_for_connection(connection)
-      (@only || connection.tables) - @tables_to_exclude
-    end
     
-    # def tables_to_truncate
-    #   (@only || connection.tables) - @tables_to_exclude
-    # end
-
-    # def connection
-    #   ::ActiveRecord::Base.connection
-    # end
-    
-    def connections
-      DatabaseCleaner::ActiveRecord.connection_klasses.map{ |klass| klass.connection }
+    def tables_to_truncate
+       (@only || connection.tables) - @tables_to_exclude
     end
 
+    def connection
+       #::ActiveRecord::Base.connection
+       connection_klass.connection
+    end
+    
     # overwritten
     def migration_storage_name
       'schema_migrations'

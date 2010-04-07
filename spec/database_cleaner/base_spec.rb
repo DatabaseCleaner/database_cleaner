@@ -95,6 +95,20 @@ module DatabaseCleaner
       end
     end
 
+    describe "db specification" do
+      it "should choose the default connection if none is specified" do
+        base = ::DatabaseCleaner::Base.new(:active_record)
+        base.db.should == :default
+      end
+      
+      it "should accept connection as part of a hash of options" do
+        base = ::DatabaseCleaner::Base.new(:active_record,:connection => :my_db)
+        base.db.should == :my_db
+      end
+      
+      it "should pass through db to the strategy"
+    end
+
     describe "orm integration" do
       let(:strategy) { mock("stratagem, attack all robots") }
       

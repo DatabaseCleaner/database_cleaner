@@ -1,4 +1,8 @@
 require 'database_cleaner/base'
+require 'database_cleaner/active_record/adaptor'
+require 'database_cleaner/data_mapper/adaptor'
+#require 'database_cleaner/mongo_mapper/adaptor'
+#require 'database_cleaner/couch_potato/adaptor'
 
 module DatabaseCleaner
 
@@ -6,38 +10,19 @@ module DatabaseCleaner
   class NoORMDetected < StandardError;   end
   class UnknownStrategySpecified < ArgumentError;   end
 
-  module ActiveRecord
-    def self.available_strategies
-      %w[truncation transaction]
-    end
-    
-    def self.connection_klasses
-      @klasses || [::ActiveRecord::Base]
-    end
-    
-    def self.connection_klasses=(other)
-      other.concat [::ActiveRecord::Base] unless other.include? ::ActiveRecord::Base
-      @klasses = other
-    end
-  end
-
-  module DataMapper
-    def self.available_strategies
-      %w[truncation transaction]
-    end
-  end
-  
-  module MongoMapper
-    def self.available_strategies
-      %w[truncation]
-    end
-  end
-
-  module CouchPotato
-    def self.available_strategies
-      %w[truncation]
-    end
-  end
+ 
+  # 
+  # module MongoMapper
+  #   def self.available_strategies
+  #     %w[truncation]
+  #   end
+  # end
+  # 
+  # module CouchPotato
+  #   def self.available_strategies
+  #     %w[truncation]
+  #   end
+  # end      
   
   class << self  
     def [](orm,opts = {})
@@ -53,11 +38,13 @@ module DatabaseCleaner
     end
     
     def strategy=(stratagem)
-      self.connections.first.strategy = stratagem
+      self.connections.each { |connect| connect.strategy = stratagem }
+      remove_duplicates
     end
     
     def orm=(orm)
-      self.connections.first.orm = orm
+      self.connections.each { |connect| connect.orm = orm }
+      remove_duplicates
     end
     
     def start
@@ -74,7 +61,7 @@ module DatabaseCleaner
     
     def remove_duplicates
       temp = []
-      @connections.each do |connect|
+      self.connections.each do |connect|
         temp.push connect unless temp.include? connect
       end
       @connections = temp
