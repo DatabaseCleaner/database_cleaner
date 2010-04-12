@@ -1,28 +1,10 @@
 require 'database_cleaner/base'
-require 'database_cleaner/active_record/adaptor'
-require 'database_cleaner/data_mapper/adaptor'
-#require 'database_cleaner/mongo_mapper/adaptor'
-#require 'database_cleaner/couch_potato/adaptor'
 
 module DatabaseCleaner
 
   class NoStrategySetError < StandardError;   end
   class NoORMDetected < StandardError;   end
   class UnknownStrategySpecified < ArgumentError;   end
-
- 
-  # 
-  # module MongoMapper
-  #   def self.available_strategies
-  #     %w[truncation]
-  #   end
-  # end
-  # 
-  # module CouchPotato
-  #   def self.available_strategies
-  #     %w[truncation]
-  #   end
-  # end      
   
   class << self  
     def [](orm,opts = {})
