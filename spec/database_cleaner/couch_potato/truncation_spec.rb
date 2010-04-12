@@ -1,18 +1,28 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 require 'database_cleaner/couch_potato/truncation'
-require 'couch_potato'
 
 module DatabaseCleaner
   module CouchPotato
 
     describe Truncation do
+      
+      #doing the require in the file root breaks autospec, doing it before(:all) just fails the specs
+      before(:all) do
+        #pend the specs if CouchPotato is missing
+        if defined?(::CouchPotato)
+          require 'couch_potato'
+        end
+      end  
+                                                 
+      let (:database) { mock('database') }
       before(:each) do
-        @database = mock('database')
-        ::CouchPotato.stub!(:couchrest_database).and_return(@database)
+        #pend the specs if CouchPotato is missing
+        pending "Please install couchdb and couch_potato before running these specs" unless defined?(::CouchPotato) 
+        ::CouchPotato.stub!(:couchrest_database).and_return(database)
       end
 
       it "should re-create the database" do
-        @database.should_receive(:recreate!)
+        database.should_receive(:recreate!)
 
         Truncation.new.clean
       end

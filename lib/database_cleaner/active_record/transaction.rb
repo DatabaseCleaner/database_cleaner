@@ -1,3 +1,4 @@
+require 'database_cleaner/active_record/adaptor'
 module DatabaseCleaner::ActiveRecord
   class Transaction
     include ::DatabaseCleaner::ActiveRecord::Adaptor

@@ -14,7 +14,7 @@ module DatabaseCleaner
   end
 end
 
-describe DatabaseCleaner do  
+describe ::DatabaseCleaner do  
   before (:each) { ::DatabaseCleaner.reset }
     
   context "orm specification" do
@@ -98,10 +98,18 @@ describe DatabaseCleaner do
     end
   end
   
-  context "class methods" do
-    it "should have array of connections (orm agnostic)" do
-      ::DatabaseCleaner.connections.should respond_to(:each)
+  context "connection/db retrieval" do
+    it "should retrieve a db rather than create a new one" do
+      pending
+      connection = ::DatabaseCleaner[:active_record].strategy = :truncation 
+      ::DatabaseCleaner[:active_record].should == connection
     end
+  end
+  
+  context "class methods" do
+    subject { ::DatabaseCleaner }
+    
+    its(:connections) { should respond_to :each }
     
     it "should give me a default (autodetection) databasecleaner by default" do
       cleaner = mock("cleaner").as_null_object
