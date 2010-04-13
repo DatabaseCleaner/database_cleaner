@@ -1,4 +1,4 @@
-Given /^I am using (ActiveRecord|DataMapper|MongoMapper|CouchPotato)$/ do |orm|
+Given /^I am using (ActiveRecord|DataMapper|MongoMapper|Mongoid|CouchPotato)$/ do |orm|
   @orm = orm
 end
 

@@ -16,7 +16,14 @@ module DatabaseCleaner
     end
   end
   
+
   module MongoMapper
+    def self.available_strategies
+      %w[truncation]
+    end
+  end
+
+  module Mongoid
     def self.available_strategies
       %w[truncation]
     end
@@ -76,7 +83,8 @@ module DatabaseCleaner
     end
 
     def orm_strategy(strategy)
-      require "database_cleaner/#{orm}/#{strategy}"
+		puts "Strategy is : #{strategy} and ORM is #{orm}"
+  		require "database_cleaner/#{orm}/#{strategy}"
       orm_module.const_get(strategy.to_s.capitalize)
     rescue LoadError => e
       raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!  Available strategies: #{orm_module.available_strategies.join(', ')}"
@@ -91,10 +99,12 @@ module DatabaseCleaner
           'data_mapper'
         elsif defined? ::MongoMapper
           'mongo_mapper'
+        elsif defined? ::Mongoid
+          'mongoid'
         elsif defined? ::CouchPotato
           'couch_potato'
         else
-          raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper or CouchPotato loaded?"
+          raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, or CouchPotato loaded?"
         end
       end
     end
@@ -108,6 +118,8 @@ module DatabaseCleaner
         DatabaseCleaner::DataMapper
       when 'mongo_mapper'
         DatabaseCleaner::MongoMapper
+      when 'mongoid'
+        DatabaseCleaner::Mongoid
       when 'couch_potato'
         DatabaseCleaner::CouchPotato
       end

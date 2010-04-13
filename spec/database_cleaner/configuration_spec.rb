@@ -9,13 +9,16 @@ describe DatabaseCleaner do
   before(:all) do
     TempAR = ActiveRecord unless defined?(TempAR)
     TempMM = MongoMapper unless defined?(TempMM)
+    TempMI = Mongoid unless defined?(TempMI)
     Object.send(:remove_const, 'MongoMapper') if defined?(::MongoMapper)
+    Object.send(:remove_const, 'Mongoid') if defined?(::Mongoid)
     # need to add one for each ORM that we load in the spec helper...
   end
   after(:all) do
     Object.send(:remove_const, 'ActiveRecord') if defined?(::ActiveRecord) #want to make sure we have the real one...
     ActiveRecord = TempAR
     MongoMapper = TempMM
+	Mongoid = TempMI
   end
 
   before(:each) do
