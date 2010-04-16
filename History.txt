@@ -1,5 +1,10 @@
 0.5.x (In Git)
 
+== 0.5.2
+
+ === Bugfixes
+  * Removes extraneous puts call from configuration.rb.  (Ben Mabey)
+
 == 0.5.1 - The Mongoid Release
 
 This release also attempts to fix AR for Rails 3 support.  I have seen mixed reviews on this.  Some people
