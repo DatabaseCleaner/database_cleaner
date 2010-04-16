@@ -83,7 +83,6 @@ module DatabaseCleaner
     end
 
     def orm_strategy(strategy)
-		puts "Strategy is : #{strategy} and ORM is #{orm}"
   		require "database_cleaner/#{orm}/#{strategy}"
       orm_module.const_get(strategy.to_s.capitalize)
     rescue LoadError => e
