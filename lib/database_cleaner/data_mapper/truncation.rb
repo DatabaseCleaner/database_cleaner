@@ -1,5 +1,3 @@
-require "database_cleaner/truncation_base"
-
 module DataMapper
   module Adapters
 
@@ -116,7 +114,7 @@ end
 
 
 module DatabaseCleaner::DataMapper
-  class Truncation < ::DatabaseCleaner::TruncationBase
+  class Truncation
 
     def clean(repository = :default)
       adapter = DataMapper.repository(repository).adapter

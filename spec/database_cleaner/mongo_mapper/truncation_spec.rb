@@ -8,7 +8,7 @@ module DatabaseCleaner
       
       #doing this in the file root breaks autospec, doing it before(:all) just fails the specs
       before(:all) do
-        #pend the specs if CouchPotato is missing
+        #pend the specs if MongoMapper is missing
         if defined?(::MongoMapper) && defined?(::Mongo)
           require 'mongo_mapper'
           require File.dirname(__FILE__) + '/mongo_examples'

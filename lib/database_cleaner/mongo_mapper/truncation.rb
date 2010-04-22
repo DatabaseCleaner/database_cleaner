@@ -1,8 +1,8 @@
-require 'database_cleaner/truncation_base'
+
 
 module DatabaseCleaner
   module MongoMapper
-    class Truncation < DatabaseCleaner::TruncationBase
+    class Truncation 
       def clean
         if @only
           collections.each { |c| c.remove if @only.include?(c.name) }

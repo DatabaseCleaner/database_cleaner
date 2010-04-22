@@ -1,7 +1,7 @@
-require 'database_cleaner/active_record/adaptor'
+require 'database_cleaner/active_record/strategy'
 module DatabaseCleaner::ActiveRecord
   class Transaction
-    include ::DatabaseCleaner::ActiveRecord::Adaptor
+    include ::DatabaseCleaner::ActiveRecord::Strategy
     
     def start
       if connection_klass.connection.respond_to?(:increment_open_transactions)

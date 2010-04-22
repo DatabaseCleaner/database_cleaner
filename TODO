@@ -1,0 +1,6 @@
+REFACTOR AR/DM/CP/MM modules to extend Generic Adaptor, strategies then should have base methods automagically :D, 
+oh and generic transaction? not implemented i suspect
+
+REFACTOR ADAPTORS / STRATEGIES
+PASS CONNECTION TO STRATEGIES
+WHERE ARE DATAMAPPER SPECS?

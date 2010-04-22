@@ -1,8 +1,6 @@
-require 'database_cleaner/truncation_base'
-
 module DatabaseCleaner
   module CouchPotato
-    class Truncation < DatabaseCleaner::TruncationBase
+    class Truncation
       def initialize(options = {})
         if options.has_key?(:only) || options.has_key?(:except)
           raise ArgumentError, "The :only and :except options are not available for use with CouchPotato/CouchDB."
