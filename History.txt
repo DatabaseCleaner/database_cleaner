@@ -1,5 +1,8 @@
 0.5.x (In Git)
 
+ === Bugfixes
+  * Updates the DataMapper truncation strategy to version 0.10.3. (Robert Rouse)
+
 == 0.5.2
 
  === Bugfixes

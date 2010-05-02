@@ -29,7 +29,7 @@ module DataMapper
           execute("SET FOREIGN_KEY_CHECKS = 0;")
           yield
         ensure
-          execute("SET FOREIGN_KEY_CHECKS = #{old};")
+          execute("SET FOREIGN_KEY_CHECKS = #{old.first};")
         end
       end
 
