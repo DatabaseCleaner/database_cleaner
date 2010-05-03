@@ -92,9 +92,7 @@ module DatabaseCleaner
 
     def orm
       @orm ||=begin
-        if defined? ::ActiveRecord
-          'active_record'
-        elsif defined? ::DataMapper
+        if defined? ::DataMapper
           'data_mapper'
         elsif defined? ::MongoMapper
           'mongo_mapper'
@@ -102,6 +100,8 @@ module DatabaseCleaner
           'mongoid'
         elsif defined? ::CouchPotato
           'couch_potato'
+        elsif defined? ::ActiveRecord
+          'active_record'
         else
           raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, or CouchPotato loaded?"
         end
