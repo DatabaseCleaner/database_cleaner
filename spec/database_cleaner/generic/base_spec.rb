@@ -1,15 +1,15 @@
 require 'spec_helper'
-require 'database_cleaner/generic/strategy'
+require 'database_cleaner/generic/base'
 
 module ::DatabaseCleaner
   module Generic
-    class ExtendedStrategy
-      include Strategy
+    class ExampleStrategy
+      include ::DatabaseCleaner::Generic::Base
     end
     
-    describe ExtendedStrategy do
+    describe ExampleStrategy do
       context "class methods" do
-        subject { ExtendedStrategy }
+        subject { ExampleStrategy }
         its (:available_strategies) { should be_empty }
       end
       
@@ -24,7 +24,7 @@ module ::DatabaseCleaner
       end
       
       it "should accept the desired database upon initalisation" do
-        eg = ExtendedStrategy.new :my_database
+        eg = ExampleStrategy.new :my_database
         eg.db.should == :my_database
       end
     end

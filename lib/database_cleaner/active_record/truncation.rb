@@ -1,7 +1,7 @@
 require 'active_record/base'
 require 'active_record/connection_adapters/abstract_adapter'
 require "database_cleaner/generic/truncation"
-require 'database_cleaner/active_record/strategy'
+require 'database_cleaner/active_record/base'
 
 module ActiveRecord
   module ConnectionAdapters
@@ -71,7 +71,7 @@ end
 
 module DatabaseCleaner::ActiveRecord
   class Truncation
-    include ::DatabaseCleaner::ActiveRecord::Strategy
+    include ::DatabaseCleaner::ActiveRecord::Base
     include ::DatabaseCleaner::Generic::Truncation
 
     def clean

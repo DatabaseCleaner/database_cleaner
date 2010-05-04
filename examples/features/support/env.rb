@@ -1,12 +1,14 @@
 require 'rubygems'
+Bundler.setup
 require 'spec/expectations'
+require 'ruby-debug'
 
 orm      = ENV['ORM']
 strategy = ENV['STRATEGY']
 
 if orm && strategy
 
-  begin
+  begin            
     require "#{File.dirname(__FILE__)}/../../lib/#{orm}_models"
   rescue LoadError
     raise "You don't have the #{orm} ORM installed"

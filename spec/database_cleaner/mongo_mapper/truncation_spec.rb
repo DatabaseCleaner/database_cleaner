@@ -23,10 +23,6 @@ module DatabaseCleaner
         #make these specs pend if orm not installed
         pending "Please install MongoMapper + Mongo to run these specs" unless defined?(::MongoMapper) && defined?(::Mongo)
         ::MongoMapper.connection.drop_database(@test_db)
-        
-        # TODO are these commented out in original?
-        #::MongoMapper.connection.db(TEST_DATABASE).collections.each {|c| c.remove }
-        #::MongoMapper.database = TEST_DATABASE
       end
 
       def ensure_counts(expected_counts)

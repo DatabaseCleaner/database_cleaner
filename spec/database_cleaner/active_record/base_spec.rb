@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'database_cleaner/active_record/strategy'
+require 'database_cleaner/active_record/base'
 require 'database_cleaner/shared_strategy_spec'
 
 module DatabaseCleaner
@@ -9,7 +9,7 @@ module DatabaseCleaner
   
   module ActiveRecord 
     class ExampleStrategy
-      include ::DatabaseCleaner::ActiveRecord::Strategy
+      include ::DatabaseCleaner::ActiveRecord::Base
     end                                      
 
     describe ExampleStrategy do

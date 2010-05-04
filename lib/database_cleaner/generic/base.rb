@@ -1,6 +1,6 @@
 module ::DatabaseCleaner
    module Generic
-     module Strategy
+     module Base
        
        def self.included(base)
          base.extend(ClassMethods)

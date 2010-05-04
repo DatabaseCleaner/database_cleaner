@@ -1,5 +1,5 @@
-require 'database_cleaner/generic/strategy'
-
+require 'database_cleaner/generic/base'
+require 'active_record/base'
 module DatabaseCleaner
   module ActiveRecord
     
@@ -7,12 +7,12 @@ module DatabaseCleaner
       %w[truncation transaction]
     end
     
-    module Strategy
-      include ::DatabaseCleaner::Generic::Strategy
+    module Base
+      include ::DatabaseCleaner::Generic::Base
 
       def connection_klass
         #TODO, multiple connections...
-        #::ActiveRecord::Base
+        ::ActiveRecord::Base
       end
     end
   end

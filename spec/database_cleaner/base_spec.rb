@@ -15,10 +15,10 @@ module DatabaseCleaner
       
        #Cache all ORMs, we'll need them later but not now.
        before(:all) do
-         Temp_AR = ActiveRecord if defined?(::ActiveRecord) and not defined?(Temp_AR)
-         Temp_DM = DataMapper   if defined?(::DataMapper)   and not defined?(Temp_DM)
-         Temp_MM = MongoMapper  if defined?(::MongoMapper)  and not defined?(Temp_MM)
-         Temp_CP = CouchPotato  if defined?(::CouchPotato)  and not defined?(Temp_CP)
+         Temp_AR = ::ActiveRecord if defined?(::ActiveRecord) and not defined?(Temp_AR)
+         Temp_DM = ::DataMapper   if defined?(::DataMapper)   and not defined?(Temp_DM)
+         Temp_MM = ::MongoMapper  if defined?(::MongoMapper)  and not defined?(Temp_MM)
+         Temp_CP = ::CouchPotato  if defined?(::CouchPotato)  and not defined?(Temp_CP)
        end                
 
        #Remove all ORM mocks and restore from cache
