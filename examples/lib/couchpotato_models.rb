@@ -2,7 +2,7 @@ require 'couch_potato'
 require 'json/pure'
 ::CouchPotato::Config.database_name = 'couch_potato_test'
 
-class Widget
+class CouchWidget
   include CouchPotato::Persistence
   
   property :name
@@ -17,5 +17,13 @@ class Widget
   
   def self.count
     CouchPotato.database.view(::Widget.by_name).size
+  end
+end
+
+unless defined? Widget
+  class Widget < CouchWidget
+  end
+else
+  class AnotherWidget < CouchWidget
   end
 end

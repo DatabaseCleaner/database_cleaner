@@ -6,7 +6,16 @@ ActiveRecord::Schema.define(:version => 1) do
   create_table :widgets do |t|
     t.string :name
   end
+  
+  create_table :another_widgets do |t|
+    t.string :name
+  end
 end
 
-class Widget < ActiveRecord::Base
+unless defined? Widget
+  class Widget < ActiveRecord::Base
+  end
+else
+  class AnotherWidget < ActiveRecord::Base
+  end  
 end

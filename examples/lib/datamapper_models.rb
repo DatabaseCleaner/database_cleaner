@@ -7,10 +7,21 @@ require "dm-aggregates"
 
 DataMapper.setup(:default, "sqlite3::memory:")
 
-class Widget
+class MapperWidget
   include DataMapper::Resource
   property :id,   Serial
   property :name, String
 end
 
-Widget.auto_migrate!
+
+unless defined? Widget
+  class Widget < MapperWidget
+  end
+  
+  Widget.auto_migrate!
+else
+  class AnotherWidget < MapperWidget
+  end
+  
+  AnotherWidget.auto_migrate!
+end
