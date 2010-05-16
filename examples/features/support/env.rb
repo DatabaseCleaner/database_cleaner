@@ -10,7 +10,7 @@ if orm && strategy
 
   begin            
     require "#{File.dirname(__FILE__)}/../../lib/#{orm}_models"
-  rescue LoadError
+  rescue LoadError => e   
     raise "You don't have the #{orm} ORM installed"
   end
 
