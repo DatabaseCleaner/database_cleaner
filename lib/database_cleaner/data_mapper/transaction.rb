@@ -1,6 +1,9 @@
+require 'database_cleaner/data_mapper/base'
+
 module DatabaseCleaner::DataMapper
   class Transaction
-
+    include ::DatabaseCleaner::DataMapper::Base
+    #TODO Figure out repositories, may have to refactor connection_klass to something more sensible
     def start(repo = :default)
       DataMapper.repository(repo) do |r|
         transaction = DataMapper::Transaction.new(r)

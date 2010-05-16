@@ -34,7 +34,7 @@ module DatabaseCleaner
        elsif strategy_args.empty?
          @strategy = strategy
        else
-         raise ArgumentError, "You must provide a strategy object, or a symbol for a know strategy along with initialization params."
+         raise ArgumentError, "You must provide a strategy object, or a symbol for a known strategy along with initialization params."
        end
     end
     
@@ -76,7 +76,7 @@ module DatabaseCleaner
       ::DatabaseCleaner.orm_module(orm)
     end
      
-    def orm_strategy(strategy)
+    def orm_strategy(strategy) 
       require "database_cleaner/#{orm.to_s}/#{strategy.to_s}"
       orm_module.const_get(strategy.to_s.capitalize)
     rescue LoadError => e
