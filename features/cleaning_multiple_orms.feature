@@ -6,7 +6,7 @@ Feature: database cleaning using multiple ORMs
   Scenario Outline: ruby app
     Given I am using <ORM1> and <ORM2>
 
-    When I run my scenarios that rely on a clean databases using multiple orms
+    When I run my scenarios that rely on clean databases using multiple orms
     Then I should see all green
 
   Examples:
