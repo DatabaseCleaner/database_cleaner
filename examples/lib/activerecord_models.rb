@@ -10,8 +10,3 @@ end
 
 class Widget < ActiveRecord::Base
 end
-
-class SneakyWidget < ActiveRecord::Base
-  set_table_name "widgets"
-  establish_connection(:adapter => "#{"jdbc" if defined?(JRUBY_VERSION)}sqlite3", :database => ":memory:")
-end
