@@ -18,8 +18,8 @@ When "I run my scenarios that rely on a clean database" do
   @feature_runner.go 'example'
 end
 
-When "I run my scenarios that rely on clean databases using multiple orms" do
-  @feature_runner.go 'example_multiple_orms'
+When "I run my scenarios that rely on clean databases" do
+  @feature_runner.go 'example_multiple_db'
 end
 
 When "I run my scenarios that rely on clean databases using multiple orms" do
