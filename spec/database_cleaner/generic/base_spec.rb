@@ -13,9 +13,7 @@ module ::DatabaseCleaner
         its (:available_strategies) { should be_empty }
       end
       
-      it { should respond_to :db  }
-      it { should respond_to :db= }
-      it { should respond_to :connection_klass }
+      it_should_behave_like "a generic strategy"          
       
       its (:db) { should == :default }
       

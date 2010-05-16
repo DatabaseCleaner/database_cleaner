@@ -1,5 +1,7 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 require 'database_cleaner/mongo_mapper/truncation'
+require 'mongo_mapper'
+require File.dirname(__FILE__) + '/mongo_examples'
 
 module DatabaseCleaner
   module MongoMapper
@@ -8,20 +10,12 @@ module DatabaseCleaner
       
       #doing this in the file root breaks autospec, doing it before(:all) just fails the specs
       before(:all) do
-        #pend the specs if MongoMapper is missing
-        if defined?(::MongoMapper) && defined?(::Mongo)
-          require 'mongo_mapper'
-          require File.dirname(__FILE__) + '/mongo_examples'
-          
           ::MongoMapper.connection = ::Mongo::Connection.new('127.0.0.1')
           @test_db = 'database_cleaner_specs'
           ::MongoMapper.database = @test_db
-        end
       end
       
       before(:each) do
-        #make these specs pend if orm not installed
-        pending "Please install MongoMapper + Mongo to run these specs" unless defined?(::MongoMapper) && defined?(::Mongo)
         ::MongoMapper.connection.drop_database(@test_db)
       end
 
