@@ -1,5 +1,5 @@
 require 'couch_potato'
-
+require 'json/pure'
 ::CouchPotato::Config.database_name = 'couch_potato_test'
 
 class Widget
