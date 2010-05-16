@@ -23,7 +23,7 @@ When "I run my scenarios that rely on clean databases" do
 end
 
 When "I run my scenarios that rely on clean databases using multiple orms" do
-  @feature_runner.go 'example_multiple_orms'
+  @feature_runner.go 'example_multiple_orm'
 end
 
 Then "I should see all green" do
