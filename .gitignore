@@ -4,4 +4,5 @@ coverage
 pkg
 .bundle
 bundled_gems/
+examples/db/*.db
 Gemfile
