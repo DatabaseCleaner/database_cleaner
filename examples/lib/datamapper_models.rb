@@ -5,7 +5,9 @@ require "dm-core"
 require "dm-validations"
 require "dm-aggregates"
 
-DataMapper.setup(:default, "sqlite3::memory:")
+db_dir = "#{File.dirname(__FILE__)}/../db"
+
+DataMapper.setup(:default, "sqlite3:#{db_dir}/datamapper_one.db")
 
 class MapperWidget
   include DataMapper::Resource
