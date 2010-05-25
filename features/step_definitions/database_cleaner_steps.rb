@@ -19,6 +19,7 @@ When "I run my scenarios that rely on a clean database" do
 end
 
 When "I run my scenarios that rely on clean databases" do
+  @feature_runner.multiple_databases = true
   @feature_runner.go 'example_multiple_db'
 end
 

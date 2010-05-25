@@ -1,7 +1,10 @@
 Feature: example
  In order to test DataBase Cleaner
  Here are some scenarios that rely on the DB being clean!
-
+  
+  # Background:
+  #   Given I have setup DatabaseCleaner to clean multiple databases 
+  #   
   Scenario: dirty the db
     When I create a widget in one db
      And I create a widget in another db

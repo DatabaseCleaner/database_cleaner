@@ -3,12 +3,17 @@ Bundler.setup
 require 'spec/expectations'
 require 'ruby-debug'
 
+DB_DIR = "#{File.dirname(__FILE__)}/../../db"
+
 orm         = ENV['ORM']
 another_orm = ENV['ANOTHER_ORM']
 strategy    = ENV['STRATEGY']
 
 if orm && strategy
-
+  $:.unshift(File.dirname(__FILE__) + '/../../../lib')
+  require 'database_cleaner'
+  require 'database_cleaner/cucumber'
+  
   begin            
     require "#{File.dirname(__FILE__)}/../../lib/#{orm}_models"    
   rescue LoadError => e   
@@ -21,14 +26,20 @@ if orm && strategy
     rescue LoadError => e   
       raise "You don't have the #{another_orm} ORM installed"
     end
+  else
+    
   end
+  
 
-  $:.unshift(File.dirname(__FILE__) + '/../../../lib')
-  require 'database_cleaner'
-  require 'database_cleaner/cucumber'
 
-  DatabaseCleaner.strategy = strategy.to_sym
+  
+  unless another_orm
+    DatabaseCleaner.strategy = strategy.to_sym  
+  else
+    DatabaseCleaner[         orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym ].strategy = strategy.to_sym
+    DatabaseCleaner[ another_orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym ].strategy = strategy.to_sym
+  end
   
 else
-  raise "Run 'ORM=activerecord|datamapper|mongomapper|couchpotato [ANOTHER_ORM=activerecord|datamapper|mongomapper|couchpotato] STRATEGY=transaction|truncation cucumber examples/features'"
+  raise "Run 'ORM=activerecord|datamapper|mongomapper|couchpotato [ANOTHER_ORM=activerecord|datamapper|mongomapper|couchpotato] [MULTIPLE_DBS=true] STRATEGY=transaction|truncation cucumber examples/features'"
 end

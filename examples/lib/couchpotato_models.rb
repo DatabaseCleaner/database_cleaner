@@ -16,7 +16,7 @@ class CouchWidget
   end
   
   def self.count
-    CouchPotato.database.view(::Widget.by_name).size
+    CouchPotato.database.view(self.by_name).size
   end
 end
 
