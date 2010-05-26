@@ -1,5 +1,5 @@
 require 'database_cleaner/generic/base'
-require 'active_record/base'
+require 'active_record'
 
 module DatabaseCleaner
   module ActiveRecord

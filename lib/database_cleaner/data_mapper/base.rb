@@ -7,12 +7,6 @@ module DatabaseCleaner
     
     module Base
       include ::DatabaseCleaner::Generic::Base
-
-      def connection_klass
-        #TODO, multiple connections...
-        raise NotImplementedError
-        #::ActiveRecord::Base
-      end
     end
   end
 end

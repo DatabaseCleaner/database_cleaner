@@ -14,7 +14,8 @@ module DatabaseCleaner
 
     describe ExampleStrategy do
       it_should_behave_like "a generic strategy"
-      #it { expect{ subject.connection_klass }.to_not raise_error }
+      it { should respond_to :db  }
+      it { should respond_to :db= }
     end
   end
 end

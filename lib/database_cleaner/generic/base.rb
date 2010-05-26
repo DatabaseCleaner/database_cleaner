@@ -8,20 +8,8 @@ module ::DatabaseCleaner
        end
 
        module InstanceMethods
-         def initialize(db = :default) 
-           @db = db
-         end
-         
-         def db=(desired_db)
-           @db = desired_db
-         end
-
          def db
-           @db
-         end
-
-         def connection_klass
-           raise NotImplementedError
+           :default
          end
        end
 

@@ -8,6 +8,7 @@ DB_DIR = "#{File.dirname(__FILE__)}/../../db"
 orm         = ENV['ORM']
 another_orm = ENV['ANOTHER_ORM']
 strategy    = ENV['STRATEGY']
+multiple_db = ENV['MULTIPLE_DBS']
 
 if orm && strategy
   $:.unshift(File.dirname(__FILE__) + '/../../../lib')
@@ -26,18 +27,19 @@ if orm && strategy
     rescue LoadError => e   
       raise "You don't have the #{another_orm} ORM installed"
     end
-  else
-    
   end
   
 
 
   
-  unless another_orm
-    DatabaseCleaner.strategy = strategy.to_sym  
-  else
+  if multiple_db && another_orm
+    DatabaseCleaner[         orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym, {:connection => :one} ].strategy = strategy.to_sym
+    DatabaseCleaner[ another_orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym, {:connection => :two} ].strategy = strategy.to_sym    
+  elsif another_orm
     DatabaseCleaner[         orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym ].strategy = strategy.to_sym
     DatabaseCleaner[ another_orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym ].strategy = strategy.to_sym
+  else
+    DatabaseCleaner.strategy = strategy.to_sym
   end
   
 else

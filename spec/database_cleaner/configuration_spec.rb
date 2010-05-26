@@ -228,9 +228,9 @@ describe ::DatabaseCleaner do
 
   describe "remove_duplicates" do
     it "should remove duplicates if they are identical" do
-      ::DatabaseCleaner[:active_record, {:connection => :one}].strategy = :truncation
-      ::DatabaseCleaner[:active_record, {:connection => :one}].strategy = :truncation
-      ::DatabaseCleaner[:active_record, {:connection => :one}].strategy = :truncation
+      ::DatabaseCleaner[:active_record, {:connection => :default}].strategy = :truncation
+      ::DatabaseCleaner[:active_record, {:connection => :default}].strategy = :truncation
+      ::DatabaseCleaner[:active_record, {:connection => :default}].strategy = :truncation
       ::DatabaseCleaner.connections.size.should == 3
       ::DatabaseCleaner.remove_duplicates
       ::DatabaseCleaner.connections.size.should == 1

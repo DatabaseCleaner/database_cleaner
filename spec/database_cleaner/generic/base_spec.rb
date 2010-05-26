@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'database_cleaner/shared_strategy_spec'
 require 'database_cleaner/generic/base'
 
 module ::DatabaseCleaner
@@ -16,15 +17,6 @@ module ::DatabaseCleaner
       it_should_behave_like "a generic strategy"          
       
       its (:db) { should == :default }
-      
-      it "should raise NotImplementedError upon access of connection_klass" do
-        expect { subject.connection_klass }.to raise_error NotImplementedError
-      end
-      
-      it "should accept the desired database upon initalisation" do
-        eg = ExampleStrategy.new :my_database
-        eg.db.should == :my_database
-      end
     end
   end
 end

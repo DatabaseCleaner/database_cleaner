@@ -36,6 +36,12 @@ module DatabaseCleaner
        else
          raise ArgumentError, "You must provide a strategy object, or a symbol for a known strategy along with initialization params."
        end
+       
+       if @strategy.respond_to? :db=
+         @strategy.db = self.db
+       elsif self.db != :default
+         raise ArgumentError, "You must provide a strategy object that supports non default databases when you specify a database"
+       end
     end
     
     def strategy

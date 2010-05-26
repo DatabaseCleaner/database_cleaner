@@ -84,10 +84,10 @@ module DatabaseCleaner
       it "should be equal if orm, connection and strategy are the same" do
         strategy = :truncation
         
-        one = DatabaseCleaner::Base.new(:active_record,:connection => :one)
+        one = DatabaseCleaner::Base.new(:active_record,:connection => :default)
         one.strategy = strategy
         
-        two = DatabaseCleaner::Base.new(:active_record,:connection => :one)
+        two = DatabaseCleaner::Base.new(:active_record,:connection => :default)
         two.strategy = strategy
         
         one.should == two
@@ -106,7 +106,31 @@ module DatabaseCleaner
         base.db.should == :my_db
       end
       
-      it "should pass through db to the strategy"
+      it "should check to see if strategy supports db specification" do
+        strategy = mock("strategy",:db= => :my_db)
+        strategy.stub(:respond_to?).with(anything)
+        strategy.should_receive(:respond_to?).with(:db=).and_return(true)
+        ::DatabaseCleaner::Base.new(:active_record,:connection => :my_db).strategy = strategy
+      end
+      
+      it "should pass db through to the strategy" do
+        strategy = mock("strategy")
+        
+        strategy.stub(:respond_to?).with(anything)
+        strategy.stub(:respond_to?).with(:db=).and_return(true)
+        
+        strategy.should_receive(:db=).with(:my_db)
+        ::DatabaseCleaner::Base.new(:active_record,:connection => :my_db).strategy = strategy
+      end
+      
+      it "should raise ArgumentError if db isn't default and strategy doesn't support different dbs" do
+        strategy = mock("strategy")
+        
+        strategy.stub(:respond_to?).with(anything)
+        strategy.stub(:respond_to?).with(:db=).and_return(false)
+        
+        expect { ::DatabaseCleaner::Base.new(:active_record,:connection => :my_db).strategy = strategy }.to raise_error ArgumentError
+      end
     end
 
     describe "orm integration" do
