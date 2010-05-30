@@ -82,7 +82,7 @@ module DatabaseCleaner
     
     describe "comparison" do
       it "should be equal if orm, connection and strategy are the same" do
-        strategy = :truncation
+        strategy = mock("strategy")
         
         one = DatabaseCleaner::Base.new(:active_record,:connection => :default)
         one.strategy = strategy
