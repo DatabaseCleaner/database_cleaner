@@ -5,4 +5,5 @@ pkg
 .bundle
 bundled_gems/
 examples/db/*.db
+examples/config/database.yml
 Gemfile
