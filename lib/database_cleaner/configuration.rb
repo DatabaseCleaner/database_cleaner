@@ -14,7 +14,15 @@ module DatabaseCleaner
       connections.push cleaner
       cleaner
     end
-
+    
+    def app_root=(desired_root)
+      @app_root = desired_root
+    end                       
+    
+    def app_root
+      @app_root || Dir.pwd
+    end
+    
     def connections
       @connections ||= [::DatabaseCleaner::Base.new]
     end

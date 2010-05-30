@@ -228,12 +228,23 @@ describe ::DatabaseCleaner do
 
   describe "remove_duplicates" do
     it "should remove duplicates if they are identical" do
-      ::DatabaseCleaner[:active_record, {:connection => :default}].strategy = :truncation
-      ::DatabaseCleaner[:active_record, {:connection => :default}].strategy = :truncation
-      ::DatabaseCleaner[:active_record, {:connection => :default}].strategy = :truncation
+      ::DatabaseCleaner[:data_mapper, {:connection => :default}].strategy = :truncation
+      ::DatabaseCleaner[:data_mapper, {:connection => :default}].strategy = :truncation
+      ::DatabaseCleaner[:data_mapper, {:connection => :default}].strategy = :truncation
       ::DatabaseCleaner.connections.size.should == 3
       ::DatabaseCleaner.remove_duplicates
       ::DatabaseCleaner.connections.size.should == 1
+    end
+  end
+  
+  describe "app_root" do
+    it "should default to Dir.pwd" do
+      DatabaseCleaner.app_root.should == Dir.pwd
+    end
+    
+    it "should store specific paths" do
+      DatabaseCleaner.app_root = '/path/to'
+      DatabaseCleaner.app_root.should == '/path/to'
     end
   end
 end
