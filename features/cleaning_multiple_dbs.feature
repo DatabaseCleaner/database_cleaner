@@ -12,9 +12,8 @@ Feature: multiple database cleaning
 
   Examples:
   | ORM          | Strategy      |
-  | ActiveRecord | transaction   |
   | ActiveRecord | truncation    |
-  | DataMapper   | transaction   |
   | DataMapper   | truncation    |
-  # | MongoMapper  | truncation    |
-  # | CouchPotato  | truncation    |  
+  # | ActiveRecord | transaction   |
+  # | MongoMapper  | truncation    |  
+  # | DataMapper   | transaction   | # Tickers are ugly...and betty don't like ugly... otherwise known as this is fubar

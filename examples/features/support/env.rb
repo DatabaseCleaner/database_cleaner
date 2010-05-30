@@ -38,8 +38,17 @@ if orm && strategy
     DatabaseCleaner[         orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym, {:connection => :one} ].strategy = strategy.to_sym
     DatabaseCleaner[ another_orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym, {:connection => :two} ].strategy = strategy.to_sym    
   elsif multiple_db
-    DatabaseCleaner[ orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym, {:connection => :one} ].strategy = strategy.to_sym
-    DatabaseCleaner[ orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym, {:connection => :two} ].strategy = strategy.to_sym
+    DatabaseCleaner.app_root = "#{File.dirname(__FILE__)}/../.."
+    orm_sym = orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym
+    
+    if orm_sym == :mongo_mapper
+      DatabaseCleaner[ orm_sym, {:connection => 'database_cleaner_test_one'} ].strategy = strategy.to_sym
+      DatabaseCleaner[ orm_sym, {:connection => 'database_cleaner_test_two'} ].strategy = strategy.to_sym
+    else
+      DatabaseCleaner[ orm_sym, {:connection => :one} ].strategy = strategy.to_sym
+      DatabaseCleaner[ orm_sym, {:connection => :two} ].strategy = strategy.to_sym
+    end
+    
   elsif another_orm
     DatabaseCleaner[         orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym ].strategy = strategy.to_sym
     DatabaseCleaner[ another_orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym ].strategy = strategy.to_sym

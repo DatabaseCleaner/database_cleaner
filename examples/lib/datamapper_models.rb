@@ -5,7 +5,7 @@ require "dm-core"
 require "dm-validations"
 require "dm-aggregates"
 
-DataMapper.setup(:default, "sqlite3:#{DB_DIR}/datamapper_one.db")
+DataMapper.setup(:default, "sqlite3:#{DB_DIR}/datamapper_default.db")
 DataMapper.setup(:one, "sqlite3:#{DB_DIR}/datamapper_one.db")
 DataMapper.setup(:two, "sqlite3:#{DB_DIR}/datamapper_two.db")
 
@@ -22,10 +22,10 @@ class DataMapperWidgetUsingDatabaseOne
   def self.default_repository_name
     :one
   end
-    
+
   property :id,   Serial
   property :name, String
-
+    
 end
     
 class DataMapperWidgetUsingDatabaseTwo

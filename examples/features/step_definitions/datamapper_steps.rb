@@ -15,7 +15,13 @@ Then /^I should see ([\d]+) widget using datamapper$/ do |widget_count|
 end
 
 When /^I create a widget in one db using datamapper$/ do
-  DataMapperWidgetUsingDatabaseOne.create!
+  begin
+    DataMapperWidgetUsingDatabaseOne.create!
+  rescue StandardError => e
+    BREAK = e.backtrace
+    debugger
+    DataMapperWidgetUsingDatabaseOne.create!
+  end
 end
 
 When /^I create a widget in another db using datamapper$/ do

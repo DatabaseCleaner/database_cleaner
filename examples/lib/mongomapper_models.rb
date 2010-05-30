@@ -18,8 +18,9 @@ end
 
 class MongoMapperWidgetUsingDatabaseOne
   include MongoMapper::Document
-  
-  database = 'database_cleaner_test_one'
+
+  connection = Mongo::Connection.new('127.0.0.1')  
+  set_database_name = 'database_cleaner_test_one'
   
   key :id, Integer
   key :name, String
@@ -35,7 +36,8 @@ end
 class MongoMapperWidgetUsingDatabaseTwo
   include MongoMapper::Document
   
-  database = 'database_cleaner_test_two'
+  connection = Mongo::Connection.new('127.0.0.1')
+  set_database_name = 'database_cleaner_test_two'
   
   key :id, Integer
   key :name, String
