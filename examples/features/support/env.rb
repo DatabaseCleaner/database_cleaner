@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'bundler'
 Bundler.setup
 require 'spec/expectations'
 require 'ruby-debug'
@@ -9,7 +10,6 @@ orm         = ENV['ORM']
 another_orm = ENV['ANOTHER_ORM']
 strategy    = ENV['STRATEGY']
 multiple_db = ENV['MULTIPLE_DBS']
-
 
 
 if orm && strategy

@@ -1,4 +1,69 @@
 --- 
+dependencies: 
+  ruby-debug: 
+    group: 
+    - :development
+    version: ">= 0"
+  datamapper: 
+    group: 
+    - :development
+    version: ">= 0"
+  bson_ext: 
+    group: 
+    - :development
+    version: ">= 0"
+  mongo: 
+    group: 
+    - :development
+    version: ">= 0"
+  activerecord: 
+    group: 
+    - :development
+    version: ">= 0"
+  mongo_mapper: 
+    group: 
+    - :development
+    version: ">= 0"
+  sqlite3-ruby: 
+    group: 
+    - :development
+    version: ">= 0"
+  mysql: 
+    group: 
+    - :development
+    version: ">= 0"
+  mongo_ext: 
+    group: 
+    - :development
+    version: ">= 0"
+  data_objects: 
+    group: 
+    - :development
+    version: ">= 0"
+  rake: 
+    group: 
+    - :development
+    version: ">= 0"
+  rspec: 
+    group: 
+    - :development
+    version: = 1.3.0
+  couch_potato: 
+    group: 
+    - :development
+    version: ">= 0"
+  jeweler: 
+    group: 
+    - :development
+    version: ">= 0"
+  cucumber: 
+    group: 
+    - :development
+    version: ">= 0"
+  do_sqlite3: 
+    group: 
+    - :development
+    version: ">= 0"
 specs: 
 - rake: 
     version: 0.8.7
@@ -38,6 +103,8 @@ specs:
     version: 1.0.5
 - cucumber: 
     version: 0.7.3
+- data_objects: 
+    version: 0.10.2
 - extlib: 
     version: 0.9.15
 - dm-core: 
@@ -58,6 +125,8 @@ specs:
     version: 0.10.1
 - datamapper: 
     version: 0.10.1
+- do_sqlite3: 
+    version: 0.10.2
 - gemcutter: 
     version: 0.5.0
 - git: 
@@ -86,60 +155,9 @@ specs:
     version: 0.10.3
 - ruby-debug: 
     version: 0.10.3
-hash: f2c77e94ff3c3ceb3ffc6a4c42f63e9eff224246
+- sqlite3-ruby: 
+    version: 1.2.5
+hash: c37ee43fed255276a87c138cb08b2024ac62ae38
 sources: 
 - Rubygems: 
     uri: http://rubygems.org
-dependencies: 
-  ruby-debug: 
-    version: ">= 0"
-    group: 
-    - :development
-  datamapper: 
-    version: ">= 0"
-    group: 
-    - :development
-  bson_ext: 
-    version: ">= 0"
-    group: 
-    - :development
-  mongo_ext: 
-    version: ">= 0"
-    group: 
-    - :development
-  activerecord: 
-    version: ">= 0"
-    group: 
-    - :development
-  mongo_mapper: 
-    version: ">= 0"
-    group: 
-    - :development
-  mysql: 
-    version: ">= 0"
-    group: 
-    - :development
-  rspec: 
-    version: = 1.3.0
-    group: 
-    - :development
-  couch_potato: 
-    version: ">= 0"
-    group: 
-    - :development
-  rake: 
-    version: ">= 0"
-    group: 
-    - :development
-  mongo: 
-    version: ">= 0"
-    group: 
-    - :development
-  jeweler: 
-    version: ">= 0"
-    group: 
-    - :development
-  cucumber: 
-    version: ">= 0"
-    group: 
-    - :development

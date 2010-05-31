@@ -10,7 +10,7 @@ class FeatureRunner
     @strategy || 'truncation'
   end
 
-  def go feature
+  def go(feature)
     full_dir ||= File.expand_path(File.dirname(__FILE__) + "/../../examples/")
     Dir.chdir(full_dir) do
 
