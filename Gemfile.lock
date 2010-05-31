@@ -4,15 +4,15 @@ dependencies:
     group: 
     - :development
     version: ">= 0"
-  bson_ext: 
-    group: 
-    - :development
-    version: ">= 0"
   datamapper: 
     group: 
     - :development
-    version: ">= 0"
+    version: = 0.10.2
   mongo: 
+    group: 
+    - :development
+    version: ">= 0"
+  bson_ext: 
     group: 
     - :development
     version: ">= 0"
@@ -48,14 +48,14 @@ dependencies:
     group: 
     - :development
     version: ">= 0"
-  rspec: 
-    group: 
-    - :development
-    version: = 1.3.0
   couch_potato: 
     group: 
     - :development
     version: ">= 0"
+  rspec: 
+    group: 
+    - :development
+    version: = 1.3.0
   jeweler: 
     group: 
     - :development
@@ -64,6 +64,10 @@ dependencies:
     group: 
     - :development
     version: ">= 0"
+  json_pure: 
+    group: 
+    - :development
+    version: = 1.2.0
   cucumber: 
     group: 
     - :development
@@ -82,6 +86,8 @@ specs:
 - activerecord: 
     version: 2.3.8
 - addressable: 
+    version: 2.1.2
+- bcrypt-ruby: 
     version: 2.1.2
 - bson: 
     version: "1.0"
@@ -105,38 +111,44 @@ specs:
     version: 0.2.31
 - diff-lcs: 
     version: 1.1.2
-- trollop: 
-    version: 1.16.2
-- gherkin: 
-    version: 1.0.30
 - json_pure: 
-    version: 1.4.3
+    version: 1.2.0
+- polyglot: 
+    version: 0.3.1
 - term-ansicolor: 
     version: 1.0.5
+- treetop: 
+    version: 1.4.8
 - cucumber: 
-    version: 0.7.3
+    version: 0.6.4
 - data_objects: 
     version: 0.10.2
 - extlib: 
     version: 0.9.15
 - dm-core: 
-    version: 0.10.1
+    version: 0.10.2
 - dm-aggregates: 
-    version: 0.10.1
+    version: 0.10.2
 - dm-constraints: 
-    version: 0.10.1
+    version: 0.10.2
 - dm-migrations: 
-    version: 0.10.1
+    version: 0.10.2
+- fastercsv: 
+    version: 1.5.3
 - dm-serializer: 
-    version: 0.10.1
+    version: 0.10.2
 - dm-timestamps: 
-    version: 0.10.1
+    version: 0.10.2
+- stringex: 
+    version: 1.1.0
+- uuidtools: 
+    version: 2.1.1
 - dm-types: 
-    version: 0.10.1
+    version: 0.10.2
 - dm-validations: 
-    version: 0.10.1
+    version: 0.10.2
 - datamapper: 
-    version: 0.10.1
+    version: 0.10.2
 - do_sqlite3: 
     version: 0.10.2
 - gemcutter: 
@@ -169,7 +181,7 @@ specs:
     version: 0.10.3
 - sqlite3-ruby: 
     version: 1.2.5
-hash: e757b477472957856d90c7fa4141c6a69b4ad296
+hash: f234f5ef0a35bbcee0aaa71ec88a1952c8aa92b9
 sources: 
 - Rubygems: 
     uri: http://rubygems.org
