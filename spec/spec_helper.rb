@@ -1,6 +1,8 @@
 require "rubygems"
+
 require "bundler"
 Bundler.setup
+
 
 require 'spec'
 #require 'active_record'

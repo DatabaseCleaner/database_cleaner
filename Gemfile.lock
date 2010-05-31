@@ -4,11 +4,11 @@ dependencies:
     group: 
     - :development
     version: ">= 0"
-  datamapper: 
+  bson_ext: 
     group: 
     - :development
     version: ">= 0"
-  bson_ext: 
+  datamapper: 
     group: 
     - :development
     version: ">= 0"
@@ -16,7 +16,7 @@ dependencies:
     group: 
     - :development
     version: ">= 0"
-  activerecord: 
+  ZenTest: 
     group: 
     - :development
     version: ">= 0"
@@ -24,11 +24,7 @@ dependencies:
     group: 
     - :development
     version: ">= 0"
-  sqlite3-ruby: 
-    group: 
-    - :development
-    version: ">= 0"
-  mysql: 
+  activerecord: 
     group: 
     - :development
     version: ">= 0"
@@ -40,7 +36,15 @@ dependencies:
     group: 
     - :development
     version: ">= 0"
+  mysql: 
+    group: 
+    - :development
+    version: ">= 0"
   rake: 
+    group: 
+    - :development
+    version: ">= 0"
+  sqlite3-ruby: 
     group: 
     - :development
     version: ">= 0"
@@ -56,6 +60,10 @@ dependencies:
     group: 
     - :development
     version: ">= 0"
+  bundler: 
+    group: 
+    - :development
+    version: ">= 0"
   cucumber: 
     group: 
     - :development
@@ -67,6 +75,8 @@ dependencies:
 specs: 
 - rake: 
     version: 0.8.7
+- ZenTest: 
+    version: 4.3.1
 - activesupport: 
     version: 2.3.8
 - activerecord: 
@@ -79,6 +89,8 @@ specs:
     version: 1.0.1
 - builder: 
     version: 2.1.2
+- bundler: 
+    version: 0.9.25
 - columnize: 
     version: 0.3.1
 - mime-types: 
@@ -157,7 +169,7 @@ specs:
     version: 0.10.3
 - sqlite3-ruby: 
     version: 1.2.5
-hash: c37ee43fed255276a87c138cb08b2024ac62ae38
+hash: e757b477472957856d90c7fa4141c6a69b4ad296
 sources: 
 - Rubygems: 
     uri: http://rubygems.org
