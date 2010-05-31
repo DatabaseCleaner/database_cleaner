@@ -5,11 +5,11 @@ class FeatureRunner
   attr_accessor :strategy
   attr_accessor :exit_status
   attr_accessor :output
-  
+
   def strategy
     @strategy || 'truncation'
   end
-  
+
   def go feature
     full_dir ||= File.expand_path(File.dirname(__FILE__) + "/../../examples/")
     Dir.chdir(full_dir) do
@@ -21,8 +21,8 @@ class FeatureRunner
 
       self.output = `#{"jruby -S " if defined?(JRUBY_VERSION)}cucumber features/#{feature}.feature`
 
-      self.exit_status = $?.exitstatus  
-    end    
+      self.exit_status = $?.exitstatus
+    end
   end
-    
+
 end

@@ -3,7 +3,7 @@ When /^I create a widget$/ do
 end
 
 Then /^I should see 1 widget$/ do
-  Then "I should see 1 widget using #{ENV['ORM'].downcase}"  
+  Then "I should see 1 widget using #{ENV['ORM'].downcase}"
 end
 
 When /^I create a widget in one orm$/ do

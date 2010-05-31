@@ -9,7 +9,7 @@ module DatabaseCleaner
     class Truncation
       include ::DatabaseCleaner::DataMapper::Base
       include ::DatabaseCleaner::Generic::Truncation
-      
+
       def clean(repository = nil)
         repository = self.db if repository.nil?
         adapter = ::DataMapper.repository(repository).adapter

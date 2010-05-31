@@ -15,5 +15,5 @@ Feature: multiple database cleaning
   | ActiveRecord | truncation    |
   | DataMapper   | truncation    |
   # | ActiveRecord | transaction   |
-  # | MongoMapper  | truncation    |  
+  # | MongoMapper  | truncation    |
   # | DataMapper   | transaction   | # Tickers are ugly...and betty don't like ugly... otherwise known as this is fubar

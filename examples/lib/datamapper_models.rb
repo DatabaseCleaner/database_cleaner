@@ -11,7 +11,7 @@ DataMapper.setup(:two, "sqlite3:#{DB_DIR}/datamapper_two.db")
 
 class DataMapperWidget
   include DataMapper::Resource
-  
+
   property :id,   Serial
   property :name, String
 end
@@ -25,9 +25,9 @@ class DataMapperWidgetUsingDatabaseOne
 
   property :id,   Serial
   property :name, String
-    
+
 end
-    
+
 class DataMapperWidgetUsingDatabaseTwo
   include DataMapper::Resource
 
@@ -37,7 +37,7 @@ class DataMapperWidgetUsingDatabaseTwo
 
   property :id,   Serial
   property :name, String
-    
+
 end
 
 DataMapperWidget.auto_migrate!

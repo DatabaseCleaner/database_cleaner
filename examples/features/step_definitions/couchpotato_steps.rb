@@ -1,7 +1,7 @@
 Given /^I have setup database cleaner to clean multiple databases using couchpotato$/ do
   #DatabaseCleaner
   # require "#{File.dirname(__FILE__)}/../../../lib/couchpotato_models"
-  # 
+  #
   # DatabaseCleaner[:couchpotato, {:connection => :one} ].strategy = :truncation
   # DatabaseCleaner[:couchpotato, {:connection => :two} ].strategy = :truncation
 end

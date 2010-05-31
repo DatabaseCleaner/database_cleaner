@@ -1,19 +1,19 @@
 module DatabaseCleaner
   class Base
-    
+
     def initialize(desired_orm = nil,opts = {})
       if desired_orm == :autodetect || desired_orm.nil?
-        autodetect 
+        autodetect
       else
         self.orm = desired_orm
       end
       @db = opts[:connection] if opts.has_key? :connection
     end
-    
+
     def db
       @db || :default
     end
-      
+
     def create_strategy(*args)
       strategy, *strategy_args = args
       orm_strategy(strategy).new(*strategy_args)
@@ -36,14 +36,14 @@ module DatabaseCleaner
        else
          raise ArgumentError, "You must provide a strategy object, or a symbol for a known strategy along with initialization params."
        end
-       
+
        if @strategy.respond_to? :db=
          @strategy.db = self.db
        elsif self.db != :default
          raise ArgumentError, "You must provide a strategy object that supports non default databases when you specify a database"
        end
     end
-    
+
     def strategy
       return @strategy if @strategy
       raise NoStrategySetError, "Please set a strategy with DatabaseCleaner.strategy=."
@@ -52,11 +52,11 @@ module DatabaseCleaner
     def orm=(desired_orm)
       @orm = desired_orm
     end
-    
+
     def orm
       @orm || autodetect
     end
-    
+
     def start
       strategy.start
     end
@@ -66,23 +66,23 @@ module DatabaseCleaner
     end
 
     alias clean! clean
-       
+
     def auto_detected
       return true unless @autodetected.nil?
     end
-    
+
     #TODO make strategies directly comparable
     def ==(other)
       self.orm == other.orm && self.db == other.db && self.strategy.class == other.strategy.class
     end
-    
+
     private
 
     def orm_module
       ::DatabaseCleaner.orm_module(orm)
     end
-     
-    def orm_strategy(strategy) 
+
+    def orm_strategy(strategy)
       require "database_cleaner/#{orm.to_s}/#{strategy.to_s}"
       orm_module.const_get(strategy.to_s.capitalize)
     rescue LoadError => e
@@ -92,7 +92,7 @@ module DatabaseCleaner
         raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!"
       end
     end
-    
+
     def autodetect
       @orm ||= begin
         @autodetected = true
@@ -109,7 +109,7 @@ module DatabaseCleaner
         end
       end
     end
-    
+
     def orm_module
       case orm
         when :active_record
@@ -121,6 +121,6 @@ module DatabaseCleaner
         when :couch_potato
           DatabaseCleaner::CouchPotato
       end
-    end    
+    end
   end
 end

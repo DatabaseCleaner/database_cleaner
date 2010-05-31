@@ -6,7 +6,7 @@ module DatabaseCleaner
     class Truncation
       include ::DatabaseCleaner::MongoMapper::Base
       include ::DatabaseCleaner::Generic::Truncation
-       
+
       def clean
         if @only
           collections.each { |c| c.remove if @only.include?(c.name) }

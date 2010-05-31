@@ -38,8 +38,8 @@ module ActiveRecord
 
       def self.db_version
         @db_version ||= connection.select_values(
-          "SELECT CHARACTER_VALUE 
-            FROM INFORMATION_SCHEMA.SQL_IMPLEMENTATION_INFO 
+          "SELECT CHARACTER_VALUE
+            FROM INFORMATION_SCHEMA.SQL_IMPLEMENTATION_INFO
             WHERE IMPLEMENTATION_INFO_NAME = 'DBMS VERSION' ").to_s
       end
 
@@ -83,7 +83,7 @@ module DatabaseCleaner::ActiveRecord
     end
 
     private
-    
+
     def tables_to_truncate
        (@only || connection.tables) - @tables_to_exclude
     end
@@ -92,7 +92,7 @@ module DatabaseCleaner::ActiveRecord
        #::ActiveRecord::Base.connection
        connection_klass.connection
     end
-    
+
     # overwritten
     def migration_storage_name
       'schema_migrations'

@@ -2,7 +2,7 @@ require 'database_cleaner/active_record/base'
 module DatabaseCleaner::ActiveRecord
   class Transaction
     include ::DatabaseCleaner::ActiveRecord::Base
-    
+
     def start
       if connection_klass.connection.respond_to?(:increment_open_transactions)
         connection_klass.connection.increment_open_transactions
