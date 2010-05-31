@@ -129,7 +129,7 @@ module DatabaseCleaner
         strategy.stub(:respond_to?).with(anything)
         strategy.stub(:respond_to?).with(:db=).and_return(false)
 
-        expect { ::DatabaseCleaner::Base.new(:active_record,:connection => :my_db).strategy = strategy }.to raise_error ArgumentError
+        expect { ::DatabaseCleaner::Base.new(:active_record,:connection => :my_db).strategy = strategy }.to raise_error(ArgumentError)
       end
     end
 

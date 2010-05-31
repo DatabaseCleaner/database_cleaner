@@ -13,37 +13,37 @@ module DatabaseCleaner
 end
 
 describe ::DatabaseCleaner do
-  before (:each) { ::DatabaseCleaner.reset }
+  before(:each) { ::DatabaseCleaner.reset }
 
   context "orm specification" do
     it "should not accept unrecognised orms" do
-      lambda { ::DatabaseCleaner[nil] }.should raise_error ::DatabaseCleaner::NoORMDetected
+      lambda { ::DatabaseCleaner[nil] }.should raise_error(::DatabaseCleaner::NoORMDetected)
     end
 
     it "should accept :active_record" do
       cleaner = ::DatabaseCleaner[:active_record]
-      cleaner.should be_a ::DatabaseCleaner::Base
+      cleaner.should be_a(::DatabaseCleaner::Base)
       cleaner.orm.should == :active_record
       ::DatabaseCleaner.connections.size.should == 1
     end
 
     it "should accept :data_mapper" do
       cleaner = ::DatabaseCleaner[:data_mapper]
-      cleaner.should be_a ::DatabaseCleaner::Base
+      cleaner.should be_a(::DatabaseCleaner::Base)
       cleaner.orm.should == :data_mapper
       ::DatabaseCleaner.connections.size.should == 1
     end
 
     it "should accept :mongo_mapper" do
       cleaner = ::DatabaseCleaner[:mongo_mapper]
-      cleaner.should be_a ::DatabaseCleaner::Base
+      cleaner.should be_a(::DatabaseCleaner::Base)
       cleaner.orm.should == :mongo_mapper
       ::DatabaseCleaner.connections.size.should == 1
     end
 
     it "should accept :couch_potato" do
       cleaner = ::DatabaseCleaner[:couch_potato]
-      cleaner.should be_a ::DatabaseCleaner::Base
+      cleaner.should be_a(::DatabaseCleaner::Base)
       cleaner.orm.should == :couch_potato
       ::DatabaseCleaner.connections.size.should == 1
     end
@@ -60,7 +60,7 @@ describe ::DatabaseCleaner do
   context "connection/db specification" do
     it "should accept a connection parameter and store it" do
       cleaner = ::DatabaseCleaner[:active_record, {:connection => :first_connection}]
-      cleaner.should be_a ::DatabaseCleaner::Base
+      cleaner.should be_a(::DatabaseCleaner::Base)
       cleaner.orm.should == :active_record
       cleaner.db.should == :first_connection
     end
@@ -107,7 +107,7 @@ describe ::DatabaseCleaner do
   context "class methods" do
     subject { ::DatabaseCleaner }
 
-    its(:connections) { should respond_to :each }
+    its(:connections) { should respond_to(:each) }
 
     it "should give me a default (autodetection) databasecleaner by default" do
       cleaner = mock("cleaner").as_null_object
@@ -119,7 +119,7 @@ describe ::DatabaseCleaner do
   end
 
   context "single orm single connection" do
-    let (:connection) { ::DatabaseCleaner.connections.first }
+    let(:connection) { ::DatabaseCleaner.connections.first }
 
     it "should proxy strategy=" do
       stratagum = mock("stratagum")

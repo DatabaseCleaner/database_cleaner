@@ -22,15 +22,15 @@ module ::DatabaseCleaner
     end
 
     describe TruncationExample do
-      its (:start) { expect{ subject }.to_not raise_error }
-      its (:clean) { expect{ subject }.to raise_error NotImplementedError }
+      its(:start) { expect{ subject }.to_not raise_error }
+      its(:clean) { expect{ subject }.to raise_error(NotImplementedError) }
 
       context "private methods" do
-        it { should_not respond_to :tables_to_truncate }
-        its (:tables_to_truncate) { expect{ subject }.to raise_error NotImplementedError }
+        it { should_not respond_to(:tables_to_truncate) }
+        its(:tables_to_truncate) { expect{ subject }.to raise_error(NotImplementedError) }
 
-        it { should_not respond_to :migration_storage_name }
-        its (:migration_storage_name) { should be_nil }
+        it { should_not respond_to(:migration_storage_name) }
+        its(:migration_storage_name) { should be_nil }
       end
 
       describe "initialize" do
@@ -40,27 +40,27 @@ module ::DatabaseCleaner
           expect{ TruncationExample.new {} }.to_not raise_error
         end
 
-        it { expect{ TruncationExample.new( { :a_random_param => "should raise ArgumentError"  } ) }.to     raise_error ArgumentError }
-        it { expect{ TruncationExample.new( { :except => "something",:only => "something else" } ) }.to     raise_error ArgumentError }
-        it { expect{ TruncationExample.new( { :only   => "something"                           } ) }.to_not raise_error ArgumentError }
-        it { expect{ TruncationExample.new( { :except => "something"                           } ) }.to_not raise_error ArgumentError }
+        it { expect{ TruncationExample.new( { :a_random_param => "should raise ArgumentError"  } ) }.to     raise_error(ArgumentError) }
+        it { expect{ TruncationExample.new( { :except => "something",:only => "something else" } ) }.to     raise_error(ArgumentError) }
+        it { expect{ TruncationExample.new( { :only   => "something"                           } ) }.to_not raise_error(ArgumentError) }
+        it { expect{ TruncationExample.new( { :except => "something"                           } ) }.to_not raise_error(ArgumentError) }
 
         context "" do
           subject { TruncationExample.new( { :only => ["something"] } ) }
-          its (:only)   { should == ["something"] }
-          its (:except) { should == [] }
+          its(:only)   { should == ["something"] }
+          its(:except) { should == [] }
         end
 
         context "" do
           subject { TruncationExample.new( { :except => ["something"] } ) }
-          its (:only)   { should == nil }
-          its (:except) { should include "something" }
+          its(:only)   { should == nil }
+          its(:except) { should include("something") }
         end
 
         context "" do
           subject { MigrationExample.new }
-          its (:only)   { should == nil }
-          its (:except) { should == ["migration_storage_name"] }
+          its(:only)   { should == nil }
+          its(:except) { should == ["migration_storage_name"] }
         end
       end
     end

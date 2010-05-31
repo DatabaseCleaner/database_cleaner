@@ -6,10 +6,10 @@ module DatabaseCleaner
   module ActiveRecord
 
     describe Transaction do
-      let (:connection) { mock("connection") }
-      let (:another_connection) { mock("a different connection") }
+      let(:connection) { mock("connection") }
+      let(:another_connection) { mock("a different connection") }
 
-      let (:model_klass) do
+      let(:model_klass) do
         model_klass = mock("klass")
         model_klass.stub!(:connection).and_return(another_connection)
         model_klass

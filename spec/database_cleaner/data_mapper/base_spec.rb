@@ -4,7 +4,7 @@ require 'database_cleaner/shared_strategy_spec'
 
 module DatabaseCleaner
   describe DataMapper do
-    it { should respond_to :available_strategies }
+    it { should respond_to(:available_strategies) }
   end
 
   module DataMapper
@@ -14,8 +14,8 @@ module DatabaseCleaner
 
     describe ExampleStrategy do
       it_should_behave_like "a generic strategy"
-      it { should respond_to :db  }
-      it { should respond_to :db= }
+      it { should respond_to(:db)  }
+      it { should respond_to(:db=) }
 
       it "should store my desired db" do
         subject.db = :my_db

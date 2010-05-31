@@ -6,7 +6,7 @@ require 'database_cleaner/active_record/truncation'
 module ActiveRecord
   module ConnectionAdapters
     [MysqlAdapter, SQLite3Adapter, JdbcAdapter, PostgreSQLAdapter].each do |adapter|
-      describe adapter, "#truncate_table" do
+      describe(adapter, "#truncate_table") do
         it "should truncate the table"
       end
     end
@@ -17,7 +17,7 @@ module DatabaseCleaner
   module ActiveRecord
 
     describe Truncation do
-      let (:connection) { mock('connection') }
+      let(:connection) { mock('connection') }
 
 
       before(:each) do

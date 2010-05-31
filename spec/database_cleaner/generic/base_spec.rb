@@ -11,12 +11,12 @@ module ::DatabaseCleaner
     describe ExampleStrategy do
       context "class methods" do
         subject { ExampleStrategy }
-        its (:available_strategies) { should be_empty }
+        its(:available_strategies) { should be_empty }
       end
 
       it_should_behave_like "a generic strategy"
 
-      its (:db) { should == :default }
+      its(:db) { should == :default }
     end
   end
 end

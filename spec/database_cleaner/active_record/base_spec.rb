@@ -5,7 +5,7 @@ require 'database_cleaner/shared_strategy_spec'
 
 module DatabaseCleaner
   describe ActiveRecord do
-    it { should respond_to :available_strategies }
+    it { should respond_to(:available_strategies) }
 
     describe "config_file_location" do
       subject { ActiveRecord.config_file_location }
@@ -30,7 +30,7 @@ module DatabaseCleaner
       it_should_behave_like "a generic strategy"
 
       describe "db" do
-        it { should respond_to :db= }
+        it { should respond_to(:db=) }
 
         it "should store my desired db" do
           subject.stub(:load_config)
@@ -51,7 +51,7 @@ module DatabaseCleaner
 
       describe "load_config" do
 
-        it { should respond_to :load_config }
+        it { should respond_to(:load_config) }
 
         before { YAML.stub(:load_file).with('/path/to/config/database.yml').and_return({ "my_db" => {"database" => "one"} }) }
 
@@ -68,8 +68,8 @@ module DatabaseCleaner
       end
 
       describe "connection_hash" do
-        it { should respond_to :connection_hash }
-        it { should respond_to :connection_hash= }
+        it { should respond_to(:connection_hash) }
+        it { should respond_to(:connection_hash=) }
         it "should store connection_hash" do
           subject.connection_hash = { :key => "value" }
           subject.connection_hash.should == { :key => "value" }
@@ -78,11 +78,11 @@ module DatabaseCleaner
 
       describe "create_connection_klass" do
         it "should return a class" do
-          subject.create_connection_klass.should be_a Class
+          subject.create_connection_klass.should be_a(Class)
         end
 
         it "should return a class extending ::ActiveRecord::Base" do
-          subject.create_connection_klass.ancestors.should include ::ActiveRecord::Base
+          subject.create_connection_klass.ancestors.should include(::ActiveRecord::Base)
         end
       end
 
