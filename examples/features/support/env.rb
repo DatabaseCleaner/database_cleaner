@@ -57,5 +57,5 @@ if orm && strategy
   end
 
 else
-  raise "Run 'ORM=activerecord|datamapper|mongomapper|couchpotato [ANOTHER_ORM=activerecord|datamapper|mongomapper|couchpotato] [MULTIPLE_DBS=true] STRATEGY=transaction|truncation cucumber examples/features'"
+  raise "Run 'ORM=ActiveRecord|DataMapper|MongoMapper|CouchPotato [ANOTHER_ORM=...] [MULTIPLE_DBS=true] STRATEGY=transaction|truncation cucumber examples/features'"
 end

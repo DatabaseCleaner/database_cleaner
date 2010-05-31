@@ -14,8 +14,8 @@ class FeatureRunner
     full_dir ||= File.expand_path(File.dirname(__FILE__) + "/../../examples/")
     Dir.chdir(full_dir) do
 
-      ENV['ORM']          = orm#.downcase
-      ENV['ANOTHER_ORM']  = another_orm if another_orm#.downcase if another_orm
+      ENV['ORM']          = orm
+      ENV['ANOTHER_ORM']  = another_orm if another_orm
       ENV['MULTIPLE_DBS'] = "true" if multiple_databases
       ENV['STRATEGY']     = strategy
 
