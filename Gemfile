@@ -6,6 +6,7 @@ group :development do
   gem "jeweler"
   gem "mongo"
   gem "mongo_ext"
+  gem "bson_ext"
   gem "mongo_mapper"
   gem "datamapper"
   gem "couch_potato"
