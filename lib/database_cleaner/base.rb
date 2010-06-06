@@ -102,10 +102,12 @@ module DatabaseCleaner
           :data_mapper
         elsif defined? ::MongoMapper
           :mongo_mapper
+        elsif defined? ::Mongoid
+          :mongoid
         elsif defined? ::CouchPotato
           :couch_potato
         else
-          raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper or CouchPotato loaded?"
+          raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, or CouchPotato loaded?"
         end
       end
     end
@@ -116,6 +118,8 @@ module DatabaseCleaner
           DatabaseCleaner::ActiveRecord
         when :data_mapper
           DatabaseCleaner::DataMapper
+        when :mongoid
+          DatabaseCleaner::Mongoid
         when :mongo_mapper
           DatabaseCleaner::MongoMapper
         when :couch_potato

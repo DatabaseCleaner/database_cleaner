@@ -10,14 +10,16 @@ group :development do
   gem "datamapper", "0.10.2"
     gem "data_objects"
     gem "do_sqlite3"
-  
+
+  gem "mongoid"
+   gem "tzinfo"
   gem "mongo_mapper"
     gem "mongo"
     gem "mongo_ext"
     gem "bson_ext"
 
   gem "couch_potato"
-    
+
   gem "rake"
   gem "ruby-debug"
   gem 'sqlite3-ruby'

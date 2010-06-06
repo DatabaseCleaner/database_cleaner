@@ -1,7 +1,22 @@
 0.5.x (In Git)
 
+ === Bugfixes
+  * Updates the DataMapper truncation strategy to version 0.10.3. (Robert Rouse)
+
+== 0.5.2
+
+ === Bugfixes
+  * Removes extraneous puts call from configuration.rb.  (Ben Mabey)
+
+== 0.5.1 - The Mongoid Release
+
+This release also attempts to fix AR for Rails 3 support.  I have seen mixed reviews on this.  Some people
+claim the fixes allow for use in Rails3 while others have not had good luck with it.  I plan on reworking
+the way AR support is added so that it is more friendly with how Rails 3 uses autoload.
+
  === New features
   * Clean and clean_with methods are now aliased to clean! and clean_with!. (Ben Mabey)
+  * Mongoid Support! (Sidney Burks)
 
 === Bugfixes
   * Check PostgreSQL version >= 8.2 before using TRUNCATE CASCADE (James B. Byrne)

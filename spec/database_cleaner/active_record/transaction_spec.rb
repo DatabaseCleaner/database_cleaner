@@ -6,20 +6,12 @@ module DatabaseCleaner
   module ActiveRecord
 
     describe Transaction do
-      let(:connection) { mock("connection") }
-      let(:another_connection) { mock("a different connection") }
-
-      let(:model_klass) do
-        model_klass = mock("klass")
-        model_klass.stub!(:connection).and_return(another_connection)
-        model_klass
-      end
-
+      let (:connection) { mock("connection") }
       before(:each) do
         ::ActiveRecord::Base.stub!(:connection).and_return(connection)
       end
 
-      describe "start" do
+      describe "#start" do
         it "should increment open transactions if possible" do
           connection.stub!(:respond_to?).with(:increment_open_transactions).and_return(true)
           connection.stub!(:begin_db_transaction)
@@ -44,14 +36,13 @@ module DatabaseCleaner
         end
       end
 
-      describe "clean" do
-        it "should finish a transaction" do
+      describe "#clean" do
+        it "should start a transaction" do
             connection.stub!(:decrement_open_transactions)
 
             connection.should_receive(:rollback_db_transaction)
             Transaction.new.clean
         end
-
         it "should decrement open transactions if possible" do
           connection.stub!(:respond_to?).with(:decrement_open_transactions).and_return(true)
           connection.stub!(:rollback_db_transaction)

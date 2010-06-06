@@ -17,4 +17,5 @@ Feature: database cleaning
     | DataMapper   | transaction   |
     | DataMapper   | truncation    |
     | MongoMapper  | truncation    |
+    | Mongoid      | truncation    |
     | CouchPotato  | truncation    |

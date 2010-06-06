@@ -8,6 +8,10 @@ dependencies:
     group: 
     - :development
     version: = 0.10.2
+  tzinfo: 
+    group: 
+    - :development
+    version: ">= 0"
   mongo: 
     group: 
     - :development
@@ -64,6 +68,10 @@ dependencies:
     group: 
     - :development
     version: ">= 0"
+  mongoid: 
+    group: 
+    - :development
+    version: ">= 0"
   json_pure: 
     group: 
     - :development
@@ -80,7 +88,7 @@ specs:
 - rake: 
     version: 0.8.7
 - ZenTest: 
-    version: 4.3.1
+    version: 4.3.2
 - activesupport: 
     version: 2.3.8
 - activerecord: 
@@ -151,6 +159,8 @@ specs:
     version: 0.10.2
 - do_sqlite3: 
     version: 0.10.2
+- durran-validatable: 
+    version: 2.0.1
 - gemcutter: 
     version: 0.5.0
 - git: 
@@ -161,6 +171,8 @@ specs:
     version: 1.4.0
 - jnunemaker-validatable: 
     version: 1.8.4
+- leshill-will_paginate: 
+    version: 2.3.11
 - linecache: 
     version: "0.43"
 - mongo: 
@@ -171,6 +183,8 @@ specs:
     version: 0.1.1
 - mongo_mapper: 
     version: 0.7.6
+- mongoid: 
+    version: 1.0.6
 - mysql: 
     version: 2.8.1
 - rspec: 
@@ -181,7 +195,9 @@ specs:
     version: 0.10.3
 - sqlite3-ruby: 
     version: 1.2.5
-hash: f234f5ef0a35bbcee0aaa71ec88a1952c8aa92b9
+- tzinfo: 
+    version: 0.3.22
+hash: 0c418ad5e81b096047c67b8f40ae9420fec31f45
 sources: 
 - Rubygems: 
     uri: http://rubygems.org

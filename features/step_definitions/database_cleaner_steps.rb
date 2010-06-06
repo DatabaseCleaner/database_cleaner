@@ -1,5 +1,5 @@
 
-Given /^I am using (ActiveRecord|DataMapper|MongoMapper|CouchPotato)$/ do |orm|
+Given /^I am using (ActiveRecord|DataMapper|MongoMapper|Mongoid|CouchPotato)$/ do |orm|
   @feature_runner = FeatureRunner.new
   @feature_runner.orm = orm
 end
