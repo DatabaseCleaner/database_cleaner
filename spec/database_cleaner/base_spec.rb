@@ -18,6 +18,7 @@ module DatabaseCleaner
          Temp_AR = ::ActiveRecord if defined?(::ActiveRecord) and not defined?(Temp_AR)
          Temp_DM = ::DataMapper   if defined?(::DataMapper)   and not defined?(Temp_DM)
          Temp_MM = ::MongoMapper  if defined?(::MongoMapper)  and not defined?(Temp_MM)
+         Temp_MO = ::Mongoid      if defined?(::Mongoid)      and not defined?(Temp_MO)
          Temp_CP = ::CouchPotato  if defined?(::CouchPotato)  and not defined?(Temp_CP)
        end
 
@@ -26,12 +27,15 @@ module DatabaseCleaner
          Object.send(:remove_const, 'ActiveRecord') if defined?(::ActiveRecord)
          Object.send(:remove_const, 'DataMapper')   if defined?(::DataMapper)
          Object.send(:remove_const, 'MongoMapper')  if defined?(::MongoMapper)
+         Object.send(:remove_const, 'Mongoid')      if defined?(::Mongoid)
          Object.send(:remove_const, 'CouchPotato')  if defined?(::CouchPotato)
-
+         
+         
          # Restore ORMs
          ::ActiveRecord = Temp_AR if defined? Temp_AR
          ::DataMapper   = Temp_DM if defined? Temp_DM
          ::MongoMapper  = Temp_MM if defined? Temp_MM
+         ::Mongoid      = Temp_MO if defined? Temp_MO
          ::CouchPotato  = Temp_CP if defined? Temp_CP
        end
 
@@ -40,6 +44,7 @@ module DatabaseCleaner
          Object.send(:remove_const, 'ActiveRecord') if defined?(::ActiveRecord)
          Object.send(:remove_const, 'DataMapper')   if defined?(::DataMapper)
          Object.send(:remove_const, 'MongoMapper')  if defined?(::MongoMapper)
+         Object.send(:remove_const, 'Mongoid')      if defined?(::Mongoid)
          Object.send(:remove_const, 'CouchPotato')  if defined?(::CouchPotato)
        end
 
