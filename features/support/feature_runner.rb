@@ -13,11 +13,22 @@ class FeatureRunner
   def go(feature)
     full_dir ||= File.expand_path(File.dirname(__FILE__) + "/../../examples/")
     Dir.chdir(full_dir) do
-
+                              
+      
       ENV['ORM']          = orm
-      ENV['ANOTHER_ORM']  = another_orm if another_orm
-      ENV['MULTIPLE_DBS'] = "true" if multiple_databases
       ENV['STRATEGY']     = strategy
+      
+      if another_orm
+       ENV['ANOTHER_ORM']  = another_orm
+      else
+        ENV['ANOTHER_ORM'] = nil
+      end
+      
+      if multiple_databases
+        ENV['MULTIPLE_DBS'] = "true"
+      else
+        ENV['MULTIPLE_DBS'] = nil 
+      end
 
       self.output = `#{"jruby -S " if defined?(JRUBY_VERSION)}cucumber features/#{feature}.feature`
 

@@ -4,7 +4,7 @@ Given /^I am using (ActiveRecord|DataMapper|MongoMapper|Mongoid|CouchPotato)$/ d
   @feature_runner.orm = orm
 end
 
-Given /^I am using (ActiveRecord|DataMapper|MongoMapper|CouchPotato) and (ActiveRecord|DataMapper|MongoMapper|CouchPotato)$/ do |orm1,orm2|
+Given /^I am using (ActiveRecord|DataMapper|MongoMapper|CouchPotato|Mongoid) and (ActiveRecord|DataMapper|MongoMapper|CouchPotato|Mongoid)$/ do |orm1,orm2|
   @feature_runner = FeatureRunner.new
   @feature_runner.orm         = orm1
   @feature_runner.another_orm = orm2

@@ -1,7 +1,12 @@
 require "dm-core"
+require "dm-transactions"
+
+#Datamapper 1.0 requires you to require dm-migrations to automigrate
+require "dm-migrations"
 
 # only to please activerecord API used in database_cleaner/examples/features/step_definitions
 # yes, i know that's lazy ...
+
 require "dm-validations"
 require "dm-aggregates"
 

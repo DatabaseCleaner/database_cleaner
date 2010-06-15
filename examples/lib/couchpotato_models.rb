@@ -1,5 +1,5 @@
 require 'couch_potato'
-require 'json/pure'
+require 'json/pure' unless defined? ::JSON
 ::CouchPotato::Config.database_name = 'couch_potato_test'
 
 class CouchPotatoWidget

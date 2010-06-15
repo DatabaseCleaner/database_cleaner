@@ -58,6 +58,7 @@ module DatabaseCleaner
          Object.const_set('ActiveRecord','Actively mocking records.')
          Object.const_set('DataMapper',  'Mapping data mocks')
          Object.const_set('MongoMapper', 'Mapping mock mongos')
+         Object.const_set('Mongoid',     'Mongoid mock')
          Object.const_set('CouchPotato', 'Couching mock potatos')
 
          cleaner.orm.should == :active_record
@@ -66,6 +67,7 @@ module DatabaseCleaner
        it "should detect DataMapper second" do
          Object.const_set('DataMapper',  'Mapping data mocks')
          Object.const_set('MongoMapper', 'Mapping mock mongos')
+         Object.const_set('Mongoid',     'Mongoid mock')
          Object.const_set('CouchPotato', 'Couching mock potatos')
 
          cleaner.orm.should == :data_mapper
@@ -73,11 +75,19 @@ module DatabaseCleaner
 
        it "should detect MongoMapper third" do
          Object.const_set('MongoMapper', 'Mapping mock mongos')
+         Object.const_set('Mongoid',     'Mongoid mock')
          Object.const_set('CouchPotato', 'Couching mock potatos')
 
          cleaner.orm.should == :mongo_mapper
        end
+       
+       it "should detect Mongoid fourth" do
+         Object.const_set('Mongoid',     'Mongoid mock')
+         Object.const_set('CouchPotato', 'Couching mock potatos')
 
+         cleaner.orm.should == :mongoid
+       end
+       
        it "should detect CouchPotato last" do
          Object.const_set('CouchPotato', 'Couching mock potatos')
 

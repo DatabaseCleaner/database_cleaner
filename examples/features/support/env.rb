@@ -1,5 +1,9 @@
+#Hilarious as it seems, this is necessary so bundle exec cucumber works for mongoid cukeage (I'm assuming mongomapper is automatically present because its a git repo)
+Object.send(:remove_const, 'MongoMapper')  if defined?(::MongoMapper)
+
 require 'rubygems'
 require 'bundler'
+
 Bundler.setup
 require 'spec/expectations'
 require 'ruby-debug'
@@ -34,10 +38,7 @@ if orm && strategy
 
 
 
-  if multiple_db && another_orm
-    DatabaseCleaner[         orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym, {:connection => :one} ].strategy = strategy.to_sym
-    DatabaseCleaner[ another_orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym, {:connection => :two} ].strategy = strategy.to_sym
-  elsif multiple_db
+  if multiple_db 
     DatabaseCleaner.app_root = "#{File.dirname(__FILE__)}/../.."
     orm_sym = orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym
 

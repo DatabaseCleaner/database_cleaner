@@ -1,20 +1,20 @@
 source "http://rubygems.org"
 group :development do
   gem "mysql"
-  gem "json_pure", "1.2.0"
+  gem "json_pure", "1.4.3"
   gem "rspec", "1.3.0"
-  gem "cucumber"
+  gem "cucumber", "0.8.1"
   
   gem "activerecord"
 
-  gem "datamapper", "0.10.2"
-    gem "data_objects"
-    gem "do_sqlite3"
+  gem "datamapper",        "1.0.0"
+  gem "dm-migrations",     "1.0.0"
+  gem "dm-sqlite-adapter", "1.0.0"
   
   # mongo requirements
-    gem "mongo",     "1.0.2"
+    gem "mongo",     "1.0.1"
     gem "mongo_ext", "0.19.3"
-    gem "bson",      "1.0.2"
+    gem "bson_ext",  "1.0.1"
     
   gem "mongoid", "1.9.0"
     #mongoid requires active support <= 2.3.5

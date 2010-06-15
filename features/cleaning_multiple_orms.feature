@@ -13,7 +13,17 @@ Feature: database cleaning using multiple ORMs
     | ORM1         | ORM2         |
     | ActiveRecord | DataMapper   |
     | ActiveRecord | MongoMapper  |
+    | ActiveRecord | Mongoid      |
+    | ActiveRecord | CouchPotato  |
+    | DataMapper   | ActiveRecord |
     | DataMapper   | MongoMapper  |
+    | DataMapper   | Mongoid      |
     | DataMapper   | CouchPotato  |
+    | MongoMapper  | ActiveRecord |
+    | MongoMapper  | DataMapper   |
+    | MongoMapper  | Mongoid      |
     | MongoMapper  | CouchPotato  |
     | CouchPotato  | ActiveRecord |
+    | CouchPotato  | DataMapper   |
+    | CouchPotato  | MongoMapper  |
+    | CouchPotato  | Mongoid      |
