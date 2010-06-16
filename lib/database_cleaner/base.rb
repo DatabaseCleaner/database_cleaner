@@ -67,7 +67,7 @@ module DatabaseCleaner
 
     alias clean! clean
 
-    def auto_detected
+    def auto_detected?
       return true unless @autodetected.nil?
     end
 
@@ -118,6 +118,8 @@ module DatabaseCleaner
           DatabaseCleaner::ActiveRecord
         when :data_mapper
           DatabaseCleaner::DataMapper
+        when :mongo
+          DatabaseCleaner::Mongo
         when :mongoid
           DatabaseCleaner::Mongoid
         when :mongo_mapper

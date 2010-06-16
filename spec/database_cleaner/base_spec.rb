@@ -8,7 +8,7 @@ module DatabaseCleaner
     #this could do with a better assertion
     it "should default to autodetect upon initalisation" do
       cleaner = ::DatabaseCleaner::Base.new
-      cleaner.auto_detected.should == true
+      cleaner.should be_auto_detected
     end
 
     describe "autodetect" do
@@ -62,6 +62,7 @@ module DatabaseCleaner
          Object.const_set('CouchPotato', 'Couching mock potatos')
 
          cleaner.orm.should == :active_record
+         cleaner.should be_auto_detected
        end
 
        it "should detect DataMapper second" do
@@ -71,6 +72,7 @@ module DatabaseCleaner
          Object.const_set('CouchPotato', 'Couching mock potatos')
 
          cleaner.orm.should == :data_mapper
+         cleaner.should be_auto_detected
        end
 
        it "should detect MongoMapper third" do
@@ -79,6 +81,7 @@ module DatabaseCleaner
          Object.const_set('CouchPotato', 'Couching mock potatos')
 
          cleaner.orm.should == :mongo_mapper
+         cleaner.should be_auto_detected
        end
        
        it "should detect Mongoid fourth" do
@@ -86,13 +89,54 @@ module DatabaseCleaner
          Object.const_set('CouchPotato', 'Couching mock potatos')
 
          cleaner.orm.should == :mongoid
+         cleaner.should be_auto_detected
        end
        
        it "should detect CouchPotato last" do
          Object.const_set('CouchPotato', 'Couching mock potatos')
 
          cleaner.orm.should == :couch_potato
+         cleaner.should be_auto_detected
        end
+    end
+    
+    describe "orm_module" do
+      it "should return DatabaseCleaner::ActiveRecord for :active_record" do
+        ::DatabaseCleaner::ActiveRecord = mock("ar module") unless defined? ::DatabaseCleaner::ActiveRecord
+        subject.should_receive(:orm).and_return(:active_record)
+        subject.send(:orm_module).should == DatabaseCleaner::ActiveRecord
+      end
+      
+      it "should return DatabaseCleaner::DataMapper for :data_mapper" do
+        ::DatabaseCleaner::DataMapper = mock("dm module") unless defined? ::DatabaseCleaner::DataMapper
+        subject.should_receive(:orm).and_return(:data_mapper)
+        subject.send(:orm_module).should == DatabaseCleaner::DataMapper
+      end
+      
+      it "should return DatabaseCleaner::MongoMapper for :mongo_mapper" do
+        ::DatabaseCleaner::MongoMapper = mock("mm module") unless defined? ::DatabaseCleaner::MongoMapper
+        subject.should_receive(:orm).and_return(:mongo_mapper)
+        subject.send(:orm_module).should == DatabaseCleaner::MongoMapper
+      end
+      
+      it "should return DatabaseCleaner::Mongoid for :mongoid" do
+        ::DatabaseCleaner::Mongoid = mock("mongoid module") unless defined? ::DatabaseCleaner::Mongoid
+        subject.should_receive(:orm).and_return(:mongoid)
+        subject.send(:orm_module).should == DatabaseCleaner::Mongoid
+      end
+      
+      it "should return DatabaseCleaner::Mongo for :mongo" do
+        ::DatabaseCleaner::Mongo = mock("mongo module") unless defined? ::DatabaseCleaner::Mongo
+        subject.should_receive(:orm).and_return(:mongo)
+        subject.send(:orm_module).should == DatabaseCleaner::Mongo
+      end
+            
+      it "should return DatabaseCleaner::CouchPotato for :couch_potato" do
+        ::DatabaseCleaner::CouchPotato = mock("cp module") unless defined? ::DatabaseCleaner::CouchPotato
+        subject.should_receive(:orm).and_return(:couch_potato)
+        subject.send(:orm_module).should == DatabaseCleaner::CouchPotato
+      end
+      
     end
 
     describe "comparison" do
@@ -156,7 +200,6 @@ module DatabaseCleaner
 
         before(:each) do
           ::DatabaseCleaner::ActiveRecord::Transaction.stub!(:new).and_return(strategy)
-          #Object.const_set('ActiveRecord', "just mocking out the constant here...") unless defined?(::ActiveRecord)
           cleaner.strategy = nil
         end
 
