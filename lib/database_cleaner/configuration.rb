@@ -56,5 +56,22 @@ module DatabaseCleaner
       end
       @connections = temp
     end
+    
+    def orm_module(symbol)
+      case symbol
+        when :active_record
+          DatabaseCleaner::ActiveRecord
+        when :data_mapper
+          DatabaseCleaner::DataMapper
+        when :mongo
+          DatabaseCleaner::Mongo
+        when :mongoid
+          DatabaseCleaner::Mongoid
+        when :mongo_mapper
+          DatabaseCleaner::MongoMapper
+        when :couch_potato
+          DatabaseCleaner::CouchPotato
+      end
+    end
   end
 end

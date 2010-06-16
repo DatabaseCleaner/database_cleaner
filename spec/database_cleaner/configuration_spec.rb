@@ -228,10 +228,11 @@ describe ::DatabaseCleaner do
 
   describe "remove_duplicates" do
     it "should remove duplicates if they are identical" do
-      ::DatabaseCleaner[:data_mapper, {:connection => :default}].strategy = :truncation
-      ::DatabaseCleaner[:data_mapper, {:connection => :default}].strategy = :truncation
-      ::DatabaseCleaner[:data_mapper, {:connection => :default}].strategy = :truncation
-      ::DatabaseCleaner.connections.size.should == 3
+      orm = mock("orm")
+      connection = mock("a datamapper connection", :orm => orm )
+      
+      ::DatabaseCleaner.connections_stub!  [connection,connection,connection]
+
       ::DatabaseCleaner.remove_duplicates
       ::DatabaseCleaner.connections.size.should == 1
     end
@@ -246,5 +247,40 @@ describe ::DatabaseCleaner do
       DatabaseCleaner.app_root = '/path/to'
       DatabaseCleaner.app_root.should == '/path/to'
     end
+  end
+  
+  describe "orm_module" do
+    subject { ::DatabaseCleaner }
+    
+    it "should return DatabaseCleaner::ActiveRecord for :active_record" do
+      ::DatabaseCleaner::ActiveRecord = mock("ar module") unless defined? ::DatabaseCleaner::ActiveRecord
+      subject.orm_module(:active_record).should == DatabaseCleaner::ActiveRecord
+    end
+    
+    it "should return DatabaseCleaner::DataMapper for :data_mapper" do
+      ::DatabaseCleaner::DataMapper = mock("dm module") unless defined? ::DatabaseCleaner::DataMapper
+      subject.orm_module(:data_mapper).should == DatabaseCleaner::DataMapper
+    end
+    
+    it "should return DatabaseCleaner::MongoMapper for :mongo_mapper" do
+      ::DatabaseCleaner::MongoMapper = mock("mm module") unless defined? ::DatabaseCleaner::MongoMapper
+      subject.orm_module(:mongo_mapper).should == DatabaseCleaner::MongoMapper
+    end
+    
+    it "should return DatabaseCleaner::Mongoid for :mongoid" do
+      ::DatabaseCleaner::Mongoid = mock("mongoid module") unless defined? ::DatabaseCleaner::Mongoid
+      subject.orm_module(:mongoid).should == DatabaseCleaner::Mongoid
+    end
+    
+    it "should return DatabaseCleaner::Mongo for :mongo" do
+      ::DatabaseCleaner::Mongo = mock("mongo module") unless defined? ::DatabaseCleaner::Mongo
+      subject.orm_module(:mongo).should == DatabaseCleaner::Mongo
+    end
+          
+    it "should return DatabaseCleaner::CouchPotato for :couch_potato" do
+      ::DatabaseCleaner::CouchPotato = mock("cp module") unless defined? ::DatabaseCleaner::CouchPotato
+      subject.orm_module(:couch_potato).should == DatabaseCleaner::CouchPotato
+    end
+    
   end
 end
