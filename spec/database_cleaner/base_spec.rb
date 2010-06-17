@@ -4,13 +4,7 @@ require 'database_cleaner/data_mapper/transaction'
 
 module DatabaseCleaner
   describe Base do
-
-    #this could do with a better assertion
-    it "should default to autodetect upon initalisation" do
-      cleaner = ::DatabaseCleaner::Base.new
-      cleaner.should be_auto_detected
-    end
-
+    
     describe "autodetect" do
 
        #Cache all ORMs, we'll need them later but not now.
@@ -101,42 +95,17 @@ module DatabaseCleaner
     end
     
     describe "orm_module" do
-      it "should return DatabaseCleaner::ActiveRecord for :active_record" do
-        ::DatabaseCleaner::ActiveRecord = mock("ar module") unless defined? ::DatabaseCleaner::ActiveRecord
-        subject.should_receive(:orm).and_return(:active_record)
-        subject.send(:orm_module).should == DatabaseCleaner::ActiveRecord
-      end
-      
-      it "should return DatabaseCleaner::DataMapper for :data_mapper" do
-        ::DatabaseCleaner::DataMapper = mock("dm module") unless defined? ::DatabaseCleaner::DataMapper
-        subject.should_receive(:orm).and_return(:data_mapper)
-        subject.send(:orm_module).should == DatabaseCleaner::DataMapper
-      end
-      
-      it "should return DatabaseCleaner::MongoMapper for :mongo_mapper" do
-        ::DatabaseCleaner::MongoMapper = mock("mm module") unless defined? ::DatabaseCleaner::MongoMapper
-        subject.should_receive(:orm).and_return(:mongo_mapper)
-        subject.send(:orm_module).should == DatabaseCleaner::MongoMapper
-      end
-      
-      it "should return DatabaseCleaner::Mongoid for :mongoid" do
-        ::DatabaseCleaner::Mongoid = mock("mongoid module") unless defined? ::DatabaseCleaner::Mongoid
-        subject.should_receive(:orm).and_return(:mongoid)
-        subject.send(:orm_module).should == DatabaseCleaner::Mongoid
-      end
-      
-      it "should return DatabaseCleaner::Mongo for :mongo" do
-        ::DatabaseCleaner::Mongo = mock("mongo module") unless defined? ::DatabaseCleaner::Mongo
-        subject.should_receive(:orm).and_return(:mongo)
-        subject.send(:orm_module).should == DatabaseCleaner::Mongo
-      end
-            
-      it "should return DatabaseCleaner::CouchPotato for :couch_potato" do
-        ::DatabaseCleaner::CouchPotato = mock("cp module") unless defined? ::DatabaseCleaner::CouchPotato
-        subject.should_receive(:orm).and_return(:couch_potato)
-        subject.send(:orm_module).should == DatabaseCleaner::CouchPotato
-      end
-      
+      it "should ask ::DatabaseCleaner what the module is for its orm" do
+        orm = mock("orm")
+        mockule = mock("module")
+        
+        cleaner = ::DatabaseCleaner::Base.new
+        cleaner.should_receive(:orm).and_return(orm)
+        
+        ::DatabaseCleaner.should_receive(:orm_module).with(orm).and_return(mockule)
+        
+        cleaner.send(:orm_module).should == mockule
+      end      
     end
 
     describe "comparison" do
@@ -154,41 +123,114 @@ module DatabaseCleaner
       end
     end
 
-    describe "db specification" do
-      it "should choose the default connection if none is specified" do
-        base = ::DatabaseCleaner::Base.new(:active_record)
-        base.db.should == :default
+    describe "strategy" do
+      it "should raise NoStrategySetError if strategy is nil" do
+        subject.instance_values[:strategy] = nil
+        expect{ subject.strategy }.to raise_error NoStrategySetError
+      end
+      
+      it "should return @strategy if @strategy is present" do
+        strategum = mock("strategy")
+        subject.strategy = strategum
+        subject.strategy.should == strategum
+      end
+    end
+
+    describe "initialization" do
+      context "db specified" do
+        subject { ::DatabaseCleaner::Base.new(:active_record,:connection => :my_db) }
+        
+        it "should store db from :connection in params hash" do
+          subject.db.should == :my_db          
+        end
+      end
+     
+      it "should test orm"
+      
+      it "should default to autodetect upon initalisation" do
+        subject.should be_auto_detected
+      end
+    end
+    
+    describe "db" do
+      it "should default to :default" do
+        subject.db.should == :default
+      end
+      
+      it "should return any stored db value" do
+        subject.stub(:strategy_db=)
+        subject.db = :test_db
+        subject.db.should == :test_db
+      end
+      
+      it "should pass db to any specified strategy" do
+        subject.should_receive(:strategy_db=).with(:a_new_db)
+        subject.db = :a_new_db
+      end
+    end
+    
+    describe "strategy_db=" do
+      let(:strategy) { mock("strategy") }
+      
+      before(:each) do
+        subject.strategy = strategy
       end
 
-      it "should accept connection as part of a hash of options" do
-        base = ::DatabaseCleaner::Base.new(:active_record,:connection => :my_db)
-        base.db.should == :my_db
-      end
-
-      it "should check to see if strategy supports db specification" do
-        strategy = mock("strategy",:db= => :my_db)
-        strategy.stub(:respond_to?).with(anything)
+      it "should check that strategy supports db specification" do
         strategy.should_receive(:respond_to?).with(:db=).and_return(true)
-        ::DatabaseCleaner::Base.new(:active_record,:connection => :my_db).strategy = strategy
+        strategy.stub(:db=)
+        subject.strategy_db = :a_db
       end
+            
+      context "when strategy supports db specification" do
+        before(:each) { strategy.stub(:respond_to?).with(:db=).and_return true }
+        
+        it "should pass db to the strategy" do
+          strategy.should_receive(:db=).with(:a_db)
+          subject.strategy_db = :a_db
+        end
+      end                                                                       
+      
+      context "when strategy doesn't supports db specification" do
+        before(:each) { strategy.stub(:respond_to?).with(:db=).and_return false }
 
-      it "should pass db through to the strategy" do
-        strategy = mock("strategy")
+        it "should check to see if db is :default" do
+          db = mock("default")
+          db.should_receive(:==).with(:default).and_return(true)
 
-        strategy.stub(:respond_to?).with(anything)
-        strategy.stub(:respond_to?).with(:db=).and_return(true)
-
-        strategy.should_receive(:db=).with(:my_db)
-        ::DatabaseCleaner::Base.new(:active_record,:connection => :my_db).strategy = strategy
+          subject.strategy_db = db
+        end
+        
+        it "should raise an argument error when db isn't default" do
+          db = mock("a db")
+          expect{ subject.strategy_db = db }.to raise_error ArgumentError
+        end
       end
-
-      it "should raise ArgumentError if db isn't default and strategy doesn't support different dbs" do
-        strategy = mock("strategy")
-
-        strategy.stub(:respond_to?).with(anything)
-        strategy.stub(:respond_to?).with(:db=).and_return(false)
-
-        expect { ::DatabaseCleaner::Base.new(:active_record,:connection => :my_db).strategy = strategy }.to raise_error(ArgumentError)
+    end
+     
+    describe "strategy=" do
+      it "should proxy symbolised strategies to create_strategy" do
+        subject.should_receive(:create_strategy).with(:symbol)
+        subject.strategy = :symbol
+      end
+      
+      it "should proxy params with symbolised strategies" do
+        subject.should_receive(:create_strategy).with(:symbol,:param => "one")
+        subject.strategy= :symbol, {:param => "one"}
+      end
+      
+      it "should accept strategy objects" do
+        expect{ subject.strategy = mock("strategy") }.to_not raise_error
+      end
+      
+      it "should raise argument error when params given with strategy Object" do
+        expect{ subject.strategy = mock("object"), {:param => "one"} }.to raise_error ArgumentError
+      end
+      
+      it "should attempt to set strategy db" do
+        subject.stub(:db).and_return(:my_db)
+        subject.should_receive(:strategy_db=).with(:my_db)
+        subject.strategy = mock("strategy")
       end
     end
 

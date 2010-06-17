@@ -162,6 +162,13 @@ describe ::DatabaseCleaner do
         ::DatabaseCleaner.stub!(:connections).and_return([active_record,data_mapper])
       end
 
+      it "should proxy orm to all connections" do
+        active_record.should_receive(:orm=)
+        data_mapper.should_receive(:orm=)
+
+        ::DatabaseCleaner.orm = mock("orm")
+      end
+
       it "should proxy start to all connections" do
         active_record.should_receive(:start)
         data_mapper.should_receive(:start)

@@ -7,7 +7,23 @@ module DatabaseCleaner
       else
         self.orm = desired_orm
       end
-      @db = opts[:connection] if opts.has_key? :connection
+      self.db = opts[:connection] if opts.has_key? :connection
+    end
+
+    def db=(desired_db)
+       self.strategy_db = desired_db
+       @db = desired_db
+    end
+    
+    def strategy_db=(desired_db)
+      if strategy.respond_to? :db=
+        strategy.db = desired_db
+      elsif desired_db!= :default
+        raise ArgumentError, "You must provide a strategy object that supports non default databases when you specify a database"
+      end
+    rescue NoStrategySetError
+      #handle NoStrategySetError by doing nothing at all
+      desired_db
     end
 
     def db
@@ -37,11 +53,7 @@ module DatabaseCleaner
          raise ArgumentError, "You must provide a strategy object, or a symbol for a known strategy along with initialization params."
        end
 
-       if @strategy.respond_to? :db=
-         @strategy.db = self.db
-       elsif self.db != :default
-         raise ArgumentError, "You must provide a strategy object that supports non default databases when you specify a database"
-       end
+       self.strategy_db = self.db
     end
 
     def strategy
@@ -109,23 +121,6 @@ module DatabaseCleaner
         else
           raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, or CouchPotato loaded?"
         end
-      end
-    end
-
-    def orm_module
-      case orm
-        when :active_record
-          DatabaseCleaner::ActiveRecord
-        when :data_mapper
-          DatabaseCleaner::DataMapper
-        when :mongo
-          DatabaseCleaner::Mongo
-        when :mongoid
-          DatabaseCleaner::Mongoid
-        when :mongo_mapper
-          DatabaseCleaner::MongoMapper
-        when :couch_potato
-          DatabaseCleaner::CouchPotato
       end
     end
   end
