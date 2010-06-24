@@ -234,6 +234,63 @@ module DatabaseCleaner
       end
     end
 
+    describe "clean_with" do
+      let (:strategy) { mock("strategy",:clean => true) }
+      
+      before(:each) { subject.stub(:create_strategy).with(anything).and_return(strategy) }
+      
+      it "should pass all arguments to create_strategy" do
+        subject.should_receive(:create_strategy).with(:lorum, :dollar, :amet, :ipsum => "random").and_return(strategy)
+        subject.clean_with :lorum, :dollar, :amet, { :ipsum => "random" }
+      end
+      
+      it "should invoke clean on the created strategy" do
+        strategy.should_receive(:clean)
+        subject.clean_with :strategy
+      end
+      
+      it "should return the strategy" do
+        subject.clean_with( :strategy ).should == strategy
+      end
+    end
+    
+    describe "clean_with!" do
+      let (:strategy) { mock("strategy",:clean => true) }
+      
+      before(:each) { subject.stub(:create_strategy).with(anything).and_return(strategy) }
+      
+      it "should pass all arguments to create_strategy" do
+        subject.should_receive(:create_strategy).with(:lorum, :dollar, :amet, :ipsum => "random").and_return(strategy)
+        subject.clean_with! :lorum, :dollar, :amet, { :ipsum => "random" }
+      end
+      
+      it "should invoke clean on the created strategy" do
+        strategy.should_receive(:clean)
+        subject.clean_with! :strategy
+      end
+      
+      it "should return the strategy" do
+        subject.clean_with!( :strategy ).should == strategy
+      end
+    end
+                 
+    describe "create_strategy" do
+      it "should pass the first argument to orm_strategy" do
+        subject.should_receive(:orm_strategy).with(:strategy).and_return(Object)
+        subject.create_strategy :strategy
+      end
+      it "should pass the remainding argument to orm_strategy.new" do
+        klass = mock("klass")
+        klass.should_receive(:new).with(:params => {:lorum => "ipsum"})
+        
+        subject.stub(:orm_strategy).and_return(klass)
+        subject.create_strategy :strategy, {:params => {:lorum => "ipsum"}}
+      end
+      it "should return the resulting strategy" do
+
+      end
+    end
+    
     describe "orm integration" do
       let(:strategy) { mock("stratagem, attack all robots") }
 
