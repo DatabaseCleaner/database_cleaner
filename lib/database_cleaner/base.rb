@@ -54,6 +54,8 @@ module DatabaseCleaner
        end
 
        self.strategy_db = self.db
+       
+       @strategy
     end
 
     def strategy

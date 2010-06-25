@@ -123,19 +123,6 @@ module DatabaseCleaner
       end
     end
 
-    describe "strategy" do
-      it "should raise NoStrategySetError if strategy is nil" do
-        subject.instance_values[:strategy] = nil
-        expect{ subject.strategy }.to raise_error NoStrategySetError
-      end
-      
-      it "should return @strategy if @strategy is present" do
-        strategum = mock("strategy")
-        subject.strategy = strategum
-        subject.strategy.should == strategum
-      end
-    end
-
     describe "initialization" do
       context "db specified" do
         subject { ::DatabaseCleaner::Base.new(:active_record,:connection => :my_db) }
@@ -145,10 +132,25 @@ module DatabaseCleaner
         end
       end
      
-      it "should test orm"
-      
-      it "should default to autodetect upon initalisation" do
-        subject.should be_auto_detected
+      describe "orm" do
+        it "should store orm" do
+          cleaner = ::DatabaseCleaner::Base.new :a_orm
+          cleaner.orm.should == :a_orm
+        end
+
+        it "should be autodetected if orm is nil" do
+          cleaner = ::DatabaseCleaner::Base.new
+          cleaner.should be_auto_detected
+        end
+
+        it "should autodetect if you specify :autodetect" do
+          cleaner = ::DatabaseCleaner::Base.new :autodetect
+          cleaner.should be_auto_detected
+        end
+
+        it "should default to autodetect upon initalisation" do
+          subject.should be_auto_detected
+        end        
       end
     end
     
@@ -207,32 +209,6 @@ module DatabaseCleaner
         end
       end
     end
-     
-    describe "strategy=" do
-      it "should proxy symbolised strategies to create_strategy" do
-        subject.should_receive(:create_strategy).with(:symbol)
-        subject.strategy = :symbol
-      end
-      
-      it "should proxy params with symbolised strategies" do
-        subject.should_receive(:create_strategy).with(:symbol,:param => "one")
-        subject.strategy= :symbol, {:param => "one"}
-      end
-      
-      it "should accept strategy objects" do
-        expect{ subject.strategy = mock("strategy") }.to_not raise_error
-      end
-      
-      it "should raise argument error when params given with strategy Object" do
-        expect{ subject.strategy = mock("object"), {:param => "one"} }.to raise_error ArgumentError
-      end
-      
-      it "should attempt to set strategy db" do
-        subject.stub(:db).and_return(:my_db)
-        subject.should_receive(:strategy_db=).with(:my_db)
-        subject.strategy = mock("strategy")
-      end
-    end
 
     describe "clean_with" do
       let (:strategy) { mock("strategy",:clean => true) }
@@ -275,146 +251,191 @@ module DatabaseCleaner
     end
                  
     describe "create_strategy" do
+      let(:klass) { mock("klass",:new => mock("instance")) }
+      
+      before :each do
+        subject.stub(:orm_strategy).and_return(klass)
+      end
+      
       it "should pass the first argument to orm_strategy" do
         subject.should_receive(:orm_strategy).with(:strategy).and_return(Object)
         subject.create_strategy :strategy
       end
       it "should pass the remainding argument to orm_strategy.new" do
-        klass = mock("klass")
         klass.should_receive(:new).with(:params => {:lorum => "ipsum"})
         
-        subject.stub(:orm_strategy).and_return(klass)
         subject.create_strategy :strategy, {:params => {:lorum => "ipsum"}}
       end
       it "should return the resulting strategy" do
+        subject.create_strategy( :strategy ).should == klass.new
+      end
+    end
 
+    describe "strategy=" do
+      let(:mock_strategy) { mock("strategy") }
+      
+      it "should proxy symbolised strategies to create_strategy" do
+        subject.should_receive(:create_strategy).with(:symbol)
+        subject.strategy = :symbol
+      end
+      
+      it "should proxy params with symbolised strategies" do
+        subject.should_receive(:create_strategy).with(:symbol,:param => "one")
+        subject.strategy= :symbol, {:param => "one"}
+      end
+      
+      it "should accept strategy objects" do
+        expect{ subject.strategy = mock_strategy }.to_not raise_error
+      end
+      
+      it "should raise argument error when params given with strategy Object" do
+        expect{ subject.strategy = mock("object"), {:param => "one"} }.to raise_error ArgumentError
+      end
+      
+      it "should attempt to set strategy db" do
+        subject.stub(:db).and_return(:my_db)
+        subject.should_receive(:strategy_db=).with(:my_db)
+        subject.strategy = mock_strategy
+      end
+      
+      it "should return the stored strategy" do
+        result = subject.strategy = mock_strategy
+        result.should == mock_strategy
+      end
+    end
+
+    describe "strategy" do
+      it "should raise NoStrategySetError if strategy is nil" do
+        subject.instance_values["@strategy"] = nil
+        expect{ subject.strategy }.to raise_error NoStrategySetError
+      end
+      
+      it "should return @strategy if @strategy is present" do
+        strategum = mock("strategy")
+        subject.strategy = strategum
+        subject.strategy.should == strategum
       end
     end
     
-    describe "orm integration" do
-      let(:strategy) { mock("stratagem, attack all robots") }
-
-      context "active record" do
-        let(:cleaner)  { ::DatabaseCleaner::Base.new(:active_record) }
-
-        before(:each) do
-          ::DatabaseCleaner::ActiveRecord::Transaction.stub!(:new).and_return(strategy)
-          cleaner.strategy = nil
-        end
-
-        describe ".create_strategy" do
-          it "should initialize and return the appropriate strategy" do
-            DatabaseCleaner::ActiveRecord::Transaction.should_receive(:new).with('options' => 'hash')
-            result = cleaner.create_strategy(:transaction, {'options' => 'hash'})
-            result.should == strategy
-          end
-        end
-
-        describe ".clean_with" do
-          it "should initialize the appropirate strategy and clean with it" do
-            DatabaseCleaner::ActiveRecord::Transaction.should_receive(:new).with('options' => 'hash')
-            strategy.should_receive(:clean)
-            cleaner.clean_with(:transaction, 'options' => 'hash')
-          end
-        end
-
-        describe ".strategy=" do
-          it "should initialize the appropirate strategy for active record" do
-            DatabaseCleaner::ActiveRecord::Transaction.should_receive(:new).with('options' => 'hash')
-            cleaner.strategy = :transaction, {'options' => 'hash'}
-          end
-
-          it "should allow any object to be set as the strategy" do
-            mock_strategy = mock('strategy')
-            running { DatabaseCleaner.strategy = mock_strategy }.should_not raise_error
-          end
-
-          it "should raise an error when the specified strategy is not found" do
-            running { DatabaseCleaner.strategy = :foo }.should raise_error(DatabaseCleaner::UnknownStrategySpecified)
-          end
-
-          it "should raise an error when multiple args is passed in and the first is not a symbol" do
-            running { DatabaseCleaner.strategy=Object.new, {:foo => 'bar'} }.should raise_error(ArgumentError)
-          end
-        end
-
-        %w[start clean].each do |strategy_method|
-          describe ".#{strategy_method}" do
-            it "should be delgated to the strategy set with strategy=" do
-              cleaner.strategy = :transaction
-
-              strategy.should_receive(strategy_method)
-
-              cleaner.send(strategy_method)
-            end
-
-            it "should raise en error when no strategy has been set" do
-              running { cleaner.send(strategy_method) }.should raise_error(DatabaseCleaner::NoStrategySetError)
-            end
-          end
-        end
+    describe "orm=" do
+      it "should stored the desired orm" do
+        subject.orm.should_not == :desired_orm
+        subject.orm = :desired_orm
+        subject.orm.should == :desired_orm
       end
+    end
 
-      context "data mapper" do
-        let(:cleaner)  { ::DatabaseCleaner::Base.new(:data_mapper) }
+    describe "orm" do
+      let(:mock_orm) { mock("orm") }
+      
+      it "should return orm if orm set" do
+        subject.instance_variable_set "@orm", mock_orm
+        subject.orm.should == mock_orm
+      end
+      
+      context "orm isn't set" do
+        before(:each) { subject.instance_variable_set "@orm", nil }
 
-        before(:each) do
-          ::DatabaseCleaner::DataMapper::Transaction.stub!(:new).and_return(strategy)
-          cleaner.strategy = nil
+        it "should run autodetect if orm isn't set" do
+          subject.should_receive(:autodetect)
+          subject.orm
         end
 
-        describe ".create_strategy" do
-          it "should initialize and return the appropirate strategy" do
-            DatabaseCleaner::DataMapper::Transaction.should_receive(:new)
-            result = cleaner.create_strategy(:transaction)
-            result.should == strategy
-          end
-        end
-
-        describe ".clean_with" do
-          it "should initialize the appropirate strategy and clean with it" do
-            DatabaseCleaner::DataMapper::Transaction.should_receive(:new)
-            strategy.should_receive(:clean)
-            cleaner.clean_with(:transaction)
-          end
-        end
-
-        describe ".strategy=" do
-          it "should initalize the appropriate strategy for data mapper" do
-            DatabaseCleaner::DataMapper::Transaction.should_receive(:new).with(no_args)
-            cleaner.strategy = :transaction
-          end
-
-          it "should allow any object to be set as the strategy" do
-            mock_strategy = mock('strategy')
-            running { cleaner.strategy = mock_strategy }.should_not raise_error
-          end
-
-          it "should raise an error when the specified strategy is not found" do
-            running { cleaner.strategy = :foo }.should raise_error(DatabaseCleaner::UnknownStrategySpecified)
-          end
-
-          it "should raise an error when multiple args is passed in and the first is not a symbol" do
-            running { cleaner.strategy=Object.new, {:foo => 'bar'} }.should raise_error(ArgumentError)
-          end
-        end
-
-        %w[start clean].each do |strategy_method|
-          describe ".#{strategy_method}" do
-            it "should be delgated to the strategy set with strategy=" do
-              cleaner.strategy = :transaction
-
-              strategy.should_receive(strategy_method)
-
-              cleaner.send(strategy_method)
-            end
-
-            it "should raise en error when no strategy has been set" do
-              running { cleaner.send(strategy_method) }.should raise_error(DatabaseCleaner::NoStrategySetError)
-            end
-          end
+        it "should return the result of autodetect if orm isn't set" do
+          subject.stub(:autodetect).and_return(mock_orm)
+          subject.orm.should == mock_orm
         end
       end
     end
+
+    describe "proxy methods" do
+      let (:strategy) { mock("strategy") }
+      
+      before(:each) do
+        subject.stub(:strategy).and_return(strategy)
+      end
+      
+      describe "start" do
+        it "should proxy start to the strategy" do
+          strategy.should_receive(:start)
+          subject.start
+        end
+      end
+    
+      describe "clean" do
+        it "should proxy clean to the strategy" do
+          strategy.should_receive(:clean)
+          subject.clean
+        end
+      end
+      
+      describe "clean!" do
+        it "should proxy clean! to the strategy clean" do
+          strategy.should_receive(:clean)
+          subject.clean!
+        end
+      end
+    end
+    
+    describe "auto_detected?" do
+      it "should return true unless @autodetected is nil" do
+        subject.instance_variable_set("@autodetected","not nil")
+        subject.auto_detected?.should be_true
+      end
+      
+      it "should return false if @autodetect is nil" do
+        subject.instance_variable_set("@autodetected",nil)
+        subject.auto_detected?.should be_false
+      end
+    end
+                                
+    describe "orm_strategy" do
+      let (:klass) { mock("klass") }
+      
+      before(:each) do
+        subject.stub(:orm_module).and_return(klass)
+      end
+      
+      context "in response to a LoadError" do
+        before(:each) { subject.should_receive(:require).with(anything).and_raise(LoadError) }
+
+        it "should catch LoadErrors" do
+          expect { subject.send(:orm_strategy,:a_strategy) }.to_not raise_error LoadError
+        end
+                
+        it "should raise UnknownStrategySpecified" do
+          expect { subject.send(:orm_strategy,:a_strategy) }.to raise_error UnknownStrategySpecified
+        end
+      
+        it "should ask orm_module if it will list available_strategies" do
+          klass.should_receive(:respond_to?).with(:available_strategies)
+          
+          subject.stub(:orm_module).and_return(klass)
+          
+          expect { subject.send(:orm_strategy,:a_strategy) }.to raise_error UnknownStrategySpecified
+        end
+        
+        it "should use available_strategies (for the error message) if its available" do
+          klass.stub(:respond_to?).with(:available_strategies).and_return(true)
+          klass.should_receive(:available_strategies).and_return([])
+          
+          subject.stub(:orm_module).and_return(klass)
+          
+          expect { subject.send(:orm_strategy,:a_strategy) }.to raise_error UnknownStrategySpecified
+        end
+      end
+      
+      it "should return the constant of the Strategy class requested" do
+        strategy_klass = mock("strategy klass")
+        
+        subject.stub(:require).with(anything).and_return(true)
+        
+        klass.should_receive(:const_get).with("Cunningplan").and_return(strategy_klass)
+        
+        subject.send(:orm_strategy, :cunningplan).should == strategy_klass
+      end
+      
+    end
+    
   end
 end
