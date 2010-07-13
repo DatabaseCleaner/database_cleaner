@@ -17,7 +17,7 @@ describe ::DatabaseCleaner do
 
   context "orm specification" do
     it "should not accept unrecognised orms" do
-      lambda { ::DatabaseCleaner[nil] }.should raise_error(::DatabaseCleaner::NoORMDetected)
+      expect { ::DatabaseCleaner[nil] }.should raise_error(::DatabaseCleaner::NoORMDetected)
     end
 
     it "should accept :active_record" do
@@ -47,14 +47,14 @@ describe ::DatabaseCleaner do
       cleaner.orm.should == :couch_potato
       ::DatabaseCleaner.connections.size.should == 1
     end
-
-    it "should accept multiple orm's" do
-      ::DatabaseCleaner[:couch_potato]
-      ::DatabaseCleaner[:data_mapper]
-      ::DatabaseCleaner.connections.size.should == 2
-      ::DatabaseCleaner.connections[0].orm.should == :couch_potato
-      ::DatabaseCleaner.connections[1].orm.should == :data_mapper
-    end
+  end
+  
+  it "should accept multiple orm's" do
+    ::DatabaseCleaner[:couch_potato]
+    ::DatabaseCleaner[:data_mapper]
+    ::DatabaseCleaner.connections.size.should == 2
+    ::DatabaseCleaner.connections[0].orm.should == :couch_potato
+    ::DatabaseCleaner.connections[1].orm.should == :data_mapper
   end
 
   context "connection/db specification" do
@@ -64,6 +64,7 @@ describe ::DatabaseCleaner do
       cleaner.orm.should == :active_record
       cleaner.db.should == :first_connection
     end
+    
     it "should accept multiple connections for a single orm" do
       ::DatabaseCleaner[:data_mapper,{:connection => :first_db}]
       ::DatabaseCleaner[:data_mapper,{:connection => :second_db}]
@@ -73,6 +74,7 @@ describe ::DatabaseCleaner do
       ::DatabaseCleaner.connections[1].orm.should == :data_mapper
       ::DatabaseCleaner.connections[1].db.should  == :second_db
     end
+    
     it "should accept multiple connections and multiple orms" do
       ::DatabaseCleaner[:data_mapper,  {:connection => :first_db} ]
       ::DatabaseCleaner[:active_record,{:connection => :second_db}]
@@ -92,7 +94,6 @@ describe ::DatabaseCleaner do
 
       ::DatabaseCleaner.connections[3].orm.should == :data_mapper
       ::DatabaseCleaner.connections[3].db.should  == :second_db
-
     end
   end
 
