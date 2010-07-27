@@ -18,6 +18,12 @@ module ActiveRecord
       end
     end
 
+    class Mysql2Adapter < AbstractAdapter
+      def truncate_table(table_name)
+        execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
+      end
+    end
+
     class SQLite3Adapter < SQLiteAdapter
       def truncate_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)};")
