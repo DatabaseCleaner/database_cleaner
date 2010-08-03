@@ -53,10 +53,25 @@ module DatabaseCleaner
 
         it { should respond_to(:load_config) }
 
-        before { YAML.stub(:load_file).with('/path/to/config/database.yml').and_return({ "my_db" => {"database" => "one"} }) }
+        before do
+          yaml = <<-Y
+my_db:
+  database: <%= "ONE".downcase %>
+          Y
+          IO.stub(:read).with('/path/to/config/database.yml').and_return(yaml)
+        end
 
         it "should parse the config" do
-          YAML.should_receive(:load_file).with('/path/to/config/database.yml').and_return( {:nil => nil} )
+          YAML.should_receive(:load).and_return( {:nil => nil} )
+          subject.load_config
+        end
+        
+        it "should process erb in the config" do
+          transformed = <<-Y
+my_db:
+  database: one
+          Y
+          YAML.should_receive(:load).with(transformed).and_return({ "my_db" => {"database" => "one"} })
           subject.load_config
         end
 
