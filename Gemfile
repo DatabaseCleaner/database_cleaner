@@ -3,6 +3,7 @@ group :development do
   gem "mysql"
   gem "json_pure", "1.4.3"
   gem "rspec", "1.3.0"
+  gem "rcov"
   gem "cucumber", "0.8.1"
   
   gem "activerecord"

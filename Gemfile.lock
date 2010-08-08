@@ -56,6 +56,10 @@ dependencies:
     group: 
     - :development
     version: = 1.3.0
+  rcov: 
+    group: 
+    - :development
+    version: ">= 0"
   jeweler: 
     group: 
     - :development
@@ -92,7 +96,7 @@ specs:
 - rake: 
     version: 0.8.7
 - ZenTest: 
-    version: 4.3.2
+    version: 4.3.3
 - activesupport: 
     version: 2.3.5
 - activerecord: 
@@ -112,19 +116,19 @@ specs:
 - mime-types: 
     version: "1.16"
 - rest-client: 
-    version: 1.5.1
+    version: 1.6.0
 - couchrest: 
     version: "0.37"
 - json: 
     version: 1.4.3
 - couch_potato: 
-    version: 0.2.31
+    version: 0.3.0
 - diff-lcs: 
     version: 1.1.2
 - trollop: 
     version: 1.16.2
 - gherkin: 
-    version: 2.0.1
+    version: 2.0.2
 - json_pure: 
     version: 1.4.3
 - term-ansicolor: 
@@ -170,7 +174,7 @@ specs:
 - durran-validatable: 
     version: 2.0.1
 - gemcutter: 
-    version: 0.5.0
+    version: 0.6.1
 - git: 
     version: 1.2.5
 - rubyforge: 
@@ -196,6 +200,8 @@ specs:
     version: 1.9.0
 - mysql: 
     version: 2.8.1
+- rcov: 
+    version: 0.9.8
 - rspec: 
     version: 1.3.0
 - ruby-debug-base: 
@@ -203,10 +209,10 @@ specs:
 - ruby-debug: 
     version: 0.10.3
 - sqlite3-ruby: 
-    version: 1.3.0
+    version: 1.3.1
 - tzinfo: 
     version: 0.3.22
-hash: dabca3250327bd882a442aa36e3708f62eed0a76
+hash: 7d202bd54bdf1b33184ddd9d32fd7289a1277842
 sources: 
 - Git: 
     uri: git://github.com/JonRowe/mongomapper.git
