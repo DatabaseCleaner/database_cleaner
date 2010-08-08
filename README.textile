@@ -122,7 +122,8 @@ Configuration options
     <td>Couch Potato</td>
     <td>DatabaseCleaner[:couch_potato]</td>
     <td>Multiple connections not yet supported</td>
-  </th>
+  </tr>
+</table>
 
 h2. Why?
 
