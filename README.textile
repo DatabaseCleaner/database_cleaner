@@ -92,37 +92,38 @@ Sometimes you need to use multiple ORMs in your application. You can use Databas
 Usage beyond that remains the same with DatabaseCleaner.start calling any setup on the different configured connections, and DatabaseCleaner.clean executing afterwards.
 
 Configuration options
+
 <table>
-  <tr>
-    <th>ORM</th>
-    <th>How to access</th>
-    <th>Notes</th>
-  </tr>
-  <tr>
-    <td>Active Record</td>
-    <td>DatabaseCleaner[:active_record]</td>
-    <td>Connection specified as :symbol keys, loaded from config/database.yml</td>
-  </th>
-  <tr>
-    <td>Data Mapper</td>
-    <td>DatabaseCleaner[:data_mapper]</td>
-    <td>Connection specified as :symbol keys, loaded via Datamapper repositories</td>
-  </th>
-  <tr>
-    <td>Mongo Mapper</td>
-    <td>DatabaseCleaner[:mongo_mapper]</td>
-    <td>Multiple connections not yet supported</td>
-  </th>
-  <tr>
-    <td>Mongoid</td>
-    <td>DatabaseCleaner[:mongoid]</td>
-    <td>Multiple connections not yet supported</td>
-  </th>
-  <tr>
-    <td>Couch Potato</td>
-    <td>DatabaseCleaner[:couch_potato]</td>
-    <td>Multiple connections not yet supported</td>
-  </tr>
+<tr>
+<th>ORM</th>
+<th>How to access</th>
+<th>Notes</th>
+</tr>
+<tr>
+<td>Active Record</td>
+<td>DatabaseCleaner[:active_record]</td>
+<td>Connection specified as :symbol keys, loaded from config/database.yml</td>
+</th>
+<tr>
+<td>Data Mapper</td>
+<td>DatabaseCleaner[:data_mapper]</td>
+<td>Connection specified as :symbol keys, loaded via Datamapper repositories</td>
+</th>
+<tr>
+<td>Mongo Mapper</td>
+<td>DatabaseCleaner[:mongo_mapper]</td>
+<td>Multiple connections not yet supported</td>
+</th>
+<tr>
+<td>Mongoid</td>
+<td>DatabaseCleaner[:mongoid]</td>
+<td>Multiple connections not yet supported</td>
+</th>
+<tr>
+<td>Couch Potato</td>
+<td>DatabaseCleaner[:couch_potato]</td>
+<td>Multiple connections not yet supported</td>
+</tr>
 </table>
 
 h2. Why?
