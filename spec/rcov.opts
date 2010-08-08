@@ -1,1 +1,1 @@
---exclude "spec/*,vendor/*,examples/*,features/*,Users/*/.rvm/gems/*/gems/"
+--exclude "spec/*,vendor/*,examples/*,features/*,Users/*/.rvm/gems/*/gems/*"
