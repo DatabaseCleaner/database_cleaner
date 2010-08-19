@@ -72,21 +72,27 @@ module DatabaseCleaner::ActiveRecord
   class Truncation < ::DatabaseCleaner::TruncationBase
 
     def clean
-      connection.disable_referential_integrity do
-        tables_to_truncate.each do |table_name|
-          connection.truncate_table table_name
+      connections.each do |connection|
+        connection.disable_referential_integrity do
+          tables_to_truncate(connection).each do |table_name|
+            connection.truncate_table table_name
+          end
         end
       end
     end
 
     private
 
-    def tables_to_truncate
-      (@only || connection.tables) - @tables_to_exclude
+    def tables_to_truncate(connection)
+      tables = connection.tables
+      if @only
+        tables = @only.map {|o| tables.include?(o) ? o : nil }.compact
+      end
+      tables - @tables_to_exclude
     end
 
-    def connection
-      ::ActiveRecord::Base.connection
+    def connections
+      ::ActiveRecord::Base.connection_handler.connection_pools.values.map {|pool| pool.connection}
     end
 
     # overwritten
