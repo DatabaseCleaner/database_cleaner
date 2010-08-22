@@ -18,6 +18,7 @@ of the hours and effort he put into making this feature request a reality.
   * Ability to clean multiple database connections managed by the same ORM. (Jon Rowe)
   * Ability to clean multiple DBs managed by different ORMs in same project. (Jon Rowe)
   * Allows for the ActiveRecord config file (database.yml) to contain ERB and process it. (Fletcher Nichol)
+  * Mysql2Adapter support. (Kamal Fariz Mahyuddin and John Ferlito)
 
  === Bugfixes
   * Updates the DataMapper truncation strategy to version 0.10.3. (Robert Rouse)
