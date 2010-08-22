@@ -1,4 +1,3 @@
-
 Before do
   DatabaseCleaner.start
 end

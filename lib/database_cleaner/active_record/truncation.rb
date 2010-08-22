@@ -1,6 +1,7 @@
 require 'active_record/base'
 require 'active_record/connection_adapters/abstract_adapter'
-require "database_cleaner/truncation_base"
+require "database_cleaner/generic/truncation"
+require 'database_cleaner/active_record/base'
 
 module ActiveRecord
   module ConnectionAdapters
@@ -36,9 +37,9 @@ module ActiveRecord
     class PostgreSQLAdapter < AbstractAdapter
 
       def self.db_version
-        @db_version ||= ActiveRecord::Base.connection.select_values(
-          "SELECT CHARACTER_VALUE 
-            FROM INFORMATION_SCHEMA.SQL_IMPLEMENTATION_INFO 
+        @db_version ||= connection.select_values(
+          "SELECT CHARACTER_VALUE
+            FROM INFORMATION_SCHEMA.SQL_IMPLEMENTATION_INFO
             WHERE IMPLEMENTATION_INFO_NAME = 'DBMS VERSION' ").to_s
       end
 
@@ -69,7 +70,9 @@ end
 
 
 module DatabaseCleaner::ActiveRecord
-  class Truncation < ::DatabaseCleaner::TruncationBase
+  class Truncation
+    include ::DatabaseCleaner::ActiveRecord::Base
+    include ::DatabaseCleaner::Generic::Truncation
 
     def clean
       connection.disable_referential_integrity do
@@ -82,11 +85,12 @@ module DatabaseCleaner::ActiveRecord
     private
 
     def tables_to_truncate
-      (@only || connection.tables) - @tables_to_exclude
+       (@only || connection.tables) - @tables_to_exclude
     end
 
     def connection
-      ::ActiveRecord::Base.connection
+       #::ActiveRecord::Base.connection
+       connection_klass.connection
     end
 
     # overwritten

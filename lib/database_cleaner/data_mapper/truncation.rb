@@ -1,4 +1,5 @@
-require "database_cleaner/truncation_base"
+require "database_cleaner/generic/truncation"
+require 'database_cleaner/data_mapper/base'
 
 module DataMapper
   module Adapters
@@ -35,6 +36,7 @@ module DataMapper
 
     end
 
+
     class Sqlite3Adapter < DataObjectsAdapter
 
       # taken from http://github.com/godfat/dm-mapping/tree/master
@@ -46,7 +48,7 @@ module DataMapper
           WHERE type = 'table' AND NOT name = 'sqlite_sequence'
         SQL
         # activerecord-2.1.0/lib/active_record/connection_adapters/sqlite_adapter.rb: 181
-        select sql
+        select(sql)
       end
 
       def truncate_table(table_name)
@@ -61,7 +63,32 @@ module DataMapper
       end
 
     end
+    
+    class SqliteAdapter < DataObjectsAdapter
+      # taken from http://github.com/godfat/dm-mapping/tree/master
+      def storage_names(repository = :default)
+        # activerecord-2.1.0/lib/active_record/connection_adapters/sqlite_adapter.rb: 177
+        sql = <<-SQL.compress_lines
+          SELECT name
+          FROM sqlite_master
+          WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+        SQL
+        # activerecord-2.1.0/lib/active_record/connection_adapters/sqlite_adapter.rb: 181
+        select(sql)
+      end
 
+      def truncate_table(table_name)
+        execute("DELETE FROM #{quote_name(table_name)};")
+      end
+
+      # this is a no-op copied from activerecord
+      # i didn't find out if/how this is possible
+      # activerecord also doesn't do more here
+      def disable_referential_integrity
+        yield
+      end
+
+    end
 
     # FIXME
     # i don't know if this works
@@ -115,28 +142,34 @@ module DataMapper
 end
 
 
-module DatabaseCleaner::DataMapper
-  class Truncation < ::DatabaseCleaner::TruncationBase
+module DatabaseCleaner
+  module DataMapper
+    class Truncation
+      include ::DatabaseCleaner::DataMapper::Base
+      include ::DatabaseCleaner::Generic::Truncation
 
-    def clean(repository = :default)
-      adapter = DataMapper.repository(repository).adapter
-      adapter.disable_referential_integrity do
-        tables_to_truncate.each do |table_name|
-          adapter.truncate_table table_name
+      def clean(repository = nil)
+        repository = self.db if repository.nil?
+        adapter = ::DataMapper.repository(repository).adapter
+        adapter.disable_referential_integrity do
+          tables_to_truncate(repository).each do |table_name|
+            adapter.truncate_table table_name
+          end
         end
       end
+
+      private
+
+      def tables_to_truncate(repository = nil)
+        repository = self.db if repository.nil?
+        (@only || ::DataMapper.repository(repository).adapter.storage_names(repository)) - @tables_to_exclude
+      end
+
+      # overwritten
+      def migration_storage_name
+        'migration_info'
+      end
+
     end
-
-    private
-
-    def tables_to_truncate(repository = :default)
-      (@only || DataMapper.repository(repository).adapter.storage_names(repository)) - @tables_to_exclude
-    end
-
-    # overwritten
-    def migration_storage_name
-      'migration_info'
-    end
-
   end
 end

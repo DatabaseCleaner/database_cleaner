@@ -2,3 +2,8 @@
 .DS_Store
 coverage
 pkg
+.bundle
+bundled_gems/
+vendor/
+examples/db/*.db
+examples/config/database.yml

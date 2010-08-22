@@ -1,8 +1,12 @@
-require 'database_cleaner/truncation_base'
+require 'database_cleaner/mongoid/base'
+require 'database_cleaner/generic/truncation'
 
 module DatabaseCleaner
   module Mongoid
-    class Truncation < DatabaseCleaner::TruncationBase
+    class Truncation
+      include ::DatabaseCleaner::Mongoid::Base
+      include ::DatabaseCleaner::Generic::Truncation
+
       def clean
         if @only
           collections.each { |c| c.remove if @only.include?(c.name) }
@@ -16,8 +20,8 @@ module DatabaseCleaner
 
       def collections
         ::Mongoid.database.collections
-      end	
-	
-	end
+      end
+
+  end
   end
 end

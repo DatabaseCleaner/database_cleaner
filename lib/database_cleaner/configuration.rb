@@ -1,129 +1,77 @@
+require 'database_cleaner/base'
+
 module DatabaseCleaner
 
   class NoStrategySetError < StandardError;   end
   class NoORMDetected < StandardError;   end
   class UnknownStrategySpecified < ArgumentError;   end
 
-  module ActiveRecord
-    def self.available_strategies
-      %w[truncation transaction]
-    end
-  end
-
-  module DataMapper
-    def self.available_strategies
-      %w[truncation transaction]
-    end
-  end
-  
-
-  module MongoMapper
-    def self.available_strategies
-      %w[truncation]
-    end
-  end
-
-  module Mongoid
-    def self.available_strategies
-      %w[truncation]
-    end
-  end
-
-  module CouchPotato
-    def self.available_strategies
-      %w[truncation]
-    end
-  end
-
   class << self
-
-    def create_strategy(*args)
-      strategy, *strategy_args = args
-      orm_strategy(strategy).new(*strategy_args)
+    def [](orm,opts = {})
+      raise NoORMDetected if orm.nil?
+      @connections ||= []
+      cleaner = DatabaseCleaner::Base.new(orm,opts)
+      connections.push cleaner
+      cleaner
     end
 
-    def clean_with(*args)
-      strategy = create_strategy(*args)
-      strategy.clean
-      strategy
+    def app_root=(desired_root)
+      @app_root = desired_root
     end
 
-    alias clean_with! clean_with
-
-    def strategy=(args)
-      strategy, *strategy_args = args
-       if strategy.is_a?(Symbol)
-          @strategy = create_strategy(*args)
-       elsif strategy_args.empty?
-         @strategy = strategy
-       else
-         raise ArgumentError, "You must provide a strategy object, or a symbol for a know strategy along with initialization params."
-       end
+    def app_root
+      @app_root || Dir.pwd
     end
 
-    def orm=(orm_string)
-      @orm = orm_string
+    def connections
+      @connections ||= [::DatabaseCleaner::Base.new]
+    end
+
+    def strategy=(stratagem)
+      self.connections.each { |connect| connect.strategy = stratagem }
+      remove_duplicates
+    end
+
+    def orm=(orm)
+      self.connections.each { |connect| connect.orm = orm }
+      remove_duplicates
     end
 
     def start
-      strategy.start
+      self.connections.each { |connection| connection.start }
     end
 
     def clean
-      strategy.clean
+      self.connections.each { |connection| connection.clean }
     end
 
-    alias clean! clean
-
-    private
-
-    def strategy
-      return @strategy if @strategy
-      raise NoStrategySetError, "Please set a strategy with DatabaseCleaner.strategy=."
+    def clean_with(stratagem)
+      self.connections.each { |connection| connection.clean_with stratagem }
     end
 
-    def orm_strategy(strategy)
-  		require "database_cleaner/#{orm}/#{strategy}"
-      orm_module.const_get(strategy.to_s.capitalize)
-    rescue LoadError => e
-      raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!  Available strategies: #{orm_module.available_strategies.join(', ')}"
+    def remove_duplicates
+      temp = []
+      self.connections.each do |connect|
+        temp.push connect unless temp.include? connect
+      end
+      @connections = temp
     end
-
-
-    def orm
-      @orm ||=begin
-        if defined? ::DataMapper
-          'data_mapper'
-        elsif defined? ::MongoMapper
-          'mongo_mapper'
-        elsif defined? ::Mongoid
-          'mongoid'
-        elsif defined? ::CouchPotato
-          'couch_potato'
-        elsif defined? ::ActiveRecord
-          'active_record'
-        else
-          raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, or CouchPotato loaded?"
-        end
+    
+    def orm_module(symbol)
+      case symbol
+        when :active_record
+          DatabaseCleaner::ActiveRecord
+        when :data_mapper
+          DatabaseCleaner::DataMapper
+        when :mongo
+          DatabaseCleaner::Mongo
+        when :mongoid
+          DatabaseCleaner::Mongoid
+        when :mongo_mapper
+          DatabaseCleaner::MongoMapper
+        when :couch_potato
+          DatabaseCleaner::CouchPotato
       end
     end
-
-
-    def orm_module
-      case orm
-      when 'active_record'
-        DatabaseCleaner::ActiveRecord
-      when 'data_mapper'
-        DatabaseCleaner::DataMapper
-      when 'mongo_mapper'
-        DatabaseCleaner::MongoMapper
-      when 'mongoid'
-        DatabaseCleaner::Mongoid
-      when 'couch_potato'
-        DatabaseCleaner::CouchPotato
-      end
-    end
-
   end
-
 end

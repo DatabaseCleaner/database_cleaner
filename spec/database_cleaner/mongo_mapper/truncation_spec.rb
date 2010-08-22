@@ -1,33 +1,26 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 require 'mongo_mapper'
 require 'database_cleaner/mongo_mapper/truncation'
-
-MongoMapper.connection = Mongo::Connection.new('127.0.0.1')
-TEST_DATABASE = 'database_cleaner_specs'
-MongoMapper.database = TEST_DATABASE
-
-class Widget
-  include MongoMapper::Document
-  key :name, String
-end
-class Gadget
-  include MongoMapper::Document
-  key :name, String
-end
-
+require File.dirname(__FILE__) + '/mongo_examples'
 
 module DatabaseCleaner
   module MongoMapper
 
     describe Truncation do
+
+      #doing this in the file root breaks autospec, doing it before(:all) just fails the specs
+      before(:all) do
+          ::MongoMapper.connection = ::Mongo::Connection.new('127.0.0.1')
+          @test_db = 'database_cleaner_specs'
+          ::MongoMapper.database = @test_db
+      end
+
       before(:each) do
-        ::MongoMapper.connection.drop_database(TEST_DATABASE)
-        #::MongoMapper.connection.db(TEST_DATABASE).collections.each {|c| c.remove }
-        #::MongoMapper.database = TEST_DATABASE
+        ::MongoMapper.connection.drop_database(@test_db)
       end
 
       def ensure_counts(expected_counts)
-        # I had to add this sanity_check garbage because I was getting non-determinisc results from mongomapper at times.. 
+        # I had to add this sanity_check garbage because I was getting non-determinisc results from mongomapper at times..
         # very odd and disconcerting...
         sanity_check = expected_counts.delete(:sanity_check)
         begin
