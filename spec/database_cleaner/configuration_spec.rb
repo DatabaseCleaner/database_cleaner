@@ -48,7 +48,7 @@ describe ::DatabaseCleaner do
       ::DatabaseCleaner.connections.size.should == 1
     end
   end
-  
+
   it "should accept multiple orm's" do
     ::DatabaseCleaner[:couch_potato]
     ::DatabaseCleaner[:data_mapper]
@@ -64,7 +64,7 @@ describe ::DatabaseCleaner do
       cleaner.orm.should == :active_record
       cleaner.db.should == :first_connection
     end
-    
+
     it "should accept multiple connections for a single orm" do
       ::DatabaseCleaner[:data_mapper,{:connection => :first_db}]
       ::DatabaseCleaner[:data_mapper,{:connection => :second_db}]
@@ -74,7 +74,7 @@ describe ::DatabaseCleaner do
       ::DatabaseCleaner.connections[1].orm.should == :data_mapper
       ::DatabaseCleaner.connections[1].db.should  == :second_db
     end
-    
+
     it "should accept multiple connections and multiple orms" do
       ::DatabaseCleaner[:data_mapper,  {:connection => :first_db} ]
       ::DatabaseCleaner[:active_record,{:connection => :second_db}]
@@ -238,7 +238,7 @@ describe ::DatabaseCleaner do
     it "should remove duplicates if they are identical" do
       orm = mock("orm")
       connection = mock("a datamapper connection", :orm => orm )
-      
+
       ::DatabaseCleaner.connections_stub!  [connection,connection,connection]
 
       ::DatabaseCleaner.remove_duplicates
@@ -256,39 +256,39 @@ describe ::DatabaseCleaner do
       DatabaseCleaner.app_root.should == '/path/to'
     end
   end
-  
+
   describe "orm_module" do
     subject { ::DatabaseCleaner }
-    
+
     it "should return DatabaseCleaner::ActiveRecord for :active_record" do
       ::DatabaseCleaner::ActiveRecord = mock("ar module") unless defined? ::DatabaseCleaner::ActiveRecord
       subject.orm_module(:active_record).should == DatabaseCleaner::ActiveRecord
     end
-    
+
     it "should return DatabaseCleaner::DataMapper for :data_mapper" do
       ::DatabaseCleaner::DataMapper = mock("dm module") unless defined? ::DatabaseCleaner::DataMapper
       subject.orm_module(:data_mapper).should == DatabaseCleaner::DataMapper
     end
-    
+
     it "should return DatabaseCleaner::MongoMapper for :mongo_mapper" do
       ::DatabaseCleaner::MongoMapper = mock("mm module") unless defined? ::DatabaseCleaner::MongoMapper
       subject.orm_module(:mongo_mapper).should == DatabaseCleaner::MongoMapper
     end
-    
+
     it "should return DatabaseCleaner::Mongoid for :mongoid" do
       ::DatabaseCleaner::Mongoid = mock("mongoid module") unless defined? ::DatabaseCleaner::Mongoid
       subject.orm_module(:mongoid).should == DatabaseCleaner::Mongoid
     end
-    
+
     it "should return DatabaseCleaner::Mongo for :mongo" do
       ::DatabaseCleaner::Mongo = mock("mongo module") unless defined? ::DatabaseCleaner::Mongo
       subject.orm_module(:mongo).should == DatabaseCleaner::Mongo
     end
-          
+
     it "should return DatabaseCleaner::CouchPotato for :couch_potato" do
       ::DatabaseCleaner::CouchPotato = mock("cp module") unless defined? ::DatabaseCleaner::CouchPotato
       subject.orm_module(:couch_potato).should == DatabaseCleaner::CouchPotato
     end
-    
+
   end
 end

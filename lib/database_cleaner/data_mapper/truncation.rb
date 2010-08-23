@@ -63,7 +63,7 @@ module DataMapper
       end
 
     end
-    
+
     class SqliteAdapter < DataObjectsAdapter
       # taken from http://github.com/godfat/dm-mapping/tree/master
       def storage_names(repository = :default)

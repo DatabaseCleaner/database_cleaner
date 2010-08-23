@@ -30,7 +30,7 @@ module DatabaseCleaner
       end
 
       def ensure_counts(expected_counts)
-        # I had to add this sanity_check garbage because I was getting non-determinisc results from mongomapper at times.. 
+        # I had to add this sanity_check garbage because I was getting non-determinisc results from mongomapper at times..
         # very odd and disconcerting...
         sanity_check = expected_counts.delete(:sanity_check)
         begin

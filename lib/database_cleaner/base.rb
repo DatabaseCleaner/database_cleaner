@@ -14,7 +14,7 @@ module DatabaseCleaner
        self.strategy_db = desired_db
        @db = desired_db
     end
-    
+
     def strategy_db=(desired_db)
       if strategy.respond_to? :db=
         strategy.db = desired_db
@@ -54,7 +54,7 @@ module DatabaseCleaner
        end
 
        self.strategy_db = self.db
-       
+
        @strategy
     end
 

@@ -56,7 +56,7 @@ module DatabaseCleaner
       end
       @connections = temp
     end
-    
+
     def orm_module(symbol)
       case symbol
         when :active_record

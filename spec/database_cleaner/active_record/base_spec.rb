@@ -65,7 +65,7 @@ my_db:
           YAML.should_receive(:load).and_return( {:nil => nil} )
           subject.load_config
         end
-        
+
         it "should process erb in the config" do
           transformed = <<-Y
 my_db:
