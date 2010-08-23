@@ -146,8 +146,8 @@ describe ::DatabaseCleaner do
 
     it "should proxy clean_with" do
       stratagem = mock("stratgem")
-      connection.should_receive(:clean_with).with(stratagem)
-      ::DatabaseCleaner.clean_with stratagem
+      connection.should_receive(:clean_with).with(stratagem, {})
+      ::DatabaseCleaner.clean_with stratagem, {}
     end
   end
 

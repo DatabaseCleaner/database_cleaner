@@ -45,9 +45,13 @@ module DatabaseCleaner
       self.connections.each { |connection| connection.clean }
     end
 
-    def clean_with(stratagem)
-      self.connections.each { |connection| connection.clean_with stratagem }
+    alias clean! clean
+
+    def clean_with(*args)
+      self.connections.each { |connection| connection.clean_with(*args) }
     end
+
+    alias clean_with! clean_with
 
     def remove_duplicates
       temp = []
