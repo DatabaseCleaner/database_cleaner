@@ -22,6 +22,7 @@ of the hours and effort he put into making this feature request a reality.
 
  === Bugfixes
   * Updates the DataMapper truncation strategy to version 0.10.3. (Robert Rouse)
+  * Addresses Ruby 1.9 and 1.8 differences causing a bug in the AR PostgreSQLAdapter truncation strategy. (GH-14, James B. Byrne)
 
 == 0.5.2
 

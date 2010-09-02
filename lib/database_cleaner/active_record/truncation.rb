@@ -46,7 +46,7 @@ module ActiveRecord
         @db_version ||= connection.select_values(
           "SELECT CHARACTER_VALUE
             FROM INFORMATION_SCHEMA.SQL_IMPLEMENTATION_INFO
-            WHERE IMPLEMENTATION_INFO_NAME = 'DBMS VERSION' ").to_s
+            WHERE IMPLEMENTATION_INFO_NAME = 'DBMS VERSION' ").join.to_s
       end
 
       def self.cascade
