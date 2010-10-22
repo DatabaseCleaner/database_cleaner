@@ -39,19 +39,19 @@ module ActiveRecord
 
     class PostgreSQLAdapter < AbstractAdapter
       def delete_table(table_name)
-        execute("DELETE FROM TABLE #{quote_table_name(table_name)};")
+        execute("DELETE FROM #{quote_table_name(table_name)};")
       end
     end
 
     class SQLServerAdapter < AbstractAdapter
       def delete_table(table_name)
-        execute("DELETE FROM TABLE #{quote_table_name(table_name)};")
+        execute("DELETE FROM #{quote_table_name(table_name)};")
       end
     end
 
     class OracleEnhancedAdapter < AbstractAdapter
       def delete_table(table_name)
-        execute("DELETE FROM TABLE #{quote_table_name(table_name)}")
+        execute("DELETE FROM #{quote_table_name(table_name)}")
       end
     end
 
