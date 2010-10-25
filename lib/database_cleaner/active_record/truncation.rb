@@ -7,16 +7,19 @@ module ActiveRecord
   module ConnectionAdapters
     # Activerecord-jdbc-adapter defines class dependencies a bit differently - if it is present, confirm to ArJdbc hierarchy to avoid 'superclass mismatch' errors.
     USE_ARJDBC_WORKAROUND = defined?(ArJdbc)
-    
+
     class AbstractAdapter
     end
-    
+
     unless USE_ARJDBC_WORKAROUND
       class SQLiteAdapter < AbstractAdapter
       end
     end
 
-    class MysqlAdapter < (USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter)
+    MYSQL_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
+    SQLITE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : SQLiteAdapter
+
+    class MysqlAdapter < MYSQL_ADAPTER_PARENT
       def truncate_table(table_name)
         execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
       end
@@ -28,10 +31,11 @@ module ActiveRecord
       end
     end
 
-    class SQLite3Adapter < (USE_ARJDBC_WORKAROUND ? JdbcAdapter : SQLiteAdapter)
-      def truncate_table(table_name)
+    class SQLite3Adapter < SQLITE_ADAPTER_PARENT
+      def delete_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)};")
       end
+      alias truncate_table delete_table
     end
 
     class JdbcAdapter < AbstractAdapter
