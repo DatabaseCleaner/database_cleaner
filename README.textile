@@ -7,6 +7,19 @@ that is testing with a database.
 
 ActiveRecord, DataMapper, MongoMapper, Mongoid, and CouchPotato are supported.
 
+Here is an overview of the strategies supported for each library:
+
+|_. ORM        |_.  Truncation  |_.  Transaction  |_.  Deletion    |
+| ActiveRecord | Yes            | Yes             | Yes            |
+| DataMapper   | Yes            | Yes             | No             |
+| CouchPotato  | Yes            | No              | No             |
+| MongoMapper  | Yes            | No              | No             |
+| Mongiod      | Yes            | No              | No             |
+
+The ActiveRecord @:deletion@ strategy is only useful for when the @:truncation@ strategy causes
+locks (as reported by some Oracle DB users).  The @:truncation@ strategy is the preferred option
+since it is much faster.
+
 h2. How to use
 
 <pre>
@@ -27,7 +40,6 @@ With the :truncation strategy you can also pass in options, for example:
 </pre>
 
 (I should point out the truncation strategy will never truncate your schema_migrations table.)
-
 
 Some strategies require that you call DatabaseCleaner.start before calling clean
 (for example the :transaction one needs to know to open up a transaction). So
@@ -93,38 +105,13 @@ Usage beyond that remains the same with DatabaseCleaner.start calling any setup 
 
 Configuration options
 
-<table>
-<tr>
-<th>ORM</th>
-<th>How to access</th>
-<th>Notes</th>
-</tr>
-<tr>
-<td>Active Record</td>
-<td>DatabaseCleaner[:active_record]</td>
-<td>Connection specified as :symbol keys, loaded from config/database.yml</td>
-</th>
-<tr>
-<td>Data Mapper</td>
-<td>DatabaseCleaner[:data_mapper]</td>
-<td>Connection specified as :symbol keys, loaded via Datamapper repositories</td>
-</th>
-<tr>
-<td>Mongo Mapper</td>
-<td>DatabaseCleaner[:mongo_mapper]</td>
-<td>Multiple connections not yet supported</td>
-</th>
-<tr>
-<td>Mongoid</td>
-<td>DatabaseCleaner[:mongoid]</td>
-<td>Multiple connections not yet supported</td>
-</th>
-<tr>
-<td>Couch Potato</td>
-<td>DatabaseCleaner[:couch_potato]</td>
-<td>Multiple connections not yet supported</td>
-</tr>
-</table>
+
+|_. ORM         |_.   How to access               |_.   Notes                                                                |
+| Active Record | DatabaseCleaner[:active_record] | Connection specified as :symbol keys, loaded from config/database.yml    |
+| Data Mapper   | DatabaseCleaner[:data_mapper]   | Connection specified as :symbol keys, loaded via Datamapper repositories |
+| Mongo Mapper  | DatabaseCleaner[:mongo_mapper]  | Multiple connections not yet supported                                   |
+| Mongoid       | DatabaseCleaner[:mongoid]       | Multiple connections not yet supported                                   |
+| Couch Potato  | DatabaseCleaner[:couch_potato]  | Multiple connections not yet supported                                   |
 
 h2. Why?
 
