@@ -1,6 +1,6 @@
 == 0.6.x (In Git)
 
-== 0.6.0 2010-08-2x - The Multi-ORM/Connection Release
+== 0.6.0 2010-10-25 - The Multi-ORM/Connection Release
 
 This release has the often asked for functionality of being able to clean
 multiple databases within the same project.  This involves being able to 
@@ -19,6 +19,7 @@ of the hours and effort he put into making this feature request a reality.
   * Ability to clean multiple DBs managed by different ORMs in same project. (Jon Rowe)
   * Allows for the ActiveRecord config file (database.yml) to contain ERB and process it. (Fletcher Nichol)
   * Mysql2Adapter support. (Kamal Fariz Mahyuddin and John Ferlito)
+  * Deletion strategy for ActiveRecord (Mikl Kurkov)
 
  === Bugfixes
   * Updates the DataMapper truncation strategy to version 0.10.3. (Robert Rouse)
