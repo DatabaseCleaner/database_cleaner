@@ -138,13 +138,18 @@ module DatabaseCleaner
           cleaner.orm.should == :a_orm
         end
 
-        it "should be autodetected if orm is nil" do
+        it "converts string to symbols" do
+          cleaner = ::DatabaseCleaner::Base.new "mongoid"
+          cleaner.orm.should == :mongoid
+        end
+        
+        it "is autodetected if orm is not provided" do
           cleaner = ::DatabaseCleaner::Base.new
           cleaner.should be_auto_detected
         end
 
-        it "should autodetect if you specify :autodetect" do
-          cleaner = ::DatabaseCleaner::Base.new :autodetect
+        it "is autodetected if you specify :autodetect" do
+          cleaner = ::DatabaseCleaner::Base.new "autodetect"
           cleaner.should be_auto_detected
         end
 

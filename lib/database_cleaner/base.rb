@@ -2,7 +2,7 @@ module DatabaseCleaner
   class Base
 
     def initialize(desired_orm = nil,opts = {})
-      if desired_orm == :autodetect || desired_orm.nil?
+      if [:autodetect, nil, "autodetect"].include?(desired_orm)
         autodetect
       else
         self.orm = desired_orm
@@ -64,7 +64,7 @@ module DatabaseCleaner
     end
 
     def orm=(desired_orm)
-      @orm = desired_orm
+      @orm = desired_orm.to_sym
     end
 
     def orm
