@@ -2,6 +2,7 @@
 
  === Bugfixes
   * ORM types can be specified in string format and not mysteriously blowup. (GH-26 Ben Mabey)
+  * Do not remove MongoDB reserved system collections. (GH-24 Ches Martin)
 
 == 0.6.0 2010-10-25 - The Multi-ORM/Connection Release
 
