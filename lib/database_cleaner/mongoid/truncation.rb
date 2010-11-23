@@ -19,7 +19,7 @@ module DatabaseCleaner
       private
 
       def collections
-        ::Mongoid.database.collections
+        ::Mongoid.database.collections.select { |c| c.name !~ /^system/ }
       end
 
   end

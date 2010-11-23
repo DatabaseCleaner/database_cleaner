@@ -14,7 +14,7 @@ Here is an overview of the strategies supported for each library:
 | DataMapper   | Yes            | Yes             | No             |
 | CouchPotato  | Yes            | No              | No             |
 | MongoMapper  | Yes            | No              | No             |
-| Mongiod      | Yes            | No              | No             |
+| Mongoid      | Yes            | No              | No             |
 
 The ActiveRecord @:deletion@ strategy is only useful for when the @:truncation@ strategy causes
 locks (as reported by some Oracle DB users).  The @:truncation@ strategy is the preferred option

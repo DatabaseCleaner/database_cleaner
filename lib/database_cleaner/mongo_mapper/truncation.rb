@@ -25,7 +25,7 @@ module DatabaseCleaner
       end
 
       def collections
-        connection.db(database).collections
+        connection.db(database).collections.select { |c| c.name !~ /^system/ }
       end
 
       def database
