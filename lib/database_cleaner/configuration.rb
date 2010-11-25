@@ -2,7 +2,6 @@ require 'database_cleaner/base'
 
 module DatabaseCleaner
 
-  class NoStrategySetError < StandardError;   end
   class NoORMDetected < StandardError;   end
   class UnknownStrategySpecified < ArgumentError;   end
 

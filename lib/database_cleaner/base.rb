@@ -1,3 +1,4 @@
+require 'database_cleaner/null_strategy'
 module DatabaseCleaner
   class Base
 
@@ -21,9 +22,6 @@ module DatabaseCleaner
       elsif desired_db!= :default
         raise ArgumentError, "You must provide a strategy object that supports non default databases when you specify a database"
       end
-    rescue NoStrategySetError
-      #handle NoStrategySetError by doing nothing at all
-      desired_db
     end
 
     def db
@@ -59,8 +57,7 @@ module DatabaseCleaner
     end
 
     def strategy
-      return @strategy if @strategy
-      raise NoStrategySetError, "Please set a strategy with DatabaseCleaner.strategy=."
+      @strategy || NullStrategy
     end
 
     def orm=(desired_orm)

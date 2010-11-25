@@ -20,6 +20,10 @@ The ActiveRecord @:deletion@ strategy is only useful for when the @:truncation@ 
 locks (as reported by some Oracle DB users).  The @:truncation@ strategy is the preferred option
 since it is much faster.
 
+Database Cleaner also includes a @null@ strategy (that does no cleaning at all) which can be used 
+with any ORM library.  _This is the default strategy and will be used unless you
+specify one._ You can also explicitly use it by setting your strategy to @nil@.
+
 h2. How to use
 
 <pre>

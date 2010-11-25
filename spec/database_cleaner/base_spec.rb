@@ -310,12 +310,12 @@ module DatabaseCleaner
     end
 
     describe "strategy" do
-      it "should raise NoStrategySetError if strategy is nil" do
+      it "returns a null strategy when strategy no set" do
         subject.instance_values["@strategy"] = nil
-        expect{ subject.strategy }.to raise_error NoStrategySetError
+        subject.strategy.should == DatabaseCleaner::NullStrategy
       end
 
-      it "should return @strategy if @strategy is present" do
+      it "returns the set strategy" do
         strategum = mock("strategy")
         subject.strategy = strategum
         subject.strategy.should == strategum
