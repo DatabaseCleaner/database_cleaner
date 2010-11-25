@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{database_cleaner}
-  s.version = "0.6.2"
+  s.version = "0.6.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ben Mabey"]
@@ -26,7 +26,13 @@ Gem::Specification.new do |s|
      "cucumber.yml",
      "examples/Gemfile",
      "examples/Gemfile.lock",
+     "examples/config/database.yml",
      "examples/config/database.yml.example",
+     "examples/db/activerecord_one.db",
+     "examples/db/activerecord_two.db",
+     "examples/db/datamapper_default.db",
+     "examples/db/datamapper_one.db",
+     "examples/db/datamapper_two.db",
      "examples/db/sqlite_databases_go_here",
      "examples/features/example.feature",
      "examples/features/example_multiple_db.feature",

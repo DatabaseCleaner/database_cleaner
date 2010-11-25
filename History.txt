@@ -1,10 +1,8 @@
-== 0.6.2 (In Git)
-  * Exclude database views from tables_to_truncate, if the connection adapter
-    supports reading from the ANSI standard information_schema views. (Samer Abukhait)
-
-== 0.6.1 (In Git)
+== 0.6.1 (in git)
 
  === Bugfixes
+  * Exclude database views from tables_to_truncate, if the connection adapter
+    supports reading from the ANSI standard information_schema views. (GH-25 Samer Abukhait)
   * ORM types can be specified in string format and not mysteriously blowup. (GH-26 Ben Mabey)
   * Do not remove MongoDB reserved system collections. (GH-24 Ches Martin)
 
