@@ -9,6 +9,9 @@ module ActiveRecord
     USE_ARJDBC_WORKAROUND = defined?(ArJdbc)
 
     class AbstractAdapter
+      def views
+        @views ||= select_values("select table_name from information_schema.views where table_schema = '#{current_database}'") rescue []
+      end
     end
 
     unless USE_ARJDBC_WORKAROUND
@@ -99,7 +102,7 @@ module DatabaseCleaner::ActiveRecord
     private
 
     def tables_to_truncate
-       (@only || connection.tables) - @tables_to_exclude
+       (@only || connection.tables) - @tables_to_exclude - connection.views
     end
 
     def connection

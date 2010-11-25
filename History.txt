@@ -1,3 +1,7 @@
+== 0.6.2 (In Git)
+  * Exclude database views from tables_to_truncate, if the connection adapter
+    supports reading from the ANSI standard information_schema views. (Samer Abukhait)
+
 == 0.6.1 (In Git)
 
  === Bugfixes

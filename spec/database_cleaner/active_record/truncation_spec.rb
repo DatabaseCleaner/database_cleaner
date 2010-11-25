@@ -22,6 +22,7 @@ module DatabaseCleaner
 
       before(:each) do
         connection.stub!(:disable_referential_integrity).and_yield
+        connection.stub!(:views).and_return([])
         ::ActiveRecord::Base.stub!(:connection).and_return(connection)
       end
 
@@ -62,6 +63,17 @@ module DatabaseCleaner
       it "should raise an error when invalid options are provided" do
         running { Truncation.new(:foo => 'bar') }.should raise_error(ArgumentError)
       end
+
+      it "should not truncate views" do
+        connection.stub!(:tables).and_return(%w[widgets dogs])
+        connection.stub!(:views).and_return(["widgets"])
+
+        connection.should_receive(:truncate_table).with('dogs')
+        connection.should_not_receive(:truncate_table).with('widgets')
+
+        Truncation.new.clean
+      end
+
     end
   end
 end
