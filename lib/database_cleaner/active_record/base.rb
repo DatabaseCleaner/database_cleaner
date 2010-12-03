@@ -27,8 +27,10 @@ module DatabaseCleaner
       end
 
       def load_config
-        connection_details = YAML::load(ERB.new(IO.read(ActiveRecord.config_file_location)).result)
-        self.connection_hash = connection_details[self.db.to_s]
+        if File.file?(ActiveRecord.config_file_location)
+          connection_details   = YAML::load(ERB.new(IO.read(ActiveRecord.config_file_location)).result)
+          self.connection_hash = connection_details[self.db.to_s]
+        end
       end
 
       def create_connection_klass

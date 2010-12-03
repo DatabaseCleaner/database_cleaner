@@ -24,8 +24,11 @@ module DatabaseCleaner
     end
 
     describe ExampleStrategy do
+      let :config_location do
+        '/path/to/config/database.yml'
+      end
 
-      before { ::DatabaseCleaner::ActiveRecord.stub(:config_file_location).and_return('/path/to/config/database.yml') }
+      before { ::DatabaseCleaner::ActiveRecord.stub(:config_file_location).and_return(config_location) }
 
       it_should_behave_like "a generic strategy"
 
@@ -58,7 +61,8 @@ module DatabaseCleaner
 my_db:
   database: <%= "ONE".downcase %>
           Y
-          IO.stub(:read).with('/path/to/config/database.yml').and_return(yaml)
+          File.stub(:file?).with(config_location).and_return(true)
+          IO.stub(:read).with(config_location).and_return(yaml)
         end
 
         it "should parse the config" do
@@ -79,6 +83,12 @@ my_db:
           subject.should_receive(:db).and_return(:my_db)
           subject.load_config
           subject.connection_hash.should == {"database" => "one"}
+        end
+
+        it "should skip config if config file is not available" do
+          File.should_receive(:file?).with(config_location).and_return(false)
+          subject.load_config
+          subject.connection_hash.should be_blank
         end
       end
 
