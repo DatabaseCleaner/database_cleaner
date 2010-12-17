@@ -7,9 +7,13 @@ module DatabaseCleaner
     def self.available_strategies
       %w[truncation transaction deletion]
     end
+    
+    def self.config_file_location=(path)
+      @config_file_location = path
+    end
 
     def self.config_file_location
-      "#{DatabaseCleaner.app_root}/config/database.yml"
+      @config_file_location ||= "#{DatabaseCleaner.app_root}/config/database.yml"
     end
 
     module Base
