@@ -11,6 +11,7 @@ module DatabaseCleaner
       subject { ActiveRecord.config_file_location }
 
       it "should default to DatabaseCleaner.root / config / database.yml" do
+        ActiveRecord.config_file_location=nil
         DatabaseCleaner.should_receive(:app_root).and_return("/path/to")
         subject.should == '/path/to/config/database.yml'
       end
