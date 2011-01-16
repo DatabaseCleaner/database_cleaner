@@ -9,6 +9,7 @@ module DatabaseCleaner
         self.orm = desired_orm
       end
       self.db = opts[:connection] if opts.has_key? :connection
+      set_default_orm_strategy
     end
 
     def db=(desired_db)
@@ -120,6 +121,15 @@ module DatabaseCleaner
         else
           raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, or CouchPotato loaded?"
         end
+      end
+    end
+
+    def set_default_orm_strategy
+      case orm
+      when :active_record, :data_mapper
+        self.strategy = :transaction
+      when :mongo_mapper, :mongoid, :couch_potato
+        self.strategy = :truncation
       end
     end
   end

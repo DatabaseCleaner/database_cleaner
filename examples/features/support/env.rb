@@ -54,9 +54,9 @@ if orm && strategy
     DatabaseCleaner[         orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym ].strategy = strategy.to_sym
     DatabaseCleaner[ another_orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym ].strategy = strategy.to_sym
   else
-    DatabaseCleaner.strategy = strategy.to_sym
+    DatabaseCleaner.strategy = strategy.to_sym unless strategy == "default"
   end
 
 else
-  raise "Run 'ORM=ActiveRecord|DataMapper|MongoMapper|CouchPotato [ANOTHER_ORM=...] [MULTIPLE_DBS=true] STRATEGY=transaction|truncation cucumber examples/features'"
+  raise "Run 'ORM=ActiveRecord|DataMapper|MongoMapper|CouchPotato [ANOTHER_ORM=...] [MULTIPLE_DBS=true] STRATEGY=transaction|truncation|default cucumber examples/features'"
 end

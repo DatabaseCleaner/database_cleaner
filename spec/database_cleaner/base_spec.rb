@@ -1,6 +1,9 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 require 'database_cleaner/active_record/transaction'
 require 'database_cleaner/data_mapper/transaction'
+require 'database_cleaner/mongo_mapper/truncation'
+require 'database_cleaner/mongoid/truncation'
+require 'database_cleaner/couch_potato/truncation'
 
 module DatabaseCleaner
   describe Base do
@@ -310,7 +313,9 @@ module DatabaseCleaner
     end
 
     describe "strategy" do
-      it "returns a null strategy when strategy no set" do
+      subject { ::DatabaseCleaner::Base.new :a_orm }
+
+      it "returns a null strategy when strategy no set and undetectable" do
         subject.instance_values["@strategy"] = nil
         subject.strategy.should == DatabaseCleaner::NullStrategy
       end
@@ -440,6 +445,33 @@ module DatabaseCleaner
         subject.send(:orm_strategy, :cunningplan).should == strategy_klass
       end
 
+    end
+
+    describe 'set_default_orm_strategy' do
+      it 'sets strategy to :transaction for ActiveRecord' do
+        cleaner = DatabaseCleaner::Base.new(:active_record)
+        cleaner.strategy.should be_instance_of DatabaseCleaner::ActiveRecord::Transaction
+      end
+
+      it 'sets strategy to :transaction for DataMapper' do
+        cleaner = DatabaseCleaner::Base.new(:data_mapper)
+        cleaner.strategy.should be_instance_of DatabaseCleaner::DataMapper::Transaction
+      end
+
+      it 'sets strategy to :truncation for MongoMapper' do
+        cleaner = DatabaseCleaner::Base.new(:mongo_mapper)
+        cleaner.strategy.should be_instance_of DatabaseCleaner::MongoMapper::Truncation
+      end
+
+      it 'sets strategy to :truncation for Mongoid' do
+        cleaner = DatabaseCleaner::Base.new(:mongoid)
+        cleaner.strategy.should be_instance_of DatabaseCleaner::Mongoid::Truncation
+      end
+
+      it 'sets strategy to :truncation for CouchPotato' do
+        cleaner = DatabaseCleaner::Base.new(:couch_potato)
+        cleaner.strategy.should be_instance_of DatabaseCleaner::CouchPotato::Truncation
+      end
     end
 
   end

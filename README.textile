@@ -10,19 +10,20 @@ ActiveRecord, DataMapper, MongoMapper, Mongoid, and CouchPotato are supported.
 Here is an overview of the strategies supported for each library:
 
 |_. ORM        |_.  Truncation  |_.  Transaction  |_.  Deletion    |
-| ActiveRecord | Yes            | Yes             | Yes            |
-| DataMapper   | Yes            | Yes             | No             |
-| CouchPotato  | Yes            | No              | No             |
-| MongoMapper  | Yes            | No              | No             |
-| Mongoid      | Yes            | No              | No             |
+| ActiveRecord | Yes            | **Yes**         | Yes            |
+| DataMapper   | Yes            | **Yes**         | No             |
+| CouchPotato  | **Yes**        | No              | No             |
+| MongoMapper  | **Yes**        | No              | No             |
+| Mongoid      | **Yes**        | No              | No             |
+
+(Default strategy for each library is denoted in bold)
 
 The ActiveRecord @:deletion@ strategy is only useful for when the @:truncation@ strategy causes
 locks (as reported by some Oracle DB users).  The @:truncation@ strategy is the preferred option
 since it is much faster.
 
 Database Cleaner also includes a @null@ strategy (that does no cleaning at all) which can be used 
-with any ORM library.  _This is the default strategy and will be used unless you
-specify one._ You can also explicitly use it by setting your strategy to @nil@.
+with any ORM library. You can also explicitly use it by setting your strategy to @nil@.
 
 h2. How to use
 
