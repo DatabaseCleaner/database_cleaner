@@ -34,6 +34,12 @@ module ActiveRecord
       end
     end
 
+    class IBM_DBAdapter < AbstractAdapter
+      def truncate_table(table_name)
+        execute("TRUNCATE #{quote_table_name(table_name)} IMMEDIATE")
+      end
+    end
+
     class SQLite3Adapter < SQLITE_ADAPTER_PARENT
       def delete_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)};")

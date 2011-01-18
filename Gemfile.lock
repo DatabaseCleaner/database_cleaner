@@ -148,6 +148,7 @@ DEPENDENCIES
   datamapper (= 1.0.0)
   dm-migrations (= 1.0.0)
   dm-sqlite-adapter (= 1.0.0)
+  ibm_db
   jeweler
   json_pure
   mongo_mapper (= 0.8.2)

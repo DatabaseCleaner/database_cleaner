@@ -32,6 +32,7 @@ group :development do
     gem "tzinfo",             "0.3.22"
   gem "mongo_mapper",         "0.8.2"
   gem "couch_potato",         "0.3.0"
+  gem "ibm_db"
 end
 
 group :test do

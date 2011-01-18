@@ -3,6 +3,7 @@
  === New Features
   * Default strategies for all ORM libs are defined. (GH-36, GH-38 Prem Sichanugrist)
   * Add a NullStrategy. (GH-6 Ben Mabey)
+  * Support IBM_DB Adapter for table truncation. This is for DB2 >= 9.7 (GH-39 Samer Abukhait)
 
  === Bugfixes
   * Exclude database views from tables_to_truncate, if the connection adapter
