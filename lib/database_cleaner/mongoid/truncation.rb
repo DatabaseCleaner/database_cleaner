@@ -1,25 +1,18 @@
 require 'database_cleaner/mongoid/base'
 require 'database_cleaner/generic/truncation'
+require 'database_cleaner/mongo/truncation'
 
 module DatabaseCleaner
   module Mongoid
     class Truncation
       include ::DatabaseCleaner::Mongoid::Base
       include ::DatabaseCleaner::Generic::Truncation
-
-      def clean
-        if @only
-          collections.each { |c| c.remove if @only.include?(c.name) }
-        else
-          collections.each { |c| c.remove unless @tables_to_exclude.include?(c.name) }
-        end
-        true
-      end
+      include ::DatabaseCleaner::Mongo::Truncation
 
       private
 
-      def collections
-        ::Mongoid.database.collections.select { |c| c.name !~ /^system/ }
+      def database
+        ::Mongoid.database
       end
 
   end
