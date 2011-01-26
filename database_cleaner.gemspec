@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{database_cleaner}
-  s.version = "0.6.1.rc"
+  s.version = "0.6.1.rc2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ben Mabey"]
-  s.date = %q{2011-01-16}
+  s.date = %q{2011-01-26}
   s.description = %q{Strategies for cleaning databases.  Can be used to ensure a clean state for testing.}
   s.email = %q{ben@benmabey.com}
   s.extra_rdoc_files = [
@@ -71,6 +71,7 @@ Gem::Specification.new do |s|
      "lib/database_cleaner/data_mapper/truncation.rb",
      "lib/database_cleaner/generic/base.rb",
      "lib/database_cleaner/generic/truncation.rb",
+     "lib/database_cleaner/mongo/truncation.rb",
      "lib/database_cleaner/mongo_mapper/base.rb",
      "lib/database_cleaner/mongo_mapper/truncation.rb",
      "lib/database_cleaner/mongoid/base.rb",
@@ -90,7 +91,6 @@ Gem::Specification.new do |s|
      "spec/database_cleaner/mongo_mapper/base_spec.rb",
      "spec/database_cleaner/mongo_mapper/mongo_examples.rb",
      "spec/database_cleaner/mongo_mapper/truncation_spec.rb",
-     "spec/database_cleaner/mongoid/truncation_spec.rb",
      "spec/database_cleaner/shared_strategy_spec.rb",
      "spec/rcov.opts",
      "spec/spec.opts",
@@ -116,7 +116,6 @@ Gem::Specification.new do |s|
      "spec/database_cleaner/mongo_mapper/base_spec.rb",
      "spec/database_cleaner/mongo_mapper/mongo_examples.rb",
      "spec/database_cleaner/mongo_mapper/truncation_spec.rb",
-     "spec/database_cleaner/mongoid/truncation_spec.rb",
      "spec/database_cleaner/shared_strategy_spec.rb",
      "spec/spec_helper.rb",
      "examples/features/step_definitions/activerecord_steps.rb",
