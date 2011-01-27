@@ -1,4 +1,6 @@
-== 0.6.1 (in git)
+== 0.6.2 (in git)
+
+== 0.6.1 2011-01-27
 
  === New Features
   * Default strategies for all ORM libs are defined. (GH-36, GH-38 Prem Sichanugrist)
