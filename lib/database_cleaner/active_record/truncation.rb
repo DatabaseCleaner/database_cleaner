@@ -72,7 +72,11 @@ module ActiveRecord
 
     class SQLServerAdapter < AbstractAdapter
       def truncate_table(table_name)
-        execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
+        begin
+          execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
+        rescue ActiveRecord::StatementInvalid
+          execute("DELETE FROM #{quote_table_name(table_name)};")
+        end
       end
     end
 
