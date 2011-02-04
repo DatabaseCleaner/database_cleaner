@@ -48,3 +48,18 @@ rescue LoadError
 end
 
 task :default => [:spec, :features]
+
+
+desc "Cleans the project of any tmp file that should not be included in the gemspec."
+task :clean do
+  ["examples/config/database.yml", "examples/db/activerecord_one.db", "examples/db/activerecord_two.db", "examples/db/datamapper_default.db",
+    "examples/db/datamapper_one.db", "examples/db/datamapper_two.db"].each do |f|
+    FileUtils.rm_f(f)
+  end
+  %w[*.sqlite3 *.log].each do |pattern|
+    `find . -name "#{pattern}" -delete`
+  end
+end
+
+desc "Cleans the dir and builds the gem"
+task :prep => [:clean, :gemspec, :build]
