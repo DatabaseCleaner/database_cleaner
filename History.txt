@@ -2,6 +2,7 @@
 
  === Bugfixes
   * Reversed GH-41 after larger community discussion. Mongo indexes are no longer dropped. (Ben Mabey)
+  * Truncation strategy works on SqlServer tables with FKs. (GH-33, Hugo Freire)
 
 == 0.6.1 2011-01-27
 
