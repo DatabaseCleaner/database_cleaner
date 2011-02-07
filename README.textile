@@ -93,6 +93,13 @@ end
 
 For use in Cucumber please see the section below.
 
+In rare cases DatabaseCleaner will encounter errors that it will log.  By default it uses STDOUT set to the ERROR level but you can configure this to use whatever Logger you desire.  Here's an example of using the Rails.logger in env.rb:
+
+<pre>
+  DatabaseCleaner.logger = Rails.logger
+</pre>
+
+
 h2. How to use with multiple ORM's
 
 Sometimes you need to use multiple ORMs in your application. You can use DatabaseCleaner to clean multiple ORMs, and multiple connections for those ORMs.

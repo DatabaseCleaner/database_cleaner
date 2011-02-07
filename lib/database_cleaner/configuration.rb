@@ -25,6 +25,18 @@ module DatabaseCleaner
     def connections
       @connections ||= [::DatabaseCleaner::Base.new]
     end
+    
+    def logger=(log_source)
+      @logger = log_source
+    end
+
+    def logger
+      return @logger if @logger
+      
+      @logger = Logger.new(STDOUT)
+      @logger.level = Logger::ERROR
+      @logger
+    end
 
     def strategy=(stratagem)
       self.connections.each { |connect| connect.strategy = stratagem }
