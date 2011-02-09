@@ -1,4 +1,11 @@
-== 0.6.2 (in git)
+== 0.6.x (in git)
+
+== 0.6.3 2011-02-09
+
+ === New Features
+  * Configurable logger to aid in debugging database cleaner. (Marty Haught)
+
+== 0.6.2 2011-02-04
 
  === New Features
   * Support IBM_DB Adapter for table truncation. This is for DB2 >= 9.7 (GH-39 Samer Abukhait)
