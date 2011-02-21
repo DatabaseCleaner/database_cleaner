@@ -101,7 +101,7 @@ module DataMapper
       def storage_names(repository = :default)
         sql = <<-SQL.compress_lines
           SELECT table_name FROM "information_schema"."tables"
-          WHERE table_schema = current_schema()
+          WHERE table_schema = current_schema() and table_type = 'BASE TABLE'
         SQL
         select(sql)
       end
