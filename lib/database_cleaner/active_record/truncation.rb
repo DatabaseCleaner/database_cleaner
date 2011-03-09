@@ -70,8 +70,12 @@ module ActiveRecord
         @cascade ||= db_version >=  "08.02" ? "CASCADE" : ""
       end
 
+      def restart_identity
+        @restart_identity ||= db_version >=  "08.04" ? "RESTART IDENTITY" : ""
+      end
+
       def truncate_table(table_name)
-        execute("TRUNCATE TABLE #{quote_table_name(table_name)} RESTART IDENTITY #{cascade};")
+        execute("TRUNCATE TABLE #{quote_table_name(table_name)} #{restart_identity} #{cascade};")
       end
 
     end
