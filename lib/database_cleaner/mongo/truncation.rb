@@ -14,7 +14,7 @@ module DatabaseCleaner
       private
 
       def collections
-        database.collections.select { |c| c.name !~ /^system/ }
+        database.collections.select { |c| c.name !~ /^system\./ }
       end
 
     end
