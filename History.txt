@@ -1,5 +1,7 @@
 == 0.6.x (in git)
 
+== 0.6.5 2011-03-08
+
 === Bugfixes
  * When truncating in postgresql (>= 8.4) sequences are now reset. (Greg Barnett)
  * Fixes the MongoDB truncation so non system collections starting with 'system' are not excluded for truncation. (Dmitry Naumov)
