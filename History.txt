@@ -1,5 +1,8 @@
 == 0.6.x (in git)
 
+=== Bugfixes
+ * When truncating in postgresql (>= 8.4) sequences are now reset. (Greg Barnett)
+
 == 0.6.4 2011-02-21
 
 === Bugfixes
