@@ -71,7 +71,7 @@ module ActiveRecord
       end
 
       def truncate_table(table_name)
-        execute("TRUNCATE TABLE #{quote_table_name(table_name)} #{cascade};")
+        execute("TRUNCATE TABLE #{quote_table_name(table_name)} RESTART IDENTITY #{cascade};")
       end
 
     end
