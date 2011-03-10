@@ -42,10 +42,15 @@ module DatabaseCleaner
       end
 
       def connection_klass
-        return ::ActiveRecord::Base if connection_hash.nil?
-        klass = create_connection_klass
-        klass.send :establish_connection, connection_hash
-        klass
+        @connection_klass ||= begin
+          if connection_hash.nil?
+            ::ActiveRecord::Base
+          else
+            klass = create_connection_klass
+            klass.send :establish_connection, connection_hash
+            klass
+          end
+        end
       end
     end
   end
