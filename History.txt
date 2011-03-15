@@ -1,5 +1,8 @@
 == 0.6.x (in git)
 
+=== Bugfixes
+ * Don't modify the array passed in with the :except key. (Eric Wollesen)
+
 == 0.6.5 2011-03-08
 
 === Bugfixes
