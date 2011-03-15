@@ -62,6 +62,16 @@ module ::DatabaseCleaner
           its(:only)   { should == nil }
           its(:except) { should == ["migration_storage_name"] }
         end
+
+        context "" do
+          EXCEPT_TABLES = ["something"]
+          subject { MigrationExample.new( { :except => EXCEPT_TABLES } ) }
+
+          it "should not modify the array of excepted tables" do
+            subject.except.should include("migration_storage_name")
+            EXCEPT_TABLES.should_not include("migration_storage_name")
+          end
+        end
       end
     end
   end
