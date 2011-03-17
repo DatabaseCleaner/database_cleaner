@@ -60,18 +60,15 @@ module ActiveRecord
     class PostgreSQLAdapter < AbstractAdapter
 
       def db_version
-        @db_version ||= select_values(
-          "SELECT CHARACTER_VALUE
-            FROM INFORMATION_SCHEMA.SQL_IMPLEMENTATION_INFO
-            WHERE IMPLEMENTATION_INFO_NAME = 'DBMS VERSION' ").join.to_s
+        @db_version ||= postgresql_version
       end
 
       def cascade
-        @cascade ||= db_version >=  "08.02" ? "CASCADE" : ""
+        @cascade ||= db_version >=  80200 ? 'CASCADE' : ''
       end
 
       def restart_identity
-        @restart_identity ||= db_version >=  "08.04" ? "RESTART IDENTITY" : ""
+        @restart_identity ||= db_version >=  80400 ? 'RESTART IDENTITY' : ''
       end
 
       def truncate_table(table_name)
