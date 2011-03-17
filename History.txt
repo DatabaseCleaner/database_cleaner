@@ -2,6 +2,7 @@
 
 === Bugfixes
  * Don't modify the array passed in with the :except key. (Eric Wollesen)
+ * Fixes version checking for postgresql. (Greg Barnett)
 
 == 0.6.5 2011-03-08
 
