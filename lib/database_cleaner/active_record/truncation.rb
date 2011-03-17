@@ -60,15 +60,15 @@ module ActiveRecord
     class PostgreSQLAdapter < AbstractAdapter
 
       def db_version
-        @db_version ||= select_value('SHOW SERVER_VERSION')
+        @db_version ||= postgresql_version
       end
 
       def cascade
-        @cascade ||= db_version >=  '8.2' ? 'CASCADE' : ''
+        @cascade ||= db_version >=  80200 ? 'CASCADE' : ''
       end
 
       def restart_identity
-        @restart_identity ||= db_version >=  '8.4' ? 'RESTART IDENTITY' : ''
+        @restart_identity ||= db_version >=  80400 ? 'RESTART IDENTITY' : ''
       end
 
       def truncate_table(table_name)
