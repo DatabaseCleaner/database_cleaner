@@ -1,6 +1,11 @@
 == 0.6.x (in git)
 
 === Bugfixes
+ * Explicity require ERB. (Vít Ondruch)
+
+== 0.6.6 2011-03-16
+
+=== Bugfixes
  * Don't modify the array passed in with the :except key. (Eric Wollesen)
  * Fixes version checking for postgresql. (Greg Barnett)
 
@@ -45,7 +50,7 @@
 == 0.6.0 2010-10-25 - The Multi-ORM/Connection Release
 
 This release has the often asked for functionality of being able to clean
-multiple databases within the same project.  This involves being able to 
+multiple databases within the same project.  This involves being able to
 clean databases managed by the same ORM (i.e. different connections) and
 also being able to clean databases managed by distinct ORMs.  So, for
 example you can now use DatabaseCleaner on a project that has ActiveRecord
