@@ -7,6 +7,24 @@ that is testing with a database.
 
 ActiveRecord, DataMapper, MongoMapper, Mongoid, and CouchPotato are supported.
 
+Here is an overview of the strategies supported for each library:
+
+|_. ORM        |_.  Truncation  |_.  Transaction  |_.  Deletion    |
+| ActiveRecord | Yes            | **Yes**         | Yes            |
+| DataMapper   | Yes            | **Yes**         | No             |
+| CouchPotato  | **Yes**        | No              | No             |
+| MongoMapper  | **Yes**        | No              | No             |
+| Mongoid      | **Yes**        | No              | No             |
+
+(Default strategy for each library is denoted in bold)
+
+The ActiveRecord @:deletion@ strategy is only useful for when the @:truncation@ strategy causes
+locks (as reported by some Oracle DB users).  The @:truncation@ strategy is the preferred option
+since it is much faster.
+
+Database Cleaner also includes a @null@ strategy (that does no cleaning at all) which can be used 
+with any ORM library. You can also explicitly use it by setting your strategy to @nil@.
+
 h2. How to use
 
 <pre>
@@ -27,7 +45,6 @@ With the :truncation strategy you can also pass in options, for example:
 </pre>
 
 (I should point out the truncation strategy will never truncate your schema_migrations table.)
-
 
 Some strategies require that you call DatabaseCleaner.start before calling clean
 (for example the :transaction one needs to know to open up a transaction). So
@@ -76,7 +93,37 @@ end
 
 For use in Cucumber please see the section below.
 
+In rare cases DatabaseCleaner will encounter errors that it will log.  By default it uses STDOUT set to the ERROR level but you can configure this to use whatever Logger you desire.  Here's an example of using the Rails.logger in env.rb:
 
+<pre>
+  DatabaseCleaner.logger = Rails.logger
+</pre>
+
+
+h2. How to use with multiple ORM's
+
+Sometimes you need to use multiple ORMs in your application. You can use DatabaseCleaner to clean multiple ORMs, and multiple connections for those ORMs.
+
+<pre>
+  #How to specify particular orms
+  DatabaseCleaner[:active_record].strategy = :transaction
+  DatabaseCleaner[:mongo_mapper].strategy = :truncation
+  
+  #How to specify particular connections
+  DatabaseCleaner[:active_record,{:connection => :two}]
+</pre>
+
+Usage beyond that remains the same with DatabaseCleaner.start calling any setup on the different configured connections, and DatabaseCleaner.clean executing afterwards.
+
+Configuration options
+
+
+|_. ORM         |_.   How to access               |_.   Notes                                                                |
+| Active Record | DatabaseCleaner[:active_record] | Connection specified as :symbol keys, loaded from config/database.yml    |
+| Data Mapper   | DatabaseCleaner[:data_mapper]   | Connection specified as :symbol keys, loaded via Datamapper repositories |
+| Mongo Mapper  | DatabaseCleaner[:mongo_mapper]  | Multiple connections not yet supported                                   |
+| Mongoid       | DatabaseCleaner[:mongoid]       | Multiple connections not yet supported                                   |
+| Couch Potato  | DatabaseCleaner[:couch_potato]  | Multiple connections not yet supported                                   |
 
 h2. Why?
 

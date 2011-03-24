@@ -4,3 +4,4 @@
 mtime
 --reverse
 --backtrace
+--debugger

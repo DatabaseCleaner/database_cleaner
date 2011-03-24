@@ -6,13 +6,14 @@ module DatabaseCleaner
   module CouchPotato
 
     describe Truncation do
+      let(:database) { mock('database') }
+
       before(:each) do
-        @database = mock('database')
-        ::CouchPotato.stub!(:couchrest_database).and_return(@database)
+        ::CouchPotato.stub!(:couchrest_database).and_return(database)
       end
 
       it "should re-create the database" do
-        @database.should_receive(:recreate!)
+        database.should_receive(:recreate!)
 
         Truncation.new.clean
       end
