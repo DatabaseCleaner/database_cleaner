@@ -2,6 +2,7 @@
 
 === Bugfixes
  * Explicity require ERB. (Vít Ondruch)
+ * Cache DB connections, fixes referential integrity bug when using multiple DBs. (John Ferlito)
 
 == 0.6.6 2011-03-16
 
