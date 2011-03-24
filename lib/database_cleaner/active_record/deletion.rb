@@ -53,10 +53,8 @@ module DatabaseCleaner::ActiveRecord
   class Deletion < Truncation
 
     def clean
-      connection.disable_referential_integrity do
-        tables_to_truncate.each do |table_name|
-          connection.delete_table table_name
-        end
+      each_table do |connection, table_name|
+        connection.delete_table table_name
       end
     end
 
