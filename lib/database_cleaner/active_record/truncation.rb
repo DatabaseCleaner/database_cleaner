@@ -118,7 +118,7 @@ module DatabaseCleaner::ActiveRecord
 
     def connection
        #::ActiveRecord::Base.connection
-       connection_klass.connection
+       @connection ||= connection_klass.connection
     end
 
     # overwritten
