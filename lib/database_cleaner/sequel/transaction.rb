@@ -5,11 +5,15 @@ module DatabaseCleaner
       include ::DatabaseCleaner::Sequel::Base
 
       def start
-        db.begin_transaction
+        @transactions ||= []
+        db.send(:add_transaction)
+        @transactions << db.send(:begin_transaction, db)
       end
   
       def clean
-        db.rollback_transaction
+        transaction = @transactions.pop
+        db.send(:rollback_transaction, transaction)
+        db.send(:remove_transaction, transaction)
       end
     end
   end
