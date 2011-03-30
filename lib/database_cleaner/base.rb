@@ -121,7 +121,7 @@ module DatabaseCleaner
         elsif defined? ::Sequel
           :sequel
         else
-          raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, or CouchPotato loaded?"
+          raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, or CouchPotato loaded?"
         end
       end
     end
