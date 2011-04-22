@@ -1,5 +1,7 @@
 == 0.6.x (in git)
 
+== 0.6.7 (in git) 2011-04-21
+
 === Bugfixes
  * Explicity require ERB. (Vít Ondruch)
  * Cache DB connections, fixes referential integrity bug when using multiple DBs. (John Ferlito)
