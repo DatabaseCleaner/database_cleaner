@@ -127,6 +127,7 @@ GEM
       linecache (>= 0.3)
     rubyforge (2.0.4)
       json_pure (>= 1.1.7)
+    sequel (3.21.0)
     sqlite3-ruby (1.3.1)
     stringex (1.1.0)
     sys-uname (0.8.4)
@@ -157,5 +158,6 @@ DEPENDENCIES
   rspactor
   rspec
   ruby-debug
+  sequel (~> 3.21.0)
   sqlite3-ruby
   tzinfo (= 0.3.22)
