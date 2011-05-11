@@ -118,15 +118,17 @@ module DatabaseCleaner
           :mongoid
         elsif defined? ::CouchPotato
           :couch_potato
+        elsif defined? ::Sequel
+          :sequel
         else
-          raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, or CouchPotato loaded?"
+          raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, or CouchPotato loaded?"
         end
       end
     end
 
     def set_default_orm_strategy
       case orm
-      when :active_record, :data_mapper
+      when :active_record, :data_mapper, :sequel
         self.strategy = :transaction
       when :mongo_mapper, :mongoid, :couch_potato
         self.strategy = :truncation

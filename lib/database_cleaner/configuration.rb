@@ -86,6 +86,8 @@ module DatabaseCleaner
           DatabaseCleaner::MongoMapper
         when :couch_potato
           DatabaseCleaner::CouchPotato
+        when :sequel
+          DatabaseCleaner::Sequel
       end
     end
   end

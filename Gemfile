@@ -32,6 +32,7 @@ group :development do
     gem "tzinfo",             "0.3.22"
   gem "mongo_mapper",         "0.8.2"
   gem "couch_potato",         "0.3.0"
+  gem "sequel",               "~>3.21.0"
   #gem "ibm_db"  # I don't want to add this dependency, even as a dev one since it requires DB2 to be installed
 end
 
