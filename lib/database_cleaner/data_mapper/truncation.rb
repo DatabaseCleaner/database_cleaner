@@ -42,7 +42,7 @@ module DataMapper
       # taken from http://github.com/godfat/dm-mapping/tree/master
       def storage_names(repository = :default)
         # activerecord-2.1.0/lib/active_record/connection_adapters/sqlite_adapter.rb: 177
-        sql = <<-SQL.compress_lines
+        sql = <<-SQL
           SELECT name
           FROM sqlite_master
           WHERE type = 'table' AND NOT name = 'sqlite_sequence'
@@ -68,7 +68,7 @@ module DataMapper
       # taken from http://github.com/godfat/dm-mapping/tree/master
       def storage_names(repository = :default)
         # activerecord-2.1.0/lib/active_record/connection_adapters/sqlite_adapter.rb: 177
-        sql = <<-SQL.compress_lines
+        sql = <<-SQL
           SELECT name
           FROM sqlite_master
           WHERE type = 'table' AND NOT name = 'sqlite_sequence'
@@ -99,7 +99,7 @@ module DataMapper
 
       # taken from http://github.com/godfat/dm-mapping/tree/master
       def storage_names(repository = :default)
-        sql = <<-SQL.compress_lines
+        sql = <<-SQL
           SELECT table_name FROM "information_schema"."tables"
           WHERE table_schema = current_schema() and table_type = 'BASE TABLE'
         SQL
