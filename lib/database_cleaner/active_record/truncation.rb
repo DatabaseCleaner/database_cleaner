@@ -12,6 +12,16 @@ module ActiveRecord
       def views
         @views ||= select_values("select table_name from information_schema.views where table_schema = '#{current_database}'") rescue []
       end
+
+      def truncate_table(table_name)
+        raise NotImplementedError
+      end
+
+      def truncate_tables(tables)
+        tables.each do |table_name|
+          self.truncate_table(table_name)
+        end
+      end
     end
 
     unless USE_ARJDBC_WORKAROUND
@@ -72,7 +82,11 @@ module ActiveRecord
       end
 
       def truncate_table(table_name)
-        execute("TRUNCATE TABLE #{quote_table_name(table_name)} #{restart_identity} #{cascade};")
+        truncate_tables([table_name])
+      end
+      
+      def truncate_tables(table_names)
+        execute("TRUNCATE TABLE #{table_names.map{|name| quote_table_name(name)}.join(', ')} #{restart_identity} #{cascade};")
       end
 
     end
@@ -103,17 +117,9 @@ module DatabaseCleaner::ActiveRecord
     include ::DatabaseCleaner::Generic::Truncation
 
     def clean
-      each_table do |connection, table_name|
-        connection.truncate_table table_name
-      end
-    end
-
-    def each_table
       connection = connection_klass.connection
       connection.disable_referential_integrity do
-        tables_to_truncate(connection).each do |table_name|
-          yield connection, table_name
-        end
+        connection.truncate_tables(tables_to_truncate(connection))
       end
     end
 
