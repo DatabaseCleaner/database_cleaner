@@ -1,6 +1,11 @@
 == 0.6.x (in git)
 
-== 0.6.7 (in git) 2011-04-21
+ === New Features
+
+ * Updates DataMapper strategies to work with DataMapper 1.1 (Xavier Shay and Anthony Williams)
+ * for AR and PSQL, truncate all tables with one command, improving performance due to avoiding cascades (Leonid Shevtsov)
+
+== 0.6.7 2011-04-21
 
 === Bugfixes
  * Explicity require ERB. (Vít Ondruch)
