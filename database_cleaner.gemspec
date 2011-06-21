@@ -51,7 +51,6 @@ Gem::Specification.new do |s|
      "features/support/env.rb",
      "features/support/feature_runner.rb",
      "lib/database_cleaner.rb",
-     "lib/database_cleaner/active_record/#transaction.rb#",
      "lib/database_cleaner/active_record/base.rb",
      "lib/database_cleaner/active_record/deletion.rb",
      "lib/database_cleaner/active_record/transaction.rb",
