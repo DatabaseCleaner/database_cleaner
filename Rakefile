@@ -56,7 +56,7 @@ task :clean do
     "examples/db/datamapper_one.db", "examples/db/datamapper_two.db"].each do |f|
     FileUtils.rm_f(f)
   end
-  %w[*.sqlite3 *.log].each do |pattern|
+  %w[*.sqlite3 *.log #* *.swp *.swo].each do |pattern|
     `find . -name "#{pattern}" -delete`
   end
 end
