@@ -53,12 +53,35 @@ module DatabaseCleaner::ActiveRecord
   class Deletion < Truncation
 
     def clean
-      connection = connection_klass.connection
-      tables_to_truncate(connection).each do |table_name|
-        connection.delete_table table_name
+      each_table do |connection, table_name|
+        connection.delete_table(table_name) if connection
       end
     end
 
+    def clean_tables *table_names
+      table_names = table_names.flatten.uniq.map(&:to_s)
+      each_table do |connection, table_name|
+        connection.delete_table(table_name) if connection && delete_table?(table_names, table_name)
+      end
+    end
+    
+    protected
+
+    def each_table
+      tables_to_delete.each do |table|
+        yield connection, table
+      end
+    end
+
+    def tables_to_delete
+      connection.tables
+    end
+    
+    def delete_table? tables, table
+      return true if tables.flatten.empty?
+      tables.include?(table.to_s)
+    end
+    
   end
 end
 

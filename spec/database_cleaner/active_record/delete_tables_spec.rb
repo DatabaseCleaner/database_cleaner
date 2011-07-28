@@ -1,0 +1,1 @@
+# Spec that test the new clean_tables feature
