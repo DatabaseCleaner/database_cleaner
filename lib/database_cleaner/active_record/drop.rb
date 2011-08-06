@@ -64,13 +64,17 @@ module DatabaseCleaner::ActiveRecord
 
     protected
 
+    def tables_to_drop
+      tables_to_truncate(connection)
+    end
+
     def drop_table? tables, table
       return true if tables.flatten.empty?
       tables.include?(table.to_s)
     end
 
     def each_table
-      tables_to_truncate.each do |table|
+      tables_to_drop.each do |table|
         yield connection, table
       end
     end

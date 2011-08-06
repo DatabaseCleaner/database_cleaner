@@ -24,6 +24,11 @@ module DatabaseCleaner
       it { should respond_to(:clean_tables) }
   end
 
+  describe "drop_tables" do
+    subject { DatabaseCleaner }
+      it { should respond_to(:drop_tables) }
+  end
+
   module ActiveRecord
     class ExampleStrategy
       include ::DatabaseCleaner::ActiveRecord::Base

@@ -74,7 +74,8 @@ module DatabaseCleaner::ActiveRecord
     end
 
     def tables_to_delete
-      connection.tables
+      # connection.tables
+      tables_to_truncate(connection)
     end
     
     def delete_table? tables, table
