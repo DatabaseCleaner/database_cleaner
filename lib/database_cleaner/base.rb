@@ -84,10 +84,10 @@ module DatabaseCleaner
     def clean_tables *names
       strategy = create_strategy(:deletion)
       strategy.clean_tables(*names)
-      strategy      
+      strategy
     end
 
-    def drop_tables *names         
+    def drop_tables *names
       strategy = create_strategy(:drop)
       strategy.drop_tables(*names) if strategy.respond_to? :drop_tables
       strategy

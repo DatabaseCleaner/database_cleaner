@@ -25,14 +25,14 @@ module DatabaseCleaner
     def connections
       @connections ||= [::DatabaseCleaner::Base.new]
     end
-    
+
     def logger=(log_source)
       @logger = log_source
     end
 
     def logger
       return @logger if @logger
-      
+
       @logger = Logger.new(STDOUT)
       @logger.level = Logger::ERROR
       @logger
@@ -59,14 +59,14 @@ module DatabaseCleaner
     alias clean! clean
 
     def clean_tables *tables
-      self.connections.each do |connection| 
+      self.connections.each do |connection|
         connection.clean_tables(*tables) if connection.respond_to?(:clean_tables)
       end
     end
     alias clean_tables! clean_tables
 
     def drop_tables *tables
-      self.connections.each do |connection| 
+      self.connections.each do |connection|
         connection.drop_tables(*tables) if connection.respond_to?(:drop_tables)
       end
     end

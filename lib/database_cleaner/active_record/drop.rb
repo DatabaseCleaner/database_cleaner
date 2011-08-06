@@ -56,40 +56,23 @@ module DatabaseCleaner::ActiveRecord
       end
     end
 
-    def drop_tables *table_names 
-      table_names = table_names.flatten.uniq.map(&:to_s)
+    def drop_tables *table_names
       each_table do |connection, table_name|
-        connection.drop_table(table_name)  if connection && drop_table?(table_names, table_name)          
+        connection.drop_table(table_name) if connection && drop_table?(table_names, table_name)
       end
     end
-    
+
     protected
-    
+
     def drop_table? tables, table
-      # return false if special_table.include? table.upcase
       return true if tables.flatten.empty?
       tables.include?(table.to_s)
-    end 
+    end
 
     def each_table
-      tables_to_drop.each do |table|
+      tables_to_truncate.each do |table|
         yield connection, table
       end
-    end
-
-    def tables_to_drop
-      connection.tables - special_tables
-    end
-
-    def special_tables
-      special_tables_map[:sqlite] + special_tables_map[:mysql]     
-    end
-    
-    def special_tables_map
-      {
-        :sqlite => ['SQLITE_TEMP_MASTER', 'SQLITE_MASTER'],
-        :mysql => ['INFORMATION_SCHEMA']
-      }
     end
   end
 end
