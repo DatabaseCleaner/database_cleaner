@@ -57,6 +57,7 @@ module DatabaseCleaner::ActiveRecord
     end
 
     def drop_tables *table_names
+      @tables = @table_names if !table_names.empty?
       each_table do |connection, table_name|
         connection.drop_table(table_name) if connection && drop_table?(table_names, table_name)
       end
@@ -65,7 +66,7 @@ module DatabaseCleaner::ActiveRecord
     protected
 
     def tables_to_drop
-      tables_to_truncate(connection)
+      @tables || (tables_to_truncate(connection) + @tables_to_exclude)
     end
 
     def drop_table? tables, table
