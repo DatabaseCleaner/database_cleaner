@@ -22,7 +22,6 @@ module DatabaseCleaner
     describe Drop do
       let(:connection) { mock('connection') }
 
-
       before(:each) do
         connection.stub!(:disable_referential_integrity).and_yield
         connection.stub!(:views).and_return([])
@@ -36,7 +35,7 @@ module DatabaseCleaner
         connection.should_receive(:drop_table).with('dogs')
         connection.should_not_receive(:drop_table).with('schema_migrations')
 
-        Drop.new.drop
+        Drop.new.clean
       end
 
       it "should only drop the tables specified in the :only option when provided" do
@@ -45,16 +44,17 @@ module DatabaseCleaner
         connection.should_receive(:drop_table).with('widgets')
         connection.should_not_receive(:drop_table).with('dogs')
 
-        Drop.new(:only => ['widgets']).drop
+        Drop.new(:only => ['widgets']).clean
       end
 
       it "should not drop the tables specified in the :except option" do
         connection.stub!(:tables).and_return(%w[schema_migrations widgets dogs])
 
+        connection.should_not_receive(:drop_table).with('schema_migrations')
         connection.should_receive(:drop_table).with('dogs')
         connection.should_not_receive(:drop_table).with('widgets')
 
-        Drop.new(:except => ['widgets']).drop
+        Drop.new(:except => ['widgets']).clean
       end
 
       it "should raise an error when :only and :except options are used" do
@@ -74,7 +74,17 @@ module DatabaseCleaner
         connection.should_receive(:drop_table).with('dogs')
         connection.should_not_receive(:drop_table).with('widgets')
 
-        Drop.new.drop
+        Drop.new.clean
+      end
+
+      it "should not drop the tables specified in the :except option" do
+        connection.stub!(:tables).and_return(%w[schema_migrations widgets dogs])
+
+        connection.should_receive(:drop_table).with('schema_migrations')
+        connection.should_receive(:drop_table).with('dogs')
+        connection.should_not_receive(:drop_table).with('widgets')
+
+        Drop.new(:except => ['widgets'], :include => ['migrations']).clean
       end
     end
   end

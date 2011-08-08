@@ -84,7 +84,7 @@ module ActiveRecord
       def truncate_table(table_name)
         truncate_tables([table_name])
       end
-      
+
       def truncate_tables(table_names)
         execute("TRUNCATE TABLE #{table_names.map{|name| quote_table_name(name)}.join(', ')} #{restart_identity} #{cascade};")
       end
@@ -129,8 +129,13 @@ module DatabaseCleaner::ActiveRecord
     end
 
     def tables_to_truncate(connection)
-       (@only || connection.tables) - @tables_to_exclude - connection.views
+      all_tables_to_include - all_tables_to_exclude
     end
+
+    def all_tables_to_exclude
+      tables_to_exclude + connection.views
+    end
+
 
     # overwritten
     def migration_storage_name

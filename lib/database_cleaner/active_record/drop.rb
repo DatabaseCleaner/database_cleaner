@@ -50,28 +50,30 @@ end
 module DatabaseCleaner::ActiveRecord
   class Drop < Truncation
 
-    def drop
+    def clean
       each_table do |connection, table_name|
         connection.drop_table table_name if connection
       end
     end
 
+    # drop all tables if no args given
     def drop_tables *table_names
-      @tables = @table_names if !table_names.empty?
+      tables_to_affect = table_names.empty? ? all_tables : table_names
+
       each_table do |connection, table_name|
-        connection.drop_table(table_name) if connection && drop_table?(table_names, table_name)
+        connection.drop_table(table_name) if connection && drop_table?(table_name)
       end
     end
 
     protected
 
     def tables_to_drop
-      @tables || (tables_to_truncate(connection) + @tables_to_exclude)
+      tables_to_truncate(connection)
     end
 
     def drop_table? tables, table
       return true if tables.flatten.empty?
-      tables.include?(table.to_s)
+      tables_to_affect.include?(table.to_s)
     end
 
     def each_table

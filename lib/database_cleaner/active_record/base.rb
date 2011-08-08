@@ -39,9 +39,9 @@ module DatabaseCleaner
       end
 
       def db_config_file
-        ERB.new(IO.read(db_config_file_path)).result        
+        ERB.new(IO.read(db_config_file_path)).result
       end
-      
+
       def db_config_file_path
         DatabaseCleaner::ActiveRecord.config_file_location || ActiveRecord.config_file_location
       end
