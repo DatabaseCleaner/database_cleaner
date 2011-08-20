@@ -99,6 +99,12 @@ In rare cases DatabaseCleaner will encounter errors that it will log.  By defaul
   DatabaseCleaner.logger = Rails.logger
 </pre>
 
+If you are using Postgres and have foreign key constraints, the truncation strategy will cause a lot of extra noise to appear on STDERR (in
+the form of "NOTICE truncate cascades" messages). To silence these warnings set the following log level in your postgresql.conf file:
+
+<pre>
+  client_min_messages = warning
+</pre>
 
 h2. How to use with multiple ORM's
 
