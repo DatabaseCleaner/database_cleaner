@@ -73,7 +73,7 @@ strategy the remaining time.  To accomplish this you can say:
 Example usage with RSpec:
 
 <pre>
-Spec::Runner.configure do |config|
+RSpec.configure do |config|
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
