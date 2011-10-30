@@ -19,6 +19,16 @@ module DatabaseCleaner
 
   end
 
+  describe "clean_tables" do
+    subject { DatabaseCleaner }
+      it { should respond_to(:clean_tables) }
+  end
+
+  describe "drop_tables" do
+    subject { DatabaseCleaner }
+      it { should respond_to(:drop_tables) }
+  end
+
   module ActiveRecord
     class ExampleStrategy
       include ::DatabaseCleaner::ActiveRecord::Base
@@ -32,6 +42,10 @@ module DatabaseCleaner
       before { ::DatabaseCleaner::ActiveRecord.stub(:config_file_location).and_return(config_location) }
 
       it_should_behave_like "a generic strategy"
+
+      describe "clean_tables" do
+        it { should respond_to(:clean_tables) }
+      end
 
       describe "db" do
         it { should respond_to(:db=) }
@@ -89,7 +103,7 @@ my_db:
         it "should skip config if config file is not available" do
           File.should_receive(:file?).with(config_location).and_return(false)
           subject.load_config
-          subject.connection_hash.should be_blank
+          subject.connection_hash.should be_nil
         end
       end
 

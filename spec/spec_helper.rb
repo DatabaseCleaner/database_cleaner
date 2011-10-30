@@ -4,7 +4,7 @@ require "bundler"
 Bundler.setup
 
 
-require 'spec'
+require 'rspec'
 #require 'active_record'
 #require 'mongo_mapper'
 $:.unshift(File.dirname(__FILE__) + '/../lib')
@@ -12,7 +12,7 @@ require 'database_cleaner'
 
 
 
-Spec::Runner.configure do |config|
+RSpec.configure do |config|
 
 end
 

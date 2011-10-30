@@ -84,7 +84,7 @@ module ActiveRecord
       def truncate_table(table_name)
         truncate_tables([table_name])
       end
-      
+
       def truncate_tables(table_names)
         execute("TRUNCATE TABLE #{table_names.map{|name| quote_table_name(name)}.join(', ')} #{restart_identity} #{cascade};")
       end
@@ -117,7 +117,6 @@ module DatabaseCleaner::ActiveRecord
     include ::DatabaseCleaner::Generic::Truncation
 
     def clean
-      connection = connection_klass.connection
       connection.disable_referential_integrity do
         connection.truncate_tables(tables_to_truncate(connection))
       end
@@ -125,9 +124,18 @@ module DatabaseCleaner::ActiveRecord
 
     private
 
-    def tables_to_truncate(connection)
-       (@only || connection.tables) - @tables_to_exclude - connection.views
+    def connection
+      connection_klass.connection
     end
+
+    def tables_to_truncate(connection)
+      all_tables_to_include - all_tables_to_exclude
+    end
+
+    def all_tables_to_exclude
+      tables_to_exclude + connection.views
+    end
+
 
     # overwritten
     def migration_storage_name

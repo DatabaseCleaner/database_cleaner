@@ -1,3 +1,4 @@
+Gemfile.lock
 *.sw?
 .DS_Store
 coverage
@@ -7,3 +8,4 @@ bundled_gems/
 vendor/
 examples/db/*.db
 examples/config/database.yml
+*.gem
