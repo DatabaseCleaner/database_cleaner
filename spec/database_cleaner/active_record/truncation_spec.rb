@@ -31,19 +31,15 @@ module DatabaseCleaner
 
       it "should truncate all tables except for schema_migrations" do
         connection.stub!(:tables).and_return(%w[schema_migrations widgets dogs])
-
-        connection.should_receive(:truncate_table).with('widgets')
-        connection.should_receive(:truncate_table).with('dogs')
-        connection.should_not_receive(:truncate_table).with('schema_migrations')
-
+        
+        connection.should_receive(:truncate_tables).with(['widgets', 'dogs'])
         Truncation.new.clean
       end
 
       it "should only truncate the tables specified in the :only option when provided" do
         connection.stub!(:tables).and_return(%w[schema_migrations widgets dogs])
 
-        connection.should_receive(:truncate_table).with('widgets')
-        connection.should_not_receive(:truncate_table).with('dogs')
+        connection.should_receive(:truncate_tables).with(['widgets'])
 
         Truncation.new(:only => ['widgets']).clean
       end
@@ -51,8 +47,7 @@ module DatabaseCleaner
       it "should not truncate the tables specified in the :except option" do
         connection.stub!(:tables).and_return(%w[schema_migrations widgets dogs])
 
-        connection.should_receive(:truncate_table).with('dogs')
-        connection.should_not_receive(:truncate_table).with('widgets')
+        connection.should_receive(:truncate_tables).with(['dogs'])
 
         Truncation.new(:except => ['widgets']).clean
       end
@@ -71,8 +66,7 @@ module DatabaseCleaner
         connection.stub!(:tables).and_return(%w[widgets dogs])
         connection.stub!(:views).and_return(["widgets"])
 
-        connection.should_receive(:truncate_table).with('dogs')
-        connection.should_not_receive(:truncate_table).with('widgets')
+        connection.should_receive(:truncate_tables).with(['dogs'])
 
         Truncation.new.clean
       end
