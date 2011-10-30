@@ -77,6 +77,22 @@ module DatabaseCleaner
       strategy.clean
     end
 
+    def drop
+      strategy.drop if strategy.respond_to? :drop
+    end
+
+    def clean_tables *names
+      strategy = create_strategy(:deletion)
+      strategy.clean_tables(*names)
+      strategy
+    end
+
+    def drop_tables *names
+      strategy = create_strategy(:drop)
+      strategy.drop_tables(*names) if strategy.respond_to? :drop_tables
+      strategy
+    end
+
     alias clean! clean
 
     def auto_detected?

@@ -8,81 +8,76 @@ require 'database_cleaner/active_record/truncation'
 
 module ActiveRecord
   module ConnectionAdapters
-
     class MysqlAdapter < MYSQL_ADAPTER_PARENT
-      def delete_table(table_name)
-        execute("DELETE FROM #{quote_table_name(table_name)};")
+      def drop_table(table_name)
+        execute("DROP #{quote_table_name(table_name)};")
       end
     end
 
     class Mysql2Adapter < AbstractAdapter
-      def delete_table(table_name)
-        execute("DELETE FROM #{quote_table_name(table_name)};")
+      def drop_table(table_name)
+        execute("DROP #{quote_table_name(table_name)};")
       end
     end
 
     class JdbcAdapter < AbstractAdapter
-      def delete_table(table_name)
-          execute("DELETE FROM #{quote_table_name(table_name)};")
+      def drop_table(table_name)
+          execute("DROP #{quote_table_name(table_name)};")
       end
     end
 
     class PostgreSQLAdapter < AbstractAdapter
-      def delete_table(table_name)
-        execute("DELETE FROM #{quote_table_name(table_name)};")
+      def drop_table(table_name)
+        execute("DROP #{quote_table_name(table_name)};")
       end
     end
 
     class SQLServerAdapter < AbstractAdapter
-      def delete_table(table_name)
-        execute("DELETE FROM #{quote_table_name(table_name)};")
+      def drop_table(table_name)
+        execute("DROP #{quote_table_name(table_name)};")
       end
     end
 
     class OracleEnhancedAdapter < AbstractAdapter
-      def delete_table(table_name)
-        execute("DELETE FROM #{quote_table_name(table_name)}")
+      def drop_table(table_name)
+        execute("DROP #{quote_table_name(table_name)}")
       end
     end
-
   end
 end
 
 
 module DatabaseCleaner::ActiveRecord
-  class Deletion < Truncation
+  class Drop < Truncation
 
-    def clean
+    def drop
       each_table do |connection, table_name|
-        connection.delete_table(table_name) if connection
+        connection.drop_table table_name if connection
       end
     end
 
-    def clean_tables *table_names
-      table_names = table_names.flatten.uniq.map(&:to_s)
+    def drop_tables *table_names
       each_table do |connection, table_name|
-        connection.delete_table(table_name) if connection && delete_table?(table_names, table_name)
+        connection.drop_table(table_name) if connection && drop_table?(table_names, table_name)
       end
     end
-    
+
     protected
 
-    def each_table
-      tables_to_delete.each do |table|
-        yield connection, table
-      end
-    end
-
-    def tables_to_delete
-      # connection.tables
+    def tables_to_drop
       tables_to_truncate(connection)
     end
-    
-    def delete_table? tables, table
+
+    def drop_table? tables, table
       return true if tables.flatten.empty?
       tables.include?(table.to_s)
     end
-    
+
+    def each_table
+      tables_to_drop.each do |table|
+        yield connection, table
+      end
+    end
   end
 end
 
