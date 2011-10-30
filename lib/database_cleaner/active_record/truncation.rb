@@ -117,13 +117,16 @@ module DatabaseCleaner::ActiveRecord
     include ::DatabaseCleaner::Generic::Truncation
 
     def clean
-      connection = connection_klass.connection
       connection.disable_referential_integrity do
         connection.truncate_tables(tables_to_truncate(connection))
       end
     end
 
     private
+
+    def connection
+      connection_klass.connection
+    end
 
     def tables_to_truncate(connection)
        (@only || connection.tables) - @tables_to_exclude - connection.views

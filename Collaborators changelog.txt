@@ -1,0 +1,6 @@
+== @kristianmandrup
+
+- Updated specs to use Rspec 2.x
+- Updated Gemfile and dependencies
+- Added option to set location of db config file with spec to prove it works!
+- Added new #clean_tables method that deletes all tables in DB or the list of tables passed as argument
