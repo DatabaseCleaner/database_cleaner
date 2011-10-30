@@ -17,6 +17,7 @@ module DatabaseCleaner
          Temp_MM = ::MongoMapper  if defined?(::MongoMapper)  and not defined?(Temp_MM)
          Temp_MO = ::Mongoid      if defined?(::Mongoid)      and not defined?(Temp_MO)
          Temp_CP = ::CouchPotato  if defined?(::CouchPotato)  and not defined?(Temp_CP)
+         Temp_SQ = ::Sequel       if defined?(::Sequel)       and not defined?(Temp_SQ)
        end
 
        #Remove all ORM mocks and restore from cache
@@ -26,6 +27,7 @@ module DatabaseCleaner
          Object.send(:remove_const, 'MongoMapper')  if defined?(::MongoMapper)
          Object.send(:remove_const, 'Mongoid')      if defined?(::Mongoid)
          Object.send(:remove_const, 'CouchPotato')  if defined?(::CouchPotato)
+         Object.send(:remove_const, 'Sequel')       if defined?(::Sequel)
 
 
          # Restore ORMs
@@ -43,8 +45,9 @@ module DatabaseCleaner
          Object.send(:remove_const, 'MongoMapper')  if defined?(::MongoMapper)
          Object.send(:remove_const, 'Mongoid')      if defined?(::Mongoid)
          Object.send(:remove_const, 'CouchPotato')  if defined?(::CouchPotato)
+         Object.send(:remove_const, 'Sequel')       if defined?(::Sequel)
        end
-
+       
        let(:cleaner) { DatabaseCleaner::Base.new :autodetect }
 
        it "should raise an error when no ORM is detected" do
@@ -57,6 +60,7 @@ module DatabaseCleaner
          Object.const_set('MongoMapper', 'Mapping mock mongos')
          Object.const_set('Mongoid',     'Mongoid mock')
          Object.const_set('CouchPotato', 'Couching mock potatos')
+         Object.const_set('Sequel',      'Sequel mock')
 
          cleaner.orm.should == :active_record
          cleaner.should be_auto_detected
@@ -67,6 +71,7 @@ module DatabaseCleaner
          Object.const_set('MongoMapper', 'Mapping mock mongos')
          Object.const_set('Mongoid',     'Mongoid mock')
          Object.const_set('CouchPotato', 'Couching mock potatos')
+         Object.const_set('Sequel',      'Sequel mock')
 
          cleaner.orm.should == :data_mapper
          cleaner.should be_auto_detected
@@ -76,6 +81,7 @@ module DatabaseCleaner
          Object.const_set('MongoMapper', 'Mapping mock mongos')
          Object.const_set('Mongoid',     'Mongoid mock')
          Object.const_set('CouchPotato', 'Couching mock potatos')
+         Object.const_set('Sequel',      'Sequel mock')
 
          cleaner.orm.should == :mongo_mapper
          cleaner.should be_auto_detected
@@ -84,15 +90,24 @@ module DatabaseCleaner
        it "should detect Mongoid fourth" do
          Object.const_set('Mongoid',     'Mongoid mock')
          Object.const_set('CouchPotato', 'Couching mock potatos')
+         Object.const_set('Sequel',      'Sequel mock')
 
          cleaner.orm.should == :mongoid
          cleaner.should be_auto_detected
        end
 
-       it "should detect CouchPotato last" do
+       it "should detect CouchPotato fifth" do
          Object.const_set('CouchPotato', 'Couching mock potatos')
+         Object.const_set('Sequel',      'Sequel mock')
 
          cleaner.orm.should == :couch_potato
+         cleaner.should be_auto_detected
+       end
+       
+       it "should detect Sequel last" do
+         Object.const_set('Sequel', 'Sequel mock')
+
+         cleaner.orm.should == :sequel
          cleaner.should be_auto_detected
        end
     end
