@@ -4,13 +4,10 @@ module ::DatabaseCleaner
 
        def self.included(base)
          base.extend(ClassMethods)
-         base.send(:include, InstanceMethods)
        end
 
-       module InstanceMethods
-         def db
-           :default
-         end
+       def db
+         :default
        end
 
        module ClassMethods
