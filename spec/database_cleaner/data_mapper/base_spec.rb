@@ -14,17 +14,7 @@ module DatabaseCleaner
 
     describe ExampleStrategy do
       it_should_behave_like "a generic strategy"
-      it { should respond_to(:db)  }
-      it { should respond_to(:db=) }
-
-      it "should store my desired db" do
-        subject.db = :my_db
-        subject.db.should == :my_db
-      end
-
-      it "should default to :default" do
-        subject.db.should == :default
-      end
+      it_should_behave_like "a strategy with configurable db"
     end
   end
 end

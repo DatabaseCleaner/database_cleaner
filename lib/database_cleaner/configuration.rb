@@ -4,6 +4,7 @@ module DatabaseCleaner
 
   class NoORMDetected < StandardError;   end
   class UnknownStrategySpecified < ArgumentError;   end
+  class UnspecifiedDatabase < ArgumentError;   end
 
   class << self
     def [](orm,opts = {})

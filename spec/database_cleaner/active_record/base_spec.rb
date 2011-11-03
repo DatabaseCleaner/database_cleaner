@@ -34,17 +34,12 @@ module DatabaseCleaner
       it_should_behave_like "a generic strategy"
 
       describe "db" do
-        it { should respond_to(:db=) }
+        before(:each) { subject.stub(:load_config)}
+        it_should_behave_like "a strategy with configurable db"
 
         it "should store my desired db" do
-          subject.stub(:load_config)
-
           subject.db = :my_db
           subject.db.should == :my_db
-        end
-
-        it "should default to :default" do
-          subject.db.should == :default
         end
 
         it "should load_config when I set db" do
@@ -54,9 +49,6 @@ module DatabaseCleaner
       end
 
       describe "load_config" do
-
-        it { should respond_to(:load_config) }
-
         before do
           yaml = <<-Y
 my_db:

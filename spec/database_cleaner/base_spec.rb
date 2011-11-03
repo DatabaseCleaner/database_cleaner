@@ -47,7 +47,7 @@ module DatabaseCleaner
          Object.send(:remove_const, 'CouchPotato')  if defined?(::CouchPotato)
          Object.send(:remove_const, 'Sequel')       if defined?(::Sequel)
        end
-       
+
        let(:cleaner) { DatabaseCleaner::Base.new :autodetect }
 
        it "should raise an error when no ORM is detected" do
@@ -103,7 +103,7 @@ module DatabaseCleaner
          cleaner.orm.should == :couch_potato
          cleaner.should be_auto_detected
        end
-       
+
        it "should detect Sequel last" do
          Object.const_set('Sequel', 'Sequel mock')
 
@@ -128,12 +128,12 @@ module DatabaseCleaner
 
     describe "comparison" do
       it "should be equal if orm, connection and strategy are the same" do
-        strategy = mock("strategy")
+        strategy = mock("strategy", {:db= => nil})
 
-        one = DatabaseCleaner::Base.new(:active_record,:connection => :default)
+        one = DatabaseCleaner::Base.new(:active_record,:connection => :foo)
         one.strategy = strategy
 
-        two = DatabaseCleaner::Base.new(:active_record,:connection => :default)
+        two = DatabaseCleaner::Base.new(:active_record,:connection => :foo)
         two.strategy = strategy
 
         one.should == two
@@ -160,7 +160,7 @@ module DatabaseCleaner
           cleaner = ::DatabaseCleaner::Base.new "mongoid"
           cleaner.orm.should == :mongoid
         end
-        
+
         it "is autodetected if orm is not provided" do
           cleaner = ::DatabaseCleaner::Base.new
           cleaner.should be_auto_detected
@@ -178,8 +178,8 @@ module DatabaseCleaner
     end
 
     describe "db" do
-      it "should default to :default" do
-        subject.db.should == :default
+      it "should default to :unspecified" do
+        subject.db.should == :unspecified
       end
 
       it "should return any stored db value" do
@@ -219,14 +219,7 @@ module DatabaseCleaner
       context "when strategy doesn't supports db specification" do
         before(:each) { strategy.stub(:respond_to?).with(:db=).and_return false }
 
-        it "should check to see if db is :default" do
-          db = mock("default")
-          db.should_receive(:==).with(:default).and_return(true)
-
-          subject.strategy_db = db
-        end
-
-        it "should raise an argument error when db isn't default" do
+        it "raises an error when db isn't default" do
           db = mock("a db")
           expect{ subject.strategy_db = db }.to raise_error ArgumentError
         end

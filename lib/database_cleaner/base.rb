@@ -20,13 +20,13 @@ module DatabaseCleaner
     def strategy_db=(desired_db)
       if strategy.respond_to? :db=
         strategy.db = desired_db
-      elsif desired_db!= :default
-        raise ArgumentError, "You must provide a strategy object that supports non default databases when you specify a database"
+      elsif desired_db != :unspecified
+        raise ArgumentError, "The #{strategy.class} strategy does not allow you to specify a database. Use a different strategy or remove the database specification."
       end
     end
 
     def db
-      @db || :default
+      @db || :unspecified
     end
 
     def create_strategy(*args)

@@ -13,9 +13,11 @@ module DatabaseCleaner
       end
 
       def db
-        return @db if @db && @db != :default
-        raise "As you have more than one active sequel database you have to specify the one to use manually!" if ::Sequel::DATABASES.count > 1 
-        ::Sequel::DATABASES.first || :default
+        return @db if @db && @db != :unspecified
+        if ::Sequel::DATABASES.count > 1
+          raise ::DatabaseCleaner::UnspecifiedDatabase, "You have more than one active sequel database. You must specify which one to use!"
+        end
+        ::Sequel::DATABASES.first || :unspecified
       end
     end
   end
