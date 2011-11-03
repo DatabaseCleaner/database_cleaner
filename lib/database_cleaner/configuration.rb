@@ -25,48 +25,48 @@ module DatabaseCleaner
     def connections
       @connections ||= [::DatabaseCleaner::Base.new]
     end
-    
+
     def logger=(log_source)
       @logger = log_source
     end
 
     def logger
       return @logger if @logger
-      
+
       @logger = Logger.new(STDOUT)
       @logger.level = Logger::ERROR
       @logger
     end
 
     def strategy=(stratagem)
-      self.connections.each { |connect| connect.strategy = stratagem }
+      connections.each { |connect| connect.strategy = stratagem }
       remove_duplicates
     end
 
     def orm=(orm)
-      self.connections.each { |connect| connect.orm = orm }
+      connections.each { |connect| connect.orm = orm }
       remove_duplicates
     end
 
     def start
-      self.connections.each { |connection| connection.start }
+      connections.each { |connection| connection.start }
     end
 
     def clean
-      self.connections.each { |connection| connection.clean }
+      connections.each { |connection| connection.clean }
     end
 
     alias clean! clean
 
     def clean_with(*args)
-      self.connections.each { |connection| connection.clean_with(*args) }
+      connections.each { |connection| connection.clean_with(*args) }
     end
 
     alias clean_with! clean_with
 
     def remove_duplicates
       temp = []
-      self.connections.each do |connect|
+      connections.each do |connect|
         temp.push connect unless temp.include? connect
       end
       @connections = temp
