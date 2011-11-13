@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{database_cleaner}
-  s.version = "0.6.7"
+  s.version = "0.7.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Ben Mabey"]
-  s.date = %q{2011-04-21}
+  s.authors = [%q{Ben Mabey}]
+  s.date = %q{2011-11-12}
   s.description = %q{Strategies for cleaning databases.  Can be used to ensure a clean state for testing.}
   s.email = %q{ben@benmabey.com}
   s.extra_rdoc_files = [
@@ -71,6 +71,9 @@ Gem::Specification.new do |s|
      "lib/database_cleaner/mongoid/base.rb",
      "lib/database_cleaner/mongoid/truncation.rb",
      "lib/database_cleaner/null_strategy.rb",
+     "lib/database_cleaner/sequel/base.rb",
+     "lib/database_cleaner/sequel/transaction.rb",
+     "lib/database_cleaner/sequel/truncation.rb",
      "spec/database_cleaner/active_record/base_spec.rb",
      "spec/database_cleaner/active_record/transaction_spec.rb",
      "spec/database_cleaner/active_record/truncation_spec.rb",
@@ -85,15 +88,18 @@ Gem::Specification.new do |s|
      "spec/database_cleaner/mongo_mapper/base_spec.rb",
      "spec/database_cleaner/mongo_mapper/mongo_examples.rb",
      "spec/database_cleaner/mongo_mapper/truncation_spec.rb",
+     "spec/database_cleaner/sequel/base_spec.rb",
+     "spec/database_cleaner/sequel/transaction_spec.rb",
+     "spec/database_cleaner/sequel/truncation_spec.rb",
      "spec/database_cleaner/shared_strategy_spec.rb",
      "spec/rcov.opts",
      "spec/spec.opts",
      "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/bmabey/database_cleaner}
-  s.rdoc_options = ["--charset=UTF-8"]
-  s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.7}
+  s.rdoc_options = [%q{--charset=UTF-8}]
+  s.require_paths = [%q{lib}]
+  s.rubygems_version = %q{1.8.5}
   s.summary = %q{Strategies for cleaning databases.  Can be used to ensure a clean state for testing.}
   s.test_files = [
     "spec/database_cleaner/active_record/base_spec.rb",
@@ -110,6 +116,9 @@ Gem::Specification.new do |s|
      "spec/database_cleaner/mongo_mapper/base_spec.rb",
      "spec/database_cleaner/mongo_mapper/mongo_examples.rb",
      "spec/database_cleaner/mongo_mapper/truncation_spec.rb",
+     "spec/database_cleaner/sequel/base_spec.rb",
+     "spec/database_cleaner/sequel/transaction_spec.rb",
+     "spec/database_cleaner/sequel/truncation_spec.rb",
      "spec/database_cleaner/shared_strategy_spec.rb",
      "spec/spec_helper.rb",
      "examples/features/step_definitions/activerecord_steps.rb",
@@ -127,7 +136,6 @@ Gem::Specification.new do |s|
   ]
 
   if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
