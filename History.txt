@@ -2,8 +2,14 @@
 
  === New Features
 
+ * Sequel Support (Corin Langosch)
  * Updates DataMapper strategies to work with DataMapper 1.1 (Xavier Shay and Anthony Williams)
  * for AR and PSQL, truncate all tables with one command, improving performance due to avoiding cascades (Leonid Shevtsov)
+
+=== Bugfixes
+
+  * Avoids trying to load the ':default' ActiveRecord config. #72 (Ben Mabey)
+
 
 == 0.6.7 2011-04-21
 
