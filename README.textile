@@ -70,7 +70,7 @@ strategy the remaining time.  To accomplish this you can say:
   # then make the DatabaseCleaner.start and DatabaseCleaner.clean calls appropriately
 </pre>
 
-Example usage with RSpec:
+h3. RSpec Example
 
 <pre>
 RSpec.configure do |config|
@@ -91,7 +91,39 @@ RSpec.configure do |config|
 end
 </pre>
 
-For use in Cucumber please see the section below.
+h3. Cucumber Example
+
+Add this to your env.rb file:
+<pre>
+begin
+
+  # then, whenever you need to clean the DB
+  #DatabaseCleaner.clean
+  require 'database_cleaner'
+
+  require 'database_cleaner/cucumber'
+
+  DatabaseCleaner.strategy = :truncation
+rescue NameError
+  raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
+end
+</pre>
+
+A good idea is to create the before and after hooks to use the DatabaseCleaner.start and DatabaseCleaner.clean methods.
+
+Inside features/support/hooks.rb:
+<pre>
+Before do
+  DatabaseCleaner.start
+end
+
+After do |scenario|
+  DatabaseCleaner.clean
+end
+</pre>
+
+This should cover the basics of tear down between scenarios and keeping your database clean. 
+For more examples see the section "Why?"
 
 In rare cases DatabaseCleaner will encounter errors that it will log.  By default it uses STDOUT set to the ERROR level but you can configure this to use whatever Logger you desire.  Here's an example of using the Rails.logger in env.rb:
 
