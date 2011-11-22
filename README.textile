@@ -96,13 +96,8 @@ h3. Cucumber Example
 Add this to your env.rb file:
 <pre>
 begin
-
-  # then, whenever you need to clean the DB
-  #DatabaseCleaner.clean
   require 'database_cleaner'
-
   require 'database_cleaner/cucumber'
-
   DatabaseCleaner.strategy = :truncation
 rescue NameError
   raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
