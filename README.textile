@@ -122,6 +122,8 @@ end
 This should cover the basics of tear down between scenarios and keeping your database clean. 
 For more examples see the section "Why?"
 
+h2. Common Errors
+
 In rare cases DatabaseCleaner will encounter errors that it will log.  By default it uses STDOUT set to the ERROR level but you can configure this to use whatever Logger you desire.  Here's an example of using the Rails.logger in env.rb:
 
 <pre>
