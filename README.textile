@@ -93,7 +93,7 @@ end
 
 h3. Cucumber Example
 
-Add this to your env.rb file:
+Add this to your features/support/env.rb file:
 
 <pre>
 begin
