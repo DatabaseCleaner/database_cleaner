@@ -94,6 +94,7 @@ end
 h3. Cucumber Example
 
 Add this to your env.rb file:
+
 <pre>
 begin
   require 'database_cleaner'
@@ -107,6 +108,7 @@ end
 A good idea is to create the before and after hooks to use the DatabaseCleaner.start and DatabaseCleaner.clean methods.
 
 Inside features/support/hooks.rb:
+
 <pre>
 Before do
   DatabaseCleaner.start
