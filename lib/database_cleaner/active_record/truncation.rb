@@ -31,6 +31,7 @@ module ActiveRecord
 
     MYSQL_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
     SQLITE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : SQLiteAdapter
+    POSTGRE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : PostgreSQLAdapter
 
     class MysqlAdapter < MYSQL_ADAPTER_PARENT
       def truncate_table(table_name)
@@ -67,7 +68,7 @@ module ActiveRecord
       end
     end
 
-    class PostgreSQLAdapter < AbstractAdapter
+    class PostgreSQLAdapter < POSTGRE_ADAPTER_PARENT
 
       def db_version
         @db_version ||= postgresql_version
@@ -136,5 +137,6 @@ module DatabaseCleaner::ActiveRecord
 
   end
 end
+
 
 
