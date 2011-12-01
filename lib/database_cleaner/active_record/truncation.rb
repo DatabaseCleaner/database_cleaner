@@ -53,6 +53,7 @@ module ActiveRecord
     class SQLite3Adapter < SQLITE_ADAPTER_PARENT
       def delete_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)};")
+        execute("DELETE FROM sqlite_sequence where name = '#{table_name}';")
       end
       alias truncate_table delete_table
     end
