@@ -53,6 +53,7 @@ module DataMapper
 
       def truncate_table(table_name)
         execute("DELETE FROM #{quote_name(table_name)};")
+        execute("DELETE FROM sqlite_sequence where name = '#{table_name}';")
       end
 
       # this is a no-op copied from activerecord
@@ -79,6 +80,7 @@ module DataMapper
 
       def truncate_table(table_name)
         execute("DELETE FROM #{quote_name(table_name)};")
+        execute("DELETE FROM sqlite_sequence where name = '#{table_name}';")
       end
 
       # this is a no-op copied from activerecord
@@ -107,7 +109,7 @@ module DataMapper
       end
 
       def truncate_table(table_name)
-        execute("TRUNCATE TABLE #{quote_name(table_name)} CASCADE;")
+        execute("TRUNCATE TABLE #{quote_name(table_name)} RESTART IDENTITY CASCADE;")
       end
 
       # FIXME
