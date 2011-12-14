@@ -7,6 +7,7 @@ GEM
     activesupport (2.3.8)
     addressable (2.2.0)
     bson (1.0.4)
+    bson_ext (1.0.4)
     builder (2.1.2)
     columnize (0.3.1)
     couch_potato (0.3.0)
@@ -143,6 +144,7 @@ PLATFORMS
 DEPENDENCIES
   ZenTest
   activerecord (= 2.3.8)
+  bson_ext (= 1.0.4)
   bundler
   couch_potato (= 0.3.0)
   cucumber
@@ -151,6 +153,7 @@ DEPENDENCIES
   dm-sqlite-adapter (= 1.0.0)
   jeweler
   json_pure
+  mongo (= 1.0.7)
   mongo_mapper (= 0.8.2)
   mongoid (= 1.9.1)
   rake
