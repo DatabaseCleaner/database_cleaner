@@ -14,6 +14,8 @@ module DatabaseCleaner::ActiveRecord
 
 
     def clean
+      return unless connection_klass.connection.open_transactions > 0
+
       connection_klass.connection.rollback_db_transaction
 
       if connection_klass.connection.respond_to?(:decrement_open_transactions)

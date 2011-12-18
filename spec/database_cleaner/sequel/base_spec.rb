@@ -24,6 +24,7 @@ module DatabaseCleaner
       end
 
       it "should default to :default" do
+        pending "I figure out how to use Sequel and write some real tests for it..."
         subject.db.should == :default
       end
     end

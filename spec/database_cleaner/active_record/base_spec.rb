@@ -34,7 +34,6 @@ module DatabaseCleaner
       it_should_behave_like "a generic strategy"
 
       describe "db" do
-        it { should respond_to(:db=) }
 
         it "should store my desired db" do
           subject.stub(:load_config)
@@ -55,9 +54,8 @@ module DatabaseCleaner
 
       describe "load_config" do
 
-        it { should respond_to(:load_config) }
-
         before do
+          subject.db = :my_db
           yaml = <<-Y
 my_db:
   database: <%= "ONE".downcase %>
@@ -81,7 +79,6 @@ my_db:
         end
 
         it "should store the relevant config in connection_hash" do
-          subject.should_receive(:db).and_return(:my_db)
           subject.load_config
           subject.connection_hash.should == {"database" => "one"}
         end
@@ -91,11 +88,17 @@ my_db:
           subject.load_config
           subject.connection_hash.should be_blank
         end
+
+        it "skips the file when the db is set to :default" do
+          # to avoid https://github.com/bmabey/database_cleaner/issues/72
+          subject.db = :default
+          YAML.should_not_receive(:load)
+          subject.load_config
+        end
+
       end
 
       describe "connection_hash" do
-        it { should respond_to(:connection_hash) }
-        it { should respond_to(:connection_hash=) }
         it "should store connection_hash" do
           subject.connection_hash = { :key => "value" }
           subject.connection_hash.should == { :key => "value" }
