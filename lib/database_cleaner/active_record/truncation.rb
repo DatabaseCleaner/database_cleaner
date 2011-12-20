@@ -86,7 +86,7 @@ module ActiveRecord
       def truncate_table(table_name)
         truncate_tables([table_name])
       end
-      
+
       def truncate_tables(table_names)
         execute("TRUNCATE TABLE #{table_names.map{|name| quote_table_name(name)}.join(', ')} #{restart_identity} #{cascade};")
       end
@@ -119,7 +119,6 @@ module DatabaseCleaner::ActiveRecord
     include ::DatabaseCleaner::Generic::Truncation
 
     def clean
-      connection = connection_klass.connection
       connection.disable_referential_integrity do
         connection.truncate_tables(tables_to_truncate(connection))
       end
@@ -138,6 +137,3 @@ module DatabaseCleaner::ActiveRecord
 
   end
 end
-
-
-

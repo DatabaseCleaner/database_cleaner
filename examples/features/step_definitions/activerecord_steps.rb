@@ -1,9 +1,9 @@
 Given /^I have setup database cleaner to clean multiple databases using activerecord$/ do
   #DatabaseCleaner
-  # require "#{File.dirname(__FILE__)}/../../../lib/datamapper_models"
+  # require "#{File.dirname(__FILE__)}/../../../lib/activerecord_models"
   #
-  # DatabaseCleaner[:datamapper, {:connection => :one} ].strategy = :truncation
-  # DatabaseCleaner[:datamapper, {:connection => :two} ].strategy = :truncation
+  # DatabaseCleaner[:active_record, {:connection => 'ActiveRecordWidgetUsingDatabaseOne'} ].strategy = whatever
+  # DatabaseCleaner[:active_record, {:connection => 'ActiveRecordWidgetUsingDatabaseTwo'} ].strategy = whatever
 end
 
 When /^I create a widget using activerecord$/ do

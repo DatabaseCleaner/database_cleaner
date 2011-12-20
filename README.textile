@@ -148,7 +148,13 @@ Sometimes you need to use multiple ORMs in your application. You can use Databas
   DatabaseCleaner[:mongo_mapper].strategy = :truncation
 
   #How to specify particular connections
-  DatabaseCleaner[:active_record,{:connection => :two}]
+
+  # with DataMapper you pass in the name of the repository
+  DatabaseCleaner[:data_mapper,{:connection => :my_other_repository}]
+
+  # With ActiveRecord you pass in the model whose #connection DataCleaner should use
+  DatabaseCleaner[:active_record,{:connection => Widget}]
+  DatabaseCleaner[:active_record,{:connection => "Widget"}] # You may pass in the model as a String in case you need/want to delay loading.
 </pre>
 
 Usage beyond that remains the same with DatabaseCleaner.start calling any setup on the different configured connections, and DatabaseCleaner.clean executing afterwards.
