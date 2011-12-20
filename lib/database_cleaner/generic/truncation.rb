@@ -16,7 +16,7 @@ module DatabaseCleaner
 
           @only = opts[:only]
           @tables_to_exclude = (opts[:except] || []).dup
-          @tables_to_exclude << migration_storage_name unless migration_storage_name.nil?
+          @tables_to_exclude << migration_storage_name if migration_storage_name
         end
 
         def start
