@@ -7,7 +7,7 @@ module DatabaseCleaner
 
   class << self
     def [](orm,opts = {})
-      raise NoORMDetected if orm.nil?
+      raise NoORMDetected unless orm
       @connections ||= []
       cleaner = DatabaseCleaner::Base.new(orm,opts)
       connections.push cleaner

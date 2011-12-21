@@ -80,7 +80,7 @@ module DatabaseCleaner
     alias clean! clean
 
     def auto_detected?
-      return true unless @autodetected.nil?
+      !!@autodetected
     end
 
     #TODO make strategies directly comparable

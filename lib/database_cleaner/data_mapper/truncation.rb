@@ -150,8 +150,7 @@ module DatabaseCleaner
       include ::DatabaseCleaner::DataMapper::Base
       include ::DatabaseCleaner::Generic::Truncation
 
-      def clean(repository = nil)
-        repository = self.db if repository.nil?
+      def clean(repository = self.db)
         adapter = ::DataMapper.repository(repository).adapter
         adapter.disable_referential_integrity do
           tables_to_truncate(repository).each do |table_name|
@@ -162,8 +161,7 @@ module DatabaseCleaner
 
       private
 
-      def tables_to_truncate(repository = nil)
-        repository = self.db if repository.nil?
+      def tables_to_truncate(repository = self.db)
         (@only || ::DataMapper.repository(repository).adapter.storage_names(repository)) - @tables_to_exclude
       end
 
