@@ -88,6 +88,8 @@ module DatabaseCleaner
           DatabaseCleaner::CouchPotato
         when :sequel
           DatabaseCleaner::Sequel
+        when :ohm
+          DatabaseCleaner::Ohm
       end
     end
   end

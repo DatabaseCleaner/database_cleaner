@@ -11,12 +11,13 @@ Feature: database cleaning
     Then I should see all green
 
   Examples:
-    | ORM          | Strategy      |
-    | ActiveRecord | transaction   |
-    | ActiveRecord | truncation    |
-    | ActiveRecord | deletion      |
-    | DataMapper   | transaction   |
-    | DataMapper   | truncation    |
-    | MongoMapper  | truncation    |
-    | Mongoid      | truncation    |
-    | CouchPotato  | truncation    |
+    | ORM          | Strategy    |
+    | ActiveRecord | transaction |
+    | ActiveRecord | truncation  |
+    | ActiveRecord | deletion    |
+    | DataMapper   | transaction |
+    | DataMapper   | truncation  |
+    | MongoMapper  | truncation  |
+    | Mongoid      | truncation  |
+    | CouchPotato  | truncation  |
+    | Ohm          | truncation  |
