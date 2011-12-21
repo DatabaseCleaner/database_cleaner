@@ -15,11 +15,12 @@ module DatabaseCleaner
 
     describe Truncation do
       before(:all) do
-        ::Ohm.connect :host => "127.0.0.1", :port => 6379, :db => 0
+        config = YAML::load(File.open("#{File.dirname(__FILE__)}/../../../examples/config/redis.yml"))
+        ::Ohm.connect :url => config['test']['url']
+        @redis = ::Ohm.redis
       end
 
       before(:each) do
-        @redis = ::Ohm.redis
         @redis.flushdb
       end
 

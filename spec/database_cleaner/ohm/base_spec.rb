@@ -15,13 +15,18 @@ module DatabaseCleaner
     end
 
     describe ExampleStrategy do
+      before(:all) do
+        ::Ohm.connect
+      end
+
       it_should_behave_like "a generic strategy"
       it { should respond_to(:db) }
       it { should respond_to(:db=) }
 
       it "should store my describe db" do
-        subject.db = :my_db
-        subject.db.should == :my_db
+        url = 'redis://localhost:6379/2'
+        subject.db = 'redis://localhost:6379/2'
+        subject.db.should == url
       end
 
       it "should default to :default" do
