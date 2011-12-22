@@ -5,16 +5,17 @@ The original use case was to ensure a clean state during tests.  Each strategy
 is a small amount of code but is code that is usually needed in any ruby app
 that is testing with a database.
 
-ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, and CouchPotato are supported.
+ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, CouchPotato, and Ohm are supported.
 
 Here is an overview of the strategies supported for each library:
 
-|_. ORM        |_.  Truncation  |_.  Transaction  |_.  Deletion    |
-| ActiveRecord | Yes            | **Yes**         | Yes            |
-| DataMapper   | Yes            | **Yes**         | No             |
-| CouchPotato  | **Yes**        | No              | No             |
-| MongoMapper  | **Yes**        | No              | No             |
-| Sequel       | **Yes**        | Yes             | No             |
+| _. ORM       | _.  Truncation | _.  Transaction | _.  Deletion |
+| ActiveRecord | Yes            | **Yes**         | Yes          |
+| DataMapper   | Yes            | **Yes**         | No           |
+| CouchPotato  | **Yes**        | No              | No           |
+| MongoMapper  | **Yes**        | No              | No           |
+| Sequel       | **Yes**        | Yes             | No           |
+| Ohm          | **YES**        | No              | No           |
 
 (Default strategy for each library is denoted in bold)
 
@@ -48,6 +49,8 @@ With the :truncation strategy you can also pass in options, for example:
 <pre>
   DatabaseCleaner.strategy = :truncation, {:except => %w[widgets]}
 </pre>
+
+(with orm Ohm, :only and :except accept options like "Widget:Name*" or "*:id*" that redis command KEYS accept)
 
 (I should point out the truncation strategy will never truncate your schema_migrations table.)
 
