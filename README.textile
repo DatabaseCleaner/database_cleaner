@@ -9,7 +9,7 @@ ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, CouchPotato, and Ohm are
 
 Here is an overview of the strategies supported for each library:
 
-| _. ORM       | _.  Truncation | _.  Transaction | _.  Deletion |
+|_. ORM        |_.  Truncation  |_.  Transaction  |_.  Deletion  |
 | ActiveRecord | Yes            | **Yes**         | Yes          |
 | DataMapper   | Yes            | **Yes**         | No           |
 | CouchPotato  | **Yes**        | No              | No           |
@@ -170,6 +170,7 @@ Configuration options
 | Mongoid       | DatabaseCleaner[:mongoid]       | Multiple connections not yet supported                                   |
 | Couch Potato  | DatabaseCleaner[:couch_potato]  | Multiple connections not yet supported                                   |
 | Sequel        | DatabaseCleaner[:sequel]        | ?                                                                        |
+| Ohm           | DatabaseCleaner[:ohm]           | Connection specified as redis url                                        |
 
 h2. Why?
 
