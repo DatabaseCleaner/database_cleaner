@@ -27,3 +27,8 @@ Feature: database cleaning using multiple ORMs
     | CouchPotato  | DataMapper   |
     | CouchPotato  | MongoMapper  |
     | CouchPotato  | Mongoid      |
+    | Ohm          | ActiveRecord |
+    | Ohm          | DataMapper   |
+    | Ohm          | MongoMapper  |
+    | Ohm          | Mongoid      |
+    | Ohm          | CouchPotato  |

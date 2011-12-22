@@ -6,7 +6,7 @@ module DatabaseCleaner
         if url == :default
           redis = ::Ohm.redis
         else
-          redis = ::Redis.new url
+          redis = ::Redis.connect :url => url
         end
         if @only
           @only.each do |term|

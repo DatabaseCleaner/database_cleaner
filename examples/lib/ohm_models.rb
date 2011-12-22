@@ -10,7 +10,7 @@ class OhmWidget < Ohm::Model
   end
 
   def self.count
-    OhmWidget.all.count
+    all.count
   end
 
 end
@@ -24,7 +24,7 @@ class OhmWidgetUsingDatabaseOne < Ohm::Model
   end
 
   def self.count
-    OhmWidgetUsingDatabaseOne.all.count
+    all.count
   end
 
 end
@@ -38,6 +38,6 @@ class OhmWidgetUsingDatabaseTwo < Ohm::Model
   end
 
   def self.count
-    OhmWidgetUsingDatabaseTwo.all.count
+    all.count
   end
 end
