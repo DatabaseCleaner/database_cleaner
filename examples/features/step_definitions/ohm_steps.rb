@@ -2,8 +2,8 @@ Given /^I have setup database cleaner to clean multiple databases using ohm$/ do
   #DatabaseCleaner
   # require "#{File.dirname(__FILE__)}/../../../lib/ohm_models"
   #
-  # DatabaseCleaner[:ohm, {:connection => :one} ].strategy = :truncation
-  # DatabaseCleaner[:ohm, {:connection => :two} ].strategy = :truncation
+  # DatabaseCleaner[:ohm, {:connection => ENV['REDIS_URL_ONE']} ].strategy = :truncation
+  # DatabaseCleaner[:ohm, {:connection => ENV['REDIS_URL_TWO']} ].strategy = :truncation
 end
 
 When /^I create a widget using ohm$/ do

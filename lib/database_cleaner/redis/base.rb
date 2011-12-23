@@ -1,6 +1,7 @@
 require 'database_cleaner/generic/base'
+
 module DatabaseCleaner
-  module Ohm
+  module Redis
     def self.available_strategies
       %w{truncation}
     end
@@ -18,3 +19,4 @@ module DatabaseCleaner
     end
   end
 end
+

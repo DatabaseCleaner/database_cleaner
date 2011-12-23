@@ -1,10 +1,10 @@
 
-Given /^I am using (ActiveRecord|DataMapper|MongoMapper|Mongoid|CouchPotato|Ohm)$/ do |orm|
+Given /^I am using (ActiveRecord|DataMapper|MongoMapper|Mongoid|CouchPotato|Ohm|Redis)$/ do |orm|
   @feature_runner = FeatureRunner.new
   @feature_runner.orm = orm
 end
 
-Given /^I am using (ActiveRecord|DataMapper|MongoMapper|CouchPotato|Mongoid|Ohm) and (ActiveRecord|DataMapper|MongoMapper|CouchPotato|Mongoid|Ohm)$/ do |orm1,orm2|
+Given /^I am using (ActiveRecord|DataMapper|MongoMapper|CouchPotato|Mongoid|Ohm|Redis) and (ActiveRecord|DataMapper|MongoMapper|CouchPotato|Mongoid|Ohm|Redis)$/ do |orm1,orm2|
   @feature_runner = FeatureRunner.new
   @feature_runner.orm         = orm1
   @feature_runner.another_orm = orm2

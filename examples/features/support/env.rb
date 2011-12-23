@@ -50,7 +50,7 @@ if orm && strategy
     if orm_sym == :mongo_mapper
       DatabaseCleaner[ orm_sym, {:connection => 'database_cleaner_test_one'} ].strategy = strategy.to_sym
       DatabaseCleaner[ orm_sym, {:connection => 'database_cleaner_test_two'} ].strategy = strategy.to_sym
-    elsif orm_sym == :ohm
+    elsif orm_sym == :ohm || orm_sym == :redis
       DatabaseCleaner[ orm_sym, {:connection => ENV['REDIS_URL_ONE']} ].strategy = strategy.to_sym
       DatabaseCleaner[ orm_sym, {:connection => ENV['REDIS_URL_TWO']} ].strategy = strategy.to_sym
     else
@@ -66,5 +66,5 @@ if orm && strategy
   end
 
 else
-  raise "Run 'ORM=ActiveRecord|DataMapper|MongoMapper|CouchPotato|Ohm [ANOTHER_ORM=...] [MULTIPLE_DBS=true] STRATEGY=transaction|truncation|default cucumber examples/features'"
+  raise "Run 'ORM=ActiveRecord|DataMapper|MongoMapper|CouchPotato|Ohm|Redis [ANOTHER_ORM=...] [MULTIPLE_DBS=true] STRATEGY=transaction|truncation|default cucumber examples/features'"
 end

@@ -18,3 +18,4 @@ Feature: database cleaning
     | Mongoid      |
     | CouchPotato  |
     | Ohm          |
+    | Redis        |

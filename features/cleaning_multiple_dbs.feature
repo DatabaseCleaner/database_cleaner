@@ -18,5 +18,6 @@ Feature: multiple database cleaning
   | MongoMapper  | truncation  |
   | DataMapper   | transaction |
   | Ohm          | truncation  |
+  | Redis        | truncation  |
 # Not working...
 #| ActiveRecord | transaction   |

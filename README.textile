@@ -5,7 +5,7 @@ The original use case was to ensure a clean state during tests.  Each strategy
 is a small amount of code but is code that is usually needed in any ruby app
 that is testing with a database.
 
-ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, CouchPotato, and Ohm are supported.
+ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, CouchPotato, Ohm and Redis are supported.
 
 Here is an overview of the strategies supported for each library:
 
@@ -15,7 +15,8 @@ Here is an overview of the strategies supported for each library:
 | CouchPotato  | **Yes**        | No              | No           |
 | MongoMapper  | **Yes**        | No              | No           |
 | Sequel       | **Yes**        | Yes             | No           |
-| Ohm          | **YES**        | No              | No           |
+| Ohm          | **Yes**        | No              | No           |
+| Redis        | **Yes**        | No              | No           |
 
 (Default strategy for each library is denoted in bold)
 
@@ -29,7 +30,7 @@ with any ORM library. You can also explicitly use it by setting your strategy to
 
 h2. Features in this fork
 
-Add **Ohm** orm support which uses Truncation strategy.
+Add **Redis** and **Ohm** orm support which uses Truncation strategy.
 
 h2. How to use
 
@@ -50,7 +51,7 @@ With the :truncation strategy you can also pass in options, for example:
   DatabaseCleaner.strategy = :truncation, {:except => %w[widgets]}
 </pre>
 
-(with orm Ohm, :only and :except accept options like "Widget:Name*" or "*:id*" that redis command KEYS accept)
+(with orm Ohm and Redis, :only and :except accept options like "Widget:Name*" or "*:id*" that redis command KEYS accept)
 
 (I should point out the truncation strategy will never truncate your schema_migrations table.)
 
@@ -171,6 +172,7 @@ Configuration options
 | Couch Potato  | DatabaseCleaner[:couch_potato]  | Multiple connections not yet supported                                   |
 | Sequel        | DatabaseCleaner[:sequel]        | ?                                                                        |
 | Ohm           | DatabaseCleaner[:ohm]           | Connection specified as redis url                                        |
+| Redis         | DatabaseCleaner[:redis]         | Connection specified as redis url                                        |
 
 h2. Why?
 

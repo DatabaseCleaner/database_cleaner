@@ -1,23 +1,18 @@
 require 'spec_helper'
-require 'database_cleaner/ohm/base'
+require 'database_cleaner/redis/base'
 require 'database_cleaner/shared_strategy_spec'
 
-require 'ohm'
-
 module DatabaseCleaner
-  describe Ohm do
+  describe Redis do
     it { should respond_to(:available_strategies) }
   end
 
-  module Ohm
+  module Redis
     class ExampleStrategy
-      include ::DatabaseCleaner::Ohm::Base
+      include ::DatabaseCleaner::Redis::Base
     end
 
     describe ExampleStrategy do
-      before(:all) do
-        ::Ohm.connect
-      end
 
       it_should_behave_like "a generic strategy"
       it { should respond_to(:db) }

@@ -1,10 +1,15 @@
+require 'database_cleaner/redis/base'
+require 'database_cleaner/generic/truncation'
+
 module DatabaseCleaner
   module Redis
-    module Truncation
+    class Truncation
+      include ::DatabaseCleaner::Redis::Base
+      include ::DatabaseCleaner::Generic::Truncation
 
       def clean(url = self.db)
         if url == :default
-          redis = ::Ohm.redis
+          redis = default_redis
         else
           redis = ::Redis.connect :url => url
         end
@@ -20,6 +25,12 @@ module DatabaseCleaner
           redis.flushdb
         end
         redis.quit unless url == :default
+      end
+
+      private
+
+      def default_redis
+        ::Redis.connect
       end
 
     end
