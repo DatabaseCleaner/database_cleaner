@@ -39,7 +39,7 @@ module ActiveRecord
       end
     end
 
-    class Mysql2Adapter < AbstractAdapter
+    class Mysql2Adapter < AbstractMysqlAdapter
       def truncate_table(table_name)
         execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
       end
