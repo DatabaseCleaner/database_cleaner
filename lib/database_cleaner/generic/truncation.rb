@@ -6,7 +6,7 @@ module DatabaseCleaner
           raise ArgumentError, "The only valid options are :only and :except. You specified #{opts.keys.join(',')}."
         end
         if opts.has_key?(:only) && opts.has_key?(:except)
-          raise ArgumentError, "You may only specify either :only or :either.  Doing both doesn't really make sense does it?"
+          raise ArgumentError, "You may only specify either :only or :except.  Doing both doesn't really make sense does it?"
         end
 
         @only = opts[:only]
