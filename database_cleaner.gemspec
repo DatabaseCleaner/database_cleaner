@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{database_cleaner}
-  s.version = "0.7.0"
+  s.version = "0.7.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Ben Mabey}]
-  s.date = %q{2011-11-12}
+  s.date = %q{2012-01-15}
   s.description = %q{Strategies for cleaning databases.  Can be used to ensure a clean state for testing.}
   s.email = %q{ben@benmabey.com}
   s.extra_rdoc_files = [
