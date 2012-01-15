@@ -1,5 +1,20 @@
 == 0.7.x (in git)
 
+== 0.7.1 2012-01-15
+
+ === New Features
+
+ * Support for Rails 3.2. (David Demaree)
+
+=== Bugfixes
+
+  * Truncation resets the id count on SQLite. (Jordan Hollinger)
+  * AR delete strategy now disables referential integrity. (Ben Mabey)
+  * Fixes Postgres adapter for JRuby. (Dmytrii Nagirniak, Uģis Ozols)
+  * Documenation fixes. (Josh Rendek, Joshua Flanagan)
+  * Fixes bad error message when no database is specified for AR. (issue #72, Ben Mabey)
+
+
 == 0.7.0 2011-11-12
 
  === New Features
