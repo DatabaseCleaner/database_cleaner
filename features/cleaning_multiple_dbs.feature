@@ -11,11 +11,13 @@ Feature: multiple database cleaning
     Then I should see all green
 
   Examples:
-  | ORM          | Strategy      |
-  | ActiveRecord | truncation    |
-  | ActiveRecord | deletion      |
-  | DataMapper   | truncation    |
-  | MongoMapper  | truncation    |
-  | DataMapper   | transaction   |
+  | ORM          | Strategy    |
+  | ActiveRecord | truncation  |
+  | ActiveRecord | deletion    |
+  | DataMapper   | truncation  |
+  | MongoMapper  | truncation  |
+  | DataMapper   | transaction |
+  | Ohm          | truncation  |
+  | Redis        | truncation  |
 # Not working...
 #| ActiveRecord | transaction   |

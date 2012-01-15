@@ -47,6 +47,13 @@ describe ::DatabaseCleaner do
       cleaner.orm.should == :couch_potato
       ::DatabaseCleaner.connections.size.should == 1
     end
+
+    it "should accept :ohm" do
+      cleaner = ::DatabaseCleaner[:ohm]
+      cleaner.should be_a(::DatabaseCleaner::Base)
+      cleaner.orm.should == :ohm
+      ::DatabaseCleaner.connections.size.should == 1
+    end
   end
 
   it "should accept multiple orm's" do

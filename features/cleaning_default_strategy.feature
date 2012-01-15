@@ -17,3 +17,5 @@ Feature: database cleaning
     | MongoMapper  |
     | Mongoid      |
     | CouchPotato  |
+    | Ohm          |
+    | Redis        |

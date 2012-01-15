@@ -4,6 +4,8 @@ require 'database_cleaner/data_mapper/transaction'
 require 'database_cleaner/mongo_mapper/truncation'
 require 'database_cleaner/mongoid/truncation'
 require 'database_cleaner/couch_potato/truncation'
+require 'database_cleaner/ohm/truncation'
+require 'database_cleaner/redis/truncation'
 
 module DatabaseCleaner
   describe Base do
@@ -18,6 +20,8 @@ module DatabaseCleaner
          Temp_MO = ::Mongoid      if defined?(::Mongoid)      and not defined?(Temp_MO)
          Temp_CP = ::CouchPotato  if defined?(::CouchPotato)  and not defined?(Temp_CP)
          Temp_SQ = ::Sequel       if defined?(::Sequel)       and not defined?(Temp_SQ)
+         Temp_OH = ::Ohm          if defined?(::Ohm)          and not defined?(Temp_OH)
+         Temp_RS = ::Redis        if defined?(::Redis)        and not defined?(Temp_RS)
        end
 
        #Remove all ORM mocks and restore from cache
@@ -28,6 +32,8 @@ module DatabaseCleaner
          Object.send(:remove_const, 'Mongoid')      if defined?(::Mongoid)
          Object.send(:remove_const, 'CouchPotato')  if defined?(::CouchPotato)
          Object.send(:remove_const, 'Sequel')       if defined?(::Sequel)
+         Object.send(:remove_const, 'Ohm')          if defined?(::Ohm)
+         Object.send(:remove_const, 'Redis')        if defined?(::Redis)
 
 
          # Restore ORMs
@@ -36,6 +42,8 @@ module DatabaseCleaner
          ::MongoMapper  = Temp_MM if defined? Temp_MM
          ::Mongoid      = Temp_MO if defined? Temp_MO
          ::CouchPotato  = Temp_CP if defined? Temp_CP
+         ::Ohm          = Temp_OH if defined? Temp_OH
+         ::Redis        = Temp_RS if defined? Temp_RS
        end
 
        #reset the orm mocks
@@ -46,6 +54,8 @@ module DatabaseCleaner
          Object.send(:remove_const, 'Mongoid')      if defined?(::Mongoid)
          Object.send(:remove_const, 'CouchPotato')  if defined?(::CouchPotato)
          Object.send(:remove_const, 'Sequel')       if defined?(::Sequel)
+         Object.send(:remove_const, 'Ohm')          if defined?(::Ohm)
+         Object.send(:remove_const, 'Redis')        if defined?(::Redis)
        end
        
        let(:cleaner) { DatabaseCleaner::Base.new :autodetect }
@@ -61,6 +71,8 @@ module DatabaseCleaner
          Object.const_set('Mongoid',     'Mongoid mock')
          Object.const_set('CouchPotato', 'Couching mock potatos')
          Object.const_set('Sequel',      'Sequel mock')
+         Object.const_set('Ohm',         'Ohm mock')
+         Object.const_set('Redis',       'Redis mock')
 
          cleaner.orm.should == :active_record
          cleaner.should be_auto_detected
@@ -72,6 +84,8 @@ module DatabaseCleaner
          Object.const_set('Mongoid',     'Mongoid mock')
          Object.const_set('CouchPotato', 'Couching mock potatos')
          Object.const_set('Sequel',      'Sequel mock')
+         Object.const_set('Ohm',         'Ohm mock')
+         Object.const_set('Redis',       'Redis mock')
 
          cleaner.orm.should == :data_mapper
          cleaner.should be_auto_detected
@@ -82,6 +96,8 @@ module DatabaseCleaner
          Object.const_set('Mongoid',     'Mongoid mock')
          Object.const_set('CouchPotato', 'Couching mock potatos')
          Object.const_set('Sequel',      'Sequel mock')
+         Object.const_set('Ohm',         'Ohm mock')
+         Object.const_set('Redis',       'Redis mock')
 
          cleaner.orm.should == :mongo_mapper
          cleaner.should be_auto_detected
@@ -91,6 +107,8 @@ module DatabaseCleaner
          Object.const_set('Mongoid',     'Mongoid mock')
          Object.const_set('CouchPotato', 'Couching mock potatos')
          Object.const_set('Sequel',      'Sequel mock')
+         Object.const_set('Ohm',         'Ohm mock')
+         Object.const_set('Redis',       'Redis mock')
 
          cleaner.orm.should == :mongoid
          cleaner.should be_auto_detected
@@ -99,15 +117,34 @@ module DatabaseCleaner
        it "should detect CouchPotato fifth" do
          Object.const_set('CouchPotato', 'Couching mock potatos')
          Object.const_set('Sequel',      'Sequel mock')
+         Object.const_set('Ohm',         'Ohm mock')
+         Object.const_set('Redis',       'Redis mock')
 
          cleaner.orm.should == :couch_potato
          cleaner.should be_auto_detected
        end
        
-       it "should detect Sequel last" do
+       it "should detect Sequel sixth" do
          Object.const_set('Sequel', 'Sequel mock')
+         Object.const_set('Ohm',    'Ohm mock')
+         Object.const_set('Redis',       'Redis mock')
 
          cleaner.orm.should == :sequel
+         cleaner.should be_auto_detected
+       end
+       
+       it "should detect Ohm seventh" do
+         Object.const_set('Ohm', 'Ohm mock')
+         Object.const_set('Redis',       'Redis mock')
+
+         cleaner.orm.should == :ohm
+         cleaner.should be_auto_detected
+       end
+
+       it "should detect Redis last" do
+         Object.const_set('Redis',       'Redis mock')
+
+         cleaner.orm.should == :redis
          cleaner.should be_auto_detected
        end
     end
@@ -486,6 +523,16 @@ module DatabaseCleaner
       it 'sets strategy to :truncation for CouchPotato' do
         cleaner = DatabaseCleaner::Base.new(:couch_potato)
         cleaner.strategy.should be_instance_of DatabaseCleaner::CouchPotato::Truncation
+      end
+
+      it 'sets strategy to :truncation for Ohm' do
+        cleaner = DatabaseCleaner::Base.new(:ohm)
+        cleaner.strategy.should be_instance_of DatabaseCleaner::Ohm::Truncation
+      end
+
+      it 'sets strategy to :truncation for Redis' do
+        cleaner = DatabaseCleaner::Base.new(:redis)
+        cleaner.strategy.should be_instance_of DatabaseCleaner::Redis::Truncation
       end
     end
 

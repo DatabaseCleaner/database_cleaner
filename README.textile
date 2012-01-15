@@ -5,16 +5,18 @@ The original use case was to ensure a clean state during tests.  Each strategy
 is a small amount of code but is code that is usually needed in any ruby app
 that is testing with a database.
 
-ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, and CouchPotato are supported.
+ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, CouchPotato, Ohm and Redis are supported.
 
 Here is an overview of the strategies supported for each library:
 
-|_. ORM        |_.  Truncation  |_.  Transaction  |_.  Deletion    |
-| ActiveRecord | Yes            | **Yes**         | Yes            |
-| DataMapper   | Yes            | **Yes**         | No             |
-| CouchPotato  | **Yes**        | No              | No             |
-| MongoMapper  | **Yes**        | No              | No             |
-| Sequel       | **Yes**        | Yes             | No             |
+|_. ORM        |_.  Truncation  |_.  Transaction  |_.  Deletion  |
+| ActiveRecord | Yes            | **Yes**         | Yes          |
+| DataMapper   | Yes            | **Yes**         | No           |
+| CouchPotato  | **Yes**        | No              | No           |
+| MongoMapper  | **Yes**        | No              | No           |
+| Sequel       | **Yes**        | Yes             | No           |
+| Ohm          | **Yes**        | No              | No           |
+| Redis        | **Yes**        | No              | No           |
 
 (Default strategy for each library is denoted in bold)
 
@@ -25,6 +27,10 @@ be faster than @:truncation@ in some cases as well.  In general, the best approa
 
 Database Cleaner also includes a @null@ strategy (that does no cleaning at all) which can be used
 with any ORM library. You can also explicitly use it by setting your strategy to @nil@.
+
+h2. Features in this fork
+
+Add **Redis** and **Ohm** orm support which uses Truncation strategy.
 
 h2. How to use
 
@@ -44,6 +50,8 @@ With the :truncation strategy you can also pass in options, for example:
 <pre>
   DatabaseCleaner.strategy = :truncation, {:except => %w[widgets]}
 </pre>
+
+(with orm Ohm and Redis, :only and :except accept options like "Widget:Name*" or "*:id*" that redis command KEYS accept)
 
 (I should point out the truncation strategy will never truncate your schema_migrations table.)
 
@@ -163,6 +171,8 @@ Configuration options
 | Mongoid       | DatabaseCleaner[:mongoid]       | Multiple connections not yet supported                                   |
 | Couch Potato  | DatabaseCleaner[:couch_potato]  | Multiple connections not yet supported                                   |
 | Sequel        | DatabaseCleaner[:sequel]        | ?                                                                        |
+| Ohm           | DatabaseCleaner[:ohm]           | Connection specified as redis url                                        |
+| Redis         | DatabaseCleaner[:redis]         | Connection specified as redis url                                        |
 
 h2. Why?
 
