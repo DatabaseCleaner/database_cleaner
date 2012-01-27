@@ -15,7 +15,7 @@ module ActiveRecord
       end
     end
 
-    class Mysql2Adapter < AbstractAdapter
+    class Mysql2Adapter < MYSQL2_ADAPTER_PARENT
       def delete_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)};")
       end
