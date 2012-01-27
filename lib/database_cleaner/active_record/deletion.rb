@@ -9,41 +9,41 @@ require 'database_cleaner/active_record/truncation'
 module ActiveRecord
   module ConnectionAdapters
 
-    class MysqlAdapter < MYSQL_ADAPTER_PARENT
+    MysqlAdapter.class_eval do
       def delete_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)};")
       end
-    end
+    end if defined?(MysqlAdapter)
 
-    class Mysql2Adapter < MYSQL2_ADAPTER_PARENT
+    Mysql2Adapter.class_eval do
       def delete_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)};")
       end
-    end
+    end if defined?(Mysql2Adapter)
 
-    class JdbcAdapter < AbstractAdapter
-      def delete_table(table_name)
-          execute("DELETE FROM #{quote_table_name(table_name)};")
-      end
-    end
-
-    class PostgreSQLAdapter < AbstractAdapter
+    JdbcAdapter.class_eval do
       def delete_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)};")
       end
-    end
+    end if defined?(JdbcAdapter)
 
-    class SQLServerAdapter < AbstractAdapter
+    PostgreSQLAdapter.class_eval do
       def delete_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)};")
       end
-    end
+    end if defined?(PostgreSQLAdapter)
 
-    class OracleEnhancedAdapter < AbstractAdapter
+    SQLServerAdapter.class_eval do
+      def delete_table(table_name)
+        execute("DELETE FROM #{quote_table_name(table_name)};")
+      end
+    end if defined?(SQLServerAdapter)
+
+    OracleEnhancedAdapter.class_eval do
       def delete_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)}")
       end
-    end
+    end if defined?(OracleEnhancedAdapter)
 
   end
 end

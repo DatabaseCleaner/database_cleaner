@@ -29,45 +29,33 @@ module ActiveRecord
       end
     end
 
-    # ActiveRecord 3.1 support
-    if defined?(AbstractMysqlAdapter)
-      MYSQL_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractMysqlAdapter
-      MYSQL2_ADAPTER_PARENT = AbstractMysqlAdapter
-    else
-      MYSQL_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
-      MYSQL2_ADAPTER_PARENT = AbstractAdapter
-    end
-    
-    SQLITE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : SQLiteAdapter
-    POSTGRE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
-
-    class MysqlAdapter < MYSQL_ADAPTER_PARENT
+    MysqlAdapter.class_eval do
       def truncate_table(table_name)
         execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
       end
-    end
+    end if defined?(MysqlAdapter)
 
-    class Mysql2Adapter < MYSQL2_ADAPTER_PARENT
+    Mysql2Adapter.class_eval do
       def truncate_table(table_name)
         execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
       end
-    end
+    end if defined?(Mysql2Adapter)
 
-    class IBM_DBAdapter < AbstractAdapter
+    IBM_DBAdapter.class_eval do
       def truncate_table(table_name)
         execute("TRUNCATE #{quote_table_name(table_name)} IMMEDIATE")
       end
-    end
+    end if defined?(IBM_DBAdapter)
 
-    class SQLite3Adapter < SQLITE_ADAPTER_PARENT
+    SQLite3Adapter.class_eval do
       def delete_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)};")
         execute("DELETE FROM sqlite_sequence where name = '#{table_name}';")
       end
       alias truncate_table delete_table
-    end
+    end if defined?(SQLite3Adapter)
 
-    class JdbcAdapter < AbstractAdapter
+    JdbcAdapter.class_eval do
       def truncate_table(table_name)
         begin
           execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
@@ -75,9 +63,9 @@ module ActiveRecord
           execute("DELETE FROM #{quote_table_name(table_name)};")
         end
       end
-    end
+    end if defined?(JdbcAdapter)
 
-    class PostgreSQLAdapter < POSTGRE_ADAPTER_PARENT
+    PostgreSQLAdapter.class_eval do
 
       def db_version
         @db_version ||= postgresql_version
@@ -99,9 +87,9 @@ module ActiveRecord
         execute("TRUNCATE TABLE #{table_names.map{|name| quote_table_name(name)}.join(', ')} #{restart_identity} #{cascade};")
       end
 
-    end
+    end if defined?(PostgreSQLAdapter)
 
-    class SQLServerAdapter < AbstractAdapter
+    SQLServerAdapter.class_eval do
       def truncate_table(table_name)
         begin
           execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
@@ -109,13 +97,13 @@ module ActiveRecord
           execute("DELETE FROM #{quote_table_name(table_name)};")
         end
       end
-    end
+    end if defined?(SQLServerAdapter)
 
-    class OracleEnhancedAdapter < AbstractAdapter
+    OracleEnhancedAdapter.class_eval do
       def truncate_table(table_name)
         execute("TRUNCATE TABLE #{quote_table_name(table_name)}")
       end
-    end
+    end if defined?(OracleEnhancedAdapter)
 
   end
 end
