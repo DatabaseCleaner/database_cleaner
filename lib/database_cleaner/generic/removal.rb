@@ -14,6 +14,7 @@ module ::DatabaseCleaner
 
 
       def execute_at_clean(object=nil, method=nil, *args)
+        @list_of_objects_to_remove ||= []
         @list_of_objects_to_remove << Executor.new(object, method, *args)
       end
 
