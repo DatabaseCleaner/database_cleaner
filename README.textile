@@ -9,12 +9,12 @@ ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, and CouchPotato are supp
 
 Here is an overview of the strategies supported for each library:
 
-|_. ORM        |_.  Truncation  |_.  Transaction  |_.  Deletion    |
-| ActiveRecord | Yes            | **Yes**         | Yes            |
-| DataMapper   | Yes            | **Yes**         | No             |
-| CouchPotato  | **Yes**        | No              | No             |
-| MongoMapper  | **Yes**        | No              | No             |
-| Sequel       | **Yes**        | Yes             | No             |
+|_. ORM        |_.  Truncation  |_.  Transaction  |_.  Deletion    |_.  Removal |
+| ActiveRecord | Yes            | **Yes**         | Yes            | Yes        |
+| DataMapper   | Yes            | **Yes**         | No             | Yes        |
+| CouchPotato  | **Yes**        | No              | No             | No         |
+| MongoMapper  | **Yes**        | No              | No             | No         |
+| Sequel       | **Yes**        | Yes             | No             | No         |
 
 (Default strategy for each library is denoted in bold)
 
@@ -25,6 +25,12 @@ be faster than @:truncation@ in some cases as well.  In general, the best approa
 
 Database Cleaner also includes a @null@ strategy (that does no cleaning at all) which can be used
 with any ORM library. You can also explicitly use it by setting your strategy to @nil@.
+
+The addition of the @:removal@ strategy is typically for use with external web applications
+where the web app cannot run within a transaction and it is desirable to remove records from
+the database after a cucumber scenario has completed and where deleting all records from tables
+(as in the Deletion strategy) is not desirable (for example, if you want to start with known
+data in the database.)
 
 For support or to discuss development please use the "Google Group":http://groups.google.com/group/database_cleaner.
 
@@ -71,6 +77,48 @@ strategy the remaining time.  To accomplish this you can say:
   DatabaseCleaner.clean_with :truncation
   DatabaseCleaner.strategy = :transaction
   # then make the DatabaseCleaner.start and DatabaseCleaner.clean calls appropriately
+</pre>
+
+h3. Removal Strategy
+
+The :removal strategy is useful if you want to work with a database with existing data and loading the data set would be too slow to repeat at each clean. This can also be useful if you are testing a remote web application in another language that cannot share a database connection and make use of the :transaction strategy.
+
+This strategy supports both ActiveRecord and DataMapper ORMs.
+
+For example:
+
+<pre>
+  require 'database_cleaner'
+  DatabaseCleaner.strategy = :removal
+
+  DatabaseCleaner.start
+
+  # removing an object at clean
+  user = User.create
+  user.save
+  DatabaseCleaner.mark_for_removal user
+
+  # setup removal in FactoryGirl:
+  FactoryGirl.define do
+    factory :user do
+      name "Joe Bloggs"
+      after_create { |user| DatabaseCleaner.mark_for_removal user }
+    end
+  end
+  # this object will also be removed at clean
+  user = FactoryGirl.create :user
+
+  # you can also undo a record change at clean
+  account = Account.find_the_account
+  original_balance = account.balance
+  DatabaseCleaner.at_removal do
+    account.balance = original_balance
+    account.save
+  end
+  perform_some_action_that_changes_the_balance_in account
+
+  # destroy the 2 users created above and revert the change to the account balance:
+  DatabaseCleaner.start
 </pre>
 
 h3. RSpec Example
@@ -204,3 +252,4 @@ You can have the best of both worlds and use the best one for the job:
 h2. COPYRIGHT
 
 Copyright (c) 2009 Ben Mabey. See LICENSE for details.
+Copyright (c) 2012 Matt Connolly. See LICENSE for details.

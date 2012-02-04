@@ -15,8 +15,10 @@ Feature: database cleaning
     | ActiveRecord | transaction   |
     | ActiveRecord | truncation    |
     | ActiveRecord | deletion      |
+    | ActiveRecord | removal       |
     | DataMapper   | transaction   |
     | DataMapper   | truncation    |
     | MongoMapper  | truncation    |
     | Mongoid      | truncation    |
     | CouchPotato  | truncation    |
+    | DataMapper   | removal       |

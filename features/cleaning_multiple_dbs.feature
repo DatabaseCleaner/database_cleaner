@@ -14,8 +14,10 @@ Feature: multiple database cleaning
   | ORM          | Strategy      |
   | ActiveRecord | truncation    |
   | ActiveRecord | deletion      |
+  | ActiveRecord | removal       |
   | DataMapper   | truncation    |
   | MongoMapper  | truncation    |
   | DataMapper   | transaction   |
+  | DataMapper   | removal       |
 # Not working...
 #| ActiveRecord | transaction   |

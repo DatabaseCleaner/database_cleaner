@@ -7,7 +7,10 @@ Given /^I have setup database cleaner to clean multiple databases using activere
 end
 
 When /^I create a widget using activerecord$/ do
-  ActiveRecordWidget.create!
+  instance = ActiveRecordWidget.create!
+  # removal strategy requires specific instances to be marked for removal.
+  # this should have no effect on other strategies.
+  DatabaseCleaner.mark_for_removal instance
 end
 
 Then /^I should see ([\d]+) widget using activerecord$/ do |widget_count|
@@ -15,11 +18,13 @@ Then /^I should see ([\d]+) widget using activerecord$/ do |widget_count|
 end
 
 When /^I create a widget in one db using activerecord$/ do
-  ActiveRecordWidgetUsingDatabaseOne.create!
+  instance = ActiveRecordWidgetUsingDatabaseOne.create!
+  DatabaseCleaner.mark_for_removal instance
 end
 
 When /^I create a widget in another db using activerecord$/ do
-  ActiveRecordWidgetUsingDatabaseTwo.create!
+  instance = ActiveRecordWidgetUsingDatabaseTwo.create!
+  DatabaseCleaner.mark_for_removal instance
 end
 
 Then /^I should see ([\d]+) widget in one db using activerecord$/ do |widget_count|
