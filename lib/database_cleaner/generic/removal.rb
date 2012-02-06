@@ -70,7 +70,6 @@ module ::DatabaseCleaner
         method = args.shift
       end
       connections.each do |connection|
-        puts connection.inspect
         if connection.strategy.respond_to? :execute_at_clean
           connection.strategy.execute_at_clean object, method, *args
         end
