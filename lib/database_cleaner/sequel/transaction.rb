@@ -6,14 +6,16 @@ module DatabaseCleaner
 
       def start
         @transactions ||= []
-        db.send(:add_transaction)
-        @transactions << db.send(:begin_transaction, db)
+        opts= {:savepoint => true}
+        db.send(:add_transaction, db, opts)
+        db.send(:begin_transaction, db, opts)
+        @transactions << db
       end
-  
+
       def clean
-        transaction = @transactions.pop
-        db.send(:rollback_transaction, transaction)
-        db.send(:remove_transaction, transaction)
+        db= @transactions.pop
+        db.send(:rollback_transaction, db)
+        db.send(:remove_transaction, db, false)
       end
     end
   end
