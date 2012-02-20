@@ -37,6 +37,12 @@ module DatabaseCleaner
       def tables_to_truncate(db)
         (@only || db.tables) - @tables_to_exclude
       end
+
+      # overwritten
+      def migration_storage_name
+        :schema_info
+      end
+
     end
   end
 end
