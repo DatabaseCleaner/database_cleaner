@@ -5,17 +5,20 @@ module DatabaseCleaner
       include ::DatabaseCleaner::Sequel::Base
 
       def start
-        @transactions ||= []
-        opts= {:savepoint => true}
-        db.send(:add_transaction, db, opts)
-        db.send(:begin_transaction, db, opts)
-        @transactions << db
+        @fibers||= []
+        db= self.db
+        f= Fiber.new do
+          db.transaction(rollback: :always, savepoint: true) do
+            Fiber.yield
+          end
+        end
+        f.resume
+        @fibers<< f
       end
 
       def clean
-        db= @transactions.pop
-        db.send(:rollback_transaction, db)
-        db.send(:remove_transaction, db, false)
+        f= @fibers.pop
+        f.resume
       end
     end
   end
