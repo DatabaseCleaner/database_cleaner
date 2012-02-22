@@ -90,5 +90,13 @@ module DatabaseCleaner
           DatabaseCleaner::Sequel
       end
     end
+
+    def mark_for_removal(*args, &block)
+      # no op by default, reimplemented when using "removal" strategy
+    end
+
+    def at_removal(&block)
+      # no op by default, reimplemented when using "removal" strategy
+    end
   end
 end

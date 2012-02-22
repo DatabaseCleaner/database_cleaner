@@ -7,7 +7,10 @@ Given /^I have setup database cleaner to clean multiple databases using datamapp
 end
 
 When /^I create a widget using datamapper$/ do
-  DataMapperWidget.create!
+  instance = DataMapperWidget.create!
+  # removal strategy requires specific instances to be marked for removal.
+  # this should have no effect on other strategies.
+  DatabaseCleaner.mark_for_removal instance
 end
 
 Then /^I should see ([\d]+) widget using datamapper$/ do |widget_count|
@@ -16,7 +19,8 @@ end
 
 When /^I create a widget in one db using datamapper$/ do
   begin
-    DataMapperWidgetUsingDatabaseOne.create!
+    instance = DataMapperWidgetUsingDatabaseOne.create!
+    DatabaseCleaner.mark_for_removal instance
   rescue StandardError => e
     BREAK = e.backtrace
     debugger
@@ -25,7 +29,8 @@ When /^I create a widget in one db using datamapper$/ do
 end
 
 When /^I create a widget in another db using datamapper$/ do
-  DataMapperWidgetUsingDatabaseTwo.create!
+  instance = DataMapperWidgetUsingDatabaseTwo.create!
+  DatabaseCleaner.mark_for_removal instance
 end
 
 Then /^I should see ([\d]+) widget in one db using datamapper$/ do |widget_count|
