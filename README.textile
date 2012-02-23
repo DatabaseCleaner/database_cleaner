@@ -14,6 +14,7 @@ Here is an overview of the strategies supported for each library:
 | DataMapper   | Yes            | **Yes**         | No             |
 | CouchPotato  | **Yes**        | No              | No             |
 | MongoMapper  | **Yes**        | No              | No             |
+| Mongoid      | **Yes**        | No              | No             |
 | Sequel       | **Yes**        | Yes             | No             |
 
 (Default strategy for each library is denoted in bold)
