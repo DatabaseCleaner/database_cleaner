@@ -126,21 +126,6 @@ end
 This should cover the basics of tear down between scenarios and keeping your database clean.
 For more examples see the section "Why?"
 
-h2. Common Errors
-
-In rare cases DatabaseCleaner will encounter errors that it will log.  By default it uses STDOUT set to the ERROR level but you can configure this to use whatever Logger you desire.  Here's an example of using the Rails.logger in env.rb:
-
-<pre>
-  DatabaseCleaner.logger = Rails.logger
-</pre>
-
-If you are using Postgres and have foreign key constraints, the truncation strategy will cause a lot of extra noise to appear on STDERR (in
-the form of "NOTICE truncate cascades" messages). To silence these warnings set the following log level in your postgresql.conf file:
-
-<pre>
-  client_min_messages = warning
-</pre>
-
 h2. How to use with multiple ORM's
 
 Sometimes you need to use multiple ORMs in your application. You can use DatabaseCleaner to clean multiple ORMs, and multiple connections for those ORMs.
@@ -201,6 +186,37 @@ You can have the best of both worlds and use the best one for the job:
   require 'database_cleaner/cucumber'
   DatabaseCleaner.strategy = (ENV['SELENIUM'] == 'true') ? :truncation : :transaction
 </pre>
+
+
+h2. Common Errors
+
+h4. DatabaseCleaner is trying to use the wrong ORM
+
+DatabaseCleaner has an autodetect mechanism where if you do not explicitly define your ORM it will use the first ORM it can detect that is loaded.  Since ActiveRecord is the most common ORM used that is the first one checked for.  Sometimes other libraries (e.g. ActiveAdmin) will load other ORMs (e.g. ActiveRecord) even though you are using a different ORM.  This will result in DatabaseCleaner trying to use the wrong ORM (e.g. ActiveRecord) unless you explicitly define your ORM like so:
+
+<pre>
+  # How to setup your ORM explicitly
+  DatabaseCleaner[:mongoid].strategy = :truncation
+</pre>
+
+h4. STDERR is being flooded when using Postgres
+
+If you are using Postgres and have foreign key constraints, the truncation strategy will cause a lot of extra noise to appear on STDERR (in
+the form of "NOTICE truncate cascades" messages). To silence these warnings set the following log level in your postgresql.conf file:
+
+<pre>
+  client_min_messages = warning
+</pre>
+
+
+h2. Debugging
+
+In rare cases DatabaseCleaner will encounter errors that it will log.  By default it uses STDOUT set to the ERROR level but you can configure this to use whatever Logger you desire.  Here's an example of using the Rails.logger in env.rb:
+
+<pre>
+  DatabaseCleaner.logger = Rails.logger
+</pre>
+
 
 h2. COPYRIGHT
 
