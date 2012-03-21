@@ -1,5 +1,12 @@
 == 0.7.x (in git)
 
+== 0.7.2 2012-03-21
+
+  * Proper Mysql2Adapter superclass fix. (Jonathan Viney)
+  * Sequel::Transaction works with latest Sequel. (David Barri)
+  * Postgres Adapter no longer generates invalid SQL when no tables provided. (Michael-Keith Bernard)
+  * Documenation fixes/improvements. (David Barri, Ben Mabey, Kevin Moore)
+
 == 0.7.1 2012-01-15
 
  === New Features
