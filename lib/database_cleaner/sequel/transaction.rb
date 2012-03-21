@@ -8,7 +8,7 @@ module DatabaseCleaner
         @fibers||= []
         db= self.db
         f= Fiber.new do
-          db.transaction(rollback: :always, savepoint: true) do
+          db.transaction(:rollback => :always, :savepoint => true) do
             Fiber.yield
           end
         end
