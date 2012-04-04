@@ -1,4 +1,5 @@
 == 0.7.x (in git)
+  * Fix for truncation with new Sequel 3.34.1 (David Barri)
 
 == 0.7.2 2012-03-21
 
