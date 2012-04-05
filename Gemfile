@@ -16,7 +16,8 @@ source "http://rubygems.org"
 
 group :development do
   gem "rake"
-  gem "ruby-debug"
+  gem "ruby-debug", :platform => :ruby_18
+  gem "ruby-debug19", :platform => :ruby_19
 
   gem "bundler"
   gem "jeweler"
@@ -37,9 +38,9 @@ group :development do
 end
 
 group :test do
-  gem "rspec"
-  gem "rspactor"
-  gem "rcov"
+  gem "rspec", "< 2.0"
+  gem "rcov", :platform => :ruby_18
+  gem "simplecov", :platform => :ruby_19
   gem "ZenTest"
 end
 

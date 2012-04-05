@@ -47,7 +47,7 @@ module DatabaseCleaner
          Object.send(:remove_const, 'CouchPotato')  if defined?(::CouchPotato)
          Object.send(:remove_const, 'Sequel')       if defined?(::Sequel)
        end
-       
+
        let(:cleaner) { DatabaseCleaner::Base.new :autodetect }
 
        it "should raise an error when no ORM is detected" do
@@ -103,7 +103,7 @@ module DatabaseCleaner
          cleaner.orm.should == :couch_potato
          cleaner.should be_auto_detected
        end
-       
+
        it "should detect Sequel last" do
          Object.const_set('Sequel', 'Sequel mock')
 
@@ -129,6 +129,7 @@ module DatabaseCleaner
     describe "comparison" do
       it "should be equal if orm, connection and strategy are the same" do
         strategy = mock("strategy")
+        strategy.stub!(:to_ary => [strategy])
 
         one = DatabaseCleaner::Base.new(:active_record,:connection => :default)
         one.strategy = strategy
@@ -160,7 +161,7 @@ module DatabaseCleaner
           cleaner = ::DatabaseCleaner::Base.new "mongoid"
           cleaner.orm.should == :mongoid
         end
-        
+
         it "is autodetected if orm is not provided" do
           cleaner = ::DatabaseCleaner::Base.new
           cleaner.should be_auto_detected
@@ -195,7 +196,11 @@ module DatabaseCleaner
     end
 
     describe "strategy_db=" do
-      let(:strategy) { mock("strategy") }
+      let(:strategy) {
+        mock("strategy").tap{|strategy|
+          strategy.stub!(:to_ary => [strategy])
+        }
+      }
 
       before(:each) do
         subject.strategy = strategy
@@ -295,7 +300,11 @@ module DatabaseCleaner
     end
 
     describe "strategy=" do
-      let(:mock_strategy) { mock("strategy") }
+      let(:mock_strategy) {
+        mock("strategy").tap{|strategy|
+        strategy.stub!(:to_ary => [strategy])
+      }
+      }
 
       it "should proxy symbolised strategies to create_strategy" do
         subject.should_receive(:create_strategy).with(:symbol)
@@ -336,7 +345,9 @@ module DatabaseCleaner
       end
 
       it "returns the set strategy" do
-        strategum = mock("strategy")
+        strategum = mock("strategy").tap{|strategy|
+          strategy.stub!(:to_ary => [strategy])
+        }
         subject.strategy = strategum
         subject.strategy.should == strategum
       end
