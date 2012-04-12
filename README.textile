@@ -29,6 +29,12 @@ with any ORM library. You can also explicitly use it by setting your strategy to
 
 For support or to discuss development please use the "Google Group":http://groups.google.com/group/database_cleaner.
 
+h2. Dependencies
+
+Because database_cleaner supports multiple ORMs, it doesn't make sense to include all the dependencies
+for each one in the gemspec.  However, the DataMapper adapter does depend on dm-transactions.  Therefore,
+if you use DataMapper, you must include dm-transactions in your Gemfile/bundle/gemset manually.  
+
 h2. How to use
 
 <pre>
