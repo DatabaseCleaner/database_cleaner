@@ -1,20 +1,12 @@
-module ::DatabaseCleaner
-   module Generic
-     module Base
+require 'active_record'
+require 'database_cleaner/active_record/base'
+require 'erb'
 
-       def self.included(base)
-         base.extend(ClassMethods)
-       end
+module DatabaseCleaner
+  module ActiveRecord
 
-       def db
-         :default
-       end
-
-       module ClassMethods
-         def available_strategies
-           %W[]
-         end
-       end
-     end
-   end
+    def self.available_strategies
+      %w[truncation transaction deletion surgicalstrike]
+    end
+  end
 end
