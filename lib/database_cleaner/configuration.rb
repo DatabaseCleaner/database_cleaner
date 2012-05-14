@@ -84,6 +84,8 @@ module DatabaseCleaner
           DatabaseCleaner::Mongoid
         when :mongo_mapper
           DatabaseCleaner::MongoMapper
+        when :moped
+          DatabaseCleaner::Moped
         when :couch_potato
           DatabaseCleaner::CouchPotato
         when :sequel
