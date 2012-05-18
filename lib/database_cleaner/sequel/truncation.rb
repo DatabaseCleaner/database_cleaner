@@ -8,7 +8,7 @@ module DatabaseCleaner
       include ::DatabaseCleaner::Generic::Truncation
   
       def clean
-        case db_type= db.url.sub(/:.+/,'').to_sym
+        case db_type= db.adapter_scheme
         when :postgres
           # PostgreSQL requires all tables with FKs to be truncates in the same command, or have the CASCADE keyword
           # appended. Bulk truncation without CASCADE is:
