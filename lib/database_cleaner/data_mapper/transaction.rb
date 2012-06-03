@@ -1,8 +1,10 @@
 require 'database_cleaner/data_mapper/base'
+require 'database_cleaner/generic/transaction'
 
 module DatabaseCleaner::DataMapper
   class Transaction
     include ::DatabaseCleaner::DataMapper::Base
+    include ::DatabaseCleaner::Generic::Transaction
 
     def start(repository = self.db)
       ::DataMapper.repository(repository) do |r|
