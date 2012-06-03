@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{database_cleaner}
-  s.version = "0.7.2"
+  s.version = "0.8.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = [%q{Ben Mabey}]
-  s.date = %q{2012-03-21}
+  s.authors = ["Ben Mabey"]
+  s.date = %q{2012-06-02}
   s.description = %q{Strategies for cleaning databases.  Can be used to ensure a clean state for testing.}
   s.email = %q{ben@benmabey.com}
   s.extra_rdoc_files = [
@@ -64,12 +64,14 @@ Gem::Specification.new do |s|
      "lib/database_cleaner/data_mapper/transaction.rb",
      "lib/database_cleaner/data_mapper/truncation.rb",
      "lib/database_cleaner/generic/base.rb",
+     "lib/database_cleaner/generic/transaction.rb",
      "lib/database_cleaner/generic/truncation.rb",
      "lib/database_cleaner/mongo/truncation.rb",
      "lib/database_cleaner/mongo_mapper/base.rb",
      "lib/database_cleaner/mongo_mapper/truncation.rb",
      "lib/database_cleaner/mongoid/base.rb",
      "lib/database_cleaner/mongoid/truncation.rb",
+     "lib/database_cleaner/moped/truncation.rb",
      "lib/database_cleaner/null_strategy.rb",
      "lib/database_cleaner/sequel/base.rb",
      "lib/database_cleaner/sequel/transaction.rb",
@@ -97,9 +99,9 @@ Gem::Specification.new do |s|
      "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/bmabey/database_cleaner}
-  s.rdoc_options = [%q{--charset=UTF-8}]
-  s.require_paths = [%q{lib}]
-  s.rubygems_version = %q{1.8.5}
+  s.rdoc_options = ["--charset=UTF-8"]
+  s.require_paths = ["lib"]
+  s.rubygems_version = %q{1.6.2}
   s.summary = %q{Strategies for cleaning databases.  Can be used to ensure a clean state for testing.}
   s.test_files = [
     "spec/database_cleaner/active_record/base_spec.rb",
