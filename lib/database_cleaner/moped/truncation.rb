@@ -14,7 +14,7 @@ module DatabaseCleaner
       private
 
       def collections
-        session['system.namespaces'].find(name: { '$not' => /system|\$/ }).to_a.map do |collection|
+        session['system.namespaces'].find(:name => { '$not' => /system|\$/ }).to_a.map do |collection|
           _, name = collection['name'].split('.', 2)
           name
         end
