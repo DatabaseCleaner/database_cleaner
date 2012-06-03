@@ -80,6 +80,22 @@ strategy the remaining time.  To accomplish this you can say:
   # then make the DatabaseCleaner.start and DatabaseCleaner.clean calls appropriately
 </pre>
 
+h3. Minitest Example
+
+<pre>
+DatabaseCleaner.strategy = :transaction
+
+class MiniTest::Spec
+  before :each do
+    DatabaseCleaner.clean
+  end
+
+  after :each do
+    DatabaseCleaner.clean
+  end
+end
+</pre>
+
 h3. RSpec Example
 
 <pre>
