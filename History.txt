@@ -1,4 +1,8 @@
-== 0.7.x (in git)
+== 0.8.x (in git)
+
+== 0.8.0 (in git)
+
+  * Support for Mongoid 3/Moped (Andrew Bennett)
 
 == 0.7.2 2012-03-21
 
