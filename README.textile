@@ -87,7 +87,7 @@ DatabaseCleaner.strategy = :transaction
 
 class MiniTest::Spec
   before :each do
-    DatabaseCleaner.clean
+    DatabaseCleaner.start
   end
 
   after :each do
