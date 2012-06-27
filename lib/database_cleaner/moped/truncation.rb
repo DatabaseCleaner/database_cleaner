@@ -4,9 +4,9 @@ module DatabaseCleaner
 
       def clean
         if @only
-          collections.each { |c| session[c].drop if @only.include?(c.name) }
+          collections.each { |c| session[c].find.remove_all if @only.include?(c.name) }
         else
-          collections.each { |c| session[c].drop unless @tables_to_exclude.include?(c) }
+          collections.each { |c| session[c].find.remove_all unless @tables_to_exclude.include?(c) }
         end
         true
       end
