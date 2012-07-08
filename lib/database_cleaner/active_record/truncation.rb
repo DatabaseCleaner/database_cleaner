@@ -259,7 +259,7 @@ module DatabaseCleaner::ActiveRecord
     def clean
       connection = connection_klass.connection
       connection.disable_referential_integrity do
-        if connection.respond_to?(:fast_truncate_tables)
+        if fast? && connection.respond_to?(:fast_truncate_tables)
           connection.fast_truncate_tables(tables_to_truncate(connection), {:reset_ids => reset_ids?})
         else
           connection.truncate_tables(tables_to_truncate(connection))
@@ -276,6 +276,10 @@ module DatabaseCleaner::ActiveRecord
     # overwritten
     def migration_storage_name
       'schema_migrations'
+    end
+
+    def fast?
+      @fast == true
     end
 
     def reset_ids?
