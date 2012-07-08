@@ -6,6 +6,8 @@
 
 == 0.8.0 2012-06-02
 
+  * Faster truncation strategy for ActiveRecord with MySQL or PostgreSQL
+  * Upgrade to RSpec 2
   * Support for Mongoid 3/Moped (Andrew Bennett)
   * Postgres Adapter no longer generates invalid SQL when no tables provided. (Michael-Keith Bernard)
 
