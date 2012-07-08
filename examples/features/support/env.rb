@@ -5,7 +5,7 @@ require 'rubygems'
 require 'bundler'
 
 Bundler.setup
-require 'spec/expectations'
+require 'rspec/expectations'
 require 'ruby-debug'
 
 DB_DIR = "#{File.dirname(__FILE__)}/../../db"
