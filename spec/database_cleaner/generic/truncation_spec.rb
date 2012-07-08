@@ -17,6 +17,10 @@ module ::DatabaseCleaner
       def reset_ids?
         !!@reset_ids
       end
+
+      def fast?
+        !!@fast
+      end
     end
 
     class MigrationExample < TruncationExample
@@ -48,6 +52,7 @@ module ::DatabaseCleaner
         it { expect{ TruncationExample.new( { :except => "something",:only => "something else" } ) }.to     raise_error(ArgumentError) }
         it { expect{ TruncationExample.new( { :only   => "something"                           } ) }.to_not raise_error(ArgumentError) }
         it { expect{ TruncationExample.new( { :except => "something"                           } ) }.to_not raise_error(ArgumentError) }
+        it { expect{ TruncationExample.new( { :fast => "something"                           } ) }.to_not raise_error(ArgumentError) }
         it { expect{ TruncationExample.new( { :reset_ids => "something"                           } ) }.to_not raise_error(ArgumentError) }
 
         context "" do
@@ -72,6 +77,16 @@ module ::DatabaseCleaner
           its(:reset_ids?) { should == false }
         end
 
+        context "" do
+          subject { TruncationExample.new( { :fast => ["something"] } ) }
+          its(:fast?) { should == true }
+        end
+
+        context "" do
+          subject { TruncationExample.new( { :fast => nil } ) }
+          its(:fast?) { should == false }
+        end
+        
         context "" do
           subject { MigrationExample.new }
           its(:only)   { should == nil }
