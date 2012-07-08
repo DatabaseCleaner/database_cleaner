@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require 'spec_helper'
 
 module DatabaseCleaner
   class << self
@@ -197,7 +197,7 @@ describe ::DatabaseCleaner do
     # plausably want to force orm/strategy change on two sets of orm that differ only on db
     context "multiple orm proxy methods" do
 
-      it "should proxy orm to all connections and remove duplicate connections" do
+      pending "should proxy orm to all connections and remove duplicate connections" do
         active_record_1 = mock("active_mock_on_db_one").as_null_object
         active_record_2 = mock("active_mock_on_db_two").as_null_object
         data_mapper_1   = mock("data_mock_on_db_one").as_null_object

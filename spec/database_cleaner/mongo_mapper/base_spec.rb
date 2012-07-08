@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'database_cleaner/mongo_mapper/base'
-require 'database_cleaner/shared_strategy_spec'
+require 'database_cleaner/shared_strategy'
 
 module DatabaseCleaner
   describe MongoMapper do
