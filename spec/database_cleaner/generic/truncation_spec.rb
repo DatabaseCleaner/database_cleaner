@@ -13,6 +13,10 @@ module ::DatabaseCleaner
       def except
         @tables_to_exclude
       end
+
+      def reset_ids?
+        !!@reset_ids
+      end
     end
 
     class MigrationExample < TruncationExample
@@ -44,6 +48,7 @@ module ::DatabaseCleaner
         it { expect{ TruncationExample.new( { :except => "something",:only => "something else" } ) }.to     raise_error(ArgumentError) }
         it { expect{ TruncationExample.new( { :only   => "something"                           } ) }.to_not raise_error(ArgumentError) }
         it { expect{ TruncationExample.new( { :except => "something"                           } ) }.to_not raise_error(ArgumentError) }
+        it { expect{ TruncationExample.new( { :reset_ids => "something"                           } ) }.to_not raise_error(ArgumentError) }
 
         context "" do
           subject { TruncationExample.new( { :only => ["something"] } ) }
@@ -55,6 +60,16 @@ module ::DatabaseCleaner
           subject { TruncationExample.new( { :except => ["something"] } ) }
           its(:only)   { should == nil }
           its(:except) { should include("something") }
+        end
+
+        context "" do
+          subject { TruncationExample.new( { :reset_ids => ["something"] } ) }
+          its(:reset_ids?) { should == true }
+        end
+
+        context "" do
+          subject { TruncationExample.new( { :reset_ids => nil } ) }
+          its(:reset_ids?) { should == false }
         end
 
         context "" do
