@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'active_record'
 require 'database_cleaner/active_record/base'
-require 'database_cleaner/shared_strategy_spec'
+require 'database_cleaner/shared_strategy'
 
 module DatabaseCleaner
   describe ActiveRecord do

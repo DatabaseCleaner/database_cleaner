@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'database_cleaner/shared_strategy_spec'
+require 'database_cleaner/shared_strategy'
 require 'database_cleaner/generic/base'
 
 module ::DatabaseCleaner
