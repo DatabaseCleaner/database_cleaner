@@ -50,7 +50,7 @@ module ActiveRecord
         opts = tables_and_opts.last.is_a?(::Hash) ? tables_and_opts.pop : {}
         reset_ids = opts[:reset_ids] != false
 
-        _tables = tables_and_opts
+        _tables = tables_and_opts.flatten
 
         _tables.each do |table_name|
           if reset_ids
@@ -93,7 +93,7 @@ module ActiveRecord
         opts = tables_and_opts.last.is_a?(::Hash) ? tables_and_opts.pop : {}
         reset_ids = opts[:reset_ids] != false
 
-        _tables = tables_and_opts
+        _tables = tables_and_opts.flatten
 
         _tables.each do |table_name|
           if reset_ids
@@ -178,7 +178,7 @@ module ActiveRecord
         opts = tables_and_opts.last.is_a?(::Hash) ? tables_and_opts.pop : {}
         reset_ids = opts[:reset_ids] != false
 
-        _tables = tables_and_opts
+        _tables = tables_and_opts.flatten
 
         if reset_ids
           truncate_tables_with_id_reset(_tables)
