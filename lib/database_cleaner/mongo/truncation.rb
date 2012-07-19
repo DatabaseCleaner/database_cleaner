@@ -1,22 +1,16 @@
+require 'database_cleaner/mongo/base'
+require 'database_cleaner/generic/truncation'
+require 'database_cleaner/mongo/truncation_mixin'
 module DatabaseCleaner
   module Mongo
-    module Truncation
-
-      def clean
-        if @only
-          collections.each { |c| c.remove if @only.include?(c.name) }
-        else
-          collections.each { |c| c.remove unless @tables_to_exclude.include?(c.name) }
-        end
-        true
-      end
-
+    class Truncation
+      include ::DatabaseCleaner::Generic::Truncation
+      include TruncationMixin
       private
 
-      def collections
-        database.collections.select { |c| c.name !~ /^system\./ }
+      def database
+        ::Mongo.connection
       end
-
     end
   end
 end

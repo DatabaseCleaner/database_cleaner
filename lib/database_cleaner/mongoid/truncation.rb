@@ -1,6 +1,6 @@
 require 'database_cleaner/mongoid/base'
 require 'database_cleaner/generic/truncation'
-require 'database_cleaner/mongo/truncation'
+require 'database_cleaner/mongo/truncation_mixin'
 require 'database_cleaner/moped/truncation'
 require 'mongoid/version'
 
@@ -12,7 +12,7 @@ module DatabaseCleaner
 
       if ::Mongoid::VERSION < '3'
 
-        include ::DatabaseCleaner::Mongo::Truncation
+        include ::DatabaseCleaner::Mongo::TruncationMixin
 
         private
 
