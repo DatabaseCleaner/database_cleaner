@@ -1,0 +1,13 @@
+mysql_test:
+  adapter: mysql2
+  database: database_cleaner_test
+  username: root
+  password:
+  host: 127.0.0.1
+  port: 3306
+
+postgres_test:
+  adapter: postgresql
+  database: database_cleaner_test
+  username: root
+  password:

@@ -1,18 +1,5 @@
 source "http://rubygems.org"
-# group :development do
-#   # gem "mysql"
-#   # gem "json_pure", "1.4.3"
-#
-#
-#   # gem "datamapper",        "1.0.0"
-#   # gem "dm-migrations",     "1.0.0"
-#   # gem "dm-sqlite-adapter", "1.0.0"
-#
-#   # mongo requirements
-#     # gem "mongo",     "1.0.1"
-#     # gem "mongo_ext", "0.19.3"
-#     # gem "bson_ext",  "1.0.1"
-# end
+# TODO: move these to the gemspec...
 
 group :development do
   gem "rake"
@@ -24,19 +11,22 @@ group :development do
   gem "json_pure"
 
   #ORM's
-  gem "activerecord",         "2.3.8"
+  gem "activerecord"
   gem "datamapper",           "1.0.0"
     gem "dm-migrations",      "1.0.0"
     gem "dm-sqlite-adapter",  "1.0.0"
-  gem "mongoid",              "1.9.1"
-    gem "tzinfo",             "0.3.22"
-  gem "mongo_mapper",         "0.8.2"
-  gem "couch_potato",         "0.3.0"
+  gem "mongoid"
+    gem "tzinfo"             
+    gem "mongo_ext"
+    gem "bson_ext"
+  gem "mongo_mapper"         
+  gem "couch_potato"         
   gem "sequel",               "~>3.21.0"
   #gem "ibm_db"  # I don't want to add this dependency, even as a dev one since it requires DB2 to be installed
   gem 'mysql'
-  gem 'mysql2', '~> 0.2.0'
+  gem 'mysql2'
   gem 'pg'
+  gem "standalone_migrations" # https://github.com/thuss/standalone-migrations
 end
 
 group :test do
