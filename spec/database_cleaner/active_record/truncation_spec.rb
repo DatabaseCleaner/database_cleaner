@@ -30,14 +30,14 @@ module DatabaseCleaner
       end
 
       it "should truncate all tables except for schema_migrations" do
-        connection.stub!(:tables).and_return(%w[schema_migrations widgets dogs])
+        connection.stub!(:database_cleaner_table_cache).and_return(%w[schema_migrations widgets dogs])
         
         connection.should_receive(:truncate_tables).with(['widgets', 'dogs'])
         Truncation.new.clean
       end
 
       it "should only truncate the tables specified in the :only option when provided" do
-        connection.stub!(:tables).and_return(%w[schema_migrations widgets dogs])
+        connection.stub!(:database_cleaner_table_cache).and_return(%w[schema_migrations widgets dogs])
 
         connection.should_receive(:truncate_tables).with(['widgets'])
 
@@ -45,7 +45,7 @@ module DatabaseCleaner
       end
 
       it "should not truncate the tables specified in the :except option" do
-        connection.stub!(:tables).and_return(%w[schema_migrations widgets dogs])
+        connection.stub!(:database_cleaner_table_cache).and_return(%w[schema_migrations widgets dogs])
 
         connection.should_receive(:truncate_tables).with(['dogs'])
 
@@ -63,7 +63,7 @@ module DatabaseCleaner
       end
 
       it "should not truncate views" do
-        connection.stub!(:tables).and_return(%w[widgets dogs])
+        connection.stub!(:database_cleaner_table_cache).and_return(%w[widgets dogs])
         connection.stub!(:views).and_return(["widgets"])
 
         connection.should_receive(:truncate_tables).with(['dogs'])
