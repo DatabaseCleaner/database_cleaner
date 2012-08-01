@@ -121,7 +121,7 @@ Gem::Specification.new do |s|
      "spec/database_cleaner/sequel/base_spec.rb",
      "spec/database_cleaner/sequel/transaction_spec.rb",
      "spec/database_cleaner/sequel/truncation_spec.rb",
-     "spec/database_cleaner/shared_strategy_spec.rb",
+     "spec/database_cleaner/shared_strategy.rb",
      "spec/spec_helper.rb",
      "examples/features/step_definitions/activerecord_steps.rb",
      "examples/features/step_definitions/couchpotato_steps.rb",
