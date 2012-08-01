@@ -9,8 +9,15 @@ module ActiveRecord
     USE_ARJDBC_WORKAROUND = defined?(ArJdbc)
 
     class AbstractAdapter
-      def views
+      # used to be called views but that can clash with gems like schema_plus
+      # this gem is not meant to be exposing such an extra interface any way
+      def database_cleaner_view_cache
         @views ||= select_values("select table_name from information_schema.views where table_schema = '#{current_database}'") rescue []
+      end
+
+      def database_cleaner_table_cache
+        # the adapters don't do caching (#130) but we make the assumption that the list stays the same in tests
+        @database_cleaner_tables ||= tables
       end
 
       def truncate_table(table_name)
@@ -137,7 +144,7 @@ module DatabaseCleaner::ActiveRecord
     private
 
     def tables_to_truncate(connection)
-       (@only || connection.tables) - @tables_to_exclude - connection.views
+      (@only || connection.database_cleaner_table_cache) - @tables_to_exclude - connection.database_cleaner_view_cache
     end
 
     # overwritten

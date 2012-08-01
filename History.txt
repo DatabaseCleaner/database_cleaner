@@ -1,5 +1,9 @@
 == 0.8.x (in git)
 
+  * view caching works with the schema_plus gem loaded
+    * ActiveRecord::ConnectionAdapters::AbstractAdapter#views was renamed to an internal name
+  * ActiveRecord truncation strategy caches the list of tables #130 (Petteri Räty)
+
 == 0.8.0 2012-06-02
 
   * Support for Mongoid 3/Moped (Andrew Bennett)
