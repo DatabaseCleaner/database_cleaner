@@ -25,7 +25,7 @@ module DatabaseCleaner
 
       before(:each) do
         connection.stub!(:disable_referential_integrity).and_yield
-        connection.stub!(:views).and_return([])
+        connection.stub!(:database_cleaner_view_cache).and_return([])
         ::ActiveRecord::Base.stub!(:connection).and_return(connection)
       end
 
@@ -64,7 +64,7 @@ module DatabaseCleaner
 
       it "should not truncate views" do
         connection.stub!(:database_cleaner_table_cache).and_return(%w[widgets dogs])
-        connection.stub!(:views).and_return(["widgets"])
+        connection.stub!(:database_cleaner_view_cache).and_return(["widgets"])
 
         connection.should_receive(:truncate_tables).with(['dogs'])
 
