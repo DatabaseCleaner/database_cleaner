@@ -1,5 +1,12 @@
 require 'active_record/base'
+
 require 'active_record/connection_adapters/abstract_adapter'
+
+begin
+  require 'active_record/connection_adapters/abstract_mysql_adapter'
+rescue LoadError
+end
+
 require "database_cleaner/generic/truncation"
 require 'database_cleaner/active_record/base'
 

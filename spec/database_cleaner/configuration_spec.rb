@@ -17,7 +17,7 @@ describe ::DatabaseCleaner do
 
   context "orm specification" do
     it "should not accept unrecognised orms" do
-      expect { ::DatabaseCleaner[nil] }.should raise_error(::DatabaseCleaner::NoORMDetected)
+      expect { ::DatabaseCleaner[nil] }.to raise_error(::DatabaseCleaner::NoORMDetected)
     end
 
     it "should accept :active_record" do
