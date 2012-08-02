@@ -1,38 +1,18 @@
+require 'support/active_record/database_setup'
+require 'support/active_record/schema_setup'
+
 module MySQL2Helper
   puts "Active Record #{ActiveRecord::VERSION::STRING}, mysql2"
 
   # ActiveRecord::Base.logger = Logger.new(STDERR)
 
-  @@mysql2_db_spec = {
-    :adapter  => 'mysql2',
-    :host => 'localhost',
-    :username => 'root',
-    :password => '',
-    :encoding => 'utf8'
-  }
-
-  @@db = {:database => 'database_cleaner_test'}
-
   def active_record_mysql2_setup
-    ActiveRecord::Base.establish_connection(@@mysql2_db_spec)
-
-    ActiveRecord::Base.connection.drop_database @@db[:database] rescue nil  
-    ActiveRecord::Base.connection.create_database @@db[:database]
-
-    ActiveRecord::Base.establish_connection(@@mysql2_db_spec.merge(@@db))
-
-    ActiveRecord::Schema.define do
-      create_table :users, :force => true do |t|
-        t.integer :name
-      end
-    end
+    ActiveRecord::Base.establish_connection db_config['mysql2']
+    load_schema
   end
 
   def active_record_mysql2_connection
     ActiveRecord::Base.connection
-  end
-
-  class ::User < ActiveRecord::Base
   end
 end
 
