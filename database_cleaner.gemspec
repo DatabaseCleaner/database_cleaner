@@ -93,7 +93,7 @@ Gem::Specification.new do |s|
      "spec/database_cleaner/sequel/base_spec.rb",
      "spec/database_cleaner/sequel/transaction_spec.rb",
      "spec/database_cleaner/sequel/truncation_spec.rb",
-     "spec/database_cleaner/shared_strategy_spec.rb",
+     "spec/database_cleaner/shared_strategy.rb",
      "spec/rcov.opts",
      "spec/spec.opts",
      "spec/spec_helper.rb"
