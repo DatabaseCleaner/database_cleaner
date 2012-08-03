@@ -1,42 +1,38 @@
+require 'support/active_record/database_setup'
+require 'support/active_record/schema_setup'
+
 module PostgreSQLHelper
   puts "Active Record #{ActiveRecord::VERSION::STRING}, pg"
 
   # ActiveRecord::Base.logger = Logger.new(STDERR)
 
-  # createdb database_cleaner_test -E UTF8 -T template0
+  def config
+    db_config['postgres']
+  end
 
-  @@pg_db_spec = {
-    :adapter  => 'postgresql',
-    :database => 'postgres',
-    :host => '127.0.0.1',
-    :username => 'postgres',
-    :password => '',
-    :encoding => 'unicode',
-    :template => 'template0'
-  }
-
-  @@db = {:database => 'database_cleaner_test'}
-
-  # ActiveRecord::Base.establish_connection(@@pg_db_spec)
-
-  # ActiveRecord::Base.connection.drop_database db[:database] rescue nil  
-  # ActiveRecord::Base.connection.create_database db[:database]
-
-  def active_record_pg_setup
-    ActiveRecord::Base.establish_connection(@@pg_db_spec.merge(@@db))
-    
-    ActiveRecord::Schema.define do
-      create_table :users, :force => true do |t|
-        t.integer :name
-      end
+  def create_db
+    @encoding = config['encoding'] || ENV['CHARSET'] || 'utf8'
+    begin
+      establish_connection(config.merge('database' => 'postgres', 'schema_search_path' => 'public'))
+      ActiveRecord::Base.connection.create_database(config['database'], config.merge('encoding' => @encoding))
+    rescue Exception => e
+      $stderr.puts e, *(e.backtrace)
+      $stderr.puts "Couldn't create database for #{config.inspect}"
     end
   end
 
-  def active_record_pg_connection 
-    ActiveRecord::Base.connection
+  def establish_connection config = config
+    ActiveRecord::Base.establish_connection(config)
   end
 
-  class ::User < ActiveRecord::Base
+  def active_record_pg_setup
+    create_db
+    establish_connection
+    load_schema
+  end
+
+  def active_record_pg_connection
+    ActiveRecord::Base.connection
   end
 end
 
