@@ -1,13 +1,26 @@
-mysql_test:
-  adapter: mysql2
+mysql:
+  adapter: mysql
   database: database_cleaner_test
   username: root
   password:
   host: 127.0.0.1
   port: 3306
+  encoding: utf8
 
-postgres_test:
-  adapter: postgresql
+mysql2:
+  adapter: mysql
   database: database_cleaner_test
   username: root
   password:
+  host: 127.0.0.1
+  port: 3306
+  encoding: utf8
+
+postgres:
+  adapter: postgresql
+  database: database_cleaner_test
+  username: postgres
+  password:
+  host: 127.0.0.1
+  encoding: unicode
+  template: template0
