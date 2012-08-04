@@ -26,7 +26,6 @@ group :development do
   gem 'mysql'
   gem 'mysql2'
   gem 'pg'
-  gem "standalone_migrations" # https://github.com/thuss/standalone-migrations
 end
 
 group :test do

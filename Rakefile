@@ -34,9 +34,6 @@ RSpec::Core::RakeTask.new(:rcov) do |spec|
   spec.rcov = true
 end
 
-
-require 'tasks/standalone_migrations'
-
 begin
   require 'cucumber/rake/task'
   Cucumber::Rake::Task.new(:features)
