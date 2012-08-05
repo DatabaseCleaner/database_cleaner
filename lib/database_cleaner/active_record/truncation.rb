@@ -137,40 +137,18 @@ module DatabaseCleaner
         end
       end
 
-      def truncate_tables_with_id_reset(_tables)
-        tables_to_truncate = []
-
-        _tables.each do |table|
-          begin
-            table_curr_value = execute(<<-CURR_VAL
-              SELECT currval('#{table}_id_seq');
-            CURR_VAL
-                                       ).first['currval'].to_i
-          rescue ActiveRecord::StatementInvalid
-            table_curr_value = nil
-          end
-
-          if table_curr_value && table_curr_value > 0
-            tables_to_truncate << table
-          end
+      def truncate_tables_with_id_reset(tables)
+        to_truncate = tables.select do |table|
+          cur_val = select_value("SELECT currval('#{table}_id_seq');").to_i rescue ActiveRecord::StatementInvalid
+          cur_val && cur_val > 0
         end
-
-        truncate_tables(tables_to_truncate) if tables_to_truncate.any?
+        
+        truncate_tables(to_truncate)
       end
 
-      def truncate_tables_no_id_reset(_tables)
-        tables_to_truncate = []
-
-        _tables.each do |table|
-          rows_exist = execute(<<-TR
-            SELECT true FROM #{table} LIMIT 1;
-          TR
-                               )
-
-          tables_to_truncate << table if rows_exist.any?
-        end
-
-        truncate_tables(tables_to_truncate) if tables_to_truncate.any?
+      def truncate_tables_no_id_reset(tables)
+        to_truncate = tables.select { |t| select_value("SELECT true FROM #{t} LIMIT 1;")}
+        truncate_tables(to_truncate)
       end
     end
 

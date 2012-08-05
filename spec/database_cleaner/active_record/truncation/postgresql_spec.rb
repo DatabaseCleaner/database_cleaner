@@ -44,15 +44,15 @@ module ActiveRecord
         it "should truncate the table" do
           2.times { User.create }
 
-          connection.truncate_tables_with_id_reset('users')
-          User.count.should == 0
+          connection.truncate_tables_with_id_reset(['users'])
+          User.count.should be_zero
         end
 
         it "should reset AUTO_INCREMENT index of table" do
           2.times { User.create }
           User.delete_all
 
-          connection.truncate_tables_with_id_reset('users')
+          connection.truncate_tables_with_id_reset(['users'])
 
           User.create.id.should == 1
         end
@@ -66,7 +66,7 @@ module ActiveRecord
         it "should truncate the table" do
           2.times { User.create }
 
-          connection.truncate_tables_no_id_reset('users')
+          connection.truncate_tables_no_id_reset(['users'])
           User.count.should == 0
         end
 
@@ -74,7 +74,7 @@ module ActiveRecord
           2.times { User.create }
           User.delete_all
 
-          connection.truncate_tables_no_id_reset('users')
+          connection.truncate_tables_no_id_reset(['users'])
 
           User.create.id.should == 3
         end
