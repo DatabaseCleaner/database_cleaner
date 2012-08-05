@@ -5,8 +5,10 @@ module DatabaseCleaner::ActiveRecord
   class Transaction
     include ::DatabaseCleaner::ActiveRecord::Base
     include ::DatabaseCleaner::Generic::Transaction
-
+    
     def start
+      return if connection_klass.connection.open_transactions > 0
+    
       if connection_klass.connection.respond_to?(:increment_open_transactions)
         connection_klass.connection.increment_open_transactions
       else
