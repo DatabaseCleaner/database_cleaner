@@ -2,10 +2,7 @@ require 'active_record/base'
 
 require 'active_record/connection_adapters/abstract_adapter'
 
-begin
-  require 'active_record/connection_adapters/abstract_mysql_adapter'
-rescue LoadError
-end
+require 'active_record/connection_adapters/abstract_mysql_adapter' rescue LoadError
 
 require "database_cleaner/generic/truncation"
 require 'database_cleaner/active_record/base'
@@ -60,7 +57,7 @@ module ActiveRecord
         execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
       end
 
-      def fast_truncate_tables *tables_and_opts
+      def fast_truncate_tables(*tables_and_opts)
         opts = tables_and_opts.last.is_a?(::Hash) ? tables_and_opts.pop : {}
         reset_ids = opts[:reset_ids] != false
 
@@ -79,12 +76,11 @@ module ActiveRecord
         rows_exist = execute("SELECT EXISTS(SELECT 1 FROM #{quote_table_name(table_name)} LIMIT 1)").fetch_row.first.to_i
 
         if rows_exist == 0
-          auto_inc = execute(<<-AUTO_INCREMENT
+          auto_inc = execute(<<-SQL)
               SELECT Auto_increment 
               FROM information_schema.tables 
               WHERE table_name='#{table_name}';
-          AUTO_INCREMENT
-          )
+          SQL
 
           truncate_table(table_name) if auto_inc.fetch_row.first.to_i > 1
         else
@@ -119,15 +115,14 @@ module ActiveRecord
       end
 
       def truncate_table_with_id_reset(table_name)
-        rows_exist = execute("SELECT EXISTS(SELECT 1 FROM #{quote_table_name(table_name)} LIMIT 1)").first.first.to_i
+        rows_exist = execute("SELECT EXISTS(SELECT 1 FROM #{quote_table_name(table_name)} LIMIT 1)").first.first.to_i.zero?
 
-        if rows_exist == 0
-          auto_inc = execute(<<-AUTO_INCREMENT
+        if rows_exist
+          auto_inc = execute(<<-SQL)
               SELECT Auto_increment 
               FROM information_schema.tables 
               WHERE table_name='#{table_name}';
-          AUTO_INCREMENT
-          )
+          SQL
 
           truncate_table(table_name) if auto_inc.first.first.to_i > 1
         else
