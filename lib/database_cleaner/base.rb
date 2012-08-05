@@ -8,7 +8,9 @@ module DatabaseCleaner
       else
         self.orm = desired_orm
       end
-      self.db = opts[:connection] if opts.has_key? :connection
+      
+      self.db = opts[:connection] || opts[:db] if opts.has_key?(:connection) || opts.has_key?(:db)
+      
       set_default_orm_strategy
     end
 
