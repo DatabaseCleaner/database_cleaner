@@ -73,24 +73,24 @@ module ActiveRecord
       end
 
       def truncate_table_with_id_reset(table_name)
-        rows_exist = execute("SELECT EXISTS(SELECT 1 FROM #{quote_table_name(table_name)} LIMIT 1)").fetch_row.first.to_i
+        row_count = select_value("SELECT EXISTS(SELECT 1 FROM #{quote_table_name(table_name)} LIMIT 1)")
 
-        if rows_exist == 0
-          auto_inc = execute(<<-SQL)
+        if row_count.zero?
+          auto_inc = select_value(<<-SQL) > 1
               SELECT Auto_increment 
               FROM information_schema.tables 
               WHERE table_name='#{table_name}';
           SQL
 
-          truncate_table(table_name) if auto_inc.fetch_row.first.to_i > 1
+          truncate_table(table_name) if auto_inc
         else
           truncate_table(table_name)
         end
       end
 
       def truncate_table_no_id_reset(table_name)
-        rows_exist = execute("SELECT EXISTS (SELECT 1 FROM #{quote_table_name(table_name)} LIMIT 1)").fetch_row.first.to_i
-        truncate_table(table_name) if rows_exist > 0
+        row_count = select_value("SELECT EXISTS (SELECT 1 FROM #{quote_table_name(table_name)} LIMIT 1)")
+        truncate_table(table_name) unless row_count.zero?
       end
     end
 
@@ -114,25 +114,27 @@ module ActiveRecord
         end
       end
 
-      def truncate_table_with_id_reset(table_name)
-        rows_exist = execute("SELECT EXISTS(SELECT 1 FROM #{quote_table_name(table_name)} LIMIT 1)").first.first.to_i.zero?
+      
 
-        if rows_exist
-          auto_inc = execute(<<-SQL)
+      def truncate_table_with_id_reset(table_name)
+        row_count = select_value("SELECT EXISTS(SELECT 1 FROM #{quote_table_name(table_name)} LIMIT 1)")
+
+        if row_count.zero?
+          auto_inc = select_value(<<-SQL) > 1
               SELECT Auto_increment 
               FROM information_schema.tables 
               WHERE table_name='#{table_name}';
           SQL
 
-          truncate_table(table_name) if auto_inc.first.first.to_i > 1
+          truncate_table(table_name) if auto_inc
         else
           truncate_table(table_name)
         end
       end
 
       def truncate_table_no_id_reset(table_name)
-        rows_exist = execute("SELECT EXISTS(SELECT 1 FROM #{quote_table_name(table_name)} LIMIT 1)").first.first
-        truncate_table(table_name) if rows_exist == 1
+        row_count = select_value("SELECT EXISTS(SELECT 1 FROM #{quote_table_name(table_name)} LIMIT 1)")
+        truncate_table(table_name) if row_count == 1
       end
     end
 
