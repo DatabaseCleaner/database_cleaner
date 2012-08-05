@@ -7,12 +7,10 @@ require 'active_record/connection_adapters/abstract_mysql_adapter' rescue LoadEr
 require "database_cleaner/generic/truncation"
 require 'database_cleaner/active_record/base'
 
-module ActiveRecord
-  module ConnectionAdapters
-    # Activerecord-jdbc-adapter defines class dependencies a bit differently - if it is present, confirm to ArJdbc hierarchy to avoid 'superclass mismatch' errors.
-    USE_ARJDBC_WORKAROUND = defined?(ArJdbc)
-
-    class AbstractAdapter
+module DatabaseCleaner
+  module ActiveRecord
+      
+    module AbstractAdapter
       # used to be called views but that can clash with gems like schema_plus
       # this gem is not meant to be exposing such an extra interface any way
       def database_cleaner_view_cache
@@ -35,24 +33,8 @@ module ActiveRecord
       end
     end
 
-    unless USE_ARJDBC_WORKAROUND
-      class SQLiteAdapter < AbstractAdapter
-      end
-    end
-
-    # ActiveRecord 3.1 support
-    if defined?(AbstractMysqlAdapter)
-      MYSQL_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractMysqlAdapter
-      MYSQL2_ADAPTER_PARENT = AbstractMysqlAdapter
-    else
-      MYSQL_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
-      MYSQL2_ADAPTER_PARENT = AbstractAdapter
-    end
-    
-    SQLITE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : SQLiteAdapter
-    POSTGRE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
-
-    class MysqlAdapter < MYSQL_ADAPTER_PARENT
+    module MysqlAdapter
+      
       def truncate_table(table_name)
         execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
       end
@@ -94,57 +76,15 @@ module ActiveRecord
       end
     end
 
-    class Mysql2Adapter < MYSQL2_ADAPTER_PARENT
-      def truncate_table(table_name)
-        execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
-      end
-
-      def fast_truncate_tables *tables_and_opts
-        opts = tables_and_opts.last.is_a?(::Hash) ? tables_and_opts.pop : {}
-        reset_ids = opts[:reset_ids] != false
-
-        _tables = tables_and_opts.flatten
-
-        _tables.each do |table_name|
-          if reset_ids
-            truncate_table_with_id_reset(table_name)
-          else
-            truncate_table_no_id_reset(table_name)
-          end
-        end
-      end
-
-      
-
-      def truncate_table_with_id_reset(table_name)
-        row_count = select_value("SELECT EXISTS(SELECT 1 FROM #{quote_table_name(table_name)} LIMIT 1)")
-
-        if row_count.zero?
-          auto_inc = select_value(<<-SQL) > 1
-              SELECT Auto_increment 
-              FROM information_schema.tables 
-              WHERE table_name='#{table_name}';
-          SQL
-
-          truncate_table(table_name) if auto_inc
-        else
-          truncate_table(table_name)
-        end
-      end
-
-      def truncate_table_no_id_reset(table_name)
-        row_count = select_value("SELECT EXISTS(SELECT 1 FROM #{quote_table_name(table_name)} LIMIT 1)")
-        truncate_table(table_name) if row_count == 1
-      end
-    end
-
-    class IBM_DBAdapter < AbstractAdapter
+    
+    module IBM_DBAdapter
       def truncate_table(table_name)
         execute("TRUNCATE #{quote_table_name(table_name)} IMMEDIATE")
       end
     end
 
-    class SQLite3Adapter < SQLITE_ADAPTER_PARENT
+    
+    module SQLiteAdapter
       def delete_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)};")
         execute("DELETE FROM sqlite_sequence where name = '#{table_name}';")
@@ -152,7 +92,7 @@ module ActiveRecord
       alias truncate_table delete_table
     end
 
-    class JdbcAdapter < AbstractAdapter
+    module TruncateOrDelete
       def truncate_table(table_name)
         begin
           execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
@@ -162,8 +102,7 @@ module ActiveRecord
       end
     end
 
-    class PostgreSQLAdapter < POSTGRE_ADAPTER_PARENT
-
+    module PostgreSQLAdapter
       def db_version
         @db_version ||= postgresql_version
       end
@@ -206,7 +145,7 @@ module ActiveRecord
             table_curr_value = execute(<<-CURR_VAL
               SELECT currval('#{table}_id_seq');
             CURR_VAL
-            ).first['currval'].to_i
+                                       ).first['currval'].to_i
           rescue ActiveRecord::StatementInvalid
             table_curr_value = nil
           end
@@ -226,7 +165,7 @@ module ActiveRecord
           rows_exist = execute(<<-TR
             SELECT true FROM #{table} LIMIT 1;
           TR
-          )
+                               )
 
           tables_to_truncate << table if rows_exist.any?
         end
@@ -235,20 +174,73 @@ module ActiveRecord
       end
     end
 
-    class SQLServerAdapter < AbstractAdapter
-      def truncate_table(table_name)
-        begin
-          execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
-        rescue ActiveRecord::StatementInvalid
-          execute("DELETE FROM #{quote_table_name(table_name)};")
-        end
-      end
-    end
-
-    class OracleEnhancedAdapter < AbstractAdapter
+    module OracleEnhancedAdapter
       def truncate_table(table_name)
         execute("TRUNCATE TABLE #{quote_table_name(table_name)}")
       end
+    end
+
+  end
+end
+
+#TODO: Remove monkeypatching and decorate the connection instead!
+
+module ActiveRecord
+  module ConnectionAdapters
+    # Activerecord-jdbc-adapter defines class dependencies a bit differently - if it is present, confirm to ArJdbc hierarchy to avoid 'superclass mismatch' errors.
+    USE_ARJDBC_WORKAROUND = defined?(ArJdbc)
+
+    class AbstractAdapter
+      include ::DatabaseCleaner::ActiveRecord::AbstractAdapter
+    end
+
+    unless USE_ARJDBC_WORKAROUND
+      class SQLiteAdapter < AbstractAdapter
+      end
+    end
+
+    # ActiveRecord 3.1 support
+    if defined?(AbstractMysqlAdapter)
+      MYSQL_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractMysqlAdapter
+      MYSQL2_ADAPTER_PARENT = AbstractMysqlAdapter
+    else
+      MYSQL_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
+      MYSQL2_ADAPTER_PARENT = AbstractAdapter
+    end
+    
+    SQLITE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : SQLiteAdapter
+    POSTGRE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
+
+    class MysqlAdapter < MYSQL_ADAPTER_PARENT
+      include ::DatabaseCleaner::ActiveRecord::MysqlAdapter
+    end
+
+    class Mysql2Adapter < MYSQL2_ADAPTER_PARENT
+      include ::DatabaseCleaner::ActiveRecord::MysqlAdapter
+    end
+
+    class IBM_DBAdapter < AbstractAdapter
+      include ::DatabaseCleaner::ActiveRecord::IBM_DBAdapter
+    end
+
+    class SQLite3Adapter < SQLITE_ADAPTER_PARENT
+      include ::DatabaseCleaner::ActiveRecord::SQLiteAdapter
+    end
+
+    class JdbcAdapter < AbstractAdapter
+      include ::DatabaseCleaner::ActiveRecord::TruncateOrDelete
+    end
+
+    class PostgreSQLAdapter < POSTGRE_ADAPTER_PARENT
+      include ::DatabaseCleaner::ActiveRecord::PostgreSQLAdapter
+    end
+
+    class SQLServerAdapter < AbstractAdapter
+      include ::DatabaseCleaner::ActiveRecord::TruncateOrDelete
+    end
+
+    class OracleEnhancedAdapter < AbstractAdapter
+      include ::DatabaseCleaner::ActiveRecord::OracleEnhancedAdapter
     end
 
   end
