@@ -39,40 +39,40 @@ module DatabaseCleaner
         execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
       end
 
-      def fast_truncate_tables(*tables_and_opts)
-        opts = tables_and_opts.last.is_a?(::Hash) ? tables_and_opts.pop : {}
-        reset_ids = opts[:reset_ids] != false
-
-        _tables = tables_and_opts.flatten
-
-        _tables.each do |table_name|
-          if reset_ids
-            truncate_table_with_id_reset(table_name)
-          else
-            truncate_table_no_id_reset(table_name)
-          end
-        end
+      def truncate_tables(tables)
+        tables.each { |t| truncate_table(t) }
       end
 
-      def truncate_table_with_id_reset(table_name)
-        row_count = select_value("SELECT EXISTS(SELECT 1 FROM #{quote_table_name(table_name)} LIMIT 1)")
+      def fast_truncate_tables(tables, options = {:reset_ids => true})
+        filter = options[:reset_ids] ? method(:has_been_used?) : method(:has_rows?)
+        truncate_tables(tables.select(&filter))
+      end
 
-        if row_count.zero?
-          auto_inc = select_value(<<-SQL) > 1
+      private
+
+      
+      def row_count(table)
+        select_value("SELECT EXISTS (SELECT 1 FROM #{quote_table_name(table)} LIMIT 1)")
+      end
+
+      # Returns a boolean indicating if the given table has an auto-inc number higher than 0.
+      # Note, this is different than an empty table since an table may populated, the index increased,
+      # but then the table is cleaned.  In other words, this function tells us if the given table
+      # was ever inserted into.
+      def has_been_used?(table)
+        if row_count(table) > 0
+          true
+        else
+          select_value(<<-SQL) > 1 # returns nil if not present
               SELECT Auto_increment 
               FROM information_schema.tables 
-              WHERE table_name='#{table_name}';
+              WHERE table_name='#{table}';
           SQL
-
-          truncate_table(table_name) if auto_inc
-        else
-          truncate_table(table_name)
         end
       end
 
-      def truncate_table_no_id_reset(table_name)
-        row_count = select_value("SELECT EXISTS (SELECT 1 FROM #{quote_table_name(table_name)} LIMIT 1)")
-        truncate_table(table_name) unless row_count.zero?
+      def has_rows?(table)
+        row_count(table) > 0
       end
     end
 
