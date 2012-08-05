@@ -124,16 +124,11 @@ module DatabaseCleaner
         execute("TRUNCATE TABLE #{table_names.map{|name| quote_table_name(name)}.join(', ')} #{restart_identity} #{cascade};")
       end
 
-      def fast_truncate_tables(*tables_and_opts)
-        opts = tables_and_opts.last.is_a?(::Hash) ? tables_and_opts.pop : {}
-        reset_ids = opts[:reset_ids] != false
-
-        _tables = tables_and_opts.flatten
-
-        if reset_ids
-          truncate_tables_with_id_reset(_tables)
+      def fast_truncate_tables(tables, options = {:reset_ids => true})
+        if options[:reset_ids]
+          truncate_tables_with_id_reset(tables)
         else
-          truncate_tables_no_id_reset(_tables)
+          truncate_tables_no_id_reset(tables)
         end
       end
 
