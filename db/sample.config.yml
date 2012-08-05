@@ -8,7 +8,7 @@ mysql:
   encoding: utf8
 
 mysql2:
-  adapter: mysql
+  adapter: mysql2
   database: database_cleaner_test
   username: root
   password:
