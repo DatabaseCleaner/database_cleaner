@@ -61,7 +61,7 @@ module ActiveRecord
             2.times { User.create }
 
             connection.fast_truncate_tables(%w[users], :reset_ids => false)
-            User.count.should == 0
+            User.count.should be_zero
           end
 
           it "does not reset AUTO_INCREMENT index of table" do

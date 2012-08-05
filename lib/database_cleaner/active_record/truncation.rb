@@ -125,25 +125,23 @@ module DatabaseCleaner
       end
 
       def fast_truncate_tables(tables, options = {:reset_ids => true})
-        if options[:reset_ids]
-          truncate_tables_with_id_reset(tables)
-        else
-          truncate_tables_no_id_reset(tables)
-        end
+        filter = options[:reset_ids] ? method(:has_been_used?) : method(:has_rows?)
+        truncate_tables(tables.select(&filter))
       end
 
-      def truncate_tables_with_id_reset(tables)
-        to_truncate = tables.select do |table|
-          cur_val = select_value("SELECT currval('#{table}_id_seq');").to_i rescue ActiveRecord::StatementInvalid
-          cur_val && cur_val > 0
-        end
-        
-        truncate_tables(to_truncate)
+      private
+
+      # Returns a boolean indicating if the given table has an auto-inc number higher than 0.
+      # Note, this is different than an empty table since an table may populated, the index increased,
+      # but then the table is cleaned.  In other words, this function tells us if the given table
+      # was ever inserted into.
+      def has_been_used?(table)
+        cur_val = select_value("SELECT currval('#{table}_id_seq');").to_i rescue ActiveRecord::StatementInvalid
+        cur_val && cur_val > 0
       end
 
-      def truncate_tables_no_id_reset(tables)
-        to_truncate = tables.select { |t| select_value("SELECT true FROM #{t} LIMIT 1;")}
-        truncate_tables(to_truncate)
+      def has_rows?(table)
+        select_value("SELECT true FROM #{table} LIMIT 1;")
       end
     end
 
