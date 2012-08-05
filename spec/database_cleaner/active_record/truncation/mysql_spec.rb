@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'active_record'
 require 'support/active_record/mysql_setup'
 require 'database_cleaner/active_record/truncation'
-require 'database_cleaner/active_record/truncation/shared_mysql'
+require 'database_cleaner/active_record/truncation/shared_fast_truncation'
 
 module ActiveRecord
   module ConnectionAdapters
@@ -30,7 +30,7 @@ module ActiveRecord
         end
       end
  
-      it_behaves_like "Fast truncation" do
+      it_behaves_like "an adapter with fast truncation" do
         let(:adapter) { MysqlAdapter }
         let(:connection) { active_record_mysql_connection }
       end
