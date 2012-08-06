@@ -1,5 +1,6 @@
 == 0.8.x (in git)
 
+  * New options for AR :truncation for speed.  See README for details. (Stanislaw Pankevich)
   * view caching works with the schema_plus gem loaded
     * ActiveRecord::ConnectionAdapters::AbstractAdapter#views was renamed to an internal name
   * ActiveRecord truncation strategy caches the list of tables #130 (Petteri Räty)
