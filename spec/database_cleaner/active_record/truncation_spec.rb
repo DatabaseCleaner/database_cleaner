@@ -70,28 +70,28 @@ module DatabaseCleaner
           Truncation.new.clean
         end
 
-        describe "relying on #fast_truncate_tables if connection allows it" do
+        describe "relying on #pre_count_truncate_tables if connection allows it" do
           subject { Truncation.new }
 
-          it "should rely on #fast_truncate_tables if #fast? returns true" do
+          it "should rely on #pre_count_truncate_tables if #pre_count? returns true" do
             connection.stub!(:database_cleaner_table_cache).and_return(%w[widgets dogs])
             connection.stub!(:database_cleaner_view_cache).and_return(["widgets"])
 
-            subject.instance_variable_set(:"@fast", true)
+            subject.instance_variable_set(:"@pre_count", true)
 
             connection.should_not_receive(:truncate_tables).with(['dogs'])
-            connection.should_receive(:fast_truncate_tables).with(['dogs'], :reset_ids => true)
+            connection.should_receive(:pre_count_truncate_tables).with(['dogs'], :reset_ids => true)
 
             subject.clean
           end
 
-          it "should not rely on #fast_truncate_tables if #fast? return false" do
+          it "should not rely on #pre_count_truncate_tables if #pre_count? return false" do
             connection.stub!(:database_cleaner_table_cache).and_return(%w[widgets dogs])
             connection.stub!(:database_cleaner_view_cache).and_return(["widgets"])
 
-            subject.instance_variable_set(:"@fast", false)
+            subject.instance_variable_set(:"@pre_count", false)
 
-            connection.should_not_receive(:fast_truncate_tables).with(['dogs'], :reset_ids => true)
+            connection.should_not_receive(:pre_count_truncate_tables).with(['dogs'], :reset_ids => true)
             connection.should_receive(:truncate_tables).with(['dogs'])
 
             subject.clean
@@ -99,7 +99,7 @@ module DatabaseCleaner
         end
       end
 
-      describe '#fast?' do
+      describe '#pre_count?' do
         before(:each) do
           connection.stub!(:disable_referential_integrity).and_yield
           connection.stub!(:database_cleaner_view_cache).and_return([])
@@ -107,16 +107,16 @@ module DatabaseCleaner
         end
 
         subject { Truncation.new }
-        its(:fast?) { should == false }
+        its(:pre_count?) { should == false }
 
         it 'should return true if @reset_id is set and non false or nil' do
-          subject.instance_variable_set(:"@fast", true)
-          subject.send(:fast?).should == true
+          subject.instance_variable_set(:"@pre_count", true)
+          subject.send(:pre_count?).should == true
         end
 
         it 'should return false if @reset_id is set to false' do
-          subject.instance_variable_set(:"@fast", false)
-          subject.send(:fast?).should == false
+          subject.instance_variable_set(:"@pre_count", false)
+          subject.send(:pre_count?).should == false
         end
       end
       

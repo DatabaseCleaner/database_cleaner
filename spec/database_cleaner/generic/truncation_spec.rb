@@ -18,8 +18,8 @@ module ::DatabaseCleaner
         !!@reset_ids
       end
 
-      def fast?
-        !!@fast
+      def pre_count?
+        !!@pre_count
       end
     end
 
@@ -52,7 +52,7 @@ module ::DatabaseCleaner
         it { expect{ TruncationExample.new( { :except => "something",:only => "something else" } ) }.to     raise_error(ArgumentError) }
         it { expect{ TruncationExample.new( { :only   => "something"                           } ) }.to_not raise_error(ArgumentError) }
         it { expect{ TruncationExample.new( { :except => "something"                           } ) }.to_not raise_error(ArgumentError) }
-        it { expect{ TruncationExample.new( { :fast => "something"                           } ) }.to_not raise_error(ArgumentError) }
+        it { expect{ TruncationExample.new( { :pre_count => "something"                           } ) }.to_not raise_error(ArgumentError) }
         it { expect{ TruncationExample.new( { :reset_ids => "something"                           } ) }.to_not raise_error(ArgumentError) }
 
         context "" do
@@ -78,13 +78,13 @@ module ::DatabaseCleaner
         end
 
         context "" do
-          subject { TruncationExample.new( { :fast => ["something"] } ) }
-          its(:fast?) { should == true }
+          subject { TruncationExample.new( { :pre_count => ["something"] } ) }
+          its(:pre_count?) { should == true }
         end
 
         context "" do
-          subject { TruncationExample.new( { :fast => nil } ) }
-          its(:fast?) { should == false }
+          subject { TruncationExample.new( { :pre_count => nil } ) }
+          its(:pre_count?) { should == false }
         end
         
         context "" do

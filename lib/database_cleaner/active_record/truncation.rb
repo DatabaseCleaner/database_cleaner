@@ -43,7 +43,7 @@ module DatabaseCleaner
         tables.each { |t| truncate_table(t) }
       end
 
-      def fast_truncate_tables(tables, options = {:reset_ids => true})
+      def pre_count_truncate_tables(tables, options = {:reset_ids => true})
         filter = options[:reset_ids] ? method(:has_been_used?) : method(:has_rows?)
         truncate_tables(tables.select(&filter))
       end
@@ -124,7 +124,7 @@ module DatabaseCleaner
         execute("TRUNCATE TABLE #{table_names.map{|name| quote_table_name(name)}.join(', ')} #{restart_identity} #{cascade};")
       end
 
-      def fast_truncate_tables(tables, options = {:reset_ids => true})
+      def pre_count_truncate_tables(tables, options = {:reset_ids => true})
         filter = options[:reset_ids] ? method(:has_been_used?) : method(:has_rows?)
         truncate_tables(tables.select(&filter))
       end
@@ -226,8 +226,8 @@ module DatabaseCleaner::ActiveRecord
     def clean
       connection = connection_klass.connection
       connection.disable_referential_integrity do
-        if fast? && connection.respond_to?(:fast_truncate_tables)
-          connection.fast_truncate_tables(tables_to_truncate(connection), {:reset_ids => reset_ids?})
+        if pre_count? && connection.respond_to?(:pre_count_truncate_tables)
+          connection.pre_count_truncate_tables(tables_to_truncate(connection), {:reset_ids => reset_ids?})
         else
           connection.truncate_tables(tables_to_truncate(connection))
         end
@@ -245,8 +245,8 @@ module DatabaseCleaner::ActiveRecord
       'schema_migrations'
     end
 
-    def fast?
-      @fast == true
+    def pre_count?
+      @pre_count == true
     end
 
     def reset_ids?

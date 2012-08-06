@@ -1,11 +1,11 @@
-shared_examples_for "an adapter with fast truncation" do
-  describe "#fast_truncate_tables" do
+shared_examples_for "an adapter with pre-count truncation" do
+  describe "#pre_count_truncate_tables" do
     
     context "with :reset_ids set true" do
       it "truncates the table" do
         2.times { User.create }
 
-        connection.fast_truncate_tables(%w[users], :reset_ids => true)
+        connection.pre_count_truncate_tables(%w[users], :reset_ids => true)
         User.count.should be_zero
       end
 
@@ -13,7 +13,7 @@ shared_examples_for "an adapter with fast truncation" do
         2.times { User.create }
         User.delete_all
 
-        connection.fast_truncate_tables(%w[users]) # true is also the default
+        connection.pre_count_truncate_tables(%w[users]) # true is also the default
         User.create.id.should == 1
       end
     end
@@ -23,7 +23,7 @@ shared_examples_for "an adapter with fast truncation" do
       it "truncates the table" do
         2.times { User.create }
 
-        connection.fast_truncate_tables(%w[users], :reset_ids => false)
+        connection.pre_count_truncate_tables(%w[users], :reset_ids => false)
         User.count.should be_zero
       end
 
@@ -31,7 +31,7 @@ shared_examples_for "an adapter with fast truncation" do
         2.times { User.create }
         User.delete_all
 
-        connection.fast_truncate_tables(%w[users], :reset_ids => false)
+        connection.pre_count_truncate_tables(%w[users], :reset_ids => false)
 
         User.create.id.should == 3
       end

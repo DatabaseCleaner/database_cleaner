@@ -30,7 +30,7 @@ module ActiveRecord
         end
       end
  
-      it_behaves_like "an adapter with fast truncation" do
+      it_behaves_like "an adapter with pre-count truncation" do
         let(:adapter) { MysqlAdapter }
         let(:connection) { active_record_mysql_connection }
       end

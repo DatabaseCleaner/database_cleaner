@@ -37,7 +37,7 @@ module ActiveRecord
         end
       end
 
-      it_behaves_like "an adapter with fast truncation" do
+      it_behaves_like "an adapter with pre-count truncation" do
         let(:adapter) { PostgreSQLAdapter }
         let(:connection) { active_record_pg_connection }
       end
