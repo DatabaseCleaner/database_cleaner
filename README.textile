@@ -21,15 +21,30 @@ Here is an overview of the strategies supported for each library:
 
 (Default strategy for each library is denoted in bold)
 
-The ActiveRecord @:deletion@ strategy is useful for when the @:truncation@ strategy causes
-locks (as reported by some Oracle DB users).  The @:deletion@ option has been reported to
-be faster than @:truncation@ in some cases as well.  In general, the best approach is to use
-@:transaction@ since it is the fastest.
-
 Database Cleaner also includes a @null@ strategy (that does no cleaning at all) which can be used
 with any ORM library. You can also explicitly use it by setting your strategy to @nil@.
 
 For support or to discuss development please use the "Google Group":http://groups.google.com/group/database_cleaner.
+
+h2(fastest). What strategy is fastest?
+
+For the SQL libraries the fastest option will be to use @:transaction@ as transactions are
+simply rolled back.  If you can use this strategy you should.  However, if you wind up needing 
+to use multiple database connections in your tests (i.e. your tests run in a different proceess 
+than your application) then using this strategy becomes a bit more difficult. You can get around the 
+problem a number of ways.  One common approach is to force all processes to use the same database
+connection ("common ActiveRecord hack":http://blog.plataformatec.com.br/2011/12/three-tips-to-improve-the-performance-of-your-test-suite/) however this approach has been reported to result in
+non-deterministic failures.  Another approach is to have the transactions rolled back in the
+application's process and relax the isolation level of the database (so the tests can read the
+uncommited transactions).  An easier, but slower, solution is to use the @:truncation@ or 
+@:deletion@ strategy.
+
+So what is fastest out of @:deletion@ and @:truncation@?  Well, it depends on your table structure 
+and what percentage of tables you populate in an average test. The reasoning is out the the 
+scope of this README but here is a "good SO answer on this topic for Postgres":http://stackoverflow.com/questions/11419536/postgresql-truncation-speed/11423886#11423886. Some people report 
+much faster speeds with @:deletion@ while others say @:truncation@ is faster for them. The best approach therefore 
+is it try all options on your test suite and see what is faster.  If you are using ActiveRecord then take a look 
+at the "additional options":#ar_truncation available for  @:truncation@.
 
 h2. Dependencies
 
@@ -82,21 +97,18 @@ strategy the remaining time.  To accomplish this you can say:
   # then make the DatabaseCleaner.start and DatabaseCleaner.clean calls appropriately
 </pre>
 
-h3. Minitest Example
+h3(#ar_truncation). Additional ActiveRecord options for Truncation
 
-<pre>
-DatabaseCleaner.strategy = :transaction
+The following options are available for ActiveRecord's @:truncation@ strategy _only_ for 
+MySQL and Postgres.
 
-class MiniTest::Spec
-  before :each do
-    DatabaseCleaner.start
-  end
+* @:pre_count@ - When set to @true@ this will check each table for existing rows before 
+truncating it.  This can speed up test suites when many of the tables to be truncated 
+are never populated. Defaults to @:false@. (Also, see the section on "What strategy is fastest?":#fastest)
+* @:reset_ids@ - This only matters when @:pre_count@ is used, and it will make sure that a 
+tables auto-incrementing id is reset even if there are no rows in the table (e.g. records 
+were created in the test but also removed before DatabaseCleaner gets to it). Defaults to @true@.
 
-  after :each do
-    DatabaseCleaner.clean
-  end
-end
-</pre>
 
 h3. RSpec Example
 
@@ -116,6 +128,22 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
+end
+</pre>
+
+h3. Minitest Example
+
+<pre>
+DatabaseCleaner.strategy = :transaction
+
+class MiniTest::Spec
+  before :each do
+    DatabaseCleaner.start
+  end
+
+  after :each do
+    DatabaseCleaner.clean
+  end
 end
 </pre>
 
@@ -178,39 +206,9 @@ Configuration options
 
 h2. Why?
 
-One of my motivations for writing this library was to have an easy way to
-turn on what Rails calls "transactional_fixtures" in my non-rails
-ActiveRecord projects.  For example, Cucumber ships with a Rails world that
-will wrap each scenario in a transaction.  This is great, but what if you are
-using ActiveRecord in a non-rails project?  You used to have to copy-and-paste
-the needed code, but with DatabaseCleaner you can now say:
-
-<pre>
-  #env.rb
-  require 'database_cleaner'
-  require 'database_cleaner/cucumber'
-  DatabaseCleaner.strategy = :transaction
-</pre>
-
-Now lets say you are running your features and it requires that another process be
-involved (i.e. Selenium running against your app's server.)  You can simply change
-your strategy type:
-
-<pre>
-  #env.rb
-  require 'database_cleaner'
-  require 'database_cleaner/cucumber'
-  DatabaseCleaner.strategy = :truncation
-</pre>
-
-You can have the best of both worlds and use the best one for the job:
-<pre>
-  #env.rb
-  require 'database_cleaner'
-  require 'database_cleaner/cucumber'
-  DatabaseCleaner.strategy = (ENV['SELENIUM'] == 'true') ? :truncation : :transaction
-</pre>
-
+One of my motivations for writing this library was to have an easy way to turn on what Rails calls "transactional_fixtures" 
+in my non-rails ActiveRecord projects.  After copying and pasting code to do this several times I decided to package it up 
+as a gem and same everyone a bit of time.
 
 h2. Common Errors
 
