@@ -7,7 +7,7 @@ that is testing with a database.
 
 ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, and CouchPotato are supported.
 
-!https://secure.travis-ci.org/bmabey/database_cleaner.png(Build Status)!:http://travis-ci.org/stanislaw/database_cleaner
+!https://secure.travis-ci.org/bmabey/database_cleaner.png(Build Status)!:http://travis-ci.org/bmabey/database_cleaner
 
 Here is an overview of the strategies supported for each library:
 
