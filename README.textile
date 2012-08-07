@@ -149,7 +149,9 @@ end
 
 h3. Cucumber Example
 
-Add this to your features/support/env.rb file:
+If you're using Cucumber with Rails, just use the generator that ships with cucumber-rails, and that will create all the code you need to integrate DatabaseCleaner into your Rails project.
+
+Otherwise, to add DatabaseCleaner to your project by hand, create a file features/support/database_cleaner.rb that looks like this:
 
 <pre>
 begin
@@ -159,13 +161,7 @@ begin
 rescue NameError
   raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
 end
-</pre>
 
-A good idea is to create the before and after hooks to use the DatabaseCleaner.start and DatabaseCleaner.clean methods.
-
-Inside features/support/hooks.rb:
-
-<pre>
 Before do
   DatabaseCleaner.start
 end
