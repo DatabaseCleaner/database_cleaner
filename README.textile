@@ -17,6 +17,9 @@ Here is an overview of the strategies supported for each library:
 | Mongoid      | **Yes**        | No              | No             |
 | Sequel       | **Yes**        | Yes             | No             |
 
+|_. Driver     |_.  Truncation  |_.  Transaction  |_.  Deletion    |
+| Mongo        | Yes            | No              | No             |
+
 (Default strategy for each library is denoted in bold)
 
 The ActiveRecord @:deletion@ strategy is useful for when the @:truncation@ strategy causes
