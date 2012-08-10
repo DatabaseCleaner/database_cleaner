@@ -7,12 +7,13 @@ module DatabaseCleaner
   module Mongo
 
     describe Truncation do
-
+      let(:args) {{}}
+      let(:truncation) { described_class.new(args).tap { |t| t.db=@db } }
       #doing this in the file root breaks autospec, doing it before(:all) just fails the specs
       before(:all) do
         @connection = ::Mongo::Connection.new('127.0.0.1')
         @test_db = 'database_cleaner_specs'
-        @connection.db(@test_db)
+        @db = @connection.db(@test_db)
       end
 
       after(:each) do
@@ -39,26 +40,28 @@ module DatabaseCleaner
         create_widget
         create_gadget
         ensure_counts(MongoTest::Widget => 1, MongoTest::Gadget => 1)
-        Truncation.new.clean
+        truncation.clean
         ensure_counts(MongoTest::Widget => 0, MongoTest::Gadget => 0)
       end
 
       context "when collections are provided to the :only option" do
+        let(:args) {{:only => ['MongoTest::Widget']}}
         it "only truncates the specified collections" do
           create_widget
           create_gadget
           ensure_counts(MongoTest::Widget => 1, MongoTest::Gadget => 1)
-          Truncation.new(:only => ['widgets']).clean
+          truncation.clean
           ensure_counts(MongoTest::Widget => 0, MongoTest::Gadget => 1)
         end
       end
 
       context "when collections are provided to the :except option" do
+        let(:args) {{:except => ['MongoTest::Widget']}}
         it "truncates all but the specified collections" do
           create_widget
           create_gadget
           ensure_counts(MongoTest::Widget => 1, MongoTest::Gadget => 1)
-          Truncation.new(:except => ['widgets']).clean
+          truncation.clean
           ensure_counts(MongoTest::Widget => 1, MongoTest::Gadget => 0)
         end
       end

@@ -15,7 +15,6 @@ module MongoTest
     end
 
     def save!
-      p self.class.collection
       self.class.collection.insert(@attrs)
     end
   end

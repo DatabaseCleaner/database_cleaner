@@ -6,10 +6,11 @@ module DatabaseCleaner
     class Truncation
       include ::DatabaseCleaner::Generic::Truncation
       include TruncationMixin
+      include Base
       private
 
       def database
-        ::Mongo.connection
+        db
       end
     end
   end
