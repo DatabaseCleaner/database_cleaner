@@ -8,12 +8,13 @@ module DatabaseCleaner
       include ::DatabaseCleaner::MongoMapper::Base
       include ::DatabaseCleaner::Generic::Truncation
       include ::DatabaseCleaner::Mongo::TruncationMixin
-      
+
       private
 
-      def database
-        ::MongoMapper.database
+      def databases
+        [::MongoMapper.database]
       end
+
     end
   end
 end
