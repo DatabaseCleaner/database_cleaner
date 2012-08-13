@@ -27,7 +27,7 @@ module ActiveRecord
       end
     end
 
-    class PostgreSQLAdapter < AbstractAdapter
+    class PostgreSQLAdapter < POSTGRE_ADAPTER_PARENT
       def delete_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)};")
       end
