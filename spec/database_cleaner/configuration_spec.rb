@@ -1,12 +1,20 @@
 require 'spec_helper'
+module ArrayHelper
+  def zipmap(array, vals)
+    Hash[*(array.zip(vals).flatten)]
+  end
+  module_function :zipmap
+end
 
 module DatabaseCleaner
   class << self
     def reset
+      @cleaners = nil
       @connections = nil
     end
-
+    # hackey, hack.. connections needs to stick around until I can properly deprecate the API
     def connections_stub!(array)
+      @cleaners = ArrayHelper.zipmap((1..array.size).to_a, array)
       @connections = array
     end
   end
@@ -108,14 +116,11 @@ describe ::DatabaseCleaner do
   context "class methods" do
     subject { ::DatabaseCleaner }
 
-    its(:connections) { should respond_to(:each) }
-
     it "should give me a default (autodetection) databasecleaner by default" do
       cleaner = mock("cleaner").as_null_object
-      ::DatabaseCleaner::Base.should_receive(:new).with().and_return(cleaner)
-
-      ::DatabaseCleaner.connections.should have(1).items
-      ::DatabaseCleaner.connections.first.should == cleaner
+      ::DatabaseCleaner::Base.stub!(:new).and_return(cleaner)
+      
+      ::DatabaseCleaner.connections.should == [cleaner]
     end
   end
 

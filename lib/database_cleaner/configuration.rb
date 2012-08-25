@@ -6,11 +6,29 @@ module DatabaseCleaner
   class UnknownStrategySpecified < ArgumentError;   end
 
   class << self
+    def init_cleaners
+      @cleaners ||= {}
+      # ghetto ordered hash.. maintains 1.8 compat and old API
+      @connections ||= []
+    end
+    
     def [](orm,opts = {})
       raise NoORMDetected unless orm
-      @connections ||= []
+      init_cleaners
+      # TODO: deprecate
+      # this method conflates creation with lookup.  Both a command and a query. Yuck.
+      if @cleaners.has_key? [orm, opts]
+        @cleaners[[orm, opts]]
+      else
+        add_cleaner(orm, opts)
+      end
+    end
+
+    def add_cleaner(orm,opts = {})
+      init_cleaners
       cleaner = DatabaseCleaner::Base.new(orm,opts)
-      connections.push cleaner
+      @cleaners[[orm, opts]] = cleaner
+      @connections << cleaner
       cleaner
     end
 
@@ -23,7 +41,12 @@ module DatabaseCleaner
     end
 
     def connections
-      @connections ||= [::DatabaseCleaner::Base.new]
+      # double yuck.. can't wait to deprecate this whole class...
+      unless @cleaners
+        autodetected = ::DatabaseCleaner::Base.new
+        add_cleaner(autodetected.orm)
+      end
+      @connections
     end
 
     def logger=(log_source)

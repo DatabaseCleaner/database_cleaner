@@ -85,7 +85,7 @@ module DatabaseCleaner
 
     #TODO make strategies directly comparable
     def ==(other)
-      self.orm == other.orm && self.db == other.db && self.strategy.class == other.strategy.class
+      self.orm == other.orm && self.db == other.db
     end
 
     private
