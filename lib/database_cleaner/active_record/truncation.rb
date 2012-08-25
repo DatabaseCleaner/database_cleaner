@@ -224,7 +224,7 @@ module DatabaseCleaner::ActiveRecord
     include ::DatabaseCleaner::Generic::Truncation
 
     def clean
-      connection = connection_klass.connection
+      connection = connection_class.connection
       connection.disable_referential_integrity do
         if pre_count? && connection.respond_to?(:pre_count_truncate_tables)
           connection.pre_count_truncate_tables(tables_to_truncate(connection), {:reset_ids => reset_ids?})

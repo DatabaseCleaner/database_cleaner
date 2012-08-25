@@ -38,14 +38,12 @@ module DatabaseCleaner
         end
       end
 
-      def create_connection_klass
+      def create_connection_class
         Class.new(::ActiveRecord::Base)
       end
 
-      
-
-      def connection_klass
-        @connection_klass ||= if @db == :default || (@db.nil? && connection_hash.nil?)
+      def connection_class
+        @connection_class ||= if @db == :default || (@db.nil? && connection_hash.nil?)
                                 ::ActiveRecord::Base
                               elsif connection_hash
                                 lookup_from_connection_pool || establish_connection
@@ -65,9 +63,9 @@ module DatabaseCleaner
       end
 
       def establish_connection
-        klass = create_connection_klass
-        klass.send :establish_connection, connection_hash
-        klass
+        strategy_class = create_connection_class
+        strategy_class.send :establish_connection, connection_hash
+        strategy_class
       end
     
     end

@@ -274,10 +274,10 @@ module DatabaseCleaner
     end
 
     describe "create_strategy" do
-      let(:klass) { mock("klass",:new => mock("instance")) }
+      let(:strategy_class) { mock("strategy_class",:new => mock("instance")) }
 
       before :each do
-        subject.stub(:orm_strategy).and_return(klass)
+        subject.stub(:orm_strategy).and_return(strategy_class)
       end
 
       it "should pass the first argument to orm_strategy" do
@@ -285,12 +285,12 @@ module DatabaseCleaner
         subject.create_strategy :strategy
       end
       it "should pass the remainding argument to orm_strategy.new" do
-        klass.should_receive(:new).with(:params => {:lorum => "ipsum"})
+        strategy_class.should_receive(:new).with(:params => {:lorum => "ipsum"})
 
         subject.create_strategy :strategy, {:params => {:lorum => "ipsum"}}
       end
       it "should return the resulting strategy" do
-        subject.create_strategy( :strategy ).should == klass.new
+        subject.create_strategy( :strategy ).should == strategy_class.new
       end
     end
 
@@ -415,10 +415,10 @@ module DatabaseCleaner
     end
 
     describe "orm_strategy" do
-      let (:klass) { mock("klass") }
+      let (:strategy_class) { mock("strategy_class") }
 
       before(:each) do
-        subject.stub(:orm_module).and_return(klass)
+        subject.stub(:orm_module).and_return(strategy_class)
       end
 
       context "in response to a LoadError" do
@@ -433,31 +433,31 @@ module DatabaseCleaner
         end
 
         it "should ask orm_module if it will list available_strategies" do
-          klass.should_receive(:respond_to?).with(:available_strategies)
+          strategy_class.should_receive(:respond_to?).with(:available_strategies)
 
-          subject.stub(:orm_module).and_return(klass)
+          subject.stub(:orm_module).and_return(strategy_class)
 
           expect { subject.send(:orm_strategy,:a_strategy) }.to raise_error UnknownStrategySpecified
         end
 
         it "should use available_strategies (for the error message) if its available" do
-          klass.stub(:respond_to?).with(:available_strategies).and_return(true)
-          klass.should_receive(:available_strategies).and_return([])
+          strategy_class.stub(:respond_to?).with(:available_strategies).and_return(true)
+          strategy_class.should_receive(:available_strategies).and_return([])
 
-          subject.stub(:orm_module).and_return(klass)
+          subject.stub(:orm_module).and_return(strategy_class)
 
           expect { subject.send(:orm_strategy,:a_strategy) }.to raise_error UnknownStrategySpecified
         end
       end
 
       it "should return the constant of the Strategy class requested" do
-        strategy_klass = mock("strategy klass")
+        strategy_strategy_class = mock("strategy strategy_class")
 
         subject.stub(:require).with(anything).and_return(true)
 
-        klass.should_receive(:const_get).with("Cunningplan").and_return(strategy_klass)
+        strategy_class.should_receive(:const_get).with("Cunningplan").and_return(strategy_strategy_class)
 
-        subject.send(:orm_strategy, :cunningplan).should == strategy_klass
+        subject.send(:orm_strategy, :cunningplan).should == strategy_strategy_class
       end
 
     end
