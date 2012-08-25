@@ -188,6 +188,9 @@ Sometimes you need to use multiple ORMs in your application. You can use Databas
 
   #How to specify particular connections
   DatabaseCleaner[:active_record,{:connection => :two}]
+
+  # You may also pass in the model directly:
+  DatabaseCleaner[:active_record,{:model => ModelWithDifferentConnection}]
 </pre>
 
 Usage beyond that remains the same with DatabaseCleaner.start calling any setup on the different configured connections, and DatabaseCleaner.clean executing afterwards.
@@ -196,7 +199,7 @@ Configuration options
 
 
 |_. ORM         |_.   How to access               |_.   Notes                                                                |
-| Active Record | DatabaseCleaner[:active_record] | Connection specified as :symbol keys, loaded from config/database.yml    |
+| Active Record | DatabaseCleaner[:active_record] | Connection specified as :symbol keys, loaded from config/database.yml. You may also pass in the ActiveRecord model under the @:model@ key.    |
 | Data Mapper   | DatabaseCleaner[:data_mapper]   | Connection specified as :symbol keys, loaded via Datamapper repositories |
 | Mongo Mapper  | DatabaseCleaner[:mongo_mapper]  | Multiple connections not yet supported                                   |
 | Mongoid       | DatabaseCleaner[:mongoid]       | Multiple connections not yet supported                                   |

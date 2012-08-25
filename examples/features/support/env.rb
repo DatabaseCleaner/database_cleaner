@@ -47,8 +47,8 @@ if orm && strategy
       DatabaseCleaner[ orm_sym, {:connection => 'database_cleaner_test_one'} ].strategy = strategy.to_sym
       DatabaseCleaner[ orm_sym, {:connection => 'database_cleaner_test_two'} ].strategy = strategy.to_sym
     when :active_record
-      DatabaseCleaner[:active_record, {:connection => ActiveRecordWidgetUsingDatabaseOne} ].strategy = strategy.to_sym
-      DatabaseCleaner[:active_record, {:connection => ActiveRecordWidgetUsingDatabaseTwo} ].strategy = strategy.to_sym
+      DatabaseCleaner[:active_record, {:model => ActiveRecordWidgetUsingDatabaseOne} ].strategy = strategy.to_sym
+      DatabaseCleaner[:active_record, {:model => ActiveRecordWidgetUsingDatabaseTwo} ].strategy = strategy.to_sym
     else
       DatabaseCleaner[ orm_sym, {:connection => :one} ].strategy = strategy.to_sym
       DatabaseCleaner[ orm_sym, {:connection => :two} ].strategy = strategy.to_sym
