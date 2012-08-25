@@ -44,6 +44,14 @@ module DatabaseCleaner
 
       def connection_klass
         return ::ActiveRecord::Base unless connection_hash
+
+        if ::ActiveRecord::Base.respond_to?(:descendants)
+          database_name = connection_hash["database"]
+          models = ::ActiveRecord::Base.descendants
+          klass = models.detect {|m| m.connection_pool.spec.config[:database] == database_name}
+          return klass if klass
+        end
+
         klass = create_connection_klass
         klass.send :establish_connection, connection_hash
         klass
