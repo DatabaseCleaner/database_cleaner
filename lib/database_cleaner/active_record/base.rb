@@ -45,13 +45,13 @@ module DatabaseCleaner
       
 
       def connection_klass
-        if @db == :default || (@db.nil? && connection_hash.nil?)
-          ::ActiveRecord::Base
-        elsif connection_hash
-          lookup_from_connection_pool || establish_connection
-        else
-          @db # allows for an actual class to be passed in
-        end
+        @connection_klass ||= if @db == :default || (@db.nil? && connection_hash.nil?)
+                                ::ActiveRecord::Base
+                              elsif connection_hash
+                                lookup_from_connection_pool || establish_connection
+                              else
+                                @db # allows for an actual class to be passed in
+                              end
       end
 
       private
