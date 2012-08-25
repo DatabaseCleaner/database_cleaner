@@ -3,6 +3,12 @@ require 'active_record'
 require 'database_cleaner/active_record/base'
 require 'database_cleaner/shared_strategy'
 
+class FakeModel
+  def self.connection
+    :fake_connection
+  end
+end
+
 module DatabaseCleaner
   describe ActiveRecord do
     it { should respond_to(:available_strategies) }
@@ -119,6 +125,11 @@ my_db:
         it { expect{ subject.connection_class }.to_not raise_error }
         it "should default to ActiveRecord::Base" do
           subject.connection_class.should == ::ActiveRecord::Base
+        end
+
+        it "allows for database models to be passed in" do
+          subject.db = FakeModel
+          subject.connection_class.should == FakeModel
         end
 
         context "when connection_hash is set" do
