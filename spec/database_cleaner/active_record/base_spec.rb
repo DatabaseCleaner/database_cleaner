@@ -123,6 +123,7 @@ my_db:
 
         context "when connection_hash is set" do
           let(:hash) { mock("hash") }
+          before { ::ActiveRecord::Base.stub!(:respond_to?).and_return(false)}
           before { subject.stub(:connection_hash).and_return(hash) }
 
           it "should create connection_klass if it doesnt exist if connection_hash is set" do
