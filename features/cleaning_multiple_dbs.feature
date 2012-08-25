@@ -17,5 +17,4 @@ Feature: multiple database cleaning
   | DataMapper   | truncation    |
   | MongoMapper  | truncation    |
   | DataMapper   | transaction   |
-# Not working...
-#| ActiveRecord | transaction   |
+  | ActiveRecord | transaction   |
