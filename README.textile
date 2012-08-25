@@ -19,6 +19,9 @@ Here is an overview of the strategies supported for each library:
 | Mongoid      | **Yes**        | No              | No             |
 | Sequel       | **Yes**        | Yes             | No             |
 
+|_. Driver     |_.  Truncation  |_.  Transaction  |_.  Deletion    |
+| Mongo        | Yes            | No              | No             |
+
 (Default strategy for each library is denoted in bold)
 
 Database Cleaner also includes a @null@ strategy (that does no cleaning at all) which can be used
