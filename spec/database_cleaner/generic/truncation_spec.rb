@@ -24,8 +24,8 @@ module ::DatabaseCleaner
     end
 
     class MigrationExample < TruncationExample
-      def migration_storage_name
-        "migration_storage_name"
+      def migration_storage_names
+        %w[migration_storage_name]
       end
     end
 
@@ -37,8 +37,8 @@ module ::DatabaseCleaner
         it { should_not respond_to(:tables_to_truncate) }
         its(:tables_to_truncate) { expect{ subject }.to raise_error(NotImplementedError) }
 
-        it { should_not respond_to(:migration_storage_name) }
-        its(:migration_storage_name) { should be_nil }
+        it { should_not respond_to(:migration_storage_names) }
+        its(:migration_storage_names) { should be_empty }
       end
 
       describe "initialize" do
@@ -86,11 +86,11 @@ module ::DatabaseCleaner
           subject { TruncationExample.new( { :pre_count => nil } ) }
           its(:pre_count?) { should == false }
         end
-        
+
         context "" do
           subject { MigrationExample.new }
           its(:only)   { should == nil }
-          its(:except) { should == ["migration_storage_name"] }
+          its(:except) { should == %w[migration_storage_name] }
         end
 
         context "" do
