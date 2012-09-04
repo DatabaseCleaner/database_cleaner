@@ -6,7 +6,7 @@ module DatabaseCleaner
     class Truncation
       include ::DatabaseCleaner::Sequel::Base
       include ::DatabaseCleaner::Generic::Truncation
-  
+
       def clean
         case db.database_type
         when :postgres
@@ -25,7 +25,7 @@ module DatabaseCleaner
           end
         end
       end
-  
+
       def each_table
         tables_to_truncate(db).each do |table|
           yield db, table
@@ -33,14 +33,14 @@ module DatabaseCleaner
       end
 
       private
-  
+
       def tables_to_truncate(db)
         (@only || db.tables) - @tables_to_exclude
       end
 
       # overwritten
-      def migration_storage_name
-        :schema_info
+      def migration_storage_names
+        %w[schema_info schema_migrations]
       end
 
     end

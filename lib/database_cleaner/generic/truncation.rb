@@ -31,8 +31,8 @@ module DatabaseCleaner
 
       # overwrite in subclasses
       # default implementation given because migration storage need not be present
-      def migration_storage_name
-        nil
+      def migration_storage_names
+        %w[]
       end
     end
   end
