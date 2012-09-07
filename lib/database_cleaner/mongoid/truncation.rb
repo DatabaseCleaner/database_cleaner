@@ -16,8 +16,8 @@ module DatabaseCleaner
 
         private
 
-        def database
-          ::Mongoid.database
+        def databases
+          ::Mongoid.databases.map { |_, db| db }.flatten << ::Mongoid.database
         end
 
       else

@@ -9,8 +9,8 @@ module DatabaseCleaner
       include Base
       private
 
-      def database
-        db
+      def databases
+        [db]
       end
     end
   end

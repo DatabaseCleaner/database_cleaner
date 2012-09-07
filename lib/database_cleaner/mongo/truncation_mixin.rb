@@ -12,11 +12,12 @@ module DatabaseCleaner
       end
 
       private
-
+	
       def collections
-        database.collections.select { |c| c.name !~ /^system\./ }
+        databases.map do |db|
+          db.collections.select { |c| c.name !~ /^system\./ }
+        end.flatten
       end
-
     end
   end
 end
