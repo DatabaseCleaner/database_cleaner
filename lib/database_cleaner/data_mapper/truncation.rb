@@ -167,7 +167,7 @@ module DatabaseCleaner
 
       # overwritten
       def migration_storage_name
-        %w[migration_info]
+        'migration_info'
       end
 
     end
