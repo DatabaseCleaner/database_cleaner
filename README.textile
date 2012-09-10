@@ -202,7 +202,7 @@ Configuration options
 | Active Record | DatabaseCleaner[:active_record] | Connection specified as :symbol keys, loaded from config/database.yml. You may also pass in the ActiveRecord model under the @:model@ key.    |
 | Data Mapper   | DatabaseCleaner[:data_mapper]   | Connection specified as :symbol keys, loaded via Datamapper repositories |
 | Mongo Mapper  | DatabaseCleaner[:mongo_mapper]  | Multiple connections not yet supported                                   |
-| Mongoid       | DatabaseCleaner[:mongoid]       | Multiple connections not yet supported                                   |
+| Mongoid       | DatabaseCleaner[:mongoid]       | Multiple databases supported for Mongoid 3. Specify DatabaseCleaner[:mongoid, {:connection => :db_name}] |
 | Couch Potato  | DatabaseCleaner[:couch_potato]  | Multiple connections not yet supported                                   |
 | Sequel        | DatabaseCleaner[:sequel]        | ?                                                                        |
 
