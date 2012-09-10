@@ -14,6 +14,10 @@ module DatabaseCleaner
       private
 
       def collections
+        if db != :default
+          session.use(db)
+        end
+        
         session['system.namespaces'].find(:name => { '$not' => /system|\$/ }).to_a.map do |collection|
           _, name = collection['name'].split('.', 2)
           name
