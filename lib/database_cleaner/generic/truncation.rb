@@ -11,9 +11,7 @@ module DatabaseCleaner
 
         @only = opts[:only]
         @tables_to_exclude = (opts[:except] || []).dup
-        migration_storage_names.each do |migration_storage_name|
-          @tables_to_exclude << migration_storage_name
-        end
+        @tables_to_exclude += migration_storage_names
         @pre_count = opts[:pre_count]
         @reset_ids = opts[:reset_ids]
       end
