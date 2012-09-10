@@ -11,7 +11,9 @@ module DatabaseCleaner
 
         @only = opts[:only]
         @tables_to_exclude = (opts[:except] || []).dup
-        @tables_to_exclude << migration_storage_name if migration_storage_name
+        migration_storage_names.each do |migration_storage_name|
+          @tables_to_exclude << migration_storage_name
+        end
         @pre_count = opts[:pre_count]
         @reset_ids = opts[:reset_ids]
       end
@@ -31,8 +33,8 @@ module DatabaseCleaner
 
       # overwrite in subclasses
       # default implementation given because migration storage need not be present
-      def migration_storage_name
-        nil
+      def migration_storage_names
+        %w[]
       end
     end
   end

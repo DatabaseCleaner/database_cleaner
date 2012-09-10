@@ -12,7 +12,7 @@ require 'database_cleaner/active_record/base'
 
 module DatabaseCleaner
   module ActiveRecord
-      
+
     module AbstractAdapter
       # used to be called views but that can clash with gems like schema_plus
       # this gem is not meant to be exposing such an extra interface any way
@@ -37,7 +37,7 @@ module DatabaseCleaner
     end
 
     module MysqlAdapter
-      
+
       def truncate_table(table_name)
         execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
       end
@@ -53,7 +53,7 @@ module DatabaseCleaner
 
       private
 
-      
+
       def row_count(table)
         select_value("SELECT EXISTS (SELECT 1 FROM #{quote_table_name(table)} LIMIT 1)")
       end
@@ -67,8 +67,8 @@ module DatabaseCleaner
           true
         else
           select_value(<<-SQL) > 1 # returns nil if not present
-              SELECT Auto_increment 
-              FROM information_schema.tables 
+              SELECT Auto_increment
+              FROM information_schema.tables
               WHERE table_name='#{table}';
           SQL
         end
@@ -79,14 +79,14 @@ module DatabaseCleaner
       end
     end
 
-    
+
     module IBM_DBAdapter
       def truncate_table(table_name)
         execute("TRUNCATE #{quote_table_name(table_name)} IMMEDIATE")
       end
     end
 
-    
+
     module SQLiteAdapter
       def delete_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)};")
@@ -181,7 +181,7 @@ module ActiveRecord
       MYSQL_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
       MYSQL2_ADAPTER_PARENT = AbstractAdapter
     end
-    
+
     SQLITE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : SQLiteAdapter
     POSTGRE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
 
@@ -244,8 +244,8 @@ module DatabaseCleaner::ActiveRecord
     end
 
     # overwritten
-    def migration_storage_name
-      'schema_migrations'
+    def migration_storage_names
+      %w[schema_migrations]
     end
 
     def pre_count?
