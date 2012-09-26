@@ -226,10 +226,13 @@ DatabaseCleaner has an autodetect mechanism where if you do not explicitly defin
 h4. STDERR is being flooded when using Postgres
 
 If you are using Postgres and have foreign key constraints, the truncation strategy will cause a lot of extra noise to appear on STDERR (in
-the form of "NOTICE truncate cascades" messages). To silence these warnings set the following log level in your postgresql.conf file:
+the form of "NOTICE truncate cascades" messages). To silence these warnings set the following log level in your database.yml file:
 
 <pre>
-  client_min_messages = warning
+test:
+  adapter: postgresql
+  # ...
+  min_messages: WARNING  
 </pre>
 
 
