@@ -1,9 +1,19 @@
-== 0.8.x (in git)
+== 0.9.0 2012-10-11
+
+ === New Features
 
   * New options for AR :truncation for speed.  See README for details. (Stanislaw Pankevich)
   * view caching works with the schema_plus gem loaded
     * ActiveRecord::ConnectionAdapters::AbstractAdapter#views was renamed to an internal name
   * ActiveRecord truncation strategy caches the list of tables #130 (Petteri Räty)
+  * MongoDB :truncation strategy (wihtout use of additional library like Mogoid). #138 (Christopher Darrell & Richard Luther/@sidereel)
+  * Add Sequel support for multiple migration storage names in #148 (Jack Chu)
+  * Caches AR DB connections which speeds up cleaning with multiple DBs and allows for transation strategy.
+
+ === Bug Fixes
+  * :deletion for AR Postgres in JRuby now works #140 (Heiko Seebach)
+  * Rescue LoadError when AR adapters not available. #145 (Garrow Bedrossian)
+  * Fixes DatabaseCleaner::[] to cache cleaners.
 
 == 0.8.0 2012-06-02
 
