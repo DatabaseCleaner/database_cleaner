@@ -182,7 +182,11 @@ module ActiveRecord
       MYSQL2_ADAPTER_PARENT = AbstractAdapter
     end
 
-    SQLITE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : SQLiteAdapter
+    if defined?(SQLite3Adapter) && SQLite3Adapter.superclass == ActiveRecord::ConnectionAdapters::AbstractAdapter
+      SQLITE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
+    else
+      SQLITE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : SQLiteAdapter
+    end
     POSTGRE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
 
     class MysqlAdapter < MYSQL_ADAPTER_PARENT
