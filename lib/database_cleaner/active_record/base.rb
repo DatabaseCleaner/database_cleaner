@@ -32,9 +32,9 @@ module DatabaseCleaner
       end
 
       def load_config
-        if self.db != :default && File.file?(ActiveRecord.config_file_location)
-          connection_details   = YAML::load(ERB.new(IO.read(ActiveRecord.config_file_location)).result)
-          @connection_hash = connection_details[self.db.to_s]
+        if self.db != :default && self.db.is_a?(Symbol) && File.file?(ActiveRecord.config_file_location)
+          connection_details = YAML::load(ERB.new(IO.read(ActiveRecord.config_file_location)).result)
+          @connection_hash   = connection_details[self.db.to_s]
         end
       end
 
@@ -43,12 +43,12 @@ module DatabaseCleaner
       end
 
       def connection_class
-        @connection_class ||= if @db == :default || (@db.nil? && connection_hash.nil?)
-                                ::ActiveRecord::Base
+        @connection_class ||= if @db && !@db.is_a?(Symbol)
+                                @db
                               elsif connection_hash
                                 lookup_from_connection_pool || establish_connection
                               else
-                                @db # allows for an actual class to be passed in
+                                ::ActiveRecord::Base
                               end
       end
 
@@ -57,8 +57,8 @@ module DatabaseCleaner
       def lookup_from_connection_pool
         if ::ActiveRecord::Base.respond_to?(:descendants)
           database_name = connection_hash["database"] || connection_hash[:database]
-          models = ::ActiveRecord::Base.descendants
-          models.detect {|m| m.connection_pool.spec.config[:database] == database_name}
+          models        = ::ActiveRecord::Base.descendants
+          models.detect { |m| m.connection_pool.spec.config[:database] == database_name }
         end
       end
 
@@ -67,7 +67,7 @@ module DatabaseCleaner
         strategy_class.send :establish_connection, connection_hash
         strategy_class
       end
-    
+
     end
   end
 end
