@@ -62,7 +62,7 @@ module DatabaseCleaner
 
         before do
           subject.db = :my_db
-          yaml = <<-Y
+          yaml       = <<-Y
 my_db:
   database: <%= "ONE".downcase %>
           Y
@@ -71,7 +71,7 @@ my_db:
         end
 
         it "should parse the config" do
-          YAML.should_receive(:load).and_return( {:nil => nil} )
+          YAML.should_receive(:load).and_return({ :nil => nil })
           subject.load_config
         end
 
@@ -80,19 +80,26 @@ my_db:
 my_db:
   database: one
           Y
-          YAML.should_receive(:load).with(transformed).and_return({ "my_db" => {"database" => "one"} })
+          YAML.should_receive(:load).with(transformed).and_return({ "my_db" => { "database" => "one" } })
           subject.load_config
         end
 
         it "should store the relevant config in connection_hash" do
           subject.load_config
-          subject.connection_hash.should == {"database" => "one"}
+          subject.connection_hash.should == { "database" => "one" }
         end
 
         it "should skip config if config file is not available" do
           File.should_receive(:file?).with(config_location).and_return(false)
           subject.load_config
-          subject.connection_hash.should be_blank
+          subject.connection_hash.should_not be
+        end
+
+        it "skips the file when the model is set" do
+          subject.db = FakeModel
+          YAML.should_not_receive(:load)
+          subject.load_config
+          subject.connection_hash.should_not be
         end
 
         it "skips the file when the db is set to :default" do
@@ -100,6 +107,7 @@ my_db:
           subject.db = :default
           YAML.should_not_receive(:load)
           subject.load_config
+          subject.connection_hash.should_not be
         end
 
       end
@@ -122,19 +130,32 @@ my_db:
       end
 
       describe "connection_class" do
-        it { expect{ subject.connection_class }.to_not raise_error }
+        it { expect { subject.connection_class }.to_not raise_error }
         it "should default to ActiveRecord::Base" do
           subject.connection_class.should == ::ActiveRecord::Base
         end
 
-        it "allows for database models to be passed in" do
-          subject.db = FakeModel
-          subject.connection_class.should == FakeModel
+        context "with database models" do
+          context "connection_hash is set" do
+            it "allows for database models to be passed in" do
+              subject.db = FakeModel
+              subject.connection_hash = { }
+              subject.load_config
+              subject.connection_class.should == FakeModel
+            end
+          end
+
+          context "connection_hash is not set" do
+            it "allows for database models to be passed in" do
+              subject.db = FakeModel
+              subject.connection_class.should == FakeModel
+            end
+          end
         end
 
         context "when connection_hash is set" do
           let(:hash) { mock("hash") }
-          before { ::ActiveRecord::Base.stub!(:respond_to?).and_return(false)}
+          before { ::ActiveRecord::Base.stub!(:respond_to?).and_return(false) }
           before { subject.stub(:connection_hash).and_return(hash) }
 
           it "should create connection_class if it doesnt exist if connection_hash is set" do
@@ -142,7 +163,7 @@ my_db:
             subject.connection_class
           end
 
-          it  "should configure the class from create_connection_class if connection_hash is set" do
+          it "should configure the class from create_connection_class if connection_hash is set" do
             strategy_class = mock('strategy_class')
             strategy_class.should_receive(:establish_connection).with(hash)
 
