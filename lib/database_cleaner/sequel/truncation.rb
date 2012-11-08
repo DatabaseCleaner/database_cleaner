@@ -35,7 +35,7 @@ module DatabaseCleaner
       private
 
       def tables_to_truncate(db)
-        (@only || db.tables) - @tables_to_exclude
+        (@only || db.tables.map(&:to_s)) - @tables_to_exclude
       end
 
       # overwritten
