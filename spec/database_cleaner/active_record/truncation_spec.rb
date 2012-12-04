@@ -8,7 +8,7 @@ module ActiveRecord
     [MysqlAdapter, Mysql2Adapter, SQLite3Adapter, JdbcAdapter, PostgreSQLAdapter, IBM_DBAdapter].each do |adapter|
       describe adapter, "#truncate_table" do
         it "responds" do
-          adapter.instance_methods.should include('truncate_table')
+          adapter.instance_methods.should include(:truncate_table)
         end
       end
     end
