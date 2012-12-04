@@ -3,7 +3,7 @@ source "http://rubygems.org"
 
 group :development do
   gem "rake"
-  gem "ruby-debug"
+  #gem "ruby-debug"
 
   gem "bundler"
   gem "jeweler"
@@ -32,12 +32,21 @@ end
 
 group :test do
   gem "rspec-rails"
-  gem "rspactor"
-  gem "rcov"
-  gem "ZenTest"
+  #gem "rspactor"
+  #gem "rcov"
+  #gem "ZenTest"
 end
 
 group :cucumber do
   gem "cucumber"
-  gem 'sqlite3-ruby'
+end
+
+platforms :mri_18 do
+  gem 'sqlite3-ruby', :group => :cucumber
+  #gem 'mysql', :group => :development
+end
+
+platforms :mri_19 do
+  gem 'sqlite3', :group => :cucumber
+  #gem 'mysql2', :group => :development
 end
