@@ -11,3 +11,5 @@ before_script:
   - mysql -e 'create database database_cleaner_test;'
   - psql -c 'create database database_cleaner_test;' -U postgres
   - cp db/sample.config.yml db/config.yml
+services:
+  - mongodb
