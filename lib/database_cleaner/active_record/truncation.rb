@@ -90,9 +90,18 @@ module DatabaseCleaner
     module SQLiteAdapter
       def delete_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)};")
-        execute("DELETE FROM sqlite_sequence where name = '#{table_name}';")
+        if uses_sequence
+          execute("DELETE FROM sqlite_sequence where name = '#{table_name}';")
+        end
       end
       alias truncate_table delete_table
+
+      private
+
+      # Returns a boolean indicating if the SQLite database is using the sqlite_sequence table.
+      def uses_sequence
+        select_value("SELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';")
+      end
     end
 
     module TruncateOrDelete
