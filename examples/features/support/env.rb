@@ -6,7 +6,7 @@ require 'bundler'
 
 Bundler.setup
 require 'rspec/expectations'
-require 'ruby-debug'
+#require 'ruby-debug'
 
 DB_DIR = "#{File.dirname(__FILE__)}/../../db"
 
@@ -20,19 +20,10 @@ if orm && strategy
   $:.unshift(File.dirname(__FILE__) + '/../../../lib')
   require 'database_cleaner'
   require 'database_cleaner/cucumber'
-
-  begin
-    require "#{File.dirname(__FILE__)}/../../lib/#{orm.downcase}_models"
-  rescue LoadError => e
-    raise "You don't have the #{orm} ORM installed"
-  end
+  require "#{File.dirname(__FILE__)}/../../lib/#{orm.downcase}_models"
 
   if another_orm
-     begin
-      require "#{File.dirname(__FILE__)}/../../lib/#{another_orm.downcase}_models"
-    rescue LoadError => e
-      raise "You don't have the #{another_orm} ORM installed"
-    end
+    require "#{File.dirname(__FILE__)}/../../lib/#{another_orm.downcase}_models"
   end
 
 
