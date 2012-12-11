@@ -14,13 +14,13 @@ Gem::Specification.new do |s|
   s.email = "ben@benmabey.com"
   s.extra_rdoc_files = [
     "LICENSE",
-    "README.textile",
+    "README.markdown",
     "TODO"
   ]
   s.files = [
     "Gemfile.lock",
     "History.txt",
-    "README.textile",
+    "README.markdown",
     "Rakefile",
     "VERSION.yml",
     "cucumber.yml",
