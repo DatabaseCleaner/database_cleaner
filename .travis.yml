@@ -1,6 +1,7 @@
 language: ruby
 rvm:
   - 1.9.3
+  - 2.0.0
 # TODO: make this work with the regular rake command
 script: "bundle exec rake spec"
 gemfile:
@@ -11,3 +12,6 @@ before_script:
   - cp db/sample.config.yml db/config.yml
 services:
   - mongodb
+matrix:
+  allow_failures:
+    - rvm: 2.0.0
