@@ -12,9 +12,9 @@ group :development do
 
   #ORM's
   gem "activerecord"
-  gem "datamapper",           "1.0.0"
-    gem "dm-migrations",      "1.0.0"
-    gem "dm-sqlite-adapter",  "1.0.0"
+  gem "datamapper"
+    gem "dm-migrations"
+    gem "dm-sqlite-adapter"
   gem "mongoid"
     gem "tzinfo"
     gem "mongo_ext"
