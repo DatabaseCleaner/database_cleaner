@@ -21,6 +21,11 @@ module DatabaseCleaner::ActiveRecord
 
       connection_class.connection.rollback_db_transaction
 
+      # The below is for handling after_commit hooks.. see https://github.com/bmabey/database_cleaner/issues/99
+      if connection_class.connection.respond_to?(:rollback_transaction_records)
+        connection_class.connection.send(:rollback_transaction_records, true)
+      end
+
       if connection_class.connection.respond_to?(:decrement_open_transactions)
         connection_class.connection.decrement_open_transactions
       else
