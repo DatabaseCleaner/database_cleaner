@@ -55,7 +55,9 @@ module DatabaseCleaner
 
 
       def row_count(table)
-        select_value("SELECT EXISTS (SELECT 1 FROM #{quote_table_name(table)} LIMIT 1)")
+        # Patch for MysqlAdapter with ActiveRecord 3.2.7 later
+        # select_value("SELECT 1") #=> "1"
+        select_value("SELECT EXISTS (SELECT 1 FROM #{quote_table_name(table)} LIMIT 1)").to_i
       end
 
       # Returns a boolean indicating if the given table has an auto-inc number higher than 0.
@@ -66,7 +68,9 @@ module DatabaseCleaner
         if row_count(table) > 0
           true
         else
-          select_value(<<-SQL) > 1 # returns nil if not present
+          # Patch for MysqlAdapter with ActiveRecord 3.2.7 later
+          # select_value("SELECT 1") #=> "1"
+          select_value(<<-SQL).to_i > 1 # returns nil if not present
               SELECT Auto_increment
               FROM information_schema.tables
               WHERE table_name='#{table}';
