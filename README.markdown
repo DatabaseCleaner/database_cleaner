@@ -293,7 +293,7 @@ Usage beyond that remains the same with `DatabaseCleaner.start` calling any setu
 
 One of my motivations for writing this library was to have an easy way to turn on what Rails calls "transactional_fixtures" in my non-rails ActiveRecord projects.
 
-After copying and pasting code to do this several times I decided to package it up as a gem and same everyone a bit of time.
+After copying and pasting code to do this several times I decided to package it up as a gem and save everyone a bit of time.
 
 ## Common Errors
 
