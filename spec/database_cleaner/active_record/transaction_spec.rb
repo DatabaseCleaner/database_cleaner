@@ -38,18 +38,19 @@ module DatabaseCleaner
 
       describe "#clean" do
         it "should start a transaction" do
-            connection.should_receive(:open_transactions).and_return(1)
+          connection.should_receive(:open_transactions).and_return(1)
 
-            connection.stub!(:decrement_open_transactions)
+          connection.stub!(:decrement_open_transactions)
 
-            connection.should_receive(:rollback_db_transaction)
-            Transaction.new.clean
+          connection.should_receive(:rollback_db_transaction)
+          Transaction.new.clean
         end
 
         it "should decrement open transactions if possible" do
           connection.should_receive(:open_transactions).and_return(1)
 
           connection.stub!(:respond_to?).with(:decrement_open_transactions).and_return(true)
+          connection.stub!(:respond_to?).with(:rollback_transaction_records).and_return(false)
           connection.stub!(:rollback_db_transaction)
 
           connection.should_receive(:decrement_open_transactions)
@@ -65,6 +66,7 @@ module DatabaseCleaner
         it "should decrement connection via ActiveRecord::Base if connection won't" do
           connection.should_receive(:open_transactions).and_return(1)
           connection.stub!(:respond_to?).with(:decrement_open_transactions).and_return(false)
+          connection.stub!(:respond_to?).with(:rollback_transaction_records).and_return(false)
           connection.stub!(:rollback_db_transaction)
 
           ::ActiveRecord::Base.should_receive(:decrement_open_transactions)
