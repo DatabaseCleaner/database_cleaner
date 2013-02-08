@@ -7,10 +7,12 @@ module DatabaseCleaner::ActiveRecord
     include ::DatabaseCleaner::Generic::Transaction
 
     def start
-      if connection_class.connection.respond_to?(:increment_open_transactions)
-        connection_class.connection.increment_open_transactions
-      else
-        connection_class.__send__(:increment_open_transactions)
+      if connection_maintains_transaction_count?
+        if connection_class.connection.respond_to?(:increment_open_transactions)
+          connection_class.connection.increment_open_transactions
+        else
+          connection_class.__send__(:increment_open_transactions)
+        end
       end
       connection_class.connection.begin_db_transaction
     end
@@ -26,11 +28,18 @@ module DatabaseCleaner::ActiveRecord
         connection_class.connection.send(:rollback_transaction_records, true)
       end
 
-      if connection_class.connection.respond_to?(:decrement_open_transactions)
-        connection_class.connection.decrement_open_transactions
-      else
-        connection_class.__send__(:decrement_open_transactions)
+      if connection_maintains_transaction_count?
+        if connection_class.connection.respond_to?(:decrement_open_transactions)
+          connection_class.connection.decrement_open_transactions
+        else
+          connection_class.__send__(:decrement_open_transactions)
+        end
       end
     end
+    
+    def connection_maintains_transaction_count?
+      ActiveRecord::VERSION::MAJOR < 4
+    end
+      
   end
 end
