@@ -188,10 +188,10 @@ module ActiveRecord
 
     # ActiveRecord 3.1 support
     if defined?(AbstractMysqlAdapter)
-      MYSQL_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractMysqlAdapter
+      MYSQL_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : MysqlAdapter.superclass
       MYSQL2_ADAPTER_PARENT = AbstractMysqlAdapter
     else
-      MYSQL_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
+      MYSQL_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : MysqlAdapter.superclass
       MYSQL2_ADAPTER_PARENT = AbstractAdapter
     end
 
