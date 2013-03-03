@@ -14,14 +14,22 @@ module DatabaseCleaner::ActiveRecord
           connection_class.__send__(:increment_open_transactions)
         end
       end
-      connection_class.connection.begin_db_transaction
+      if connection_class.connection.respond_to?(:begin_transaction)
+        connection_class.connection.begin_transaction
+      else
+        connection_class.connection.begin_db_transaction
+      end
     end
 
 
     def clean
       return unless connection_class.connection.open_transactions > 0
 
-      connection_class.connection.rollback_db_transaction
+      if connection_class.connection.respond_to?(:rollback_transaction)
+        connection_class.connection.rollback_transaction
+      else
+        connection_class.connection.rollback_db_transaction
+      end
 
       # The below is for handling after_commit hooks.. see https://github.com/bmabey/database_cleaner/issues/99
       if connection_class.connection.respond_to?(:rollback_transaction_records)
@@ -36,10 +44,10 @@ module DatabaseCleaner::ActiveRecord
         end
       end
     end
-    
+
     def connection_maintains_transaction_count?
       ActiveRecord::VERSION::MAJOR < 4
     end
-      
+
   end
 end
