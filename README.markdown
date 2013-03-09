@@ -88,7 +88,7 @@ For the SQL libraries the fastest option will be to use `:transaction` as transa
 
 One common approach is to force all processes to use the same database connection ([common ActiveRecord hack](http://blog.plataformatec.com.br/2011/12/three-tips-to-improve-the-performance-of-your-test-suite/)) however this approach has been reported to result in non-deterministic failures.
 
-Another approach is to have the transactions rolled back in the application's process and relax the isolation level of the database (so the tests can read the uncommited transactions).
+Another approach is to have the transactions rolled back in the application's process and relax the isolation level of the database (so the tests can read the uncommitted transactions).
 
 An easier, but slower, solution is to use the `:truncation` or `:deletion` strategy.
 
