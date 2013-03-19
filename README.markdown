@@ -72,6 +72,12 @@ Here is an overview of the strategies supported for each library:
       <td> No</td>
       <td> No</td>
     </tr>
+    <tr>
+      <td> Moped</td>
+      <td> Yes</td>
+      <td> No</td>
+      <td> No</td>
+    </tr>
   </tbody>
 </table>
 
@@ -275,6 +281,11 @@ Usage beyond that remains the same with `DatabaseCleaner.start` calling any setu
       <td> Mongoid</td>
       <td> <code>DatabaseCleaner[:mongoid]</code></td>
       <td> Multiple databases supported for Mongoid 3. Specify <code>DatabaseCleaner[:mongoid, {:connection =&gt; :db_name}]</code> </td>
+    </tr>
+    <tr>
+      <td> Moped</td>
+      <td> <code>DatabaseCleaner[:moped]</code></td>
+      <td> It is necessary to configure database name with <code>DatabaseCleaner[:moped].db = db_name</code> otherwise name `default` will be used.</td>
     </tr>
     <tr>
       <td> Couch Potato</td>
