@@ -1,6 +1,11 @@
+require 'database_cleaner/moped/base'
+require 'database_cleaner/generic/truncation'
+
 module DatabaseCleaner
   module Moped
-    module Truncation
+    class Truncation
+      include ::DatabaseCleaner::Moped::Base
+      include ::DatabaseCleaner::Generic::Truncation
 
       def clean
         if @only
@@ -17,7 +22,7 @@ module DatabaseCleaner
         if db != :default
           session.use(db)
         end
-        
+
         session['system.namespaces'].find(:name => { '$not' => /system|\$/ }).to_a.map do |collection|
           _, name = collection['name'].split('.', 2)
           name
