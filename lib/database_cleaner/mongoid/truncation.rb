@@ -1,7 +1,7 @@
 require 'database_cleaner/mongoid/base'
 require 'database_cleaner/generic/truncation'
 require 'database_cleaner/mongo/truncation_mixin'
-require 'database_cleaner/moped/truncation'
+require 'database_cleaner/moped/truncation_base'
 require 'mongoid/version'
 
 module DatabaseCleaner
@@ -22,7 +22,7 @@ module DatabaseCleaner
 
       else
 
-        include ::DatabaseCleaner::Moped::Truncation
+        include ::DatabaseCleaner::Moped::TruncationBase
 
         private
 
