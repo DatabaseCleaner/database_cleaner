@@ -13,10 +13,13 @@ module DatabaseCleaner
 
       private
 
-      def collections
-        database.collections.select { |c| c.name !~ /^system\./ }
+      def collections_cache
+        @@collections_cache ||= {}
       end
 
+      def collections
+        collections_cache[database.name] ||= database.collections.select { |c| c.name !~ /^system\./ }
+      end
     end
   end
 end
