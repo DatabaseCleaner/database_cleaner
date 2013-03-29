@@ -36,11 +36,21 @@ module DatabaseCleaner
 
     def clean_with(*args)
       strategy = create_strategy(*args)
+      set_strategy_db strategy, self.db
+
       strategy.clean
       strategy
     end
 
     alias clean_with! clean_with
+
+    def set_strategy_db(strategy, desired_db)
+      if strategy.respond_to? :db=
+        strategy.db = desired_db
+      elsif desired_db != :default
+        raise ArgumentError, "You must provide a strategy object that supports non default databases when you specify a database"
+      end
+    end
 
     def strategy=(args)
       strategy, *strategy_args = args
@@ -52,7 +62,7 @@ module DatabaseCleaner
          raise ArgumentError, "You must provide a strategy object, or a symbol for a known strategy along with initialization params."
        end
 
-       self.strategy_db = self.db
+       set_strategy_db @strategy, self.db
 
        @strategy
     end
