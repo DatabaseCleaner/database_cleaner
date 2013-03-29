@@ -334,7 +334,7 @@ module DatabaseCleaner
 
       it "should attempt to set strategy db" do
         subject.stub(:db).and_return(:my_db)
-        subject.should_receive(:strategy_db=).with(:my_db)
+        subject.should_receive(:set_strategy_db).with(mock_strategy, :my_db)
         subject.strategy = mock_strategy
       end
 
