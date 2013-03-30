@@ -119,16 +119,6 @@ my_db:
         end
       end
 
-      describe "create_connection_class" do
-        it "should return a class" do
-          subject.create_connection_class.should be_a(Class)
-        end
-
-        it "should return a class extending ::ActiveRecord::Base" do
-          subject.create_connection_class.ancestors.should include(::ActiveRecord::Base)
-        end
-      end
-
       describe "connection_class" do
         it { expect { subject.connection_class }.to_not raise_error }
         it "should default to ActiveRecord::Base" do
@@ -158,16 +148,9 @@ my_db:
           before { ::ActiveRecord::Base.stub!(:respond_to?).and_return(false) }
           before { subject.stub(:connection_hash).and_return(hash) }
 
-          it "should create connection_class if it doesnt exist if connection_hash is set" do
-            subject.should_receive(:create_connection_class).and_return(mock('class').as_null_object)
-            subject.connection_class
-          end
+          it "establish a connection using ActiveRecord::Base" do
+            ::ActiveRecord::Base.should_receive(:establish_connection).with(hash)
 
-          it "should configure the class from create_connection_class if connection_hash is set" do
-            strategy_class = mock('strategy_class')
-            strategy_class.should_receive(:establish_connection).with(hash)
-
-            subject.should_receive(:create_connection_class).and_return(strategy_class)
             subject.connection_class
           end
         end
