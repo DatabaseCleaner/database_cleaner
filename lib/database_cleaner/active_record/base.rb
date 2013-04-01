@@ -38,10 +38,6 @@ module DatabaseCleaner
         end
       end
 
-      def create_connection_class
-        Class.new(::ActiveRecord::Base)
-      end
-
       def connection_class
         @connection_class ||= if @db && !@db.is_a?(Symbol)
                                 @db
@@ -63,9 +59,7 @@ module DatabaseCleaner
       end
 
       def establish_connection
-        strategy_class = create_connection_class
-        strategy_class.send :establish_connection, connection_hash
-        strategy_class
+        ::ActiveRecord::Base.establish_connection(connection_hash)
       end
 
     end
