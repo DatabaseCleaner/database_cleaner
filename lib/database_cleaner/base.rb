@@ -36,11 +36,21 @@ module DatabaseCleaner
 
     def clean_with(*args)
       strategy = create_strategy(*args)
+      set_strategy_db strategy, self.db
+
       strategy.clean
       strategy
     end
 
     alias clean_with! clean_with
+
+    def set_strategy_db(strategy, desired_db)
+      if strategy.respond_to? :db=
+        strategy.db = desired_db
+      elsif desired_db != :default
+        raise ArgumentError, "You must provide a strategy object that supports non default databases when you specify a database"
+      end
+    end
 
     def strategy=(args)
       strategy, *strategy_args = args
@@ -52,7 +62,7 @@ module DatabaseCleaner
          raise ArgumentError, "You must provide a strategy object, or a symbol for a known strategy along with initialization params."
        end
 
-       self.strategy_db = self.db
+       set_strategy_db @strategy, self.db
 
        @strategy
     end
@@ -120,8 +130,10 @@ module DatabaseCleaner
           :couch_potato
         elsif defined? ::Sequel
           :sequel
+        elsif defined? ::Moped
+          :moped
         else
-          raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, or CouchPotato loaded?"
+          raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, Moped, or CouchPotato loaded?"
         end
       end
     end
@@ -130,7 +142,7 @@ module DatabaseCleaner
       case orm
       when :active_record, :data_mapper, :sequel
         self.strategy = :transaction
-      when :mongo_mapper, :mongoid, :couch_potato
+      when :mongo_mapper, :mongoid, :couch_potato, :moped
         self.strategy = :truncation
       end
     end

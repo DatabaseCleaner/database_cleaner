@@ -72,6 +72,12 @@ Here is an overview of the strategies supported for each library:
       <td> No</td>
       <td> No</td>
     </tr>
+    <tr>
+      <td> Moped</td>
+      <td> Yes</td>
+      <td> No</td>
+      <td> No</td>
+    </tr>
   </tbody>
 </table>
 
@@ -88,7 +94,7 @@ For the SQL libraries the fastest option will be to use `:transaction` as transa
 
 One common approach is to force all processes to use the same database connection ([common ActiveRecord hack](http://blog.plataformatec.com.br/2011/12/three-tips-to-improve-the-performance-of-your-test-suite/)) however this approach has been reported to result in non-deterministic failures.
 
-Another approach is to have the transactions rolled back in the application's process and relax the isolation level of the database (so the tests can read the uncommited transactions).
+Another approach is to have the transactions rolled back in the application's process and relax the isolation level of the database (so the tests can read the uncommitted transactions).
 
 An easier, but slower, solution is to use the `:truncation` or `:deletion` strategy.
 
@@ -275,6 +281,11 @@ Usage beyond that remains the same with `DatabaseCleaner.start` calling any setu
       <td> Mongoid</td>
       <td> <code>DatabaseCleaner[:mongoid]</code></td>
       <td> Multiple databases supported for Mongoid 3. Specify <code>DatabaseCleaner[:mongoid, {:connection =&gt; :db_name}]</code> </td>
+    </tr>
+    <tr>
+      <td> Moped</td>
+      <td> <code>DatabaseCleaner[:moped]</code></td>
+      <td> It is necessary to configure database name with <code>DatabaseCleaner[:moped].db = db_name</code> otherwise name `default` will be used.</td>
     </tr>
     <tr>
       <td> Couch Potato</td>

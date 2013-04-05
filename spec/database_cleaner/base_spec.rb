@@ -18,6 +18,7 @@ module DatabaseCleaner
          Temp_MO = ::Mongoid      if defined?(::Mongoid)      and not defined?(Temp_MO)
          Temp_CP = ::CouchPotato  if defined?(::CouchPotato)  and not defined?(Temp_CP)
          Temp_SQ = ::Sequel       if defined?(::Sequel)       and not defined?(Temp_SQ)
+         Temp_MP = ::Moped        if defined?(::Moped)        and not defined?(Temp_MP)
        end
 
        #Remove all ORM mocks and restore from cache
@@ -28,6 +29,7 @@ module DatabaseCleaner
          Object.send(:remove_const, 'Mongoid')      if defined?(::Mongoid)
          Object.send(:remove_const, 'CouchPotato')  if defined?(::CouchPotato)
          Object.send(:remove_const, 'Sequel')       if defined?(::Sequel)
+         Object.send(:remove_const, 'Moped')        if defined?(::Moped)
 
 
          # Restore ORMs
@@ -36,6 +38,7 @@ module DatabaseCleaner
          ::MongoMapper  = Temp_MM if defined? Temp_MM
          ::Mongoid      = Temp_MO if defined? Temp_MO
          ::CouchPotato  = Temp_CP if defined? Temp_CP
+         ::Moped        = Temp_MP if defined? Temp_MP
        end
 
        #reset the orm mocks
@@ -46,6 +49,7 @@ module DatabaseCleaner
          Object.send(:remove_const, 'Mongoid')      if defined?(::Mongoid)
          Object.send(:remove_const, 'CouchPotato')  if defined?(::CouchPotato)
          Object.send(:remove_const, 'Sequel')       if defined?(::Sequel)
+         Object.send(:remove_const, 'Moped')        if defined?(::Moped)
        end
        
        let(:cleaner) { DatabaseCleaner::Base.new :autodetect }
@@ -61,6 +65,7 @@ module DatabaseCleaner
          Object.const_set('Mongoid',     'Mongoid mock')
          Object.const_set('CouchPotato', 'Couching mock potatos')
          Object.const_set('Sequel',      'Sequel mock')
+         Object.const_set('Moped',       'Moped mock')
 
          cleaner.orm.should == :active_record
          cleaner.should be_auto_detected
@@ -72,6 +77,7 @@ module DatabaseCleaner
          Object.const_set('Mongoid',     'Mongoid mock')
          Object.const_set('CouchPotato', 'Couching mock potatos')
          Object.const_set('Sequel',      'Sequel mock')
+         Object.const_set('Moped',       'Moped mock')
 
          cleaner.orm.should == :data_mapper
          cleaner.should be_auto_detected
@@ -82,6 +88,7 @@ module DatabaseCleaner
          Object.const_set('Mongoid',     'Mongoid mock')
          Object.const_set('CouchPotato', 'Couching mock potatos')
          Object.const_set('Sequel',      'Sequel mock')
+         Object.const_set('Moped',       'Moped mock')
 
          cleaner.orm.should == :mongo_mapper
          cleaner.should be_auto_detected
@@ -91,6 +98,7 @@ module DatabaseCleaner
          Object.const_set('Mongoid',     'Mongoid mock')
          Object.const_set('CouchPotato', 'Couching mock potatos')
          Object.const_set('Sequel',      'Sequel mock')
+         Object.const_set('Moped',       'Moped mock')
 
          cleaner.orm.should == :mongoid
          cleaner.should be_auto_detected
@@ -99,15 +107,24 @@ module DatabaseCleaner
        it "should detect CouchPotato fifth" do
          Object.const_set('CouchPotato', 'Couching mock potatos')
          Object.const_set('Sequel',      'Sequel mock')
+         Object.const_set('Moped',       'Moped mock')
 
          cleaner.orm.should == :couch_potato
          cleaner.should be_auto_detected
        end
-       
-       it "should detect Sequel last" do
+
+       it "should detect Sequel sixth" do
          Object.const_set('Sequel', 'Sequel mock')
+         Object.const_set('Moped',  'Moped mock')
 
          cleaner.orm.should == :sequel
+         cleaner.should be_auto_detected
+       end
+
+       it "should detect Moped seventh" do
+         Object.const_set('Moped', 'Moped mock')
+
+         cleaner.orm.should == :moped
          cleaner.should be_auto_detected
        end
     end
@@ -317,7 +334,7 @@ module DatabaseCleaner
 
       it "should attempt to set strategy db" do
         subject.stub(:db).and_return(:my_db)
-        subject.should_receive(:strategy_db=).with(:my_db)
+        subject.should_receive(:set_strategy_db).with(mock_strategy, :my_db)
         subject.strategy = mock_strategy
       end
 
@@ -330,8 +347,7 @@ module DatabaseCleaner
     describe "strategy" do
       subject { ::DatabaseCleaner::Base.new :a_orm }
 
-      it "returns a null strategy when strategy no set and undetectable" do
-        subject.instance_values["@strategy"] = nil
+      it "returns a null strategy when strategy is not set and undetectable" do
         subject.strategy.should == DatabaseCleaner::NullStrategy
       end
 
@@ -486,6 +502,11 @@ module DatabaseCleaner
       it 'sets strategy to :truncation for CouchPotato' do
         cleaner = DatabaseCleaner::Base.new(:couch_potato)
         cleaner.strategy.should be_instance_of DatabaseCleaner::CouchPotato::Truncation
+      end
+
+      it 'sets strategy to :truncation for Moped' do
+        cleaner = DatabaseCleaner::Base.new(:moped)
+        cleaner.strategy.should be_instance_of DatabaseCleaner::Moped::Truncation
       end
     end
 
