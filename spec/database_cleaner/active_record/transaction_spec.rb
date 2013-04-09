@@ -15,6 +15,7 @@ module DatabaseCleaner
         [:begin_transaction, :begin_db_transaction].each do |begin_transaction_method|
           context "using #{begin_transaction_method}" do
             before do
+              connection.stub(:transaction)
               connection.stub(begin_transaction_method)
               connection.stub(:respond_to?).with(:begin_transaction).and_return(:begin_transaction == begin_transaction_method)
             end
@@ -35,6 +36,7 @@ module DatabaseCleaner
               connection.stub(:respond_to?).with(:increment_open_transactions).and_return(true)
               connection.stub(:increment_open_transactions)
               connection.should_receive(begin_transaction_method)
+              connection.should_receive(:transaction)
               Transaction.new.start
             end
           end
