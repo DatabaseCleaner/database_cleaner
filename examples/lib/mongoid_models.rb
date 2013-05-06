@@ -2,7 +2,7 @@ require 'mongoid'
 
 Mongoid.configure do |config|
   name = 'database_cleaner_test'
-  config.master = Mongo::Connection.new.db(name)
+  config.connect_to(name)
 end
 
 
