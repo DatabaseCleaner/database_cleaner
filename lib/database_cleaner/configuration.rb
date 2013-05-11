@@ -11,7 +11,7 @@ module DatabaseCleaner
       # ghetto ordered hash.. maintains 1.8 compat and old API
       @connections ||= []
     end
-    
+
     def [](orm,opts = {})
       raise NoORMDetected unless orm
       init_cleaners
@@ -113,6 +113,10 @@ module DatabaseCleaner
           DatabaseCleaner::CouchPotato
         when :sequel
           DatabaseCleaner::Sequel
+        when :ohm
+          DatabaseCleaner::Ohm
+        when :redis
+          DatabaseCleaner::Redis
       end
     end
   end
