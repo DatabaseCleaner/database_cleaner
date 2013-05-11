@@ -132,8 +132,12 @@ module DatabaseCleaner
           :sequel
         elsif defined? ::Moped
           :moped
+        elsif defined? ::Ohm
+          :ohm
+        elsif defined? ::Redis
+          :redis
         else
-          raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, Moped, or CouchPotato loaded?"
+          raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, Moped, or CouchPotato, Redis or Ohm loaded?"
         end
       end
     end
@@ -142,7 +146,7 @@ module DatabaseCleaner
       case orm
       when :active_record, :data_mapper, :sequel
         self.strategy = :transaction
-      when :mongo_mapper, :mongoid, :couch_potato, :moped
+      when :mongo_mapper, :mongoid, :couch_potato, :moped, :ohm, :redis
         self.strategy = :truncation
       end
     end
