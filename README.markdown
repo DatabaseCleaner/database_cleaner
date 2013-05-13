@@ -5,7 +5,7 @@ Database Cleaner is a set of strategies for cleaning your database in Ruby.
 The original use case was to ensure a clean state during tests.
 Each strategy is a small amount of code but is code that is usually needed in any ruby app that is testing with a database.
 
-ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, and CouchPotato are supported.
+ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, CouchPotato, Ohm and Redis are supported.
 
 [![Build Status](https://secure.travis-ci.org/bmabey/database_cleaner.png)](http://travis-ci.org/bmabey/database_cleaner)
 
@@ -55,6 +55,18 @@ Here is an overview of the strategies supported for each library:
       <td> Yes</td>
       <td> No</td>
     </tr>
+    <tr>
+      <td>Redis</td>
+      <td><b>Yes</b></td>
+      <td>No</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>Ohm</td>
+      <td><b>Yes</b></td>
+      <td>No</td>
+      <td>No</td>
+    </tr>
   </tbody>
 </table>
 
@@ -68,6 +80,12 @@ Here is an overview of the strategies supported for each library:
     </tr>
     <tr>
       <td> Mongo</td>
+      <td> Yes</td>
+      <td> No</td>
+      <td> No</td>
+    </tr>
+    <tr>
+      <td> Moped</td>
       <td> Yes</td>
       <td> No</td>
       <td> No</td>
@@ -88,11 +106,11 @@ For the SQL libraries the fastest option will be to use `:transaction` as transa
 
 One common approach is to force all processes to use the same database connection ([common ActiveRecord hack](http://blog.plataformatec.com.br/2011/12/three-tips-to-improve-the-performance-of-your-test-suite/)) however this approach has been reported to result in non-deterministic failures.
 
-Another approach is to have the transactions rolled back in the application's process and relax the isolation level of the database (so the tests can read the uncommited transactions).
+Another approach is to have the transactions rolled back in the application's process and relax the isolation level of the database (so the tests can read the uncommitted transactions).
 
 An easier, but slower, solution is to use the `:truncation` or `:deletion` strategy.
 
-So what is fastest out of `:deletion` and `:truncation`? Well, it depends on your table structure and what percentage of tables you populate in an average test. The reasoning is out the the scope of this README but here is a [good SO answer on this topic for Postgres](http://stackoverflow.com/questions/11419536/postgresql-truncation-speed/11423886#11423886).
+So what is fastest out of `:deletion` and `:truncation`? Well, it depends on your table structure and what percentage of tables you populate in an average test. The reasoning is out of the scope of this README but here is a [good SO answer on this topic for Postgres](http://stackoverflow.com/questions/11419536/postgresql-truncation-speed/11423886#11423886).
 
 Some people report much faster speeds with `:deletion` while others say `:truncation` is faster for them. The best approach therefore is it try all options on your test suite and see what is faster.
 
@@ -122,6 +140,9 @@ DatabaseCleaner.strategy = :truncation, {:only => %w[widgets dogs some_other_tab
 ```ruby
 DatabaseCleaner.strategy = :truncation, {:except => %w[widgets]}
 ```
+
+With Ohm and Redis, `:only` and `:except` take a list of strings to be
+passed to [`keys`](http://redis.io/commands/keys)).
 
 (I should point out the truncation strategy will never truncate your schema_migrations table.)
 
@@ -277,6 +298,11 @@ Usage beyond that remains the same with `DatabaseCleaner.start` calling any setu
       <td> Multiple databases supported for Mongoid 3. Specify <code>DatabaseCleaner[:mongoid, {:connection =&gt; :db_name}]</code> </td>
     </tr>
     <tr>
+      <td> Moped</td>
+      <td> <code>DatabaseCleaner[:moped]</code></td>
+      <td> It is necessary to configure database name with <code>DatabaseCleaner[:moped].db = db_name</code> otherwise name `default` will be used.</td>
+    </tr>
+    <tr>
       <td> Couch Potato</td>
       <td> <code>DatabaseCleaner[:couch_potato]</code></td>
       <td> Multiple connections not yet supported</td>
@@ -285,6 +311,16 @@ Usage beyond that remains the same with `DatabaseCleaner.start` calling any setu
       <td> Sequel</td>
       <td> <code>DatabaseCleaner[:sequel]</code></td>
       <td> Multiple databases supported; specify <code>Databasecleaner[:sequel, {:connection =&gt; Sequel.connect(uri)}]</code></td>
+    </tr>
+    <tr>
+      <td>Redis</td>
+      <td><code>DatabaseCleaner[:redis]</code></td>
+      <td>Connection specified as Redis URI</td>
+    </tr>
+    <tr>
+      <td>Ohm</td>
+      <td><code>DatabaseCleaner[:ohm]</code></td>
+      <td>Connection specified as Redis URI</td>
     </tr>
   </tbody>
 </table>

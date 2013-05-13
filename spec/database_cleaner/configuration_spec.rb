@@ -55,6 +55,20 @@ describe ::DatabaseCleaner do
       cleaner.orm.should == :couch_potato
       ::DatabaseCleaner.connections.size.should == 1
     end
+
+    it "should accept :moped" do
+      cleaner = ::DatabaseCleaner[:moped]
+      cleaner.should be_a(::DatabaseCleaner::Base)
+      cleaner.orm.should == :moped
+      ::DatabaseCleaner.connections.size.should == 1
+    end
+
+    it 'accepts :ohm' do
+      cleaner = ::DatabaseCleaner[:ohm]
+      cleaner.should be_a(::DatabaseCleaner::Base)
+      cleaner.orm.should == :ohm
+      ::DatabaseCleaner.connections.size.should == 1
+    end
   end
 
   it "should accept multiple orm's" do
@@ -119,7 +133,7 @@ describe ::DatabaseCleaner do
     it "should give me a default (autodetection) databasecleaner by default" do
       cleaner = mock("cleaner").as_null_object
       ::DatabaseCleaner::Base.stub!(:new).and_return(cleaner)
-      
+
       ::DatabaseCleaner.connections.should == [cleaner]
     end
   end

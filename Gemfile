@@ -26,6 +26,8 @@ group :development do
   gem 'mysql', '~> 2.8.1'
   gem 'mysql2'
   gem 'pg'
+  gem 'sqlite3'
+  gem 'ohm', '~> 0.1.3'
 
   gem 'guard-rspec'
 end

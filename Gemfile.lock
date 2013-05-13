@@ -135,6 +135,10 @@ GEM
     multi_json (1.5.0)
     mysql (2.8.1)
     mysql2 (0.3.11)
+    nest (1.1.2)
+      redis
+    ohm (0.1.5)
+      nest (~> 1.0)
     origin (1.0.11)
     pg (0.14.1)
     plucky (0.5.2)
@@ -160,6 +164,7 @@ GEM
     rake (10.0.3)
     rdoc (3.12)
       json (~> 1.4)
+    redis (3.0.4)
     rest-client (1.6.7)
       mime-types (>= 1.16)
     rspec (2.12.0)
@@ -213,6 +218,7 @@ DEPENDENCIES
   mongoid
   mysql (~> 2.8.1)
   mysql2
+  ohm (~> 0.1.3)
   pg
   rake
   rspec-rails

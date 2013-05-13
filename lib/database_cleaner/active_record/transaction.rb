@@ -7,6 +7,10 @@ module DatabaseCleaner::ActiveRecord
     include ::DatabaseCleaner::Generic::Transaction
 
     def start
+      # Hack to make sure that the connection is properly setup for
+      # the clean code.
+      connection_class.connection.transaction{ }
+
       if connection_maintains_transaction_count?
         if connection_class.connection.respond_to?(:increment_open_transactions)
           connection_class.connection.increment_open_transactions
