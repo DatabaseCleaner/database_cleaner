@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "database_cleaner"
-  s.version = "1.0.0.RC1"
+  s.version = "1.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ben Mabey"]

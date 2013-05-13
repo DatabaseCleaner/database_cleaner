@@ -1,9 +1,9 @@
-== 1.0.0 2012-03-xx
+== 1.0.0 2013-05-13
 
  === New Features/Changes
 
   * Dropping support for Ruby 1.8.x; Only 1.9.x and beyond will be supported going forward.
-  * Now supporting (and testing against 2.0.x).
+  * Now supporting (and testing against ruby 2.0.x).
   * Adds support for AR 4.0 by using `begin_transaction` (David Chelimsky and Steve Madsen)
   * Adds Rails 4 support for SQLite3Adapter
   * Suppport for Moped when used without Mongoid (Cyprian Kowalczyk)
