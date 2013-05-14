@@ -202,11 +202,11 @@ module ActiveRecord
     end
     POSTGRE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
 
-    class MysqlAdapter < MYSQL_ADAPTER_PARENT
+    class MysqlAdapter < MYSQL_ADAPTER_PARENT.superclass
       include ::DatabaseCleaner::ActiveRecord::MysqlAdapter
     end
 
-    class Mysql2Adapter < MYSQL2_ADAPTER_PARENT
+    class Mysql2Adapter < MYSQL2_ADAPTER_PARENT.superclass
       include ::DatabaseCleaner::ActiveRecord::MysqlAdapter
     end
 
