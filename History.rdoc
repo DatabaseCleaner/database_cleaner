@@ -7,7 +7,7 @@
 === New Features/Changes
 
   * Dropping support for Ruby 1.8.x; Only 1.9.x and beyond will be supported going forward.
-  * Now supporting (and testing against ruby 2.0.x).
+  * Now supporting and testing against ruby 2.0.x.
   * Adds support for AR 4.0 by using `begin_transaction` (David Chelimsky and Steve Madsen)
   * Adds Rails 4 support for SQLite3Adapter
   * Suppport for Moped when used without Mongoid (Cyprian Kowalczyk)
@@ -25,7 +25,7 @@
   * #clean_with now works with multiple connections. (John Ferlito)
   * Always start a AR transaction to prevent nil errors in AR when rolling back (John Hampton, M.Shibuya)
 
-== 0.9.1 2012-10-11 
+== 0.9.1 2012-10-11
 
 (0.9.0 was released first but was yanked due to bad gemspec)
 
@@ -103,7 +103,7 @@
 == 0.6.5 2011-03-08
 
 === Bugfixes
- 
+
   * When truncating in postgresql (>= 8.4) sequences are now reset. (Greg Barnett)
   * Fixes the MongoDB truncation so non system collections starting with 'system' are not excluded for truncation. (Dmitry Naumov)
 
@@ -116,7 +116,7 @@
 == 0.6.3 2011-02-09
 
 === New Features
-  
+
   * Configurable logger to aid in debugging database cleaner. (Marty Haught)
 
 == 0.6.2 2011-02-04
@@ -276,7 +276,7 @@ the way AR support is added so that it is more friendly with how Rails 3 uses au
 === New features
 
   * PostgresSQLAdapter for AR to support the truncation strategy. (Alberto Perdomo)
- 
+
 === Bufixes
 
   * Added missing quotes around table names in truncation calls. (Michael MacDonald)
@@ -288,7 +288,7 @@ the way AR support is added so that it is more friendly with how Rails 3 uses au
   * JDBC Adapter to enable AR truncation strategy to work. (Kamal Fariz Mahyuddin)
 
 == 0.1.1 2009-03-04 - Initial Release (Ben Mabey)
-  
+
   * Basic infrastructure
   * Features, RSpec code examples
   * ActiveRecord strategies
