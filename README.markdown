@@ -5,7 +5,7 @@ Database Cleaner is a set of strategies for cleaning your database in Ruby.
 The original use case was to ensure a clean state during tests.
 Each strategy is a small amount of code but is code that is usually needed in any ruby app that is testing with a database.
 
-ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, and CouchPotato are supported.
+ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, CouchPotato, Ohm and Redis are supported.
 
 [![Build Status](https://secure.travis-ci.org/bmabey/database_cleaner.png)](http://travis-ci.org/bmabey/database_cleaner)
 
@@ -54,6 +54,18 @@ Here is an overview of the strategies supported for each library:
       <td> <b>Yes</b></td>
       <td> Yes</td>
       <td> No</td>
+    </tr>
+    <tr>
+      <td>Redis</td>
+      <td><b>Yes</b></td>
+      <td>No</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>Ohm</td>
+      <td><b>Yes</b></td>
+      <td>No</td>
+      <td>No</td>
     </tr>
   </tbody>
 </table>
@@ -128,6 +140,9 @@ DatabaseCleaner.strategy = :truncation, {:only => %w[widgets dogs some_other_tab
 ```ruby
 DatabaseCleaner.strategy = :truncation, {:except => %w[widgets]}
 ```
+
+With Ohm and Redis, `:only` and `:except` take a list of strings to be
+passed to [`keys`](http://redis.io/commands/keys)).
 
 (I should point out the truncation strategy will never truncate your schema_migrations table.)
 
@@ -296,6 +311,16 @@ Usage beyond that remains the same with `DatabaseCleaner.start` calling any setu
       <td> Sequel</td>
       <td> <code>DatabaseCleaner[:sequel]</code></td>
       <td> Multiple databases supported; specify <code>Databasecleaner[:sequel, {:connection =&gt; Sequel.connect(uri)}]</code></td>
+    </tr>
+    <tr>
+      <td>Redis</td>
+      <td><code>DatabaseCleaner[:redis]</code></td>
+      <td>Connection specified as Redis URI</td>
+    </tr>
+    <tr>
+      <td>Ohm</td>
+      <td><code>DatabaseCleaner[:ohm]</code></td>
+      <td>Connection specified as Redis URI</td>
     </tr>
   </tbody>
 </table>

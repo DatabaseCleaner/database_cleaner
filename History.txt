@@ -1,20 +1,24 @@
-== 1.0.0 2012-03-xx
+== 1.0.0 2013-05-13
 
  === New Features/Changes
 
   * Dropping support for Ruby 1.8.x; Only 1.9.x and beyond will be supported going forward.
-  * Now supporting (and testing against 2.0.x).
+  * Now supporting (and testing against ruby 2.0.x).
   * Adds support for AR 4.0 by using `begin_transaction` (David Chelimsky and Steve Madsen)
   * Adds Rails 4 support for SQLite3Adapter
+  * Suppport for Moped when used without Mongoid (Cyprian Kowalczyk)
+  * Redis & Ohm support (Hengbin Qiu, James Conroy-Finn)
 
   * CI Improvements (Jan Vlnas, Murahashi Sanemat Kenichi, Samer Masry, Jordan Hollinger)
-  * README/Documentation improvements (Marcelo Cajueiro, Donald Ball, TJ Chambers, Nick Huanca
+  * README/Documentation improvements (Marcelo Cajueiro, Donald Ball, TJ Chambers, Nick Huanca, Justin Edwards, Ryota Arai)
 
  === Bug Fixes
   * Fixes transaction errors when using `after_commit` hooks in AR.
   * Fixes truncation error with SQLite (Daniel White)
   * Fixes `pre_count` logic in AR Postgres. (Jordan Hollinger)
   * Sequel fix to normalize all table names to strings. (Lauri Peltola)
+  * #clean_with now works with multiple connections. (John Ferlito)
+  * Always start a AR transaction to prevent nil errors in AR when rolling back (John Hampton, M.Shibuya)
 
 == 0.9.1 2012-10-11 (0.9.0 was released first but was yanked due to bad gemspec)
 

@@ -15,6 +15,10 @@ another_orm = ENV['ANOTHER_ORM']
 strategy    = ENV['STRATEGY']
 multiple_db = ENV['MULTIPLE_DBS']
 
+config = YAML::load(File.open("#{File.dirname(__FILE__)}/../../config/redis.yml"))
+ENV['REDIS_URL'] = config['test']['url']
+ENV['REDIS_URL_ONE'] = config['one']['url']
+ENV['REDIS_URL_TWO'] = config['two']['url']
 
 if orm && strategy
   $:.unshift(File.dirname(__FILE__) + '/../../../lib')
@@ -37,6 +41,9 @@ if orm && strategy
     when :mongo_mapper
       DatabaseCleaner[ orm_sym, {:connection => 'database_cleaner_test_one'} ].strategy = strategy.to_sym
       DatabaseCleaner[ orm_sym, {:connection => 'database_cleaner_test_two'} ].strategy = strategy.to_sym
+    when :redis, :ohm
+      DatabaseCleaner[ orm_sym, {:connection => ENV['REDIS_URL_ONE']} ].strategy = strategy.to_sym
+      DatabaseCleaner[ orm_sym, {:connection => ENV['REDIS_URL_TWO']} ].strategy = strategy.to_sym
     when :active_record
       DatabaseCleaner[:active_record, {:model => ActiveRecordWidgetUsingDatabaseOne} ].strategy = strategy.to_sym
       DatabaseCleaner[:active_record, {:model => ActiveRecordWidgetUsingDatabaseTwo} ].strategy = strategy.to_sym
@@ -53,5 +60,5 @@ if orm && strategy
   end
 
 else
-  raise "Run 'ORM=ActiveRecord|DataMapper|MongoMapper|CouchPotato [ANOTHER_ORM=...] [MULTIPLE_DBS=true] STRATEGY=transaction|truncation|default cucumber examples/features'"
+  raise "Run 'ORM=ActiveRecord|DataMapper|MongoMapper|CouchPotato|Ohm|Redis [ANOTHER_ORM=...] [MULTIPLE_DBS=true] STRATEGY=transaction|truncation|default cucumber examples/features'"
 end
