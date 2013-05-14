@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "database_cleaner"
-  s.version = "1.0.0"
+  s.version = "1.0.1"
 
-  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ben Mabey"]
-  s.date = "2013-03-04"
+  s.date = "2013-05-14"
   s.description = "Strategies for cleaning databases.  Can be used to ensure a clean state for testing."
   s.email = "ben@benmabey.com"
   s.extra_rdoc_files = [
@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
     "examples/Gemfile",
     "examples/Gemfile.lock",
     "examples/config/database.yml.example",
+    "examples/config/redis.yml",
     "examples/db/sqlite_databases_go_here",
     "examples/features/example.feature",
     "examples/features/example_multiple_db.feature",
@@ -43,11 +44,15 @@ Gem::Specification.new do |s|
     "examples/lib/datamapper_models.rb",
     "examples/lib/mongoid_models.rb",
     "examples/lib/mongomapper_models.rb",
+    "examples/lib/ohm_models.rb",
+    "examples/lib/redis_models.rb",
     "features/cleaning.feature",
     "features/cleaning_default_strategy.feature",
     "features/cleaning_multiple_dbs.feature",
     "features/cleaning_multiple_orms.feature",
     "features/step_definitions/database_cleaner_steps.rb",
+    "features/step_definitions/ohm_steps.rb",
+    "features/step_definitions/redis_steps.rb",
     "features/support/env.rb",
     "features/support/feature_runner.rb",
     "lib/database_cleaner.rb",
@@ -73,8 +78,13 @@ Gem::Specification.new do |s|
     "lib/database_cleaner/mongo_mapper/truncation.rb",
     "lib/database_cleaner/mongoid/base.rb",
     "lib/database_cleaner/mongoid/truncation.rb",
+    "lib/database_cleaner/moped/base.rb",
     "lib/database_cleaner/moped/truncation.rb",
+    "lib/database_cleaner/moped/truncation_base.rb",
     "lib/database_cleaner/null_strategy.rb",
+    "lib/database_cleaner/ohm/truncation.rb",
+    "lib/database_cleaner/redis/base.rb",
+    "lib/database_cleaner/redis/truncation.rb",
     "lib/database_cleaner/sequel/base.rb",
     "lib/database_cleaner/sequel/transaction.rb",
     "lib/database_cleaner/sequel/truncation.rb",
@@ -98,6 +108,11 @@ Gem::Specification.new do |s|
     "spec/database_cleaner/mongo_mapper/base_spec.rb",
     "spec/database_cleaner/mongo_mapper/mongo_examples.rb",
     "spec/database_cleaner/mongo_mapper/truncation_spec.rb",
+    "spec/database_cleaner/moped/moped_examples.rb",
+    "spec/database_cleaner/moped/truncation_spec.rb",
+    "spec/database_cleaner/ohm/truncation_spec.rb",
+    "spec/database_cleaner/redis/base_spec.rb",
+    "spec/database_cleaner/redis/truncation_spec.rb",
     "spec/database_cleaner/sequel/base_spec.rb",
     "spec/database_cleaner/sequel/transaction_spec.rb",
     "spec/database_cleaner/sequel/truncation_spec.rb",
@@ -122,4 +137,3 @@ Gem::Specification.new do |s|
   end
 
 end
-

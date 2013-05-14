@@ -1,3 +1,7 @@
+== 1.0.1 2013-05-13
+
+  * Patch release to fix broken gemspec file.  Sorry folks!
+
 == 1.0.0 2013-05-13
 
  === New Features/Changes
