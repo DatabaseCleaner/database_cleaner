@@ -176,15 +176,10 @@ module ActiveRecord
   module ConnectionAdapters
     # Activerecord-jdbc-adapter defines class dependencies a bit differently - if it is present, confirm to ArJdbc hierarchy to avoid 'superclass mismatch' errors.
     USE_ARJDBC_WORKAROUND = defined?(ArJdbc)
+    # ActiveRecord 3.1+ support
+    MYSQL_ABSTRACT_ADAPTER = defined?(AbstractMysqlAdapter) ? AbstractMysqlAdapter : AbstractAdapter
 
-    class AbstractAdapter
-      include ::DatabaseCleaner::ActiveRecord::AbstractAdapter
-    end
-
-    unless USE_ARJDBC_WORKAROUND
-      class SQLiteAdapter < AbstractAdapter
-      end
-    end
+    AbstractAdapter.send(:include, ::DatabaseCleaner::ActiveRecord::AbstractAdapter)
 
     # ActiveRecord 3.1 support
     if defined?(AbstractMysqlAdapter)
@@ -194,36 +189,26 @@ module ActiveRecord
       MYSQL_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : MysqlAdapter.superclass
       MYSQL2_ADAPTER_PARENT = AbstractAdapter
     end
+    MYSQL2_ADAPTER_PARENT = MYSQL_ABSTRACT_ADAPTER
 
     if defined?(SQLite3Adapter) && SQLite3Adapter.superclass == ActiveRecord::ConnectionAdapters::AbstractAdapter
       SQLITE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
     else
       SQLITE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : SQLiteAdapter
     end
-    POSTGRE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
+    POSTGRES_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
 
-    class MysqlAdapter < MYSQL_ADAPTER_PARENT
-      include ::DatabaseCleaner::ActiveRecord::MysqlAdapter
-    end
-
-    class Mysql2Adapter < MYSQL2_ADAPTER_PARENT
-      include ::DatabaseCleaner::ActiveRecord::MysqlAdapter
-    end
+    MYSQL_ADAPTER_PARENT.class_eval     { include ::DatabaseCleaner::ActiveRecord::MysqlAdapter }
+    MYSQL2_ADAPTER_PARENT.class_eval    { include ::DatabaseCleaner::ActiveRecord::MysqlAdapter }
+    SQLITE_ADAPTER_PARENT.class_eval    { include ::DatabaseCleaner::ActiveRecord::SQLiteAdapter }
+    POSTGRES_ADAPTER_PARENT.class_eval  { include ::DatabaseCleaner::ActiveRecord::PostgreSQLAdapter }
 
     class IBM_DBAdapter < AbstractAdapter
       include ::DatabaseCleaner::ActiveRecord::IBM_DBAdapter
     end
 
-    class SQLite3Adapter < SQLITE_ADAPTER_PARENT
-      include ::DatabaseCleaner::ActiveRecord::SQLiteAdapter
-    end
-
     class JdbcAdapter < AbstractAdapter
       include ::DatabaseCleaner::ActiveRecord::TruncateOrDelete
-    end
-
-    class PostgreSQLAdapter < POSTGRE_ADAPTER_PARENT
-      include ::DatabaseCleaner::ActiveRecord::PostgreSQLAdapter
     end
 
     class SQLServerAdapter < AbstractAdapter
@@ -233,7 +218,6 @@ module ActiveRecord
     class OracleEnhancedAdapter < AbstractAdapter
       include ::DatabaseCleaner::ActiveRecord::OracleEnhancedAdapter
     end
-
   end
 end
 

@@ -1,5 +1,9 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 require 'active_record'
+require 'active_record/connection_adapters/mysql_adapter'
+require 'active_record/connection_adapters/mysql2_adapter'
+require 'active_record/connection_adapters/sqlite3_adapter'
+require 'active_record/connection_adapters/postgresql_adapter'
 
 require 'database_cleaner/active_record/truncation'
 
@@ -119,14 +123,14 @@ module DatabaseCleaner
           subject.send(:pre_count?).should == false
         end
       end
-      
+
       describe '#reset_ids?' do
         before(:each) do
           connection.stub!(:disable_referential_integrity).and_yield
           connection.stub!(:database_cleaner_view_cache).and_return([])
           ::ActiveRecord::Base.stub!(:connection).and_return(connection)
         end
-        
+
         subject { Truncation.new }
         its(:reset_ids?) { should == true }
 
