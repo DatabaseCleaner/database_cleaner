@@ -196,11 +196,10 @@ module ActiveRecord
     end
     POSTGRES_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
 
-
-    MYSQL_ADAPTER_PARENT.class_eval { include ::DatabaseCleaner::ActiveRecord::MysqlAdapter }
-    MYSQL2_ADAPTER_PARENT.class_eval { include ::DatabaseCleaner::ActiveRecord::MysqlAdapter }
-    SQLITE_ADAPTER_PARENT.class_eval { include ::DatabaseCleaner::ActiveRecord::SQLiteAdapter }
-    POSTGRES_ADAPTER_PARENT.class_eval { include ::DatabaseCleaner::ActiveRecord::PostgreSQLAdapter }
+    MYSQL_ADAPTER_PARENT.class_eval     { include ::DatabaseCleaner::ActiveRecord::MysqlAdapter }
+    MYSQL2_ADAPTER_PARENT.class_eval    { include ::DatabaseCleaner::ActiveRecord::MysqlAdapter }
+    SQLITE_ADAPTER_PARENT.class_eval    { include ::DatabaseCleaner::ActiveRecord::SQLiteAdapter }
+    POSTGRES_ADAPTER_PARENT.class_eval  { include ::DatabaseCleaner::ActiveRecord::PostgreSQLAdapter }
 
     class IBM_DBAdapter < AbstractAdapter
       include ::DatabaseCleaner::ActiveRecord::IBM_DBAdapter
@@ -217,7 +216,6 @@ module ActiveRecord
     class OracleEnhancedAdapter < AbstractAdapter
       include ::DatabaseCleaner::ActiveRecord::OracleEnhancedAdapter
     end
-
   end
 end
 
