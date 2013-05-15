@@ -1,6 +1,7 @@
 require 'support/active_record/database_setup'
 require 'support/active_record/schema_setup'
 
+
 module MySQL2Helper
   puts "Active Record #{ActiveRecord::VERSION::STRING}, mysql2"
 
@@ -36,3 +37,4 @@ end
 RSpec.configure do |c|
   c.include MySQL2Helper
 end
+
