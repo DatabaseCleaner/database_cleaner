@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     "Gemfile.lock",
-    "History.txt",
+    "History.rdoc",
     "README.markdown",
     "Rakefile",
     "VERSION.yml",
