@@ -39,6 +39,16 @@ module DatabaseCleaner
           Truncation.new.clean
         end
 
+        it "should use ActiveRecord's schema_migrations_table_name" do
+          connection.stub!(:database_cleaner_table_cache).and_return(%w[pre_schema_migrations_suf widgets dogs])
+          ::ActiveRecord::Base.stub!(:table_name_prefix).and_return('pre_')
+          ::ActiveRecord::Base.stub!(:table_name_suffix).and_return('_suf')
+
+          connection.should_receive(:truncate_tables).with(['widgets', 'dogs'])
+
+          Truncation.new.clean
+        end
+
         it "should only truncate the tables specified in the :only option when provided" do
           connection.stub!(:database_cleaner_table_cache).and_return(%w[schema_migrations widgets dogs])
 

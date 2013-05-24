@@ -246,7 +246,7 @@ module DatabaseCleaner::ActiveRecord
 
     # overwritten
     def migration_storage_names
-      %w[schema_migrations]
+      [::ActiveRecord::Migrator.schema_migrations_table_name]
     end
 
     def pre_count?
