@@ -1,7 +1,6 @@
 require 'database_cleaner/null_strategy'
 module DatabaseCleaner
   class Base
-
     def initialize(desired_orm = nil,opts = {})
       if [:autodetect, nil, "autodetect"].include?(desired_orm)
         autodetect
@@ -98,6 +97,28 @@ module DatabaseCleaner
       self.orm == other.orm && self.db == other.db
     end
 
+    def autodetect_orm
+      if defined? ::ActiveRecord
+        :active_record
+      elsif defined? ::DataMapper
+        :data_mapper
+      elsif defined? ::MongoMapper
+        :mongo_mapper
+      elsif defined? ::Mongoid
+        :mongoid
+      elsif defined? ::CouchPotato
+        :couch_potato
+      elsif defined? ::Sequel
+        :sequel
+      elsif defined? ::Moped
+        :moped
+      elsif defined? ::Ohm
+        :ohm
+      elsif defined? ::Redis
+        :redis
+      end
+    end
+
     private
 
     def orm_module
@@ -116,30 +137,10 @@ module DatabaseCleaner
     end
 
     def autodetect
-      @orm ||= begin
-        @autodetected = true
-        if defined? ::ActiveRecord
-          :active_record
-        elsif defined? ::DataMapper
-          :data_mapper
-        elsif defined? ::MongoMapper
-          :mongo_mapper
-        elsif defined? ::Mongoid
-          :mongoid
-        elsif defined? ::CouchPotato
-          :couch_potato
-        elsif defined? ::Sequel
-          :sequel
-        elsif defined? ::Moped
-          :moped
-        elsif defined? ::Ohm
-          :ohm
-        elsif defined? ::Redis
-          :redis
-        else
-          raise NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, Moped, or CouchPotato, Redis or Ohm loaded?"
-        end
-      end
+      @autodetected = true
+
+      @orm ||= autodetect_orm ||
+               raise(NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, Moped, or CouchPotato, Redis or Ohm loaded?")
     end
 
     def set_default_orm_strategy
