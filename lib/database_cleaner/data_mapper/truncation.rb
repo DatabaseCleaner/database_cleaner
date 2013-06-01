@@ -65,6 +65,12 @@ module DataMapper
         yield
       end
 
+      private
+
+      # Returns a boolean indicating if the SQLite database is using the sqlite_sequence table.
+      def uses_sequence
+        select("SELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';").include?("sqlite_sequence")
+      end
     end
 
     class SqliteAdapter < DataObjectsAdapter
@@ -94,6 +100,12 @@ module DataMapper
         yield
       end
 
+      private
+
+      # Returns a boolean indicating if the SQLite database is using the sqlite_sequence table.
+      def uses_sequence
+        select("SELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';").include?("sqlite_sequence")
+      end
     end
 
     # FIXME
