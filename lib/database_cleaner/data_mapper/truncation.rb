@@ -52,10 +52,15 @@ module DataMapper
       end
 
       def truncate_table(table_name)
-        execute("DELETE FROM #{quote_name(table_name)};")
         if uses_sequence
+          if select_value("SELECT EXISTS (SELECT seq FROM sqlite_sequence WHERE name = '#{table_name}' LIMIT 1)").to_i == 0
+            if row_count(table_name) == 0
+              return
+            end
+          end
           execute("DELETE FROM sqlite_sequence where name = '#{table_name}';")
         end
+        execute("DELETE FROM #{quote_name(table_name)};")
       end
 
       # this is a no-op copied from activerecord
@@ -65,6 +70,11 @@ module DataMapper
         yield
       end
 
+      private
+
+      def row_count(table)
+        select_value("SELECT EXISTS (SELECT 1 FROM #{quote_name(table)} LIMIT 1)").to_i
+      end
     end
 
     class SqliteAdapter < DataObjectsAdapter
@@ -81,10 +91,15 @@ module DataMapper
       end
 
       def truncate_table(table_name)
-        execute("DELETE FROM #{quote_name(table_name)};")
         if uses_sequence
+          if select_value("SELECT EXISTS (SELECT seq FROM sqlite_sequence WHERE name = '#{table_name}' LIMIT 1)").to_i == 0
+            if row_count(table_name) == 0
+              return
+            end
+          end
           execute("DELETE FROM sqlite_sequence where name = '#{table_name}';")
         end
+        execute("DELETE FROM #{quote_name(table_name)};")
       end
 
       # this is a no-op copied from activerecord
@@ -94,6 +109,11 @@ module DataMapper
         yield
       end
 
+      private
+
+      def row_count(table)
+        select_value("SELECT EXISTS (SELECT 1 FROM #{quote_name(table)} LIMIT 1)").to_i
+      end
     end
 
     # FIXME
