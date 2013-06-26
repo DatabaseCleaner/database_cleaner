@@ -42,7 +42,7 @@ module DatabaseCleaner
         return collections_cache[database.name] if collections_cache.has_key?(database.name)
         db_collections = database.collections.select { |c| c.name !~ /^system\./ }
 
-        missing_collections = db_collections.map(&:name) - mongoid_collection_names[database.name]
+        missing_collections = mongoid_collection_names[database.name] - db_collections.map(&:name)
 
         if missing_collections.empty?
           collections_cache[database.name] = db_collections
