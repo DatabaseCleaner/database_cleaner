@@ -114,7 +114,8 @@ module DatabaseCleaner
 
         context 'when :cache_tables is set to true' do
           it 'caches the list of tables to be truncated' do
-            connection.should_receive(:database_cleaner_table_cache)
+            connection.should_receive(:database_cleaner_table_cache).and_return([])
+            connection.should_not_receive(:tables)
 
             connection.stub!(:truncate_tables)
             Truncation.new({ :cache_tables => true }).clean
@@ -124,6 +125,7 @@ module DatabaseCleaner
         context 'when :cache_tables is set to false' do
           it 'does not cache the list of tables to be truncated' do
             connection.should_not_receive(:database_cleaner_table_cache)
+            connection.should_receive(:tables).and_return([])
 
             connection.stub!(:truncate_tables)
             Truncation.new({ :cache_tables => false }).clean
