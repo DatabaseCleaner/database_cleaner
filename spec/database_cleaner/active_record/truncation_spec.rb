@@ -111,6 +111,24 @@ module DatabaseCleaner
             subject.clean
           end
         end
+
+        context 'when :cache_tables is set to true' do
+          it 'caches the list of tables to be truncated' do
+            connection.should_receive(:database_cleaner_table_cache)
+
+            connection.stub!(:truncate_tables)
+            Truncation.new({ :cache_tables => true }).clean
+          end
+        end
+
+        context 'when :cache_tables is set to false' do
+          it 'does not cache the list of tables to be truncated' do
+            connection.should_not_receive(:database_cleaner_table_cache)
+
+            connection.stub!(:truncate_tables)
+            Truncation.new({ :cache_tables => false }).clean
+          end
+        end
       end
 
       describe '#pre_count?' do
