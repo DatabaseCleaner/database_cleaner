@@ -1,3 +1,16 @@
+== 1.1.0 2013-08-01
+
+=== New Features/Changes
+
+  * schema_migrations table name is now retrieved from ActiveRecord (Kyle Stevens)
+  * Autoloading logic is now exposed, see PR #212 for details (Jeff Felchner)
+
+=== Bug Fixes
+
+  * Deletion strategy works again on MySQL, had to roll back multiple statements patch.
+  * Fix MySqlAdapter superclass bug via class_eval loading of superclasses (Tom Meier)
+  * Sequel strategy fix dealing with symbol/string mismatch on table names. (Fred Wu)
+
 == 1.0.1 2013-05-13
 
   * Patch release to fix broken gemspec file.  Sorry folks!
