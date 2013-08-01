@@ -1,3 +1,9 @@
+== 1.1.1 2013-08-01
+
+=== Bug Fixes
+
+  * Fixes typo in Postgres superclass (POSTGRE_ADAPTER_PARENT > POSTGRES_ADAPTER_PARENT) (Joel Nimety)
+
 == 1.1.0 2013-08-01
 
 === New Features/Changes
