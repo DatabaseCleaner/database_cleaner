@@ -13,7 +13,7 @@ module DatabaseCleaner
       @connections = nil
     end
     # hackey, hack.. connections needs to stick around until I can properly deprecate the API
-    def connections_stub!(array)
+    def connections_stub(array)
       @cleaners = ArrayHelper.zipmap((1..array.size).to_a, array)
       @connections = array
     end
@@ -132,7 +132,7 @@ describe ::DatabaseCleaner do
 
     it "should give me a default (autodetection) databasecleaner by default" do
       cleaner = mock("cleaner").as_null_object
-      ::DatabaseCleaner::Base.stub!(:new).and_return(cleaner)
+      ::DatabaseCleaner::Base.stub(:new).and_return(cleaner)
 
       ::DatabaseCleaner.connections.should == [cleaner]
     end
@@ -179,7 +179,7 @@ describe ::DatabaseCleaner do
       let(:data_mapper)   { mock("data_mock")   }
 
       before(:each) do
-        ::DatabaseCleaner.stub!(:connections).and_return([active_record,data_mapper])
+        ::DatabaseCleaner.stub(:connections).and_return([active_record,data_mapper])
       end
 
       it "should proxy orm to all connections" do
@@ -221,7 +221,7 @@ describe ::DatabaseCleaner do
         active_record_2 = mock("active_mock_on_db_two").as_null_object
         data_mapper_1   = mock("data_mock_on_db_one").as_null_object
 
-        ::DatabaseCleaner.connections_stub! [active_record_1,active_record_2,data_mapper_1]
+        ::DatabaseCleaner.connections_stub [active_record_1,active_record_2,data_mapper_1]
 
         active_record_1.should_receive(:orm=).with(:data_mapper)
         active_record_2.should_receive(:orm=).with(:data_mapper)
@@ -239,7 +239,7 @@ describe ::DatabaseCleaner do
         active_record_2 = mock("active_mock_strategy_two").as_null_object
         strategy = mock("strategy")
 
-        ::DatabaseCleaner.connections_stub! [active_record_1,active_record_2]
+        ::DatabaseCleaner.connections_stub [active_record_1,active_record_2]
 
         active_record_1.should_receive(:strategy=).with(strategy)
         active_record_2.should_receive(:strategy=).with(strategy)
@@ -258,7 +258,7 @@ describe ::DatabaseCleaner do
       orm = mock("orm")
       connection = mock("a datamapper connection", :orm => orm )
 
-      ::DatabaseCleaner.connections_stub!  [connection,connection,connection]
+      ::DatabaseCleaner.connections_stub  [connection,connection,connection]
 
       ::DatabaseCleaner.remove_duplicates
       ::DatabaseCleaner.connections.size.should == 1

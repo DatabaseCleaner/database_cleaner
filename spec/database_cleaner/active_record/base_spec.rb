@@ -145,7 +145,7 @@ my_db:
 
         context "when connection_hash is set" do
           let(:hash) { mock("hash") }
-          before { ::ActiveRecord::Base.stub!(:respond_to?).and_return(false) }
+          before { ::ActiveRecord::Base.stub(:respond_to?).and_return(false) }
           before { subject.stub(:connection_hash).and_return(hash) }
 
           it "establish a connection using ActiveRecord::Base" do

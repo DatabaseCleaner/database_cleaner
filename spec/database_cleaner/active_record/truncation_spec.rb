@@ -26,23 +26,23 @@ module DatabaseCleaner
       let(:connection) { mock('connection') }
 
       before(:each) do
-        connection.stub!(:disable_referential_integrity).and_yield
-        connection.stub!(:database_cleaner_view_cache).and_return([])
-        ::ActiveRecord::Base.stub!(:connection).and_return(connection)
+        connection.stub(:disable_referential_integrity).and_yield
+        connection.stub(:database_cleaner_view_cache).and_return([])
+        ::ActiveRecord::Base.stub(:connection).and_return(connection)
       end
 
       describe '#clean' do
         it "should truncate all tables except for schema_migrations" do
-          connection.stub!(:database_cleaner_table_cache).and_return(%w[schema_migrations widgets dogs])
+          connection.stub(:database_cleaner_table_cache).and_return(%w[schema_migrations widgets dogs])
 
           connection.should_receive(:truncate_tables).with(['widgets', 'dogs'])
           Truncation.new.clean
         end
 
         it "should use ActiveRecord's schema_migrations_table_name" do
-          connection.stub!(:database_cleaner_table_cache).and_return(%w[pre_schema_migrations_suf widgets dogs])
-          ::ActiveRecord::Base.stub!(:table_name_prefix).and_return('pre_')
-          ::ActiveRecord::Base.stub!(:table_name_suffix).and_return('_suf')
+          connection.stub(:database_cleaner_table_cache).and_return(%w[pre_schema_migrations_suf widgets dogs])
+          ::ActiveRecord::Base.stub(:table_name_prefix).and_return('pre_')
+          ::ActiveRecord::Base.stub(:table_name_suffix).and_return('_suf')
 
           connection.should_receive(:truncate_tables).with(['widgets', 'dogs'])
 
@@ -50,7 +50,7 @@ module DatabaseCleaner
         end
 
         it "should only truncate the tables specified in the :only option when provided" do
-          connection.stub!(:database_cleaner_table_cache).and_return(%w[schema_migrations widgets dogs])
+          connection.stub(:database_cleaner_table_cache).and_return(%w[schema_migrations widgets dogs])
 
           connection.should_receive(:truncate_tables).with(['widgets'])
 
@@ -58,7 +58,7 @@ module DatabaseCleaner
         end
 
         it "should not truncate the tables specified in the :except option" do
-          connection.stub!(:database_cleaner_table_cache).and_return(%w[schema_migrations widgets dogs])
+          connection.stub(:database_cleaner_table_cache).and_return(%w[schema_migrations widgets dogs])
 
           connection.should_receive(:truncate_tables).with(['dogs'])
 
@@ -76,8 +76,8 @@ module DatabaseCleaner
         end
 
         it "should not truncate views" do
-          connection.stub!(:database_cleaner_table_cache).and_return(%w[widgets dogs])
-          connection.stub!(:database_cleaner_view_cache).and_return(["widgets"])
+          connection.stub(:database_cleaner_table_cache).and_return(%w[widgets dogs])
+          connection.stub(:database_cleaner_view_cache).and_return(["widgets"])
 
           connection.should_receive(:truncate_tables).with(['dogs'])
 
@@ -88,8 +88,8 @@ module DatabaseCleaner
           subject { Truncation.new }
 
           it "should rely on #pre_count_truncate_tables if #pre_count? returns true" do
-            connection.stub!(:database_cleaner_table_cache).and_return(%w[widgets dogs])
-            connection.stub!(:database_cleaner_view_cache).and_return(["widgets"])
+            connection.stub(:database_cleaner_table_cache).and_return(%w[widgets dogs])
+            connection.stub(:database_cleaner_view_cache).and_return(["widgets"])
 
             subject.instance_variable_set(:"@pre_count", true)
 
@@ -100,8 +100,8 @@ module DatabaseCleaner
           end
 
           it "should not rely on #pre_count_truncate_tables if #pre_count? return false" do
-            connection.stub!(:database_cleaner_table_cache).and_return(%w[widgets dogs])
-            connection.stub!(:database_cleaner_view_cache).and_return(["widgets"])
+            connection.stub(:database_cleaner_table_cache).and_return(%w[widgets dogs])
+            connection.stub(:database_cleaner_view_cache).and_return(["widgets"])
 
             subject.instance_variable_set(:"@pre_count", false)
 
@@ -115,9 +115,9 @@ module DatabaseCleaner
 
       describe '#pre_count?' do
         before(:each) do
-          connection.stub!(:disable_referential_integrity).and_yield
-          connection.stub!(:database_cleaner_view_cache).and_return([])
-          ::ActiveRecord::Base.stub!(:connection).and_return(connection)
+          connection.stub(:disable_referential_integrity).and_yield
+          connection.stub(:database_cleaner_view_cache).and_return([])
+          ::ActiveRecord::Base.stub(:connection).and_return(connection)
         end
 
         subject { Truncation.new }
@@ -136,9 +136,9 @@ module DatabaseCleaner
 
       describe '#reset_ids?' do
         before(:each) do
-          connection.stub!(:disable_referential_integrity).and_yield
-          connection.stub!(:database_cleaner_view_cache).and_return([])
-          ::ActiveRecord::Base.stub!(:connection).and_return(connection)
+          connection.stub(:disable_referential_integrity).and_yield
+          connection.stub(:database_cleaner_view_cache).and_return([])
+          ::ActiveRecord::Base.stub(:connection).and_return(connection)
         end
 
         subject { Truncation.new }

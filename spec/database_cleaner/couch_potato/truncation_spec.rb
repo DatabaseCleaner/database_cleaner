@@ -9,7 +9,7 @@ module DatabaseCleaner
       let(:database) { mock('database') }
 
       before(:each) do
-        ::CouchPotato.stub!(:couchrest_database).and_return(database)
+        ::CouchPotato.stub(:couchrest_database).and_return(database)
       end
 
       it "should re-create the database" do
