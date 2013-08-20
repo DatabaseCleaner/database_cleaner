@@ -166,8 +166,8 @@ module DatabaseCleaner
 
     describe "orm_module" do
       it "should ask ::DatabaseCleaner what the module is for its orm" do
-        orm = mock("orm")
-        mockule = mock("module")
+        orm = double("orm")
+        mockule = double("module")
 
         cleaner = ::DatabaseCleaner::Base.new
         cleaner.should_receive(:orm).and_return(orm)
@@ -180,7 +180,7 @@ module DatabaseCleaner
 
     describe "comparison" do
       it "should be equal if orm, connection and strategy are the same" do
-        strategy = mock("strategy")
+        strategy = double("strategy")
 
         one = DatabaseCleaner::Base.new(:active_record,:connection => :default)
         one.strategy = strategy
@@ -247,7 +247,7 @@ module DatabaseCleaner
     end
 
     describe "strategy_db=" do
-      let(:strategy) { mock("strategy") }
+      let(:strategy) { double("strategy") }
 
       before(:each) do
         subject.strategy = strategy
@@ -272,21 +272,21 @@ module DatabaseCleaner
         before(:each) { strategy.stub(:respond_to?).with(:db=).and_return false }
 
         it "should check to see if db is :default" do
-          db = mock("default")
+          db = double("default")
           db.should_receive(:==).with(:default).and_return(true)
 
           subject.strategy_db = db
         end
 
         it "should raise an argument error when db isn't default" do
-          db = mock("a db")
+          db = double("a db")
           expect{ subject.strategy_db = db }.to raise_error ArgumentError
         end
       end
     end
 
     describe "clean_with" do
-      let (:strategy) { mock("strategy",:clean => true) }
+      let (:strategy) { double("strategy",:clean => true) }
 
       before(:each) { subject.stub(:create_strategy).with(anything).and_return(strategy) }
 
@@ -306,7 +306,7 @@ module DatabaseCleaner
     end
 
     describe "clean_with!" do
-      let (:strategy) { mock("strategy",:clean => true) }
+      let (:strategy) { double("strategy",:clean => true) }
 
       before(:each) { subject.stub(:create_strategy).with(anything).and_return(strategy) }
 
@@ -326,7 +326,7 @@ module DatabaseCleaner
     end
 
     describe "create_strategy" do
-      let(:strategy_class) { mock("strategy_class",:new => mock("instance")) }
+      let(:strategy_class) { double("strategy_class",:new => double("instance")) }
 
       before :each do
         subject.stub(:orm_strategy).and_return(strategy_class)
@@ -347,7 +347,7 @@ module DatabaseCleaner
     end
 
     describe "strategy=" do
-      let(:mock_strategy) { mock("strategy") }
+      let(:mock_strategy) { double("strategy") }
 
       it "should proxy symbolised strategies to create_strategy" do
         subject.should_receive(:create_strategy).with(:symbol)
@@ -364,7 +364,7 @@ module DatabaseCleaner
       end
 
       it "should raise argument error when params given with strategy Object" do
-        expect{ subject.strategy = mock("object"), {:param => "one"} }.to raise_error ArgumentError
+        expect{ subject.strategy = double("object"), {:param => "one"} }.to raise_error ArgumentError
       end
 
       it "should attempt to set strategy db" do
@@ -387,7 +387,7 @@ module DatabaseCleaner
       end
 
       it "returns the set strategy" do
-        strategum = mock("strategy")
+        strategum = double("strategy")
         subject.strategy = strategum
         subject.strategy.should == strategum
       end
@@ -402,7 +402,7 @@ module DatabaseCleaner
     end
 
     describe "orm" do
-      let(:mock_orm) { mock("orm") }
+      let(:mock_orm) { double("orm") }
 
       it "should return orm if orm set" do
         subject.instance_variable_set "@orm", mock_orm
@@ -425,7 +425,7 @@ module DatabaseCleaner
     end
 
     describe "proxy methods" do
-      let (:strategy) { mock("strategy") }
+      let (:strategy) { double("strategy") }
 
       before(:each) do
         subject.stub(:strategy).and_return(strategy)
@@ -466,7 +466,7 @@ module DatabaseCleaner
     end
 
     describe "orm_strategy" do
-      let (:strategy_class) { mock("strategy_class") }
+      let (:strategy_class) { double("strategy_class") }
 
       before(:each) do
         subject.stub(:orm_module).and_return(strategy_class)
@@ -502,7 +502,7 @@ module DatabaseCleaner
       end
 
       it "should return the constant of the Strategy class requested" do
-        strategy_strategy_class = mock("strategy strategy_class")
+        strategy_strategy_class = double("strategy strategy_class")
 
         subject.stub(:require).with(anything).and_return(true)
 

@@ -23,7 +23,7 @@ module DatabaseCleaner
   module ActiveRecord
 
     describe Truncation do
-      let(:connection) { mock('connection') }
+      let(:connection) { double('connection') }
 
       before(:each) do
         connection.stub(:disable_referential_integrity).and_yield

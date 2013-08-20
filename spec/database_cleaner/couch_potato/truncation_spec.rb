@@ -6,7 +6,7 @@ module DatabaseCleaner
   module CouchPotato
 
     describe Truncation do
-      let(:database) { mock('database') }
+      let(:database) { double('database') }
 
       before(:each) do
         ::CouchPotato.stub(:couchrest_database).and_return(database)

@@ -131,7 +131,7 @@ describe ::DatabaseCleaner do
     subject { ::DatabaseCleaner }
 
     it "should give me a default (autodetection) databasecleaner by default" do
-      cleaner = mock("cleaner").as_null_object
+      cleaner = double("cleaner").as_null_object
       ::DatabaseCleaner::Base.stub(:new).and_return(cleaner)
 
       ::DatabaseCleaner.connections.should == [cleaner]
@@ -142,13 +142,13 @@ describe ::DatabaseCleaner do
     let(:connection) { ::DatabaseCleaner.connections.first }
 
     it "should proxy strategy=" do
-      stratagum = mock("stratagum")
+      stratagum = double("stratagum")
       connection.should_receive(:strategy=).with(stratagum)
       ::DatabaseCleaner.strategy = stratagum
     end
 
     it "should proxy orm=" do
-      orm = mock("orm")
+      orm = double("orm")
       connection.should_receive(:orm=).with(orm)
       ::DatabaseCleaner.orm = orm
     end
@@ -164,7 +164,7 @@ describe ::DatabaseCleaner do
     end
 
     it "should proxy clean_with" do
-      stratagem = mock("stratgem")
+      stratagem = double("stratgem")
       connection.should_receive(:clean_with).with(stratagem, {})
       ::DatabaseCleaner.clean_with stratagem, {}
     end
@@ -175,8 +175,8 @@ describe ::DatabaseCleaner do
     #these are relativly simple, all we need to do is make sure all connections are cleaned/started/cleaned_with appropriatly.
     context "simple proxy methods" do
 
-      let(:active_record) { mock("active_mock") }
-      let(:data_mapper)   { mock("data_mock")   }
+      let(:active_record) { double("active_mock") }
+      let(:data_mapper)   { double("data_mock")   }
 
       before(:each) do
         ::DatabaseCleaner.stub(:connections).and_return([active_record,data_mapper])
@@ -186,7 +186,7 @@ describe ::DatabaseCleaner do
         active_record.should_receive(:orm=)
         data_mapper.should_receive(:orm=)
 
-        ::DatabaseCleaner.orm = mock("orm")
+        ::DatabaseCleaner.orm = double("orm")
       end
 
       it "should proxy start to all connections" do
@@ -204,7 +204,7 @@ describe ::DatabaseCleaner do
       end
 
       it "should proxy clean_with to all connections" do
-        stratagem = mock("stratgem")
+        stratagem = double("stratgem")
         active_record.should_receive(:clean_with).with(stratagem)
         data_mapper.should_receive(:clean_with).with(stratagem)
 
@@ -217,9 +217,9 @@ describe ::DatabaseCleaner do
     context "multiple orm proxy methods" do
 
       pending "should proxy orm to all connections and remove duplicate connections" do
-        active_record_1 = mock("active_mock_on_db_one").as_null_object
-        active_record_2 = mock("active_mock_on_db_two").as_null_object
-        data_mapper_1   = mock("data_mock_on_db_one").as_null_object
+        active_record_1 = double("active_mock_on_db_one").as_null_object
+        active_record_2 = double("active_mock_on_db_two").as_null_object
+        data_mapper_1   = double("data_mock_on_db_one").as_null_object
 
         ::DatabaseCleaner.connections_stub [active_record_1,active_record_2,data_mapper_1]
 
@@ -235,9 +235,9 @@ describe ::DatabaseCleaner do
       end
 
       it "should proxy strategy to all connections and remove duplicate connections" do
-        active_record_1 = mock("active_mock_strategy_one").as_null_object
-        active_record_2 = mock("active_mock_strategy_two").as_null_object
-        strategy = mock("strategy")
+        active_record_1 = double("active_mock_strategy_one").as_null_object
+        active_record_2 = double("active_mock_strategy_two").as_null_object
+        strategy = double("strategy")
 
         ::DatabaseCleaner.connections_stub [active_record_1,active_record_2]
 
@@ -255,8 +255,8 @@ describe ::DatabaseCleaner do
 
   describe "remove_duplicates" do
     it "should remove duplicates if they are identical" do
-      orm = mock("orm")
-      connection = mock("a datamapper connection", :orm => orm )
+      orm = double("orm")
+      connection = double("a datamapper connection", :orm => orm )
 
       ::DatabaseCleaner.connections_stub  [connection,connection,connection]
 
@@ -280,32 +280,32 @@ describe ::DatabaseCleaner do
     subject { ::DatabaseCleaner }
 
     it "should return DatabaseCleaner::ActiveRecord for :active_record" do
-      ::DatabaseCleaner::ActiveRecord = mock("ar module") unless defined? ::DatabaseCleaner::ActiveRecord
+      ::DatabaseCleaner::ActiveRecord = double("ar module") unless defined? ::DatabaseCleaner::ActiveRecord
       subject.orm_module(:active_record).should == DatabaseCleaner::ActiveRecord
     end
 
     it "should return DatabaseCleaner::DataMapper for :data_mapper" do
-      ::DatabaseCleaner::DataMapper = mock("dm module") unless defined? ::DatabaseCleaner::DataMapper
+      ::DatabaseCleaner::DataMapper = double("dm module") unless defined? ::DatabaseCleaner::DataMapper
       subject.orm_module(:data_mapper).should == DatabaseCleaner::DataMapper
     end
 
     it "should return DatabaseCleaner::MongoMapper for :mongo_mapper" do
-      ::DatabaseCleaner::MongoMapper = mock("mm module") unless defined? ::DatabaseCleaner::MongoMapper
+      ::DatabaseCleaner::MongoMapper = double("mm module") unless defined? ::DatabaseCleaner::MongoMapper
       subject.orm_module(:mongo_mapper).should == DatabaseCleaner::MongoMapper
     end
 
     it "should return DatabaseCleaner::Mongoid for :mongoid" do
-      ::DatabaseCleaner::Mongoid = mock("mongoid module") unless defined? ::DatabaseCleaner::Mongoid
+      ::DatabaseCleaner::Mongoid = double("mongoid module") unless defined? ::DatabaseCleaner::Mongoid
       subject.orm_module(:mongoid).should == DatabaseCleaner::Mongoid
     end
 
     it "should return DatabaseCleaner::Mongo for :mongo" do
-      ::DatabaseCleaner::Mongo = mock("mongo module") unless defined? ::DatabaseCleaner::Mongo
+      ::DatabaseCleaner::Mongo = double("mongo module") unless defined? ::DatabaseCleaner::Mongo
       subject.orm_module(:mongo).should == DatabaseCleaner::Mongo
     end
 
     it "should return DatabaseCleaner::CouchPotato for :couch_potato" do
-      ::DatabaseCleaner::CouchPotato = mock("cp module") unless defined? ::DatabaseCleaner::CouchPotato
+      ::DatabaseCleaner::CouchPotato = double("cp module") unless defined? ::DatabaseCleaner::CouchPotato
       subject.orm_module(:couch_potato).should == DatabaseCleaner::CouchPotato
     end
 
