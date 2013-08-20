@@ -57,40 +57,40 @@ module ::DatabaseCleaner
 
         context "" do
           subject { TruncationExample.new( { :only => ["something"] } ) }
-          its(:only)   { should == ["something"] }
-          its(:except) { should == [] }
+          its(:only)   { should eq ["something"] }
+          its(:except) { should eq [] }
         end
 
         context "" do
           subject { TruncationExample.new( { :except => ["something"] } ) }
-          its(:only)   { should == nil }
+          its(:only)   { should eq nil }
           its(:except) { should include("something") }
         end
 
         context "" do
           subject { TruncationExample.new( { :reset_ids => ["something"] } ) }
-          its(:reset_ids?) { should == true }
+          its(:reset_ids?) { should eq true }
         end
 
         context "" do
           subject { TruncationExample.new( { :reset_ids => nil } ) }
-          its(:reset_ids?) { should == false }
+          its(:reset_ids?) { should eq false }
         end
 
         context "" do
           subject { TruncationExample.new( { :pre_count => ["something"] } ) }
-          its(:pre_count?) { should == true }
+          its(:pre_count?) { should eq true }
         end
 
         context "" do
           subject { TruncationExample.new( { :pre_count => nil } ) }
-          its(:pre_count?) { should == false }
+          its(:pre_count?) { should eq false }
         end
 
         context "" do
           subject { MigrationExample.new }
-          its(:only)   { should == nil }
-          its(:except) { should == %w[migration_storage_name] }
+          its(:only)   { should eq nil }
+          its(:except) { should eq %w[migration_storage_name] }
         end
 
         context "" do

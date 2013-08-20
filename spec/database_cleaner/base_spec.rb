@@ -77,7 +77,7 @@ module DatabaseCleaner
          Object.const_set('Ohm',         'Ohm mock')
          Object.const_set('Redis',       'Redis mock')
 
-         cleaner.orm.should == :active_record
+         cleaner.orm.should eq :active_record
          cleaner.should be_auto_detected
        end
 
@@ -91,7 +91,7 @@ module DatabaseCleaner
          Object.const_set('Ohm',         'Ohm mock')
          Object.const_set('Redis',       'Redis mock')
 
-         cleaner.orm.should == :data_mapper
+         cleaner.orm.should eq :data_mapper
          cleaner.should be_auto_detected
        end
 
@@ -104,7 +104,7 @@ module DatabaseCleaner
          Object.const_set('Ohm',         'Ohm mock')
          Object.const_set('Redis',       'Redis mock')
 
-         cleaner.orm.should == :mongo_mapper
+         cleaner.orm.should eq :mongo_mapper
          cleaner.should be_auto_detected
        end
 
@@ -116,7 +116,7 @@ module DatabaseCleaner
          Object.const_set('Ohm',         'Ohm mock')
          Object.const_set('Redis',       'Redis mock')
 
-         cleaner.orm.should == :mongoid
+         cleaner.orm.should eq :mongoid
          cleaner.should be_auto_detected
        end
 
@@ -127,7 +127,7 @@ module DatabaseCleaner
          Object.const_set('Ohm',         'Ohm mock')
          Object.const_set('Redis',       'Redis mock')
 
-         cleaner.orm.should == :couch_potato
+         cleaner.orm.should eq :couch_potato
          cleaner.should be_auto_detected
        end
 
@@ -137,7 +137,7 @@ module DatabaseCleaner
          Object.const_set('Ohm',    'Ohm mock')
          Object.const_set('Redis',  'Redis mock')
 
-         cleaner.orm.should == :sequel
+         cleaner.orm.should eq :sequel
          cleaner.should be_auto_detected
        end
 
@@ -145,21 +145,21 @@ module DatabaseCleaner
          Object.const_set('Ohm', 'Ohm mock')
          Object.const_set('Redis',       'Redis mock')
 
-         cleaner.orm.should == :ohm
+         cleaner.orm.should eq :ohm
          cleaner.should be_auto_detected
        end
 
        it 'detects Redis last' do
          Object.const_set('Redis',       'Redis mock')
 
-         cleaner.orm.should == :redis
+         cleaner.orm.should eq :redis
          cleaner.should be_auto_detected
        end
 
        it 'detects Moped seventh' do
          Object.const_set('Moped', 'Moped mock')
 
-         cleaner.orm.should == :moped
+         cleaner.orm.should eq :moped
          cleaner.should be_auto_detected
        end
     end
@@ -174,7 +174,7 @@ module DatabaseCleaner
 
         ::DatabaseCleaner.should_receive(:orm_module).with(orm).and_return(mockule)
 
-        cleaner.send(:orm_module).should == mockule
+        cleaner.send(:orm_module).should eq mockule
       end
     end
 
@@ -188,8 +188,8 @@ module DatabaseCleaner
         two = DatabaseCleaner::Base.new(:active_record,:connection => :default)
         two.strategy = strategy
 
-        one.should == two
-        two.should == one
+        one.should eq two
+        two.should eq one
       end
     end
 
@@ -198,19 +198,19 @@ module DatabaseCleaner
         subject { ::DatabaseCleaner::Base.new(:active_record,:connection => :my_db) }
 
         it "should store db from :connection in params hash" do
-          subject.db.should == :my_db
+          subject.db.should eq :my_db
         end
       end
 
       describe "orm" do
         it "should store orm" do
           cleaner = ::DatabaseCleaner::Base.new :a_orm
-          cleaner.orm.should == :a_orm
+          cleaner.orm.should eq :a_orm
         end
 
         it "converts string to symbols" do
           cleaner = ::DatabaseCleaner::Base.new "mongoid"
-          cleaner.orm.should == :mongoid
+          cleaner.orm.should eq :mongoid
         end
 
         it "is autodetected if orm is not provided" do
@@ -231,13 +231,13 @@ module DatabaseCleaner
 
     describe "db" do
       it "should default to :default" do
-        subject.db.should == :default
+        subject.db.should eq :default
       end
 
       it "should return any stored db value" do
         subject.stub(:strategy_db=)
         subject.db = :test_db
-        subject.db.should == :test_db
+        subject.db.should eq :test_db
       end
 
       it "should pass db to any specified strategy" do
@@ -301,7 +301,7 @@ module DatabaseCleaner
       end
 
       it "should return the strategy" do
-        subject.clean_with( :strategy ).should == strategy
+        subject.clean_with( :strategy ).should eq strategy
       end
     end
 
@@ -321,7 +321,7 @@ module DatabaseCleaner
       end
 
       it "should return the strategy" do
-        subject.clean_with!( :strategy ).should == strategy
+        subject.clean_with!( :strategy ).should eq strategy
       end
     end
 
@@ -342,7 +342,7 @@ module DatabaseCleaner
         subject.create_strategy :strategy, {:params => {:lorum => "ipsum"}}
       end
       it "should return the resulting strategy" do
-        subject.create_strategy( :strategy ).should == strategy_class.new
+        subject.create_strategy( :strategy ).should eq strategy_class.new
       end
     end
 
@@ -375,7 +375,7 @@ module DatabaseCleaner
 
       it "should return the stored strategy" do
         result = subject.strategy = mock_strategy
-        result.should == mock_strategy
+        result.should eq mock_strategy
       end
     end
 
@@ -383,21 +383,21 @@ module DatabaseCleaner
       subject { ::DatabaseCleaner::Base.new :a_orm }
 
       it "returns a null strategy when strategy is not set and undetectable" do
-        subject.strategy.should == DatabaseCleaner::NullStrategy
+        subject.strategy.should eq DatabaseCleaner::NullStrategy
       end
 
       it "returns the set strategy" do
         strategum = double("strategy")
         subject.strategy = strategum
-        subject.strategy.should == strategum
+        subject.strategy.should eq strategum
       end
     end
 
     describe "orm=" do
       it "should stored the desired orm" do
-        subject.orm.should_not == :desired_orm
+        subject.orm.should_not eq :desired_orm
         subject.orm = :desired_orm
-        subject.orm.should == :desired_orm
+        subject.orm.should eq :desired_orm
       end
     end
 
@@ -406,7 +406,7 @@ module DatabaseCleaner
 
       it "should return orm if orm set" do
         subject.instance_variable_set "@orm", mock_orm
-        subject.orm.should == mock_orm
+        subject.orm.should eq mock_orm
       end
 
       context "orm isn't set" do
@@ -419,7 +419,7 @@ module DatabaseCleaner
 
         it "should return the result of autodetect if orm isn't set" do
           subject.stub(:autodetect).and_return(mock_orm)
-          subject.orm.should == mock_orm
+          subject.orm.should eq mock_orm
         end
       end
     end
@@ -508,7 +508,7 @@ module DatabaseCleaner
 
         strategy_class.should_receive(:const_get).with("Cunningplan").and_return(strategy_strategy_class)
 
-        subject.send(:orm_strategy, :cunningplan).should == strategy_strategy_class
+        subject.send(:orm_strategy, :cunningplan).should eq strategy_strategy_class
       end
 
     end
