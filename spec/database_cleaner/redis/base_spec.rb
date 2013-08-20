@@ -21,11 +21,11 @@ module DatabaseCleaner
       it "should store my describe db" do
         url = 'redis://localhost:6379/2'
         subject.db = 'redis://localhost:6379/2'
-        subject.db.should == url
+        subject.db.should eq url
       end
 
       it "should default to :default" do
-        subject.db.should == :default
+        subject.db.should eq :default
       end
     end
   end

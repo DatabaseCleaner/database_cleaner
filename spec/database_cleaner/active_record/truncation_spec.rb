@@ -141,16 +141,16 @@ module DatabaseCleaner
         end
 
         subject { Truncation.new }
-        its(:pre_count?) { should == false }
+        its(:pre_count?) { should eq false }
 
         it 'should return true if @reset_id is set and non false or nil' do
           subject.instance_variable_set(:"@pre_count", true)
-          subject.send(:pre_count?).should == true
+          subject.send(:pre_count?).should eq true
         end
 
         it 'should return false if @reset_id is set to false' do
           subject.instance_variable_set(:"@pre_count", false)
-          subject.send(:pre_count?).should == false
+          subject.send(:pre_count?).should eq false
         end
       end
 
@@ -162,16 +162,16 @@ module DatabaseCleaner
         end
 
         subject { Truncation.new }
-        its(:reset_ids?) { should == true }
+        its(:reset_ids?) { should eq true }
 
         it 'should return true if @reset_id is set and non false or nil' do
           subject.instance_variable_set(:"@reset_ids", 'Something')
-          subject.send(:reset_ids?).should == true
+          subject.send(:reset_ids?).should eq true
         end
 
         it 'should return false if @reset_id is set to false' do
           subject.instance_variable_set(:"@reset_ids", false)
-          subject.send(:reset_ids?).should == false
+          subject.send(:reset_ids?).should eq false
         end
       end
     end

@@ -31,70 +31,70 @@ describe ::DatabaseCleaner do
     it "should accept :active_record" do
       cleaner = ::DatabaseCleaner[:active_record]
       cleaner.should be_a(::DatabaseCleaner::Base)
-      cleaner.orm.should == :active_record
-      ::DatabaseCleaner.connections.size.should == 1
+      cleaner.orm.should eq :active_record
+      ::DatabaseCleaner.connections.size.should eq 1
     end
 
     it "should accept :data_mapper" do
       cleaner = ::DatabaseCleaner[:data_mapper]
       cleaner.should be_a(::DatabaseCleaner::Base)
-      cleaner.orm.should == :data_mapper
-      ::DatabaseCleaner.connections.size.should == 1
+      cleaner.orm.should eq :data_mapper
+      ::DatabaseCleaner.connections.size.should eq 1
     end
 
     it "should accept :mongo_mapper" do
       cleaner = ::DatabaseCleaner[:mongo_mapper]
       cleaner.should be_a(::DatabaseCleaner::Base)
-      cleaner.orm.should == :mongo_mapper
-      ::DatabaseCleaner.connections.size.should == 1
+      cleaner.orm.should eq :mongo_mapper
+      ::DatabaseCleaner.connections.size.should eq 1
     end
 
     it "should accept :couch_potato" do
       cleaner = ::DatabaseCleaner[:couch_potato]
       cleaner.should be_a(::DatabaseCleaner::Base)
-      cleaner.orm.should == :couch_potato
-      ::DatabaseCleaner.connections.size.should == 1
+      cleaner.orm.should eq :couch_potato
+      ::DatabaseCleaner.connections.size.should eq 1
     end
 
     it "should accept :moped" do
       cleaner = ::DatabaseCleaner[:moped]
       cleaner.should be_a(::DatabaseCleaner::Base)
-      cleaner.orm.should == :moped
-      ::DatabaseCleaner.connections.size.should == 1
+      cleaner.orm.should eq :moped
+      ::DatabaseCleaner.connections.size.should eq 1
     end
 
     it 'accepts :ohm' do
       cleaner = ::DatabaseCleaner[:ohm]
       cleaner.should be_a(::DatabaseCleaner::Base)
-      cleaner.orm.should == :ohm
-      ::DatabaseCleaner.connections.size.should == 1
+      cleaner.orm.should eq :ohm
+      ::DatabaseCleaner.connections.size.should eq 1
     end
   end
 
   it "should accept multiple orm's" do
     ::DatabaseCleaner[:couch_potato]
     ::DatabaseCleaner[:data_mapper]
-    ::DatabaseCleaner.connections.size.should == 2
-    ::DatabaseCleaner.connections[0].orm.should == :couch_potato
-    ::DatabaseCleaner.connections[1].orm.should == :data_mapper
+    ::DatabaseCleaner.connections.size.should eq 2
+    ::DatabaseCleaner.connections[0].orm.should eq :couch_potato
+    ::DatabaseCleaner.connections[1].orm.should eq :data_mapper
   end
 
   context "connection/db specification" do
     it "should accept a connection parameter and store it" do
       cleaner = ::DatabaseCleaner[:active_record, {:connection => :first_connection}]
       cleaner.should be_a(::DatabaseCleaner::Base)
-      cleaner.orm.should == :active_record
-      cleaner.db.should == :first_connection
+      cleaner.orm.should eq :active_record
+      cleaner.db.should eq :first_connection
     end
 
     it "should accept multiple connections for a single orm" do
       ::DatabaseCleaner[:data_mapper,{:connection => :first_db}]
       ::DatabaseCleaner[:data_mapper,{:connection => :second_db}]
-      ::DatabaseCleaner.connections.size.should == 2
-      ::DatabaseCleaner.connections[0].orm.should == :data_mapper
-      ::DatabaseCleaner.connections[0].db.should  == :first_db
-      ::DatabaseCleaner.connections[1].orm.should == :data_mapper
-      ::DatabaseCleaner.connections[1].db.should  == :second_db
+      ::DatabaseCleaner.connections.size.should eq 2
+      ::DatabaseCleaner.connections[0].orm.should eq :data_mapper
+      ::DatabaseCleaner.connections[0].db.should  eq :first_db
+      ::DatabaseCleaner.connections[1].orm.should eq :data_mapper
+      ::DatabaseCleaner.connections[1].db.should  eq :second_db
     end
 
     it "should accept multiple connections and multiple orms" do
@@ -103,19 +103,19 @@ describe ::DatabaseCleaner do
       ::DatabaseCleaner[:active_record,{:connection => :first_db} ]
       ::DatabaseCleaner[:data_mapper,  {:connection => :second_db}]
 
-      ::DatabaseCleaner.connections.size.should == 4
+      ::DatabaseCleaner.connections.size.should eq 4
 
-      ::DatabaseCleaner.connections[0].orm.should == :data_mapper
-      ::DatabaseCleaner.connections[0].db.should  == :first_db
+      ::DatabaseCleaner.connections[0].orm.should eq :data_mapper
+      ::DatabaseCleaner.connections[0].db.should  eq :first_db
 
-      ::DatabaseCleaner.connections[1].orm.should == :active_record
-      ::DatabaseCleaner.connections[1].db.should  == :second_db
+      ::DatabaseCleaner.connections[1].orm.should eq :active_record
+      ::DatabaseCleaner.connections[1].db.should  eq :second_db
 
-      ::DatabaseCleaner.connections[2].orm.should == :active_record
-      ::DatabaseCleaner.connections[2].db.should  == :first_db
+      ::DatabaseCleaner.connections[2].orm.should eq :active_record
+      ::DatabaseCleaner.connections[2].db.should  eq :first_db
 
-      ::DatabaseCleaner.connections[3].orm.should == :data_mapper
-      ::DatabaseCleaner.connections[3].db.should  == :second_db
+      ::DatabaseCleaner.connections[3].orm.should eq :data_mapper
+      ::DatabaseCleaner.connections[3].db.should  eq :second_db
     end
   end
 
@@ -123,7 +123,7 @@ describe ::DatabaseCleaner do
     it "should retrieve a db rather than create a new one" do
       pending
       connection = ::DatabaseCleaner[:active_record].strategy = :truncation
-      ::DatabaseCleaner[:active_record].should == connection
+      ::DatabaseCleaner[:active_record].should eq connection
     end
   end
 
@@ -134,7 +134,7 @@ describe ::DatabaseCleaner do
       cleaner = double("cleaner").as_null_object
       ::DatabaseCleaner::Base.stub(:new).and_return(cleaner)
 
-      ::DatabaseCleaner.connections.should == [cleaner]
+      ::DatabaseCleaner.connections.should eq [cleaner]
     end
   end
 
@@ -229,9 +229,9 @@ describe ::DatabaseCleaner do
 
         active_record_1.should_receive(:==).with(data_mapper_1).and_return(true)
 
-        ::DatabaseCleaner.connections.size.should == 3
+        ::DatabaseCleaner.connections.size.should eq 3
         ::DatabaseCleaner.orm = :data_mapper
-        ::DatabaseCleaner.connections.size.should == 2
+        ::DatabaseCleaner.connections.size.should eq 2
       end
 
       it "should proxy strategy to all connections and remove duplicate connections" do
@@ -246,9 +246,9 @@ describe ::DatabaseCleaner do
 
         active_record_1.should_receive(:==).with(active_record_2).and_return(true)
 
-        ::DatabaseCleaner.connections.size.should == 2
+        ::DatabaseCleaner.connections.size.should eq 2
         ::DatabaseCleaner.strategy = strategy
-        ::DatabaseCleaner.connections.size.should == 1
+        ::DatabaseCleaner.connections.size.should eq 1
       end
     end
   end
@@ -261,18 +261,18 @@ describe ::DatabaseCleaner do
       ::DatabaseCleaner.connections_stub  [connection,connection,connection]
 
       ::DatabaseCleaner.remove_duplicates
-      ::DatabaseCleaner.connections.size.should == 1
+      ::DatabaseCleaner.connections.size.should eq 1
     end
   end
 
   describe "app_root" do
     it "should default to Dir.pwd" do
-      DatabaseCleaner.app_root.should == Dir.pwd
+      DatabaseCleaner.app_root.should eq Dir.pwd
     end
 
     it "should store specific paths" do
       DatabaseCleaner.app_root = '/path/to'
-      DatabaseCleaner.app_root.should == '/path/to'
+      DatabaseCleaner.app_root.should eq '/path/to'
     end
   end
 
@@ -281,32 +281,32 @@ describe ::DatabaseCleaner do
 
     it "should return DatabaseCleaner::ActiveRecord for :active_record" do
       ::DatabaseCleaner::ActiveRecord = double("ar module") unless defined? ::DatabaseCleaner::ActiveRecord
-      subject.orm_module(:active_record).should == DatabaseCleaner::ActiveRecord
+      subject.orm_module(:active_record).should eq DatabaseCleaner::ActiveRecord
     end
 
     it "should return DatabaseCleaner::DataMapper for :data_mapper" do
       ::DatabaseCleaner::DataMapper = double("dm module") unless defined? ::DatabaseCleaner::DataMapper
-      subject.orm_module(:data_mapper).should == DatabaseCleaner::DataMapper
+      subject.orm_module(:data_mapper).should eq DatabaseCleaner::DataMapper
     end
 
     it "should return DatabaseCleaner::MongoMapper for :mongo_mapper" do
       ::DatabaseCleaner::MongoMapper = double("mm module") unless defined? ::DatabaseCleaner::MongoMapper
-      subject.orm_module(:mongo_mapper).should == DatabaseCleaner::MongoMapper
+      subject.orm_module(:mongo_mapper).should eq DatabaseCleaner::MongoMapper
     end
 
     it "should return DatabaseCleaner::Mongoid for :mongoid" do
       ::DatabaseCleaner::Mongoid = double("mongoid module") unless defined? ::DatabaseCleaner::Mongoid
-      subject.orm_module(:mongoid).should == DatabaseCleaner::Mongoid
+      subject.orm_module(:mongoid).should eq DatabaseCleaner::Mongoid
     end
 
     it "should return DatabaseCleaner::Mongo for :mongo" do
       ::DatabaseCleaner::Mongo = double("mongo module") unless defined? ::DatabaseCleaner::Mongo
-      subject.orm_module(:mongo).should == DatabaseCleaner::Mongo
+      subject.orm_module(:mongo).should eq DatabaseCleaner::Mongo
     end
 
     it "should return DatabaseCleaner::CouchPotato for :couch_potato" do
       ::DatabaseCleaner::CouchPotato = double("cp module") unless defined? ::DatabaseCleaner::CouchPotato
-      subject.orm_module(:couch_potato).should == DatabaseCleaner::CouchPotato
+      subject.orm_module(:couch_potato).should eq DatabaseCleaner::CouchPotato
     end
 
   end
