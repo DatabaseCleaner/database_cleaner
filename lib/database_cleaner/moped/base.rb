@@ -14,7 +14,7 @@ module DatabaseCleaner
       end
 
       def db
-        @db || :default
+        @db ||= :default
       end
 
       def host_port=(desired_host)
@@ -22,7 +22,7 @@ module DatabaseCleaner
       end
 
       def host
-        @host || '127.0.0.1:27017'
+        @host ||= '127.0.0.1:27017'
       end
 
       private

@@ -37,7 +37,7 @@ module DatabaseCleaner
     end
 
     def app_root
-      @app_root || Dir.pwd
+      @app_root ||= Dir.pwd
     end
 
     def connections
