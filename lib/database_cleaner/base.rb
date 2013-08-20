@@ -25,7 +25,7 @@ module DatabaseCleaner
     end
 
     def db
-      @db || :default
+      @db ||= :default
     end
 
     def create_strategy(*args)
@@ -67,7 +67,7 @@ module DatabaseCleaner
     end
 
     def strategy
-      @strategy || NullStrategy
+      @strategy ||= NullStrategy
     end
 
     def orm=(desired_orm)
