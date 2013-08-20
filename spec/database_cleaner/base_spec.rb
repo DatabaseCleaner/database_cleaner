@@ -475,10 +475,6 @@ module DatabaseCleaner
       context "in response to a LoadError" do
         before(:each) { subject.should_receive(:require).with(anything).and_raise(LoadError) }
 
-        it "should catch LoadErrors" do
-          expect { subject.send(:orm_strategy,:a_strategy) }.to_not raise_error LoadError
-        end
-
         it "should raise UnknownStrategySpecified" do
           expect { subject.send(:orm_strategy,:a_strategy) }.to raise_error UnknownStrategySpecified
         end
