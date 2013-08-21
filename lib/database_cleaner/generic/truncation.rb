@@ -10,7 +10,7 @@ module DatabaseCleaner
         end
 
         @only = opts[:only]
-        @tables_to_exclude = (opts[:except] || []).dup
+        @tables_to_exclude = Array( (opts[:except] || []).dup ).flatten
         @tables_to_exclude += migration_storage_names
         @pre_count = opts[:pre_count]
         @reset_ids = opts[:reset_ids]
