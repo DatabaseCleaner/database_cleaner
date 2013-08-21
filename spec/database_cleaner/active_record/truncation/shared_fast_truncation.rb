@@ -14,7 +14,7 @@ shared_examples_for "an adapter with pre-count truncation" do
         User.delete_all
 
         connection.pre_count_truncate_tables(%w[users]) # true is also the default
-        User.create.id.should == 1
+        User.create.id.should eq 1
       end
     end
 
@@ -33,7 +33,7 @@ shared_examples_for "an adapter with pre-count truncation" do
 
         connection.pre_count_truncate_tables(%w[users], :reset_ids => false)
 
-        User.create.id.should == 3
+        User.create.id.should eq 3
       end
     end
   end

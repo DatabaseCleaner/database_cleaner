@@ -19,7 +19,7 @@ module DatabaseCleaner
       it "should default to DatabaseCleaner.root / config / database.yml" do
         ActiveRecord.config_file_location=nil
         DatabaseCleaner.should_receive(:app_root).and_return("/path/to")
-        subject.should == '/path/to/config/database.yml'
+        subject.should eq '/path/to/config/database.yml'
       end
     end
 
@@ -45,11 +45,11 @@ module DatabaseCleaner
           subject.stub(:load_config)
 
           subject.db = :my_db
-          subject.db.should == :my_db
+          subject.db.should eq :my_db
         end
 
         it "should default to :default" do
-          subject.db.should == :default
+          subject.db.should eq :default
         end
 
         it "should load_config when I set db" do
@@ -86,7 +86,7 @@ my_db:
 
         it "should store the relevant config in connection_hash" do
           subject.load_config
-          subject.connection_hash.should == { "database" => "one" }
+          subject.connection_hash.should eq( "database" => "one" )
         end
 
         it "should skip config if config file is not available" do
@@ -115,14 +115,14 @@ my_db:
       describe "connection_hash" do
         it "should store connection_hash" do
           subject.connection_hash = { :key => "value" }
-          subject.connection_hash.should == { :key => "value" }
+          subject.connection_hash.should eq( :key => "value" )
         end
       end
 
       describe "connection_class" do
         it { expect { subject.connection_class }.to_not raise_error }
         it "should default to ActiveRecord::Base" do
-          subject.connection_class.should == ::ActiveRecord::Base
+          subject.connection_class.should eq ::ActiveRecord::Base
         end
 
         context "with database models" do
@@ -131,21 +131,21 @@ my_db:
               subject.db = FakeModel
               subject.connection_hash = { }
               subject.load_config
-              subject.connection_class.should == FakeModel
+              subject.connection_class.should eq FakeModel
             end
           end
 
           context "connection_hash is not set" do
             it "allows for database models to be passed in" do
               subject.db = FakeModel
-              subject.connection_class.should == FakeModel
+              subject.connection_class.should eq FakeModel
             end
           end
         end
 
         context "when connection_hash is set" do
-          let(:hash) { mock("hash") }
-          before { ::ActiveRecord::Base.stub!(:respond_to?).and_return(false) }
+          let(:hash) { double("hash") }
+          before { ::ActiveRecord::Base.stub(:respond_to?).and_return(false) }
           before { subject.stub(:connection_hash).and_return(hash) }
 
           it "establish a connection using ActiveRecord::Base" do
