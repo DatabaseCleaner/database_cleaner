@@ -28,7 +28,7 @@ module DatabaseCleaner
 
       def each_table
         tables_to_truncate(db).each do |table|
-          yield db, table
+          yield db, table.to_sym
         end
       end
 

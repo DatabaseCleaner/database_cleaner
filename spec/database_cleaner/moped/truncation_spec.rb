@@ -8,7 +8,7 @@ module DatabaseCleaner
 
     describe Truncation do
       let(:args) {{}}
-      let(:truncation) { described_class.new(args).tap { |t| t.db=@db } }
+      let(:truncation) { described_class.new(args) }
       #doing this in the file root breaks autospec, doing it before(:all) just fails the specs
       before(:all) do
         @test_db = 'database_cleaner_specs'

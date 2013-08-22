@@ -16,7 +16,7 @@ module ::DatabaseCleaner
 
       it_should_behave_like "a generic strategy"
 
-      its(:db) { should == :default }
+      its(:db) { should eq :default }
     end
   end
 end
