@@ -65,7 +65,7 @@ module DatabaseCleaner
         # but then the table is cleaned.  In other words, this function tells us if the given table
         # was ever inserted into.
         def has_been_used?(table)
-          if row_count(table) > 0
+          if has_rows?(table)
             true
           else
             # Patch for MysqlAdapter with ActiveRecord 3.2.7 later
