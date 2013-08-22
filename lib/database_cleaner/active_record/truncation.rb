@@ -54,33 +54,33 @@ module DatabaseCleaner
 
       private
 
-        def row_count(table)
+      def row_count(table)
+        # Patch for MysqlAdapter with ActiveRecord 3.2.7 later
+        # select_value("SELECT 1") #=> "1"
+        select_value("SELECT EXISTS (SELECT 1 FROM #{quote_table_name(table)} LIMIT 1)").to_i
+      end
+
+      # Returns a boolean indicating if the given table has an auto-inc number higher than 0.
+      # Note, this is different than an empty table since an table may populated, the index increased,
+      # but then the table is cleaned.  In other words, this function tells us if the given table
+      # was ever inserted into.
+      def has_been_used?(table)
+        if has_rows?(table)
+          true
+        else
           # Patch for MysqlAdapter with ActiveRecord 3.2.7 later
           # select_value("SELECT 1") #=> "1"
-          select_value("SELECT EXISTS (SELECT 1 FROM #{quote_table_name(table)} LIMIT 1)").to_i
+          select_value(<<-SQL).to_i > 1 # returns nil if not present
+          SELECT Auto_increment
+          FROM information_schema.tables
+          WHERE table_name='#{table}';
+          SQL
         end
+      end
 
-        # Returns a boolean indicating if the given table has an auto-inc number higher than 0.
-        # Note, this is different than an empty table since an table may populated, the index increased,
-        # but then the table is cleaned.  In other words, this function tells us if the given table
-        # was ever inserted into.
-        def has_been_used?(table)
-          if has_rows?(table)
-            true
-          else
-            # Patch for MysqlAdapter with ActiveRecord 3.2.7 later
-            # select_value("SELECT 1") #=> "1"
-            select_value(<<-SQL).to_i > 1 # returns nil if not present
-            SELECT Auto_increment
-            FROM information_schema.tables
-            WHERE table_name='#{table}';
-            SQL
-          end
-        end
-
-        def has_rows?(table)
-          row_count(table) > 0
-        end
+      def has_rows?(table)
+        row_count(table) > 0
+      end
     end
 
     module IBM_DBAdapter
@@ -100,10 +100,10 @@ module DatabaseCleaner
 
       private
 
-        # Returns a boolean indicating if the SQLite database is using the sqlite_sequence table.
-        def uses_sequence
-          select_value("SELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';")
-        end
+      # Returns a boolean indicating if the SQLite database is using the sqlite_sequence table.
+      def uses_sequence
+        select_value("SELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';")
+      end
     end
 
     module TruncateOrDelete
@@ -151,18 +151,18 @@ module DatabaseCleaner
 
       private
 
-        # Returns a boolean indicating if the given table has an auto-inc number higher than 0.
-        # Note, this is different than an empty table since an table may populated, the index increased,
-        # but then the table is cleaned.  In other words, this function tells us if the given table
-        # was ever inserted into.
-        def has_been_used?(table)
-          cur_val = select_value("SELECT currval('#{table}_id_seq');").to_i rescue 0
-          cur_val > 0
-        end
+      # Returns a boolean indicating if the given table has an auto-inc number higher than 0.
+      # Note, this is different than an empty table since an table may populated, the index increased,
+      # but then the table is cleaned.  In other words, this function tells us if the given table
+      # was ever inserted into.
+      def has_been_used?(table)
+        cur_val = select_value("SELECT currval('#{table}_id_seq');").to_i rescue 0
+        cur_val > 0
+      end
 
-        def has_rows?(table)
-          select_value("SELECT true FROM #{table} LIMIT 1;")
-        end
+      def has_rows?(table)
+        select_value("SELECT true FROM #{table} LIMIT 1;")
+      end
     end
   end
 end
@@ -201,21 +201,21 @@ module DatabaseCleaner::ActiveRecord
 
     private
 
-      def tables_to_truncate(connection)
-        (@only || connection.database_cleaner_table_cache) - @tables_to_exclude - connection.database_cleaner_view_cache
-      end
+    def tables_to_truncate(connection)
+      (@only || connection.database_cleaner_table_cache) - @tables_to_exclude - connection.database_cleaner_view_cache
+    end
 
-      # overwritten
-      def migration_storage_names
-        [::ActiveRecord::Migrator.schema_migrations_table_name]
-      end
+    # overwritten
+    def migration_storage_names
+      [::ActiveRecord::Migrator.schema_migrations_table_name]
+    end
 
-      def pre_count?
-        @pre_count == true
-      end
+    def pre_count?
+      @pre_count == true
+    end
 
-      def reset_ids?
-        @reset_ids != false
-      end
+    def reset_ids?
+      @reset_ids != false
+    end
   end
 end
