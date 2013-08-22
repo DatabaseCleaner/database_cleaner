@@ -30,12 +30,22 @@ module ::DatabaseCleaner
     end
 
     describe TruncationExample do
-      its(:start) { expect{ subject }.to_not raise_error }
-      its(:clean) { expect{ subject }.to raise_error(NotImplementedError) }
+      subject(:truncation_example) { TruncationExample.new }
+
+      it "will start" do
+        expect { truncation_example.start }.to_not raise_error
+      end
+
+      it "expects clean to be implemented later" do
+        expect { truncation_example.clean }.to raise_error(NotImplementedError)
+      end
 
       context "private methods" do
         it { should_not respond_to(:tables_to_truncate) }
-        its(:tables_to_truncate) { expect{ subject }.to raise_error(NotImplementedError) }
+
+        it 'expects #tables_to_truncate to be implemented later' do
+          expect{ truncation_example.send :tables_to_truncate }.to raise_error(NotImplementedError)
+        end
 
         it { should_not respond_to(:migration_storage_names) }
         its(:migration_storage_names) { should be_empty }
@@ -50,47 +60,47 @@ module ::DatabaseCleaner
 
         it { expect{ TruncationExample.new( { :a_random_param => "should raise ArgumentError"  } ) }.to     raise_error(ArgumentError) }
         it { expect{ TruncationExample.new( { :except => "something",:only => "something else" } ) }.to     raise_error(ArgumentError) }
-        it { expect{ TruncationExample.new( { :only   => "something"                           } ) }.to_not raise_error(ArgumentError) }
-        it { expect{ TruncationExample.new( { :except => "something"                           } ) }.to_not raise_error(ArgumentError) }
-        it { expect{ TruncationExample.new( { :pre_count => "something"                           } ) }.to_not raise_error(ArgumentError) }
-        it { expect{ TruncationExample.new( { :reset_ids => "something"                           } ) }.to_not raise_error(ArgumentError) }
+        it { expect{ TruncationExample.new( { :only   => "something"                           } ) }.to_not raise_error }
+        it { expect{ TruncationExample.new( { :except => "something"                           } ) }.to_not raise_error }
+        it { expect{ TruncationExample.new( { :pre_count => "something"                        } ) }.to_not raise_error }
+        it { expect{ TruncationExample.new( { :reset_ids => "something"                        } ) }.to_not raise_error }
 
         context "" do
           subject { TruncationExample.new( { :only => ["something"] } ) }
-          its(:only)   { should == ["something"] }
-          its(:except) { should == [] }
+          its(:only)   { should eq ["something"] }
+          its(:except) { should eq [] }
         end
 
         context "" do
           subject { TruncationExample.new( { :except => ["something"] } ) }
-          its(:only)   { should == nil }
+          its(:only)   { should eq nil }
           its(:except) { should include("something") }
         end
 
         context "" do
           subject { TruncationExample.new( { :reset_ids => ["something"] } ) }
-          its(:reset_ids?) { should == true }
+          its(:reset_ids?) { should eq true }
         end
 
         context "" do
           subject { TruncationExample.new( { :reset_ids => nil } ) }
-          its(:reset_ids?) { should == false }
+          its(:reset_ids?) { should eq false }
         end
 
         context "" do
           subject { TruncationExample.new( { :pre_count => ["something"] } ) }
-          its(:pre_count?) { should == true }
+          its(:pre_count?) { should eq true }
         end
 
         context "" do
           subject { TruncationExample.new( { :pre_count => nil } ) }
-          its(:pre_count?) { should == false }
+          its(:pre_count?) { should eq false }
         end
 
         context "" do
           subject { MigrationExample.new }
-          its(:only)   { should == nil }
-          its(:except) { should == %w[migration_storage_name] }
+          its(:only)   { should eq nil }
+          its(:except) { should eq %w[migration_storage_name] }
         end
 
         context "" do

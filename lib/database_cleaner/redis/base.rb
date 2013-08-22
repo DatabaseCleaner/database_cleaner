@@ -14,7 +14,7 @@ module DatabaseCleaner
       end
 
       def db
-        @db || :default
+        @db ||= :default
       end
 
       alias url db

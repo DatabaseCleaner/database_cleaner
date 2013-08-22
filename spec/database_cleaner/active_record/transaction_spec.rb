@@ -6,7 +6,7 @@ module DatabaseCleaner
   module ActiveRecord
 
     describe Transaction do
-      let (:connection) { mock("connection") }
+      let (:connection) { double("connection") }
       before(:each) do
         ::ActiveRecord::Base.stub(:connection).and_return(connection)
       end

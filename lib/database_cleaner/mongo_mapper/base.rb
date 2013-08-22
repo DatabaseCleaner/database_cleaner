@@ -13,7 +13,7 @@ module DatabaseCleaner
       end
 
       def db
-        @db || :default
+        @db ||= :default
       end
     end
   end
