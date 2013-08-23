@@ -239,12 +239,17 @@ module DatabaseCleaner::ActiveRecord
     private
 
     def tables_to_truncate(connection)
-      (@only || connection.database_cleaner_table_cache) - @tables_to_exclude - connection.database_cleaner_view_cache
+      tables_in_db = cache_tables? ? connection.database_cleaner_table_cache : connection.tables
+      (@only || tables_in_db) - @tables_to_exclude - connection.database_cleaner_view_cache
     end
 
     # overwritten
     def migration_storage_names
       [::ActiveRecord::Migrator.schema_migrations_table_name]
+    end
+
+    def cache_tables?
+      !!@cache_tables
     end
 
     def pre_count?
