@@ -53,7 +53,7 @@ module DataMapper
 
       def truncate_table(table_name)
         execute("DELETE FROM #{quote_name(table_name)};")
-        if uses_sequence
+        if uses_sequence?
           execute("DELETE FROM sqlite_sequence where name = '#{table_name}';")
         end
       end
@@ -63,6 +63,16 @@ module DataMapper
       # activerecord also doesn't do more here
       def disable_referential_integrity
         yield
+      end
+
+      private
+
+      def uses_sequence?
+        sql = <<-SQL
+          SELECT name FROM sqlite_master
+          WHERE type='table' AND name='sqlite_sequence'
+        SQL
+        select(sql).first
       end
 
     end
@@ -82,7 +92,7 @@ module DataMapper
 
       def truncate_table(table_name)
         execute("DELETE FROM #{quote_name(table_name)};")
-        if uses_sequence
+        if uses_sequence?
           execute("DELETE FROM sqlite_sequence where name = '#{table_name}';")
         end
       end
@@ -92,6 +102,16 @@ module DataMapper
       # activerecord also doesn't do more here
       def disable_referential_integrity
         yield
+      end
+
+      private
+
+      def uses_sequence?
+        sql = <<-SQL
+          SELECT name FROM sqlite_master
+          WHERE type='table' AND name='sqlite_sequence'
+        SQL
+        select(sql).first
       end
 
     end
