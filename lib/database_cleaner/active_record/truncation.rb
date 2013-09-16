@@ -174,6 +174,7 @@ module ActiveRecord
 
     JdbcAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::TruncateOrDelete } if defined?(JdbcAdapter)
     AbstractMysqlAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::AbstractMysqlAdapter } if defined?(AbstractMysqlAdapter)
+    Mysql2Adapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::AbstractMysqlAdapter } if defined?(Mysql2Adapter)
     SQLiteAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::SQLiteAdapter } if defined?(SQLiteAdapter)
     SQLite3Adapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::SQLiteAdapter } if defined?(SQLite3Adapter)
     PostgreSQLAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::PostgreSQLAdapter } if defined?(PostgreSQLAdapter)
