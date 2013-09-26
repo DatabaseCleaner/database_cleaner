@@ -100,6 +100,10 @@ module DatabaseCleaner
       end
       alias truncate_table delete_table
 
+      def truncate_tables(tables)
+        tables.each { |t| truncate_table(t) }
+      end
+
       private
 
       # Returns a boolean indicating if the SQLite database is using the sqlite_sequence table.
