@@ -2,16 +2,19 @@ require 'active_record/base'
 
 require 'active_record/connection_adapters/abstract_adapter'
 
-begin
-  require 'active_record/connection_adapters/abstract_mysql_adapter'
-rescue LoadError
+#Load available connection adapters
+%w( abstract_mysql_adapter postgresql_adapter sqlite3_adapter ).each do |known_adapter|
+  begin
+    require "active_record/connection_adapters/#{known_adapter}"
+  rescue LoadError
+  end
 end
 
 require "database_cleaner/generic/truncation"
 require 'database_cleaner/active_record/base'
 
 module DatabaseCleaner
-  module ActiveRecord
+  module ConnectionAdapters
 
     module AbstractAdapter
       # used to be called views but that can clash with gems like schema_plus
@@ -19,7 +22,6 @@ module DatabaseCleaner
       def database_cleaner_view_cache
         @views ||= select_values("select table_name from information_schema.views where table_schema = '#{current_database}'") rescue []
       end
-
       def database_cleaner_table_cache
         # the adapters don't do caching (#130) but we make the assumption that the list stays the same in tests
         @database_cleaner_tables ||= tables
@@ -36,8 +38,7 @@ module DatabaseCleaner
       end
     end
 
-    module MysqlAdapter
-
+    module AbstractMysqlAdapter
       def truncate_table(table_name)
         execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
       end
@@ -53,7 +54,6 @@ module DatabaseCleaner
 
       private
 
-
       def row_count(table)
         # Patch for MysqlAdapter with ActiveRecord 3.2.7 later
         # select_value("SELECT 1") #=> "1"
@@ -65,15 +65,15 @@ module DatabaseCleaner
       # but then the table is cleaned.  In other words, this function tells us if the given table
       # was ever inserted into.
       def has_been_used?(table)
-        if row_count(table) > 0
+        if has_rows?(table)
           true
         else
           # Patch for MysqlAdapter with ActiveRecord 3.2.7 later
           # select_value("SELECT 1") #=> "1"
           select_value(<<-SQL).to_i > 1 # returns nil if not present
-              SELECT Auto_increment
-              FROM information_schema.tables
-              WHERE table_name='#{table}';
+          SELECT Auto_increment
+          FROM information_schema.tables
+          WHERE table_name='#{table}';
           SQL
         end
       end
@@ -83,13 +83,11 @@ module DatabaseCleaner
       end
     end
 
-
     module IBM_DBAdapter
       def truncate_table(table_name)
         execute("TRUNCATE #{quote_table_name(table_name)} IMMEDIATE")
       end
     end
-
 
     module SQLiteAdapter
       def delete_table(table_name)
@@ -119,6 +117,12 @@ module DatabaseCleaner
         rescue ActiveRecord::StatementInvalid
           execute("DELETE FROM #{quote_table_name(table_name)};")
         end
+      end
+    end
+
+    module OracleEnhancedAdapter
+      def truncate_table(table_name)
+        execute("TRUNCATE TABLE #{quote_table_name(table_name)}")
       end
     end
 
@@ -164,65 +168,25 @@ module DatabaseCleaner
         select_value("SELECT true FROM #{table} LIMIT 1;")
       end
     end
-
-    module OracleEnhancedAdapter
-      def truncate_table(table_name)
-        execute("TRUNCATE TABLE #{quote_table_name(table_name)}")
-      end
-    end
-
   end
 end
-
-#TODO: Remove monkeypatching and decorate the connection instead!
 
 module ActiveRecord
   module ConnectionAdapters
-    # Activerecord-jdbc-adapter defines class dependencies a bit differently - if it is present, confirm to ArJdbc hierarchy to avoid 'superclass mismatch' errors.
-    USE_ARJDBC_WORKAROUND = defined?(ArJdbc)
-    # ActiveRecord 3.1+ support
-    MYSQL_ABSTRACT_ADAPTER = defined?(AbstractMysqlAdapter) ? AbstractMysqlAdapter : AbstractAdapter
+    #Apply adapter decoraters where applicable (adapter should be loaded)
+    AbstractAdapter.class_eval { include DatabaseCleaner::ConnectionAdapters::AbstractAdapter }
 
-    AbstractAdapter.send(:include, ::DatabaseCleaner::ActiveRecord::AbstractAdapter)
-
-    if USE_ARJDBC_WORKAROUND
-      MYSQL_ADAPTER_PARENT  = JdbcAdapter
-    else
-      MYSQL_ADAPTER_PARENT  = MYSQL_ABSTRACT_ADAPTER
-      class SQLiteAdapter < AbstractAdapter; end
-    end
-    MYSQL2_ADAPTER_PARENT = MYSQL_ABSTRACT_ADAPTER
-
-    if defined?(SQLite3Adapter) && SQLite3Adapter.superclass == ActiveRecord::ConnectionAdapters::AbstractAdapter
-      SQLITE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
-    else
-      SQLITE_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : SQLiteAdapter
-    end
-    POSTGRES_ADAPTER_PARENT = USE_ARJDBC_WORKAROUND ? JdbcAdapter : AbstractAdapter
-
-    MYSQL_ADAPTER_PARENT.class_eval     { include ::DatabaseCleaner::ActiveRecord::MysqlAdapter }
-    MYSQL2_ADAPTER_PARENT.class_eval    { include ::DatabaseCleaner::ActiveRecord::MysqlAdapter }
-    SQLITE_ADAPTER_PARENT.class_eval    { include ::DatabaseCleaner::ActiveRecord::SQLiteAdapter }
-    POSTGRES_ADAPTER_PARENT.class_eval  { include ::DatabaseCleaner::ActiveRecord::PostgreSQLAdapter }
-
-    class IBM_DBAdapter < AbstractAdapter
-      include ::DatabaseCleaner::ActiveRecord::IBM_DBAdapter
-    end
-
-    class JdbcAdapter < AbstractAdapter
-      include ::DatabaseCleaner::ActiveRecord::TruncateOrDelete
-    end
-
-    class SQLServerAdapter < AbstractAdapter
-      include ::DatabaseCleaner::ActiveRecord::TruncateOrDelete
-    end
-
-    class OracleEnhancedAdapter < AbstractAdapter
-      include ::DatabaseCleaner::ActiveRecord::OracleEnhancedAdapter
-    end
+    JdbcAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::TruncateOrDelete } if defined?(JdbcAdapter)
+    AbstractMysqlAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::AbstractMysqlAdapter } if defined?(AbstractMysqlAdapter)
+    Mysql2Adapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::AbstractMysqlAdapter } if defined?(Mysql2Adapter)
+    SQLiteAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::SQLiteAdapter } if defined?(SQLiteAdapter)
+    SQLite3Adapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::SQLiteAdapter } if defined?(SQLite3Adapter)
+    PostgreSQLAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::PostgreSQLAdapter } if defined?(PostgreSQLAdapter)
+    IBM_DBAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::IBM_DBAdapter } if defined?(IBM_DBAdapter)
+    SQLServerAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::TruncateOrDelete } if defined?(SQLServerAdapter)
+    OracleEnhancedAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::OracleEnhancedAdapter } if defined?(OracleEnhancedAdapter)
   end
 end
-
 
 module DatabaseCleaner::ActiveRecord
   class Truncation
