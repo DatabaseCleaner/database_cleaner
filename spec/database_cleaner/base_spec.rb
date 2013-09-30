@@ -535,6 +535,11 @@ module DatabaseCleaner
         cleaner.strategy.should be_instance_of DatabaseCleaner::CouchPotato::Truncation
       end
 
+      it 'sets strategy to :transaction for Sequel' do
+        cleaner = DatabaseCleaner::Base.new(:sequel)
+        cleaner.strategy.should be_instance_of DatabaseCleaner::Sequel::Transaction
+      end
+
       it 'sets strategy to :truncation for Moped' do
         cleaner = DatabaseCleaner::Base.new(:moped)
         cleaner.strategy.should be_instance_of DatabaseCleaner::Moped::Truncation
