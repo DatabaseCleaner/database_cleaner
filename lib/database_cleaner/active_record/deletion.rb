@@ -3,55 +3,41 @@ require 'active_record/connection_adapters/abstract_adapter'
 require "database_cleaner/generic/truncation"
 require 'database_cleaner/active_record/base'
 require 'database_cleaner/active_record/truncation'
-# This file may seem to have duplication with that of truncation, but by keeping them separate
-# we avoiding loading this code when it is not being used (which is the common case).
 
-module ActiveRecord
+module DatabaseCleaner
   module ConnectionAdapters
+    module AbstractDeleteAdapter
+      def delete_table(table_name)
+        raise NotImplementedError
+      end
+    end
 
-    class MysqlAdapter < MYSQL_ADAPTER_PARENT
+    module GenericDeleteAdapter
       def delete_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)};")
       end
     end
-
-    class Mysql2Adapter < MYSQL2_ADAPTER_PARENT
-      def delete_table(table_name)
-        execute("DELETE FROM #{quote_table_name(table_name)};")
-      end
-    end
-
-    class JdbcAdapter < AbstractAdapter
-      def delete_table(table_name)
-          execute("DELETE FROM #{quote_table_name(table_name)};")
-      end
-    end
-
-    class PostgreSQLAdapter < POSTGRES_ADAPTER_PARENT
-      def delete_table(table_name)
-        execute("DELETE FROM #{quote_table_name(table_name)};")
-      end
-    end
-
-    class SQLServerAdapter < AbstractAdapter
-      def delete_table(table_name)
-        execute("DELETE FROM #{quote_table_name(table_name)};")
-      end
-    end
-
-    class OracleEnhancedAdapter < AbstractAdapter
-      def delete_table(table_name)
-        execute("DELETE FROM #{quote_table_name(table_name)}")
-      end
-    end
-
   end
 end
 
+module ActiveRecord
+  module ConnectionAdapters
+    AbstractAdapter.class_eval { include DatabaseCleaner::ConnectionAdapters::AbstractDeleteAdapter }
+
+    JdbcAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::GenericDeleteAdapter } if defined?(JdbcAdapter)
+    AbstractMysqlAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::GenericDeleteAdapter } if defined?(AbstractMysqlAdapter)
+    Mysql2Adapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::GenericDeleteAdapter } if defined?(Mysql2Adapter)
+    SQLiteAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::GenericDeleteAdapter } if defined?(SQLiteAdapter)
+    SQLite3Adapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::GenericDeleteAdapter } if defined?(SQLite3Adapter)
+    PostgreSQLAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::GenericDeleteAdapter } if defined?(PostgreSQLAdapter)
+    IBM_DBAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::GenericDeleteAdapter } if defined?(IBM_DBAdapter)
+    SQLServerAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::GenericDeleteAdapter } if defined?(SQLServerAdapter)
+    OracleEnhancedAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::GenericDeleteAdapter } if defined?(OracleEnhancedAdapter)
+  end
+end
 
 module DatabaseCleaner::ActiveRecord
   class Deletion < Truncation
-
     def clean
       connection = connection_class.connection
       connection.disable_referential_integrity do
@@ -60,8 +46,5 @@ module DatabaseCleaner::ActiveRecord
         end
       end
     end
-
   end
 end
-
-

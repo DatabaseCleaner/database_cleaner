@@ -9,7 +9,8 @@ require 'database_cleaner/active_record/truncation'
 
 module ActiveRecord
   module ConnectionAdapters
-    [MysqlAdapter, Mysql2Adapter, SQLite3Adapter, JdbcAdapter, PostgreSQLAdapter, IBM_DBAdapter].each do |adapter|
+    #JdbcAdapter IBM_DBAdapter
+    [ MysqlAdapter, Mysql2Adapter, SQLite3Adapter, PostgreSQLAdapter ].each do |adapter|
       describe adapter, "#truncate_table" do
         it "responds" do
           adapter.instance_methods.should include(:truncate_table)
