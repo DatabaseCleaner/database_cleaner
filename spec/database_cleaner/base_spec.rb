@@ -42,6 +42,7 @@ module DatabaseCleaner
          ::MongoMapper  = Temp_MM if defined? Temp_MM
          ::Mongoid      = Temp_MO if defined? Temp_MO
          ::CouchPotato  = Temp_CP if defined? Temp_CP
+         ::Sequel       = Temp_SQ if defined? Temp_SQ
          ::Moped        = Temp_MP if defined? Temp_MP
          ::Ohm          = Temp_OH if defined? Temp_OH
          ::Redis        = Temp_RS if defined? Temp_RS
