@@ -1,3 +1,20 @@
+== 1.2.0 2013-10-09
+
+A huge thanks goes to @tommeier for fixing the bug with class loading that was cuasing the wrong adapters
+to be used in certain cases.
+
+=== New Features/Changes
+
+  * Upgraded RSpec to remove deprecation warnings (John Rowe)
+  * Caching of tables to truncate is now optional (@marcoow)
+
+=== Bug Fixes
+
+  * Use class_eval loading of superclasses to ensure right version of class is patched. (Tom Meier, Joel Nimety, Ernesto Tagwerker)
+  * Add truncate_tables method to SQLiteAdapter. (Chris Mo)
+  * Fixes missing #uses_sequence invokation in adapter classes for sqlite and sqlite3 (Lefteris Laskaridis)
+
+
 == 1.1.1 2013-08-01
 
 === Bug Fixes

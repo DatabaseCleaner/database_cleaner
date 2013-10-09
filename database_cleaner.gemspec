@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "database_cleaner"
-  s.version = "1.1.1"
+  s.version = "1.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ben Mabey"]
-  s.date = "2013-08-01"
+  s.date = "2013-10-09"
   s.description = "Strategies for cleaning databases.  Can be used to ensure a clean state for testing."
   s.email = "ben@benmabey.com"
   s.license = 'MIT'
@@ -95,6 +95,7 @@ Gem::Specification.new do |s|
     "spec/database_cleaner/active_record/truncation/mysql_spec.rb",
     "spec/database_cleaner/active_record/truncation/postgresql_spec.rb",
     "spec/database_cleaner/active_record/truncation/shared_fast_truncation.rb",
+    "spec/database_cleaner/active_record/truncation/sqlite3_spec.rb",
     "spec/database_cleaner/active_record/truncation_spec.rb",
     "spec/database_cleaner/base_spec.rb",
     "spec/database_cleaner/configuration_spec.rb",
@@ -124,7 +125,8 @@ Gem::Specification.new do |s|
     "spec/support/active_record/mysql2_setup.rb",
     "spec/support/active_record/mysql_setup.rb",
     "spec/support/active_record/postgresql_setup.rb",
-    "spec/support/active_record/schema_setup.rb"
+    "spec/support/active_record/schema_setup.rb",
+    "spec/support/active_record/sqlite3_setup.rb"
   ]
   s.homepage = "http://github.com/bmabey/database_cleaner"
   s.require_paths = ["lib"]
