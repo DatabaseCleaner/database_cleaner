@@ -14,7 +14,7 @@ begin
     s.description = "Strategies for cleaning databases.  Can be used to ensure a clean state for testing."
     s.files = FileList["[A-Z]*.*", "{examples,lib,features,spec}/**/*", "Rakefile", "cucumber.yml"]
     s.authors = ["Ben Mabey"]
-    s.licence  = 'MIT'
+    # s.licence  = 'MIT'
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
