@@ -19,7 +19,7 @@ module DatabaseCleaner::ActiveRecord
         end
       end
       if connection_class.connection.respond_to?(:begin_transaction)
-        connection_class.connection.begin_transaction
+        connection_class.connection.begin_transaction joinable: false
       else
         connection_class.connection.begin_db_transaction
       end
