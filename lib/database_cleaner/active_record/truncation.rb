@@ -114,13 +114,13 @@ module DatabaseCleaner
       def truncate_table(table_name)
         begin
           execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
-        rescue ActiveRecord::StatementInvalid
+        rescue ::ActiveRecord::StatementInvalid
           execute("DELETE FROM #{quote_table_name(table_name)};")
         end
       end
     end
 
-    module OracleEnhancedAdapter
+    module OracleAdapter
       def truncate_table(table_name)
         execute("TRUNCATE TABLE #{quote_table_name(table_name)}")
       end
@@ -176,7 +176,13 @@ module ActiveRecord
     #Apply adapter decoraters where applicable (adapter should be loaded)
     AbstractAdapter.class_eval { include DatabaseCleaner::ConnectionAdapters::AbstractAdapter }
 
-    JdbcAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::TruncateOrDelete } if defined?(JdbcAdapter)
+    if defined?(JdbcAdapter)
+      if defined?(OracleJdbcConnection)
+        JdbcAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::OracleAdapter }
+      else
+        JdbcAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::TruncateOrDelete }
+      end
+    end
     AbstractMysqlAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::AbstractMysqlAdapter } if defined?(AbstractMysqlAdapter)
     Mysql2Adapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::AbstractMysqlAdapter } if defined?(Mysql2Adapter)
     SQLiteAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::SQLiteAdapter } if defined?(SQLiteAdapter)
@@ -184,7 +190,7 @@ module ActiveRecord
     PostgreSQLAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::PostgreSQLAdapter } if defined?(PostgreSQLAdapter)
     IBM_DBAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::IBM_DBAdapter } if defined?(IBM_DBAdapter)
     SQLServerAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::TruncateOrDelete } if defined?(SQLServerAdapter)
-    OracleEnhancedAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::OracleEnhancedAdapter } if defined?(OracleEnhancedAdapter)
+    OracleEnhancedAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::OracleAdapter } if defined?(OracleEnhancedAdapter)
   end
 end
 
