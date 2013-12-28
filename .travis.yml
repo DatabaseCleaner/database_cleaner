@@ -2,6 +2,7 @@ language: ruby
 rvm:
   - 1.9.3
   - 2.0.0
+  - 2.1.0
 # TODO: make this work with the regular rake command
 script: "bundle exec rake spec"
 gemfile:
@@ -11,7 +12,5 @@ before_script:
   - psql -c 'create database database_cleaner_test;' -U postgres
   - cp db/sample.config.yml db/config.yml
 services:
+  - redis-server
   - mongodb
-matrix:
-  allow_failures:
-    - rvm: 2.0.0
