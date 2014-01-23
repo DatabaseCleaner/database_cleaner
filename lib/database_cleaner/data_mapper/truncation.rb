@@ -10,6 +10,12 @@ module DataMapper
         raise NotImplementedError
       end
 
+      def truncate_tables(table_names)
+        table_names.each do |table_name|
+          adapter.truncate_table table_name
+        end
+      end
+
     end
 
     class MysqlAdapter < DataObjectsAdapter
@@ -136,6 +142,12 @@ module DataMapper
         execute("TRUNCATE TABLE #{quote_name(table_name)} RESTART IDENTITY CASCADE;")
       end
 
+      # override to use a single statement
+      def truncate_tables(table_names)
+        quoted_names = table_names.collect { |n| quote_name(n) }.join(', ')
+        execute("TRUNCATE TABLE #{quoted_names} RESTART IDENTITY;")
+      end
+
       # FIXME
       # copied from activerecord
       def supports_disable_referential_integrity?
@@ -177,9 +189,7 @@ module DatabaseCleaner
       def clean(repository = self.db)
         adapter = ::DataMapper.repository(repository).adapter
         adapter.disable_referential_integrity do
-          tables_to_truncate(repository).each do |table_name|
-            adapter.truncate_table table_name
-          end
+          adapter.truncate_tables(tables_to_truncate(repository))
         end
       end
 

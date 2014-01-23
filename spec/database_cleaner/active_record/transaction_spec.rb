@@ -58,7 +58,7 @@ module DatabaseCleaner
             connection.should_receive(:open_transactions).and_return(1)
 
             connection.stub(:respond_to?).with(:decrement_open_transactions).and_return(true)
-            connection.stub(:respond_to?).with(:rollback_transaction_records).and_return(false)
+            connection.stub(:respond_to?).with(:rollback_transaction_records, true).and_return(false)
             connection.stub(:respond_to?).with(:rollback_transaction).and_return(false)
             connection.stub(:rollback_db_transaction)
 
@@ -75,7 +75,7 @@ module DatabaseCleaner
           it "should decrement connection via ActiveRecord::Base if connection won't" do
             connection.should_receive(:open_transactions).and_return(1)
             connection.stub(:respond_to?).with(:decrement_open_transactions).and_return(false)
-            connection.stub(:respond_to?).with(:rollback_transaction_records).and_return(false)
+            connection.stub(:respond_to?).with(:rollback_transaction_records, true).and_return(false)
             connection.stub(:respond_to?).with(:rollback_transaction).and_return(false)
             connection.stub(:rollback_db_transaction)
 
@@ -112,7 +112,7 @@ module DatabaseCleaner
 
           it "should decrement connection via ActiveRecord::Base if connection won't" do
             connection.should_receive(:open_transactions).and_return(1)
-            connection.stub(:respond_to?).with(:rollback_transaction_records).and_return(false)
+            connection.stub(:respond_to?).with(:rollback_transaction_records, true).and_return(false)
             connection.stub(:respond_to?).with(:rollback_transaction).and_return(true)
             connection.stub(:rollback_transaction)
 

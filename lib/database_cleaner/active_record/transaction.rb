@@ -19,7 +19,7 @@ module DatabaseCleaner::ActiveRecord
         end
       end
       if connection_class.connection.respond_to?(:begin_transaction)
-        connection_class.connection.begin_transaction
+        connection_class.connection.begin_transaction joinable: false
       else
         connection_class.connection.begin_db_transaction
       end
@@ -36,7 +36,7 @@ module DatabaseCleaner::ActiveRecord
       end
 
       # The below is for handling after_commit hooks.. see https://github.com/bmabey/database_cleaner/issues/99
-      if connection_class.connection.respond_to?(:rollback_transaction_records)
+      if connection_class.connection.respond_to?(:rollback_transaction_records, true)
         connection_class.connection.send(:rollback_transaction_records, true)
       end
 

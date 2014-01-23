@@ -314,7 +314,7 @@ Usage beyond that remains the same with `DatabaseCleaner.start` calling any setu
     <tr>
       <td> Sequel</td>
       <td> <code>DatabaseCleaner[:sequel]</code></td>
-      <td> Multiple databases supported; specify <code>Databasecleaner[:sequel, {:connection =&gt; Sequel.connect(uri)}]</code></td>
+      <td> Multiple databases supported; specify <code>DatabaseCleaner[:sequel, {:connection =&gt; Sequel.connect(uri)}]</code></td>
     </tr>
     <tr>
       <td>Redis</td>
