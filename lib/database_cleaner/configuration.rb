@@ -81,6 +81,12 @@ module DatabaseCleaner
 
     alias clean! clean
 
+    def cleaning(&inner_block)
+      connections.inject(inner_block) do |curr_block, connection|
+        proc { connection.cleaning(&curr_block) }
+      end.call
+    end
+
     def clean_with(*args)
       connections.each { |connection| connection.clean_with(*args) }
     end

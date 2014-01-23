@@ -20,6 +20,10 @@ module DatabaseCleaner
         f= @fibers.pop
         f.resume
       end
+
+      def cleaning
+        self.db.transaction(:rollback => :always, :savepoint => true) { yield }
+      end
     end
   end
 end
