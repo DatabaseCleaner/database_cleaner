@@ -4,7 +4,18 @@ module DatabaseCleaner
     class Transaction
       include ::DatabaseCleaner::Sequel::Base
 
+      def self.check_fiber_brokenness
+        if !@checked_fiber_brokenness && Fiber.new { Thread.current }.resume != Thread.current
+          raise RuntimeError, "This ruby engine's Fibers are not compatible with Sequel's connection pool. " +
+            "To work around this, please use DatabaseCleaner.cleaning with a block instead of " +
+            "DatabaseCleaner.start and DatabaseCleaner.clean"
+        end
+        @checked_fiber_brokenness = true
+      end
+
       def start
+        self.class.check_fiber_brokenness
+
         @fibers||= []
         db= self.db
         f= Fiber.new do
