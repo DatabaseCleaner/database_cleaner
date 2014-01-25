@@ -451,6 +451,13 @@ module DatabaseCleaner
           subject.clean!
         end
       end
+
+      describe "cleaning" do
+        it "should proxy cleaning to the strategy" do
+          strategy.should_receive(:cleaning)
+          subject.cleaning { }
+        end
+      end
     end
 
     describe "auto_detected?" do
