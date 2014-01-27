@@ -163,6 +163,11 @@ describe ::DatabaseCleaner do
       ::DatabaseCleaner.clean
     end
 
+    it 'should proxy cleaning' do
+      connection.should_receive(:cleaning)
+      ::DatabaseCleaner.cleaning { }
+    end
+
     it "should proxy clean_with" do
       stratagem = double("stratgem")
       connection.should_receive(:clean_with).with(stratagem, {})
@@ -201,6 +206,28 @@ describe ::DatabaseCleaner do
         data_mapper.should_receive(:clean)
 
         ::DatabaseCleaner.clean
+      end
+
+      it "should initiate cleaning on each connection, yield, and finish cleaning each connection" do
+        [active_record, data_mapper].each do |connection|
+          mc = class << connection; self; end
+          mc.send(:attr_reader, :started, :cleaned)
+          mc.send(:define_method, 'cleaning') do |&block|
+            @started = true
+            block.call
+            @cleaned = true
+          end
+        end
+
+        ::DatabaseCleaner.cleaning do
+          active_record.started.should == true
+          data_mapper.started.should == true
+          active_record.cleaned.should == nil
+          data_mapper.cleaned.should == nil
+          @yielded = true
+        end
+        active_record.cleaned.should == true
+        data_mapper.cleaned.should == true
       end
 
       it "should proxy clean_with to all connections" do

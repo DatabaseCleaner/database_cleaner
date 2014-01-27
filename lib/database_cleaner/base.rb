@@ -88,6 +88,10 @@ module DatabaseCleaner
 
     alias clean! clean
 
+    def cleaning(&block)
+      strategy.cleaning(&block)
+    end
+
     def auto_detected?
       !!@autodetected
     end

@@ -146,7 +146,7 @@ passed to [`keys`](http://redis.io/commands/keys)).
 
 (I should point out the truncation strategy will never truncate your schema_migrations table.)
 
-Some strategies require that you call `DatabaseCleaner.start` before calling `clean` (for example the `:transaction` one needs to know to open up a transaction). So you would have:
+Some strategies need to be started before tests are run (for example the `:transaction` strategy needs to know to open up a transaction). This can be accomplished by calling `DatabaseCleaner.start` at the beginning of the run, or by running the tests inside a block to `Database.cleaning`. So you would have:
 
 ```ruby
 require 'database_cleaner'
@@ -158,6 +158,12 @@ DatabaseCleaner.start # usually this is called in setup of a test
 dirty_the_db
 
 DatabaseCleaner.clean # cleanup of the test
+
+# OR
+
+DatabaseCleaner.cleaning do
+  dirty_the_db
+end
 ```
 
 At times you may want to do a single clean with one strategy.
@@ -196,12 +202,10 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
   end
 
-  config.before(:each) do
-    DatabaseCleaner.start
-  end
-
-  config.after(:each) do
-    DatabaseCleaner.clean
+  config.around(:each) do |example|
+    DatabaseCleaner.cleaning do
+      example.run
+    end
   end
 
 end
@@ -219,6 +223,13 @@ class MiniTest::Spec
 
   after :each do
     DatabaseCleaner.clean
+  end
+end
+
+# with the minitest-around gem, this may be used instead:
+class Minitest::Spec
+  around do |tests|
+    DatabaseCleaner.cleaning(&tests)
   end
 end
 ```
@@ -239,12 +250,8 @@ rescue NameError
   raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
 end
 
-Before do
-  DatabaseCleaner.start
-end
-
-After do |scenario|
-  DatabaseCleaner.clean
+Around do |scenario, block|
+  DatabaseCleaner.cleaning(&block)
 end
 ```
 
@@ -358,6 +365,9 @@ If you are using Postgres and have foreign key constraints, the truncation strat
 client_min_messages = warning
 ```
 
+### Nothing happens in JRuby with Sequel using transactions
+
+Due to an inconsistency in JRuby's implementation of Fibers, Sequel gives a different connection to `DatabaseCleaner.start` than is used for tests run between `.start` and `.clean`. This can be worked around by running your tests in a block like `DatabaseCleaner.cleaning { run_my_tests }` instead, which does not use Fibers. 
 
 ## Debugging
 
