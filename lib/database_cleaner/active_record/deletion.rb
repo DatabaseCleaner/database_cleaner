@@ -17,6 +17,12 @@ module DatabaseCleaner
         execute("DELETE FROM #{quote_table_name(table_name)};")
       end
     end
+
+    module OracleDeleteAdapter
+      def delete_table(table_name)
+        execute("DELETE FROM #{quote_table_name(table_name)}")
+      end
+    end
   end
 end
 
@@ -32,7 +38,7 @@ module ActiveRecord
     PostgreSQLAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::GenericDeleteAdapter } if defined?(PostgreSQLAdapter)
     IBM_DBAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::GenericDeleteAdapter } if defined?(IBM_DBAdapter)
     SQLServerAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::GenericDeleteAdapter } if defined?(SQLServerAdapter)
-    OracleEnhancedAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::GenericDeleteAdapter } if defined?(OracleEnhancedAdapter)
+    OracleEnhancedAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::OracleDeleteAdapter } if defined?(OracleEnhancedAdapter)
   end
 end
 
