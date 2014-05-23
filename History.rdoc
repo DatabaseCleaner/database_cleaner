@@ -1,3 +1,10 @@
+== Unreleased
+
+=== Bug Fixes
+
+  * Fixed an issue with the `Transaction` strategy and Active Record where application-level transactions
+    are not rolledback correctly. (Godfrey Chan)
+
 == 1.2.0 2013-10-09
 
 A huge thanks goes to @tommeier for fixing the bug with class loading that was cuasing the wrong adapters
