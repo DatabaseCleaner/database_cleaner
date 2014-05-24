@@ -1,3 +1,15 @@
+== 1.3.0 2014-05-23
+
+=== New Features/Changes
+  * Introduced `DatabaseCleaener::cleaninng` method that takes a block. (@ethco)
+  * Improved Sequel support and added more tests (@ethco, @rhunter)
+
+=== Bug Fixes
+
+  * Fixed an issue with the `Transaction` strategy and Active Record where application-level transactions
+    are not rolledback correctly. (Godfrey Chan)
+  * activerecord-oracle_enhanced-adapter now works again (#259, @sockmonk)
+
 == 1.2.0 2013-10-09
 
 A huge thanks goes to @tommeier for fixing the bug with class loading that was cuasing the wrong adapters
