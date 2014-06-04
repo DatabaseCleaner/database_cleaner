@@ -12,7 +12,7 @@ module DataMapper
 
       def truncate_tables(table_names)
         table_names.each do |table_name|
-          adapter.truncate_table table_name
+          truncate_table table_name
         end
       end
 
