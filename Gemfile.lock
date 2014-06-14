@@ -106,6 +106,7 @@ GEM
       guard (>= 1.1)
       rspec (~> 2.11)
     hike (1.2.1)
+    hiredis (0.5.2)
     i18n (0.6.1)
     jeweler (1.8.4)
       bundler (~> 1.0)
@@ -132,13 +133,15 @@ GEM
       origin (~> 1.0)
       tzinfo (~> 0.3.22)
     moped (1.3.2)
+    msgpack (0.5.8)
     multi_json (1.5.0)
     mysql (2.8.1)
     mysql2 (0.3.11)
-    nest (1.1.2)
-      redis
-    ohm (0.1.5)
-      nest (~> 1.0)
+    nido (0.0.1)
+    ohm (2.0.0)
+      msgpack
+      nido
+      redic
     origin (1.0.11)
     pg (0.14.1)
     plucky (0.5.2)
@@ -164,7 +167,9 @@ GEM
     rake (10.0.3)
     rdoc (3.12)
       json (~> 1.4)
-    redis (3.0.4)
+    redic (1.1.1)
+      hiredis
+    redis (3.1.0)
     rest-client (1.6.7)
       mime-types (>= 1.16)
     rspec (2.14.1)
@@ -218,9 +223,11 @@ DEPENDENCIES
   mongoid
   mysql (~> 2.8.1)
   mysql2
-  ohm (~> 0.1.3)
+  ohm
   pg
   rake
+  redic
+  redis
   rspec-rails
   sequel (~> 3.21.0)
   sqlite3

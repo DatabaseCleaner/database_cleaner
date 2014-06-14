@@ -120,6 +120,8 @@ module DatabaseCleaner
         :ohm
       elsif defined? ::Redis
         :redis
+      elsif defined? ::Redic
+        :redic
       end
     end
 
@@ -144,14 +146,14 @@ module DatabaseCleaner
       @autodetected = true
 
       @orm ||= autodetect_orm ||
-               raise(NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, Moped, or CouchPotato, Redis or Ohm loaded?")
+               raise(NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, Moped, or CouchPotato, Redis, Redic or Ohm loaded?")
     end
 
     def set_default_orm_strategy
       case orm
       when :active_record, :data_mapper, :sequel
         self.strategy = :transaction
-      when :mongo_mapper, :mongoid, :couch_potato, :moped, :ohm, :redis
+      when :mongo_mapper, :mongoid, :couch_potato, :moped, :ohm, :redis, :redic
         self.strategy = :truncation
       end
     end

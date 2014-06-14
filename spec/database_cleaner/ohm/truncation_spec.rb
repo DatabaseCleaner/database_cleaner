@@ -1,6 +1,8 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
 require 'ohm'
 require 'database_cleaner/ohm/truncation'
+require 'yaml'
+require 'redic'
 
 module DatabaseCleaner
   module Ohm
@@ -16,12 +18,12 @@ module DatabaseCleaner
     describe Truncation do
       before(:all) do
         config = YAML::load(File.open("#{File.dirname(__FILE__)}/../../../examples/config/redis.yml"))
-        ::Ohm.connect :url => config['test']['url']
+        ::Ohm.redis =  ::Redic.new config['test']['url']
         @redis = ::Ohm.redis
       end
 
       before(:each) do
-        @redis.flushdb
+        @redis.call('FLUSHDB')
       end
 
       it "should flush the database" do
@@ -39,19 +41,19 @@ module DatabaseCleaner
       it "truncates all keys by default" do
         create_widget
         create_gadget
-        @redis.keys.size.should eq 6
+        @redis.call('KEYS', '*').size.should eq 6
         Truncation.new.clean
-        @redis.keys.size.should eq 0
+        @redis.call('KEYS', '*').size.should eq 0
       end
 
       context "when keys are provided to the :only option" do
         it "only truncates the specified keys" do
           create_widget
           create_gadget
-          @redis.keys.size.should eq 6
+          @redis.call('KEYS', '*').size.should eq 6
           Truncation.new(:only => ['*Widget*']).clean
-          @redis.keys.size.should eq 3
-          @redis.get('DatabaseCleaner::Ohm::Gadget:id').should eq '1'
+          @redis.call('KEYS', '*').size.should eq 3
+          @redis.call('GET', 'DatabaseCleaner::Ohm::Gadget:id').should eq '1'
         end
       end
 
@@ -59,10 +61,10 @@ module DatabaseCleaner
         it "truncates all but the specified keys" do
           create_widget
           create_gadget
-          @redis.keys.size.should eq 6
+          @redis.call('KEYS', '*').size.should eq 6
           Truncation.new(:except => ['*Widget*']).clean
-          @redis.keys.size.should eq 3
-          @redis.get('DatabaseCleaner::Ohm::Widget:id').should eq '1'
+          @redis.call('KEYS', '*').size.should eq 3
+          @redis.call('GET', 'DatabaseCleaner::Ohm::Widget:id').should eq '1'
         end
       end
     end

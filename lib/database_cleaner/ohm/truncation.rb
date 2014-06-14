@@ -1,8 +1,8 @@
-require 'database_cleaner/redis/truncation'
+require 'database_cleaner/redic/truncation'
 
 module DatabaseCleaner
   module Ohm
-    class Truncation < ::DatabaseCleaner::Redis::Truncation
+    class Truncation < ::DatabaseCleaner::Redic::Truncation
 
       private
 

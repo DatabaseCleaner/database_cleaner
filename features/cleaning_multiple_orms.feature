@@ -17,24 +17,28 @@ Feature: database cleaning using multiple ORMs
     | ActiveRecord | CouchPotato  |
     | ActiveRecord | Ohm          |
     | ActiveRecord | Redis        |
+    | ActiveRecord | Redic        |
     | DataMapper   | ActiveRecord |
     | DataMapper   | MongoMapper  |
     | DataMapper   | Mongoid      |
     | DataMapper   | CouchPotato  |
     | DataMapper   | Ohm          |
     | DataMapper   | Redis        |
+    | DataMapper   | Redic        |
     | MongoMapper  | ActiveRecord |
     | MongoMapper  | DataMapper   |
     | MongoMapper  | Mongoid      |
     | MongoMapper  | CouchPotato  |
     | MongoMapper  | Ohm          |
     | MongoMapper  | Redis        |
+    | MongoMapper  | Redic        |
     | CouchPotato  | ActiveRecord |
     | CouchPotato  | DataMapper   |
     | CouchPotato  | MongoMapper  |
     | CouchPotato  | Mongoid      |
     | CouchPotato  | Ohm          |
     | CouchPotato  | Redis        |
+    | CouchPotato  | Redic        |
     | Ohm          | ActiveRecord |
     | Ohm          | DataMapper   |
     | Ohm          | MongoMapper  |
@@ -46,3 +50,9 @@ Feature: database cleaning using multiple ORMs
     | Redis        | Mongoid      |
     | Redis        | CouchPotato  |
     | Redis        | Ohm          |
+    | Redic        | ActiveRecord |
+    | Redic        | DataMapper   |
+    | Redic        | MongoMapper  |
+    | Redic        | Mongoid      |
+    | Redic        | CouchPotato  |
+    | Redic        | Ohm          |

@@ -5,7 +5,7 @@ Database Cleaner is a set of strategies for cleaning your database in Ruby.
 The original use case was to ensure a clean state during tests.
 Each strategy is a small amount of code but is code that is usually needed in any ruby app that is testing with a database.
 
-ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, CouchPotato, Ohm and Redis are supported.
+ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, CouchPotato, Ohm, Redic and Redis are supported.
 
 [![Build Status](https://secure.travis-ci.org/bmabey/database_cleaner.png)](http://travis-ci.org/bmabey/database_cleaner)
 
@@ -61,6 +61,12 @@ Here is an overview of the strategies supported for each library:
       <td>No</td>
       <td>No</td>
     </tr>
+    <tr>
+      <td>Redic</td>
+      <td><b>Yes</b></td>
+      <td>No</td>
+      <td>No</td>
+    </tr
     <tr>
       <td>Ohm</td>
       <td><b>Yes</b></td>
@@ -141,7 +147,7 @@ DatabaseCleaner.strategy = :truncation, {:only => %w[widgets dogs some_other_tab
 DatabaseCleaner.strategy = :truncation, {:except => %w[widgets]}
 ```
 
-With Ohm and Redis, `:only` and `:except` take a list of strings to be
+With Ohm, Redic and Redis, `:only` and `:except` take a list of strings to be
 passed to [`keys`](http://redis.io/commands/keys)).
 
 (I should point out the truncation strategy will never truncate your schema_migrations table.)
@@ -329,6 +335,11 @@ Usage beyond that remains the same with `DatabaseCleaner.start` calling any setu
       <td>Connection specified as Redis URI</td>
     </tr>
     <tr>
+      <td>Redic</td>
+      <td><code>DatabaseCleaner[:redic]</code></td>
+      <td>Connection specified as Redis URI</td>
+    </tr>
+    <tr>
       <td>Ohm</td>
       <td><code>DatabaseCleaner[:ohm]</code></td>
       <td>Connection specified as Redis URI</td>
@@ -367,7 +378,7 @@ client_min_messages = warning
 
 ### Nothing happens in JRuby with Sequel using transactions
 
-Due to an inconsistency in JRuby's implementation of Fibers, Sequel gives a different connection to `DatabaseCleaner.start` than is used for tests run between `.start` and `.clean`. This can be worked around by running your tests in a block like `DatabaseCleaner.cleaning { run_my_tests }` instead, which does not use Fibers. 
+Due to an inconsistency in JRuby's implementation of Fibers, Sequel gives a different connection to `DatabaseCleaner.start` than is used for tests run between `.start` and `.clean`. This can be worked around by running your tests in a block like `DatabaseCleaner.cleaning { run_my_tests }` instead, which does not use Fibers.
 
 ## Debugging
 

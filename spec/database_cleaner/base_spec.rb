@@ -20,6 +20,7 @@ module DatabaseCleaner
          Temp_SQ = ::Sequel       if defined?(::Sequel)       and not defined?(Temp_SQ)
          Temp_MP = ::Moped        if defined?(::Moped)        and not defined?(Temp_MP)
          Temp_RS = ::Redis        if defined?(::Redis)        and not defined?(Temp_RS)
+         Temp_RC = ::Redic        if defined?(::Redic)        and not defined?(Temp_RC)
          Temp_OH = ::Ohm          if defined?(::Ohm)          and not defined?(Temp_OH)
        end
 
@@ -34,6 +35,7 @@ module DatabaseCleaner
          Object.send(:remove_const, 'Moped')        if defined?(::Moped)
          Object.send(:remove_const, 'Ohm')          if defined?(::Ohm)
          Object.send(:remove_const, 'Redis')        if defined?(::Redis)
+         Object.send(:remove_const, 'Redic')        if defined?(::Redic)
 
 
          # Restore ORMs
@@ -46,6 +48,7 @@ module DatabaseCleaner
          ::Moped        = Temp_MP if defined? Temp_MP
          ::Ohm          = Temp_OH if defined? Temp_OH
          ::Redis        = Temp_RS if defined? Temp_RS
+         ::Redic        = Temp_RC if defined? Temp_RC
        end
 
        #reset the orm mocks
@@ -59,6 +62,7 @@ module DatabaseCleaner
          Object.send(:remove_const, 'Moped')        if defined?(::Moped)
          Object.send(:remove_const, 'Ohm')          if defined?(::Ohm)
          Object.send(:remove_const, 'Redis')        if defined?(::Redis)
+         Object.send(:remove_const, 'Redic')        if defined?(::Redic)
        end
 
        let(:cleaner) { DatabaseCleaner::Base.new :autodetect }
@@ -77,6 +81,7 @@ module DatabaseCleaner
          Object.const_set('Moped',       'Moped mock')
          Object.const_set('Ohm',         'Ohm mock')
          Object.const_set('Redis',       'Redis mock')
+         Object.const_set('Redis',       'Redic mock')
 
          cleaner.orm.should eq :active_record
          cleaner.should be_auto_detected
@@ -91,6 +96,7 @@ module DatabaseCleaner
          Object.const_set('Moped',       'Moped mock')
          Object.const_set('Ohm',         'Ohm mock')
          Object.const_set('Redis',       'Redis mock')
+         Object.const_set('Redic',       'Redic mock')
 
          cleaner.orm.should eq :data_mapper
          cleaner.should be_auto_detected
@@ -104,6 +110,7 @@ module DatabaseCleaner
          Object.const_set('Moped',       'Moped mock')
          Object.const_set('Ohm',         'Ohm mock')
          Object.const_set('Redis',       'Redis mock')
+         Object.const_set('Redic',       'Redic mock')
 
          cleaner.orm.should eq :mongo_mapper
          cleaner.should be_auto_detected
@@ -116,6 +123,7 @@ module DatabaseCleaner
          Object.const_set('Moped',       'Moped mock')
          Object.const_set('Ohm',         'Ohm mock')
          Object.const_set('Redis',       'Redis mock')
+         Object.const_set('Redic',       'Redic mock')
 
          cleaner.orm.should eq :mongoid
          cleaner.should be_auto_detected
@@ -127,6 +135,7 @@ module DatabaseCleaner
          Object.const_set('Moped',       'Moped mock')
          Object.const_set('Ohm',         'Ohm mock')
          Object.const_set('Redis',       'Redis mock')
+         Object.const_set('Redic',       'Redic mock')
 
          cleaner.orm.should eq :couch_potato
          cleaner.should be_auto_detected
@@ -137,30 +146,43 @@ module DatabaseCleaner
          Object.const_set('Moped',  'Moped mock')
          Object.const_set('Ohm',    'Ohm mock')
          Object.const_set('Redis',  'Redis mock')
+         Object.const_set('Redic',  'Redic mock')
 
          cleaner.orm.should eq :sequel
          cleaner.should be_auto_detected
        end
 
-       it 'detects Ohm seventh' do
-         Object.const_set('Ohm', 'Ohm mock')
+       it 'detects Moped seventh' do
+         Object.const_set('Moped',       'Moped mock')
+         Object.const_set('Ohm',         'Ohm mock')
          Object.const_set('Redis',       'Redis mock')
+         Object.const_set('Redic',       'Redic mock')
+
+         cleaner.orm.should eq :moped
+         cleaner.should be_auto_detected
+       end
+
+       it 'detects Ohm eighth' do
+         Object.const_set('Ohm',         'Ohm mock')
+         Object.const_set('Redis',       'Redis mock')
+         Object.const_set('Redic',       'Redic mock')
 
          cleaner.orm.should eq :ohm
          cleaner.should be_auto_detected
        end
 
-       it 'detects Redis last' do
+       it 'detects Redis ninth' do
          Object.const_set('Redis',       'Redis mock')
+         Object.const_set('Redic',       'Redic mock')
 
          cleaner.orm.should eq :redis
          cleaner.should be_auto_detected
        end
 
-       it 'detects Moped seventh' do
-         Object.const_set('Moped', 'Moped mock')
+       it 'detects Redic tenth' do
+         Object.const_set('Redic',       'Redic mock')
 
-         cleaner.orm.should eq :moped
+         cleaner.orm.should eq :redic
          cleaner.should be_auto_detected
        end
     end
@@ -561,6 +583,11 @@ module DatabaseCleaner
       it 'sets strategy to :truncation for Redis' do
         cleaner = DatabaseCleaner::Base.new(:redis)
         cleaner.strategy.should be_instance_of DatabaseCleaner::Redis::Truncation
+      end
+
+      it 'sets strategy to :truncation for Redic' do
+        cleaner = DatabaseCleaner::Base.new(:redic)
+        cleaner.strategy.should be_instance_of DatabaseCleaner::Redic::Truncation
       end
     end
 

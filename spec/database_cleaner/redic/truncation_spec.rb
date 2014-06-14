@@ -1,20 +1,20 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
-require 'redis'
-require 'database_cleaner/redis/truncation'
+require 'redic'
+require 'database_cleaner/redic/truncation'
 require 'yaml'
 
 
 module DatabaseCleaner
-  module Redis
+  module Redic
 
     describe Truncation do
       before(:all) do
         config =  YAML::load(File.open("#{File.dirname(__FILE__)}/../../../examples/config/redis.yml"))
-      @redis = ::Redis.connect :url => config['test']['url']
+      @redic = ::Redic.new config['test']['url']
       end
 
       before(:each) do
-        @redis.flushdb
+        @redic.call('FLUSHDB')
       end
 
       it "should flush the database" do
@@ -22,29 +22,29 @@ module DatabaseCleaner
       end
 
       def create_widget(attrs={})
-        @redis.set 'Widget', 1
+        @redic.call 'SET', 'Widget', 1
       end
 
       def create_gadget(attrs={})
-        @redis.set 'Gadget', 1
+        @redic.call 'SET', 'Gadget', 1
       end
 
       it "truncates all keys by default" do
         create_widget
         create_gadget
-        @redis.keys.size.should eq 2
+        @redic.call('KEYS', '*').size.should eq 2
         Truncation.new.clean
-        @redis.keys.size.should eq 0
+        @redic.call('KEYS', '*').size.should eq 0
       end
 
       context "when keys are provided to the :only option" do
         it "only truncates the specified keys" do
           create_widget
           create_gadget
-          @redis.keys.size.should eq 2
+          @redic.call('KEYS', '*').size.should eq 2
           Truncation.new(:only => ['Widge*']).clean
-          @redis.keys.size.should eq 1
-          @redis.get('Gadget').should eq '1'
+          @redic.call('KEYS', '*').size.should eq 1
+          @redic.call('GET', 'Gadget').should eq '1'
         end
       end
 
@@ -52,10 +52,10 @@ module DatabaseCleaner
         it "truncates all but the specified keys" do
           create_widget
           create_gadget
-          @redis.keys.size.should eq 2
+          @redic.call('KEYS', '*').size.should eq 2
           Truncation.new(:except => ['Widg*']).clean
-          @redis.keys.size.should eq 1
-          @redis.get('Widget').should eq '1'
+          @redic.call('KEYS', '*').size.should eq 1
+          @redic.call('GET', 'Widget').should eq '1'
         end
       end
     end

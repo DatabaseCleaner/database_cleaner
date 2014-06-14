@@ -69,6 +69,13 @@ describe ::DatabaseCleaner do
       cleaner.orm.should eq :ohm
       ::DatabaseCleaner.connections.size.should eq 1
     end
+
+    it 'accepts :redic' do
+      cleaner = ::DatabaseCleaner[:redic]
+      cleaner.should be_a(::DatabaseCleaner::Base)
+      cleaner.orm.should eq :redic
+      ::DatabaseCleaner.connections.size.should eq 1
+    end
   end
 
   it "should accept multiple orm's" do

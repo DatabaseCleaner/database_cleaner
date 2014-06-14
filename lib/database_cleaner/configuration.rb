@@ -123,6 +123,8 @@ module DatabaseCleaner
           DatabaseCleaner::Ohm
         when :redis
           DatabaseCleaner::Redis
+        when :redic
+            DatabaseCleaner::Redic
       end
     end
   end
