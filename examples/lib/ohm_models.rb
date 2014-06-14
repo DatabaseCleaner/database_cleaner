@@ -1,6 +1,7 @@
 require 'ohm'
+require 'redis'
 
-Ohm.connect :url => ENV['REDIS_URL']
+Ohm.redis = Redic.new ENV['REDIS_URL']
 
 class OhmWidget < Ohm::Model
   attribute :name
@@ -16,7 +17,7 @@ class OhmWidget < Ohm::Model
 end
 
 class OhmWidgetUsingDatabaseOne < Ohm::Model
-  connect :url => ENV['REDIS_URL_ONE']
+  Ohm.redis = Redic.new ENV['REDIS_URL_ONE']
   attribute :name
 
   def self.create!(attrs = {})
@@ -30,7 +31,7 @@ class OhmWidgetUsingDatabaseOne < Ohm::Model
 end
 
 class OhmWidgetUsingDatabaseTwo < Ohm::Model
-  connect :url => ENV['REDIS_URL_TWO']
+  Ohm.redis = Redic.new ENV['REDIS_URL_TWO']
   attribute :name
 
   def self.create!(attrs = {})
