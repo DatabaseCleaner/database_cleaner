@@ -2,6 +2,7 @@ require 'support/active_record/database_setup'
 require 'support/data_mapper/schema_setup'
 
 module DataMapperSQLite3Helper
+
   puts "DataMapper #{DataMapper::VERSION}, sqlite3"
 
   def config
@@ -25,7 +26,7 @@ module DataMapperSQLite3Helper
   def data_mapper_sqlite3_setup
     create_db
     establish_connection
-    load_schema
+    data_mapper_load_schema
   end
 
   def data_mapper_sqlite3_connection

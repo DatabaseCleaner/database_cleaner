@@ -16,24 +16,24 @@ module DataMapper
       end
 
       before(:each) do
-        connection.truncate_tables ['users']
+        connection.truncate_tables(DataMapper::Model.descendants.map { |d| d.storage_names[:default] || d.name.underscore })
       end
 
       describe "#truncate_table" do
         it "truncates the table" do
-          2.times { User.create }
+          2.times { DmUser.create }
 
-          connection.truncate_table('users')
-          User.count.should eq 0
+          connection.truncate_table(DmUser.storage_names[:default])
+          DmUser.count.should eq 0
         end
 
         it "resets AUTO_INCREMENT index of table" do
-          2.times { User.create }
-          User.destroy
+          2.times { DmUser.create }
+          DmUser.destroy
 
-          connection.truncate_table('users')
+          connection.truncate_table(DmUser.storage_names[:default])
 
-          User.create.id.should eq 1
+          DmUser.create.id.should eq 1
         end
       end
 

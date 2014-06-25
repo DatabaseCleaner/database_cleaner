@@ -2,6 +2,7 @@ require 'support/active_record/database_setup'
 require 'support/active_record/schema_setup'
 
 module SQLite3Helper
+
   puts "Active Record #{ActiveRecord::VERSION::STRING}, sqlite3"
 
   # ActiveRecord::Base.logger = Logger.new(STDERR)
@@ -27,7 +28,7 @@ module SQLite3Helper
   def active_record_sqlite3_setup
     create_db
     establish_connection
-    load_schema
+    active_record_load_schema
   end
 
   def active_record_sqlite3_connection

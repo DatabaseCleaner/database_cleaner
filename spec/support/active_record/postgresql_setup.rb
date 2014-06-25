@@ -2,6 +2,7 @@ require 'support/active_record/database_setup'
 require 'support/active_record/schema_setup'
 
 module PostgreSQLHelper
+
   puts "Active Record #{ActiveRecord::VERSION::STRING}, pg"
 
   # ActiveRecord::Base.logger = Logger.new(STDERR)
@@ -28,7 +29,7 @@ module PostgreSQLHelper
   def active_record_pg_setup
     create_db
     establish_connection
-    load_schema
+    active_record_load_schema
   end
 
   def active_record_pg_connection

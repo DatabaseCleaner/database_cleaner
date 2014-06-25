@@ -3,6 +3,7 @@ require 'support/active_record/schema_setup'
 
 
 module MySQL2Helper
+
   puts "Active Record #{ActiveRecord::VERSION::STRING}, mysql2"
 
   # require 'logger'
@@ -26,7 +27,7 @@ module MySQL2Helper
   def active_record_mysql2_setup
     create_db
     establish_connection
-    load_schema
+    active_record_load_schema
   end
 
   def active_record_mysql2_connection
