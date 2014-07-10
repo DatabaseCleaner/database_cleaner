@@ -43,8 +43,8 @@ module DatabaseCleaner
     end
 
     supported_configurations = [
-      { url: 'mysql:///', connection_options: db_config['mysql'] },
-      { url: 'postgres:///', connection_options: db_config['postgres'] }
+      { :url => 'mysql:///', :connection_options => db_config['mysql'] },
+      { :url => 'postgres:///', :connection_options => db_config['postgres'] }
     ]
 
     supported_configurations.each do |config|
