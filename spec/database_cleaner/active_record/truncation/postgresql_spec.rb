@@ -35,6 +35,12 @@ module ActiveRecord
         end
       end
 
+      describe '#database_cleaner_table_cache' do
+        it 'should default to the list of tables with their schema' do
+          connection.database_cleaner_table_cache.first.should match(/^public\./)
+        end
+      end
+
       it_behaves_like "an adapter with pre-count truncation" do
         let(:connection) { active_record_pg_connection }
       end
