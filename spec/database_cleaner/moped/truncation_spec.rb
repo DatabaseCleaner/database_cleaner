@@ -39,12 +39,17 @@ module DatabaseCleaner
         MopedTest::Gadget.new({:name => 'some gadget'}.merge(attrs)).save!
       end
 
+      def create_system(attrs={})
+        MopedTest::System.new({:name => 'some system'}.merge(attrs)).save!
+      end
+
       it "truncates all collections by default" do
         create_widget
         create_gadget
-        ensure_counts(MopedTest::Widget => 1, MopedTest::Gadget => 1)
+        create_system
+        ensure_counts(MopedTest::Widget => 1, MopedTest::Gadget => 1, MopedTest::System => 1)
         truncation.clean
-        ensure_counts(MopedTest::Widget => 0, MopedTest::Gadget => 0)
+        ensure_counts(MopedTest::Widget => 0, MopedTest::Gadget => 0, MopedTest::System => 0)
       end
 
       context "when collections are provided to the :only option" do
