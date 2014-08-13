@@ -7,7 +7,13 @@ module DatabaseCleaner
       include ::DatabaseCleaner::Sequel::Base
       include ::DatabaseCleaner::Generic::Truncation
 
+      def start
+        @last_txid = txid
+      end
+
       def clean
+        return unless is_dirty?
+
         case db.database_type
         when :postgres
           # PostgreSQL requires all tables with FKs to be truncates in the same command, or have the CASCADE keyword
@@ -41,6 +47,17 @@ module DatabaseCleaner
       def truncate_tables(db, tables)
         tables.each do |table|
           db[table.to_sym].truncate
+        end
+      end
+
+      def is_dirty?
+        @last_txid != txid || @last_txid.nil?
+      end
+
+      def txid
+        case db.database_type
+        when :postgres
+          db.fetch("SELECT txid_snapshot_xmax(txid_current_snapshot()) AS txid").first[:txid]
         end
       end
 

@@ -5,6 +5,8 @@ require "database_cleaner/sequel/truncation"
 module DatabaseCleaner::Sequel
   class Deletion < Truncation
     def clean
+      return unless is_dirty?
+
       db.transaction do
         case db.database_type
         when :postgres
