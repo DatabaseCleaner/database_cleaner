@@ -87,6 +87,7 @@ Gem::Specification.new do |s|
     "lib/database_cleaner/redis/base.rb",
     "lib/database_cleaner/redis/truncation.rb",
     "lib/database_cleaner/sequel/base.rb",
+    "lib/database_cleaner/sequel/deletion.rb",
     "lib/database_cleaner/sequel/transaction.rb",
     "lib/database_cleaner/sequel/truncation.rb",
     "spec/database_cleaner/active_record/base_spec.rb",

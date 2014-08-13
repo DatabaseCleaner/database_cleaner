@@ -2,7 +2,7 @@ require 'database_cleaner/generic/base'
 module DatabaseCleaner
   module Sequel
     def self.available_strategies
-      %w[truncation transaction]
+      %w[truncation transaction deletion]
     end
 
     module Base
@@ -14,7 +14,7 @@ module DatabaseCleaner
 
       def db
         return @db if @db && @db != :default
-        raise "As you have more than one active sequel database you have to specify the one to use manually!" if ::Sequel::DATABASES.count > 1 
+        raise "As you have more than one active sequel database you have to specify the one to use manually!" if ::Sequel::DATABASES.count > 1
         ::Sequel::DATABASES.first || :default
       end
     end
