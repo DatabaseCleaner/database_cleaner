@@ -1,7 +1,7 @@
 == 1.3.0 2014-05-23
 
 === New Features/Changes
-  * Introduced `DatabaseCleaener::cleaninng` method that takes a block. (@ethco)
+  * Introduced `DatabaseCleaner::cleaning` method that takes a block. (@ethco)
   * Improved Sequel support and added more tests (@ethco, @rhunter)
 
 === Bug Fixes
