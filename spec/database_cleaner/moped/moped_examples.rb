@@ -23,4 +23,10 @@ module MopedTest
   end
   class Gadget < ThingBase
   end
+  class System < ThingBase
+    def self.collection
+      super
+      @collection = @session['system_logs']
+    end
+  end
 end
