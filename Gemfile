@@ -3,8 +3,8 @@ source "http://rubygems.org"
 
 group :development do
   gem "rake"
-  #gem "ruby-debug"
-
+  gem "ruby-debug", :platform => :ruby_18
+  gem "ruby-debug19", :platform => :ruby_19
   gem "bundler"
   gem "jeweler"
 
@@ -26,7 +26,6 @@ group :development do
   gem 'mysql', '~> 2.8.1'
   gem 'mysql2'
   gem 'pg'
-  gem 'sqlite3'
   gem 'ohm', '~> 0.1.3'
 
   gem 'guard-rspec'
@@ -34,9 +33,6 @@ end
 
 group :test do
   gem "rspec-rails"
-  #gem "rspactor"
-  #gem "rcov"
-  #gem "ZenTest"
 end
 
 group :cucumber do

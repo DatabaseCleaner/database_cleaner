@@ -30,7 +30,13 @@ module DatabaseCleaner
           ::Mongoid.default_session
         end
 
-      end
+        def database
+          if not(@db.nil? or @db == :default)
+            ::Mongoid.databases[@db]
+          else
+            ::Mongoid.database
+          end
+        end
 
     end
   end
