@@ -1,7 +1,7 @@
 source "http://rubygems.org"
 # TODO: move these to the gemspec...
 
-group :development do
+group :development, :test do
   gem "rake"
   gem "ruby-debug", :platform => :ruby_18
   gem "ruby-debug19", :platform => :ruby_19
@@ -10,6 +10,7 @@ group :development do
 
   gem "json_pure"
 
+  gem "activerecord-mysql2-adapter"
   #ORM's
   gem "activerecord"
   gem "datamapper"
@@ -19,8 +20,12 @@ group :development do
     gem "tzinfo"
     gem "mongo_ext"
     gem "bson_ext"
+    gem "mongoid-tree"
+
   gem "mongo_mapper"
+  gem "moped"
   gem "couch_potato"
+
   gem "sequel",               "~>3.21.0"
   #gem "ibm_db"  # I don't want to add this dependency, even as a dev one since it requires DB2 to be installed
   gem 'mysql', '~> 2.8.1'
@@ -33,6 +38,7 @@ end
 
 group :test do
   gem "rspec-rails"
+  gem "sqlite3"
 end
 
 group :cucumber do
