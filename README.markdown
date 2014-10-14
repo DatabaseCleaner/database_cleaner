@@ -359,15 +359,26 @@ DatabaseCleaner[:mongoid].strategy = :truncation
 
 ### STDERR is being flooded when using Postgres
 
-If you are using Postgres and have foreign key constraints, the truncation strategy will cause a lot of extra noise to appear on STDERR (in the form of "NOTICE truncate cascades" messages). To silence these warnings set the following log level in your `postgresql.conf` file:
+If you are using Postgres and have foreign key constraints, the truncation strategy will cause a lot of extra noise to appear on STDERR (in the form of "NOTICE truncate cascades" messages).
+
+To silence these warnings set the following log level in your `postgresql.conf` file:
 
 ```ruby
 client_min_messages = warning
 ```
 
+For ActiveRecord, you add the following parameter in your database.yml file:
+
+<pre>
+test:
+  adapter: postgresql
+  # ...
+  min_messages: WARNING  
+</pre>
+
 ### Nothing happens in JRuby with Sequel using transactions
 
-Due to an inconsistency in JRuby's implementation of Fibers, Sequel gives a different connection to `DatabaseCleaner.start` than is used for tests run between `.start` and `.clean`. This can be worked around by running your tests in a block like `DatabaseCleaner.cleaning { run_my_tests }` instead, which does not use Fibers. 
+Due to an inconsistency in JRuby's implementation of Fibers, Sequel gives a different connection to `DatabaseCleaner.start` than is used for tests run between `.start` and `.clean`. This can be worked around by running your tests in a block like `DatabaseCleaner.cleaning { run_my_tests }` instead, which does not use Fibers.
 
 ## Debugging
 
