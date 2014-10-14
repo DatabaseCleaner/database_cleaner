@@ -181,7 +181,12 @@ module DatabaseCleaner
 
     describe "comparison" do
       it "should be equal if orm, connection and strategy are the same" do
+<<<<<<< HEAD
         strategy = double("strategy")
+=======
+        strategy = mock("strategy")
+        strategy.stub!(:to_ary => [strategy])
+>>>>>>> bb3dce2558d2888ef581affb0de4d5e55118cd3d
 
         one = DatabaseCleaner::Base.new(:active_record,:connection => :default)
         one.strategy = strategy
@@ -248,7 +253,15 @@ module DatabaseCleaner
     end
 
     describe "strategy_db=" do
+<<<<<<< HEAD
       let(:strategy) { double("strategy") }
+=======
+      let(:strategy) {
+        mock("strategy").tap{|strategy|
+          strategy.stub!(:to_ary => [strategy])
+        }
+      }
+>>>>>>> bb3dce2558d2888ef581affb0de4d5e55118cd3d
 
       before(:each) do
         subject.strategy = strategy
@@ -348,7 +361,15 @@ module DatabaseCleaner
     end
 
     describe "strategy=" do
+<<<<<<< HEAD
       let(:mock_strategy) { double("strategy") }
+=======
+      let(:mock_strategy) {
+        mock("strategy").tap{|strategy|
+        strategy.stub!(:to_ary => [strategy])
+      }
+      }
+>>>>>>> bb3dce2558d2888ef581affb0de4d5e55118cd3d
 
       it "should proxy symbolised strategies to create_strategy" do
         subject.should_receive(:create_strategy).with(:symbol)
@@ -388,7 +409,13 @@ module DatabaseCleaner
       end
 
       it "returns the set strategy" do
+<<<<<<< HEAD
         strategum = double("strategy")
+=======
+        strategum = mock("strategy").tap{|strategy|
+          strategy.stub!(:to_ary => [strategy])
+        }
+>>>>>>> bb3dce2558d2888ef581affb0de4d5e55118cd3d
         subject.strategy = strategum
         subject.strategy.should eq strategum
       end
