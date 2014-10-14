@@ -42,8 +42,7 @@ module DataMapper
 
     end
 
-
-    class Sqlite3Adapter < DataObjectsAdapter
+    module SqliteAdapterMethods
 
       # taken from http://github.com/godfat/dm-mapping/tree/master
       def storage_names(repository = :default)
@@ -73,6 +72,7 @@ module DataMapper
 
       private
 
+      # Returns a boolean indicating if the SQLite database is using the sqlite_sequence table.
       def uses_sequence?
         sql = <<-SQL
           SELECT name FROM sqlite_master
@@ -80,47 +80,10 @@ module DataMapper
         SQL
         select(sql).first
       end
-
     end
 
-    class SqliteAdapter < DataObjectsAdapter
-      # taken from http://github.com/godfat/dm-mapping/tree/master
-      def storage_names(repository = :default)
-        # activerecord-2.1.0/lib/active_record/connection_adapters/sqlite_adapter.rb: 177
-        sql = <<-SQL
-          SELECT name
-          FROM sqlite_master
-          WHERE type = 'table' AND NOT name = 'sqlite_sequence'
-        SQL
-        # activerecord-2.1.0/lib/active_record/connection_adapters/sqlite_adapter.rb: 181
-        select(sql)
-      end
-
-      def truncate_table(table_name)
-        execute("DELETE FROM #{quote_name(table_name)};")
-        if uses_sequence?
-          execute("DELETE FROM sqlite_sequence where name = '#{table_name}';")
-        end
-      end
-
-      # this is a no-op copied from activerecord
-      # i didn't find out if/how this is possible
-      # activerecord also doesn't do more here
-      def disable_referential_integrity
-        yield
-      end
-
-      private
-
-      def uses_sequence?
-        sql = <<-SQL
-          SELECT name FROM sqlite_master
-          WHERE type='table' AND name='sqlite_sequence'
-        SQL
-        select(sql).first
-      end
-
-    end
+    class SqliteAdapter; include SqliteAdapterMethods; end
+    class Sqlite3Adapter; include SqliteAdapterMethods; end
 
     # FIXME
     # i don't know if this works
