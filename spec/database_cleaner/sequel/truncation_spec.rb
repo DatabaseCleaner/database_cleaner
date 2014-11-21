@@ -130,6 +130,44 @@ module DatabaseCleaner
 
         it_behaves_like 'a Sequel truncation strategy'
         it_behaves_like 'a truncation strategy that resets autoincrement keys by default'
+
+        describe '#pre_count?' do
+          subject { Truncation.new.tap { |t| t.db = db } }
+
+          its(:pre_count?) { should eq false }
+
+          it 'should return true if @reset_id is set and non false or nil' do
+            subject.instance_variable_set(:"@pre_count", true)
+            subject.send(:pre_count?).should eq true
+          end
+
+          it 'should return false if @reset_id is set to false' do
+            subject.instance_variable_set(:"@pre_count", false)
+            subject.send(:pre_count?).should eq false
+          end
+        end
+
+        describe "relying on #pre_count_truncate_tables if asked to" do
+          subject { Truncation.new.tap { |t| t.db = db } }
+
+          it "should rely on #pre_count_truncate_tables if #pre_count? returns true" do
+            subject.instance_variable_set(:"@pre_count", true)
+
+            subject.should_not_receive(:truncate_tables)
+            subject.should_receive(:pre_count_truncate_tables)
+
+            subject.clean
+          end
+
+          it "should not rely on #pre_count_truncate_tables if #pre_count? return false" do
+            subject.instance_variable_set(:"@pre_count", false)
+
+            subject.should_not_receive(:pre_count_truncate_tables)
+            subject.should_receive(:truncate_tables)
+
+            subject.clean
+          end
+        end
       end
     end
     half_supported_configurations.each do |config|

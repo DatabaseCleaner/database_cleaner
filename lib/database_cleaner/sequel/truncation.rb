@@ -19,20 +19,30 @@ module DatabaseCleaner
             db.run "TRUNCATE TABLE #{all_tables};"
           end
         else
-          # Truncate each table normally
-          each_table do |db, table|
-            db[table].truncate
+          tables = tables_to_truncate(db)
+
+          if pre_count?
+            # Count rows before truncating
+            pre_count_truncate_tables(db, tables)
+          else
+            # Truncate each table normally
+            truncate_tables(db, tables)
           end
         end
       end
 
-      def each_table
-        tables_to_truncate(db).each do |table|
-          yield db, table.to_sym
-        end
+      private
+
+      def pre_count_truncate_tables(db, tables)
+        tables = tables.reject { |t| db[table.to_sym].count == 0 }
+        truncate_tables(db, tables)
       end
 
-      private
+      def truncate_tables(db, tables)
+        tables.each do |table|
+          db[table.to_sym].truncate
+        end
+      end
 
       def tables_to_truncate(db)
         (@only || db.tables.map(&:to_s)) - @tables_to_exclude
@@ -41,6 +51,10 @@ module DatabaseCleaner
       # overwritten
       def migration_storage_names
         %w[schema_info schema_migrations]
+      end
+
+      def pre_count?
+        @pre_count == true
       end
 
     end
