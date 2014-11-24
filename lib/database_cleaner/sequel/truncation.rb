@@ -34,7 +34,7 @@ module DatabaseCleaner
       private
 
       def pre_count_truncate_tables(db, tables)
-        tables = tables.reject { |t| db[table.to_sym].count == 0 }
+        tables = tables.reject { |table| db[table.to_sym].count == 0 }
         truncate_tables(db, tables)
       end
 
@@ -56,9 +56,6 @@ module DatabaseCleaner
       def pre_count?
         @pre_count == true
       end
-
     end
   end
 end
-
-
