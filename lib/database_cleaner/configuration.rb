@@ -123,6 +123,8 @@ module DatabaseCleaner
           DatabaseCleaner::Ohm
         when :redis
           DatabaseCleaner::Redis
+        when :neo4j
+          DatabaseCleaner::Neo4j
       end
     end
   end

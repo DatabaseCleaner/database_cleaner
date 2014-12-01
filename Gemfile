@@ -24,6 +24,7 @@ group :development, :test do
 
   gem "mongo_mapper"
   gem "moped"
+  gem "neo4j-core"
   gem "couch_potato"
 
   gem "sequel",               "~>3.21.0"

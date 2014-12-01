@@ -67,8 +67,16 @@ Here is an overview of the strategies supported for each library:
       <td>No</td>
       <td>No</td>
     </tr>
+    <tr>
+      <td>Neo4j</td>
+      <td>Yes</td>
+      <td>Yes*</td>
+      <td>Yes*</td>
+    </tr>
   </tbody>
 </table>
+
+* Truncation and Deletion strategies for Neo4j will just delete all nodes and relationships from the database.
 
 <table>
   <tbody>
