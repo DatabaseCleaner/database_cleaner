@@ -8,8 +8,6 @@ module ActiveRecord
     describe do
       before(:all) { active_record_sqlite3_setup }
 
-      let(:adapter) { SQLite3Adapter }
-
       let(:connection) do
         active_record_sqlite3_connection
       end
