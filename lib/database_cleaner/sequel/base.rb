@@ -2,7 +2,7 @@ require 'database_cleaner/generic/base'
 module DatabaseCleaner
   module Sequel
     def self.available_strategies
-      %w[truncation transaction deletion]
+      %w(truncation transaction deletion)
     end
 
     module Base
