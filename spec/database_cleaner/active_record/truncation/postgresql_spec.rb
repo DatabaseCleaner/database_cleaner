@@ -9,8 +9,6 @@ module ActiveRecord
     describe do
       before(:all) { active_record_pg_setup }
 
-      let(:adapter) { PostgreSQLAdapter }
-
       let(:connection) do
         active_record_pg_connection
       end
@@ -38,7 +36,6 @@ module ActiveRecord
       end
 
       it_behaves_like "an adapter with pre-count truncation" do
-        let(:adapter) { PostgreSQLAdapter }
         let(:connection) { active_record_pg_connection }
       end
 
