@@ -1,4 +1,4 @@
-require "database_cleaner/generic/truncation"
+require 'database_cleaner/generic/truncation'
 require 'database_cleaner/sequel/base'
 
 module DatabaseCleaner
@@ -12,7 +12,7 @@ module DatabaseCleaner
       end
 
       def clean
-        return unless is_dirty?
+        return unless dirty?
 
         case db.database_type
         when :postgres
@@ -20,8 +20,8 @@ module DatabaseCleaner
           # appended. Bulk truncation without CASCADE is:
           # * Safer. Tables outside of tables_to_truncate won't be affected.
           # * Faster. Less roundtrips to the db.
-          unless (tables= tables_to_truncate(db)).empty?
-            all_tables= tables.map{|t| %["#{t}"]}.join ','
+          unless (tables = tables_to_truncate(db)).empty?
+            all_tables = tables.map { |t| %("#{t}") }.join(',')
             db.run "TRUNCATE TABLE #{all_tables};"
           end
         else
@@ -50,14 +50,14 @@ module DatabaseCleaner
         end
       end
 
-      def is_dirty?
+      def dirty?
         @last_txid != txid || @last_txid.nil?
       end
 
       def txid
         case db.database_type
         when :postgres
-          db.fetch("SELECT txid_snapshot_xmax(txid_current_snapshot()) AS txid").first[:txid]
+          db.fetch('SELECT txid_snapshot_xmax(txid_current_snapshot()) AS txid').first[:txid]
         end
       end
 
@@ -67,7 +67,7 @@ module DatabaseCleaner
 
       # overwritten
       def migration_storage_names
-        %w[schema_info schema_migrations]
+        %w(schema_info schema_migrations)
       end
 
       def pre_count?
