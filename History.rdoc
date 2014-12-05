@@ -3,6 +3,7 @@
 === New Features/Changes
   * Using the deletion strategy with Mysql now only deletes those tables
     which have had records added to them. (@MadRabbit)
+  * Add support for `pre_count` on Sequel with Mysql. (@vrinek)
 
 === Bug Fixes
   * Fix `undefined method error` with DataMapper SQLite adaptor. (@lanej)
