@@ -2,7 +2,6 @@ require 'support/active_record/database_setup'
 require 'support/active_record/schema_setup'
 
 module SQLite3Helper
-
   puts "Active Record #{ActiveRecord::VERSION::STRING}, sqlite3"
 
   # ActiveRecord::Base.logger = Logger.new(STDERR)

@@ -2,7 +2,6 @@ require 'support/active_record/database_setup'
 require 'support/active_record/schema_setup'
 
 module MySQLHelper
-
   puts "Active Record #{ActiveRecord::VERSION::STRING}, mysql"
 
   # require 'logger'

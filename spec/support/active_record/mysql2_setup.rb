@@ -3,7 +3,6 @@ require 'support/active_record/schema_setup'
 
 
 module MySQL2Helper
-
   puts "Active Record #{ActiveRecord::VERSION::STRING}, mysql2"
 
   # require 'logger'
@@ -38,4 +37,3 @@ end
 RSpec.configure do |c|
   c.include MySQL2Helper
 end
-

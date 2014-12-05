@@ -36,8 +36,6 @@ module DataMapper
           DmUser.create.id.should eq 1
         end
       end
-
     end
   end
 end
-
