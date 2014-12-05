@@ -1,5 +1,9 @@
 == Development (master)
 
+=== New Features/Changes
+  * Using the deletion strategy with Mysql now only deletes those tables
+    which have had records added to them. (@MadRabbit)
+
 === Bug Fixes
   * Fix `undefined method error` with DataMapper SQLite adaptor. (@lanej)
 
