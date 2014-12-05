@@ -14,20 +14,20 @@ group :development, :test do
   #ORM's
   gem "activerecord"
   gem "datamapper"
-    gem "dm-migrations"
-    gem "dm-sqlite-adapter"
+  gem "dm-migrations"
+  gem "dm-sqlite-adapter"
   gem "mongoid"
-    gem "tzinfo"
-    gem "mongo_ext"
-    gem "bson_ext"
-    gem "mongoid-tree"
+  gem "tzinfo"
+  gem "mongo_ext"
+  gem "bson_ext"
+  gem "mongoid-tree"
 
   gem "mongo_mapper"
   gem "moped"
   gem "neo4j-core"
   gem "couch_potato"
 
-  gem "sequel",               "~>3.21.0"
+  gem "sequel", "~> 3.21.0"
   #gem "ibm_db"  # I don't want to add this dependency, even as a dev one since it requires DB2 to be installed
   gem 'mysql', '~> 2.8.1'
   gem 'mysql2'

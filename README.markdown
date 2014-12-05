@@ -7,7 +7,7 @@ Each strategy is a small amount of code but is code that is usually needed in an
 
 ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, CouchPotato, Ohm and Redis are supported.
 
-[![Build Status](https://secure.travis-ci.org/bmabey/database_cleaner.png)](http://travis-ci.org/bmabey/database_cleaner)
+[![Build Status](https://travis-ci.org/DatabaseCleaner/database_cleaner.svg?branch=master)](https://travis-ci.org/DatabaseCleaner/database_cleaner)
 
 Here is an overview of the strategies supported for each library:
 
