@@ -6,10 +6,9 @@ require 'database_cleaner/active_record/truncation/shared_fast_truncation'
 
 module ActiveRecord
   module ConnectionAdapters
-    describe do 
+    describe do
       before(:all) { active_record_mysql_setup }
 
-      let(:adapter) { MysqlAdapter }
       let(:connection) { active_record_mysql_connection }
 
       describe "#truncate_table" do
@@ -29,9 +28,8 @@ module ActiveRecord
           User.create.id.should eq 1
         end
       end
- 
+
       it_behaves_like "an adapter with pre-count truncation" do
-        let(:adapter) { MysqlAdapter }
         let(:connection) { active_record_mysql_connection }
       end
     end

@@ -3,7 +3,9 @@ require 'active_record/base'
 require 'active_record/connection_adapters/abstract_adapter'
 
 #Load available connection adapters
-%w( abstract_mysql_adapter postgresql_adapter sqlite3_adapter ).each do |known_adapter|
+%w(
+  abstract_mysql_adapter postgresql_adapter sqlite3_adapter mysql_adapter mysql2_adapter
+).each do |known_adapter|
   begin
     require "active_record/connection_adapters/#{known_adapter}"
   rescue LoadError
@@ -185,6 +187,7 @@ module ActiveRecord
     end
     AbstractMysqlAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::AbstractMysqlAdapter } if defined?(AbstractMysqlAdapter)
     Mysql2Adapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::AbstractMysqlAdapter } if defined?(Mysql2Adapter)
+    MysqlAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::AbstractMysqlAdapter } if defined?(MysqlAdapter)
     SQLiteAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::SQLiteAdapter } if defined?(SQLiteAdapter)
     SQLite3Adapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::SQLiteAdapter } if defined?(SQLite3Adapter)
     PostgreSQLAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::PostgreSQLAdapter } if defined?(PostgreSQLAdapter)
