@@ -1,11 +1,9 @@
 require 'support/active_record/database_setup'
-require 'support/active_record/schema_setup'
+require 'support/data_mapper/schema_setup'
 
-module SQLite3Helper
+module DataMapperSQLite3Helper
 
-  puts "Active Record #{ActiveRecord::VERSION::STRING}, sqlite3"
-
-  # ActiveRecord::Base.logger = Logger.new(STDERR)
+  puts "DataMapper #{DataMapper::VERSION}, sqlite3"
 
   def config
     db_config['sqlite3']
@@ -21,21 +19,21 @@ module SQLite3Helper
     end
   end
 
-  def establish_connection config = config
-    ActiveRecord::Base.establish_connection(config)
+  def establish_connection(config = config)
+    DataMapper.setup(:default, config)
   end
 
-  def active_record_sqlite3_setup
+  def data_mapper_sqlite3_setup
     create_db
     establish_connection
-    active_record_load_schema
+    data_mapper_load_schema
   end
 
-  def active_record_sqlite3_connection
-    ActiveRecord::Base.connection
+  def data_mapper_sqlite3_connection
+    DataMapper.repository.adapter
   end
 end
 
 RSpec.configure do |c|
-  c.include SQLite3Helper
+  c.include(DataMapperSQLite3Helper)
 end
