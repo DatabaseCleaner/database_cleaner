@@ -31,7 +31,7 @@ module DatabaseCleaner
       private
 
       def default_db
-        {type: default_db_type, path: default_db_path}
+        {:type => default_db_type, :path => default_db_path}
       end
 
       def default_db_type

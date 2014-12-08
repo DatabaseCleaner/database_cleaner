@@ -47,9 +47,6 @@ if orm && strategy
     when :active_record
       DatabaseCleaner[:active_record, {:model => ActiveRecordWidgetUsingDatabaseOne} ].strategy = strategy.to_sym
       DatabaseCleaner[:active_record, {:model => ActiveRecordWidgetUsingDatabaseTwo} ].strategy = strategy.to_sym
-    when :neo4j
-      DatabaseCleaner[:neo4j,   {:connection => {:type => :server_db, :path => 'http://localhost:7475/'}} ].strategy = strategy.to_sym
-      DatabaseCleaner[:neo4j,   {:connection => {:type => :server_db, :path => 'http://localhost:7476/'}} ].strategy = strategy.to_sym
     else
       DatabaseCleaner[ orm_sym, {:connection => :one} ].strategy = strategy.to_sym
       DatabaseCleaner[ orm_sym, {:connection => :two} ].strategy = strategy.to_sym

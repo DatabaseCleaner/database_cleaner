@@ -14,3 +14,4 @@ before_script:
 services:
   - redis-server
   - mongodb
+  - neo4j

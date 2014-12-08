@@ -1,11 +1,3 @@
-Given /^I have setup database cleaner to clean multiple databases using neo4j$/ do
-  #DatabaseCleaner
-  # require "#{File.dirname(__FILE__)}/../../../lib/neo4j_models"
-  #
-  # DatabaseCleaner[:neo4j, :connection => {:type => :server_db, :path => 'http://localhost:7475'} ]
-  # DatabaseCleaner[:neo4j, :connection => {:type => :server_db, :path => 'http://localhost:7476'} ]
-end
-
 When /^I create a widget using neo4j$/ do
   Neo4jWidget.create!
 end

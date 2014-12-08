@@ -4,6 +4,7 @@ require 'database_cleaner/data_mapper/transaction'
 require 'database_cleaner/mongo_mapper/truncation'
 require 'database_cleaner/mongoid/truncation'
 require 'database_cleaner/couch_potato/truncation'
+require 'database_cleaner/neo4j/transaction'
 
 module DatabaseCleaner
   describe Base do
@@ -21,6 +22,7 @@ module DatabaseCleaner
          Temp_MP = ::Moped        if defined?(::Moped)        and not defined?(Temp_MP)
          Temp_RS = ::Redis        if defined?(::Redis)        and not defined?(Temp_RS)
          Temp_OH = ::Ohm          if defined?(::Ohm)          and not defined?(Temp_OH)
+         Temp_NJ = ::Neo4j        if defined?(::Neo4j)        and not defined?(Temp_NJ)
        end
 
        #Remove all ORM mocks and restore from cache
@@ -34,6 +36,7 @@ module DatabaseCleaner
          Object.send(:remove_const, 'Moped')        if defined?(::Moped)
          Object.send(:remove_const, 'Ohm')          if defined?(::Ohm)
          Object.send(:remove_const, 'Redis')        if defined?(::Redis)
+         Object.send(:remove_const, 'Neo4j')        if defined?(::Neo4j)
 
 
          # Restore ORMs
@@ -46,6 +49,7 @@ module DatabaseCleaner
          ::Moped        = Temp_MP if defined? Temp_MP
          ::Ohm          = Temp_OH if defined? Temp_OH
          ::Redis        = Temp_RS if defined? Temp_RS
+         ::Neo4j        = Temp_NJ if defined? Temp_NJ
        end
 
        #reset the orm mocks
@@ -59,6 +63,7 @@ module DatabaseCleaner
          Object.send(:remove_const, 'Moped')        if defined?(::Moped)
          Object.send(:remove_const, 'Ohm')          if defined?(::Ohm)
          Object.send(:remove_const, 'Redis')        if defined?(::Redis)
+         Object.send(:remove_const, 'Neo4j')        if defined?(::Neo4j)
        end
 
        let(:cleaner) { DatabaseCleaner::Base.new :autodetect }
@@ -77,6 +82,7 @@ module DatabaseCleaner
          Object.const_set('Moped',       'Moped mock')
          Object.const_set('Ohm',         'Ohm mock')
          Object.const_set('Redis',       'Redis mock')
+         Object.const_set('Neo4j',       'Neo4j mock')
 
          cleaner.orm.should eq :active_record
          cleaner.should be_auto_detected
@@ -91,6 +97,7 @@ module DatabaseCleaner
          Object.const_set('Moped',       'Moped mock')
          Object.const_set('Ohm',         'Ohm mock')
          Object.const_set('Redis',       'Redis mock')
+         Object.const_set('Neo4j',       'Neo4j mock')
 
          cleaner.orm.should eq :data_mapper
          cleaner.should be_auto_detected
@@ -104,6 +111,7 @@ module DatabaseCleaner
          Object.const_set('Moped',       'Moped mock')
          Object.const_set('Ohm',         'Ohm mock')
          Object.const_set('Redis',       'Redis mock')
+         Object.const_set('Neo4j',       'Neo4j mock')
 
          cleaner.orm.should eq :mongo_mapper
          cleaner.should be_auto_detected
@@ -116,6 +124,7 @@ module DatabaseCleaner
          Object.const_set('Moped',       'Moped mock')
          Object.const_set('Ohm',         'Ohm mock')
          Object.const_set('Redis',       'Redis mock')
+         Object.const_set('Neo4j',       'Neo4j mock')
 
          cleaner.orm.should eq :mongoid
          cleaner.should be_auto_detected
@@ -127,6 +136,7 @@ module DatabaseCleaner
          Object.const_set('Moped',       'Moped mock')
          Object.const_set('Ohm',         'Ohm mock')
          Object.const_set('Redis',       'Redis mock')
+         Object.const_set('Neo4j',       'Neo4j mock')
 
          cleaner.orm.should eq :couch_potato
          cleaner.should be_auto_detected
@@ -137,27 +147,37 @@ module DatabaseCleaner
          Object.const_set('Moped',  'Moped mock')
          Object.const_set('Ohm',    'Ohm mock')
          Object.const_set('Redis',  'Redis mock')
+         Object.const_set('Neo4j',  'Neo4j mock')
 
          cleaner.orm.should eq :sequel
          cleaner.should be_auto_detected
        end
 
        it 'detects Ohm seventh' do
-         Object.const_set('Ohm', 'Ohm mock')
-         Object.const_set('Redis',       'Redis mock')
+         Object.const_set('Ohm',    'Ohm mock')
+         Object.const_set('Redis',  'Redis mock')
+         Object.const_set('Neo4j',  'Neo4j mock')
 
          cleaner.orm.should eq :ohm
          cleaner.should be_auto_detected
        end
 
-       it 'detects Redis last' do
-         Object.const_set('Redis',       'Redis mock')
+       it 'detects Redis eighth' do
+         Object.const_set('Redis', 'Redis mock')
+         Object.const_set('Neo4j', 'Neo4j mock')
 
          cleaner.orm.should eq :redis
          cleaner.should be_auto_detected
        end
 
-       it 'detects Moped seventh' do
+       it 'detects Neo4j ninth' do
+         Object.const_set('Neo4j', 'Neo4j mock')
+
+         cleaner.orm.should eq :neo4j
+         cleaner.should be_auto_detected
+       end
+
+       it 'detects Moped seventh' do #FIXME
          Object.const_set('Moped', 'Moped mock')
 
          cleaner.orm.should eq :moped
@@ -572,6 +592,11 @@ module DatabaseCleaner
       it 'sets strategy to :truncation for Redis' do
         cleaner = DatabaseCleaner::Base.new(:redis)
         cleaner.strategy.should be_instance_of DatabaseCleaner::Redis::Truncation
+      end
+
+      it 'sets strategy to :transaction for Neo4j' do
+        cleaner = DatabaseCleaner::Base.new(:neo4j)
+        cleaner.strategy.should be_instance_of DatabaseCleaner::Neo4j::Transaction
       end
     end
 

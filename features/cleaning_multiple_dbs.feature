@@ -18,6 +18,3 @@ Feature: multiple database cleaning
   | MongoMapper  | truncation    |
   | DataMapper   | transaction   |
   | ActiveRecord | transaction   |
-  | Neo4j        | deletion      |
-  | Neo4j        | truncation    |
-  | Neo4j        | transaction   |
