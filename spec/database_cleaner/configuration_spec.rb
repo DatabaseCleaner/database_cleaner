@@ -336,5 +336,10 @@ describe ::DatabaseCleaner do
       subject.orm_module(:couch_potato).should eq DatabaseCleaner::CouchPotato
     end
 
+    it "should return DatabaseCleaner::Neo4j for :neo4j" do
+      ::DatabaseCleaner::Neo4j = double("nj module") unless defined? ::DatabaseCleaner::Neo4j
+      subject.orm_module(:neo4j).should eq DatabaseCleaner::Neo4j
+    end
+
   end
 end

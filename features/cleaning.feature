@@ -22,3 +22,6 @@ Feature: database cleaning
     | CouchPotato  | truncation  |
     | Redis        | truncation  |
     | Ohm          | truncation  |
+    | Neo4j        | deletion    |
+    | Neo4j        | truncation  |
+    | Neo4j        | transaction |

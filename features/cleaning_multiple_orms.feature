@@ -46,3 +46,7 @@ Feature: database cleaning using multiple ORMs
     | Redis        | Mongoid      |
     | Redis        | CouchPotato  |
     | Redis        | Ohm          |
+    | Neo4j        | ActiveRecord |
+    | Neo4j        | Redis        |
+    | Neo4j        | Ohm          |
+    | Neo4j        | MongoMapper  |

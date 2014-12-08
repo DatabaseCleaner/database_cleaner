@@ -120,6 +120,8 @@ module DatabaseCleaner
         :ohm
       elsif defined? ::Redis
         :redis
+      elsif defined? ::Neo4j
+        :neo4j
       end
     end
 
@@ -153,6 +155,8 @@ module DatabaseCleaner
         self.strategy = :transaction
       when :mongo_mapper, :mongoid, :couch_potato, :moped, :ohm, :redis
         self.strategy = :truncation
+      when :neo4j
+        self.strategy = :transaction
       end
     end
   end

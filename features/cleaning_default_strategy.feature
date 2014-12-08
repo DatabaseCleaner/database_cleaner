@@ -19,3 +19,4 @@ Feature: database cleaning
     | CouchPotato  |
     | Redis        |
     | Ohm          |
+    | Neo4j        |
