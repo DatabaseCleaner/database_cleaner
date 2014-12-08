@@ -153,7 +153,14 @@ module DatabaseCleaner
          cleaner.should be_auto_detected
        end
 
-       it 'detects Ohm seventh' do
+       it 'detects Moped seventh' do
+         Object.const_set('Moped', 'Moped mock')
+
+         cleaner.orm.should eq :moped
+         cleaner.should be_auto_detected
+       end
+
+       it 'detects Ohm eighth' do
          Object.const_set('Ohm',    'Ohm mock')
          Object.const_set('Redis',  'Redis mock')
          Object.const_set('Neo4j',  'Neo4j mock')
@@ -162,7 +169,7 @@ module DatabaseCleaner
          cleaner.should be_auto_detected
        end
 
-       it 'detects Redis eighth' do
+       it 'detects Redis ninth' do
          Object.const_set('Redis', 'Redis mock')
          Object.const_set('Neo4j', 'Neo4j mock')
 
@@ -170,17 +177,10 @@ module DatabaseCleaner
          cleaner.should be_auto_detected
        end
 
-       it 'detects Neo4j ninth' do
+       it 'detects Neo4j tenth' do
          Object.const_set('Neo4j', 'Neo4j mock')
 
          cleaner.orm.should eq :neo4j
-         cleaner.should be_auto_detected
-       end
-
-       it 'detects Moped seventh' do #FIXME
-         Object.const_set('Moped', 'Moped mock')
-
-         cleaner.orm.should eq :moped
          cleaner.should be_auto_detected
        end
     end

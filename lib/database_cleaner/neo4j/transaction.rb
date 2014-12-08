@@ -20,7 +20,6 @@ module DatabaseCleaner
         rollback
       end
 
-
       private
 
       def rollback
