@@ -24,9 +24,9 @@ module DatabaseCleaner
       private
 
       def rollback
-        return unless tx
         tx.failure
         tx.close
+      ensure
         self.tx = nil
       end
     end
