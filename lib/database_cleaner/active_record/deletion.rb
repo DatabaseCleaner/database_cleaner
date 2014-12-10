@@ -55,7 +55,7 @@ module DatabaseCleaner::ActiveRecord
   end
 end
 
-if defined?(Mysql2Adapter)
+if defined?(ActiveRecord::ConnectionAdapters::Mysql2Adapter)
   class DatabaseCleaner::ActiveRecord::Deletion
     def tables_to_truncate(connection)
       (@only || tables_with_new_rows(connection)) - @tables_to_exclude
