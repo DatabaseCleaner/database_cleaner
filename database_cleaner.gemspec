@@ -128,7 +128,7 @@ Gem::Specification.new do |s|
     "spec/support/active_record/schema_setup.rb",
     "spec/support/active_record/sqlite3_setup.rb"
   ]
-  s.homepage = "http://github.com/bmabey/database_cleaner"
+  s.homepage = "http://github.com/DatabaseCleaner/database_cleaner"
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.23"
   s.summary = "Strategies for cleaning databases.  Can be used to ensure a clean state for testing."
