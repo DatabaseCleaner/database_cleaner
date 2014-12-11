@@ -43,7 +43,37 @@ module ActiveRecord
 end
 
 module DatabaseCleaner::ActiveRecord
+  module SelectiveTruncation
+    def tables_to_truncate(connection)
+      if information_schema_exists?(connection)
+        (@only || tables_with_new_rows(connection)) - @tables_to_exclude
+      else
+        super
+      end
+    end
+
+    def tables_with_new_rows(connection)
+      @db_name ||= connection.instance_variable_get('@config')[:database]
+      result = connection.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = '#{@db_name}' AND table_rows > 0")
+      result.map{ |row| row[0] } - ['schema_migrations']
+    end
+
+    def information_schema_exists? connection
+      @information_schema_exists ||=
+        begin
+          connection.execute("SELECT * FROM information_schema.tables")
+          true
+        rescue
+          false
+        end
+    end
+  end
+
   class Deletion < Truncation
+    if defined?(ActiveRecord::ConnectionAdapters::Mysql2Adapter)
+      include SelectiveTruncation
+    end
+
     def clean
       connection = connection_class.connection
       connection.disable_referential_integrity do
@@ -51,20 +81,6 @@ module DatabaseCleaner::ActiveRecord
           connection.delete_table table_name
         end
       end
-    end
-  end
-end
-
-if defined?(ActiveRecord::ConnectionAdapters::Mysql2Adapter)
-  class DatabaseCleaner::ActiveRecord::Deletion
-    def tables_to_truncate(connection)
-      (@only || tables_with_new_rows(connection)) - @tables_to_exclude
-    end
-
-    def tables_with_new_rows(connection)
-      @db_name ||= connection.instance_variable_get('@config')[:database]
-      result = connection.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = '#{@db_name}' AND table_rows > 0")
-      result.map{ |row| row[0] } - ['schema_migrations']
     end
   end
 end
