@@ -30,9 +30,6 @@ if orm && strategy
     require "#{File.dirname(__FILE__)}/../../lib/#{another_orm.downcase}_models"
   end
 
-
-
-
   if multiple_db
     DatabaseCleaner.app_root = "#{File.dirname(__FILE__)}/../.."
     orm_sym = orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym
