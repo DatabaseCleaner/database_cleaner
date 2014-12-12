@@ -341,6 +341,11 @@ Usage beyond that remains the same with `DatabaseCleaner.start` calling any setu
       <td><code>DatabaseCleaner[:ohm]</code></td>
       <td>Connection specified as Redis URI</td>
     </tr>
+    <tr>
+      <td>Neo4j</td>
+      <td><code>DatabaseCleaner[:neo4j]</code></td>
+      <td>Database type and path(URI) <code>DatabaseCleaner[:neo4j, connection: {type: :server_db, path: 'http://localhost:7475'}].</code></td>
+    </tr>
   </tbody>
 </table>
 
@@ -387,6 +392,19 @@ test:
 ### Nothing happens in JRuby with Sequel using transactions
 
 Due to an inconsistency in JRuby's implementation of Fibers, Sequel gives a different connection to `DatabaseCleaner.start` than is used for tests run between `.start` and `.clean`. This can be worked around by running your tests in a block like `DatabaseCleaner.cleaning { run_my_tests }` instead, which does not use Fibers.
+
+### Model fails to load with Neo4j using transactions
+
+When you are using [neo4j](https://github.com/neo4jrb/neo4j) gem it creates schema and reads indexes upon loading models. These operations can't be done during a transaction. You have to preload your models before DatabaseCleaner starts a transaction.
+
+Add to your rails_helper or spec_helper after requiring database_cleaner:
+
+```ruby
+require 'database_cleaner'
+Dir["#{Rails.root}/app/models/**/*.rb"].each do |model|
+  load model
+end
+```
 
 ## Debugging
 
