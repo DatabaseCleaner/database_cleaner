@@ -5,11 +5,14 @@
     which have had records added to them. (@MadRabbit)
   * Add support for `pre_count` on Sequel with Mysql. (@vrinek)
   * Add support for neo4j. (@dpisarewski)
+  * Cache collection names in mongo's truncation strategy. (@nyarly)
+  * Support for mongoid multiple connections. (@nyarly)
 
 === Bug Fixes
   * Fix `undefined method error` with DataMapper SQLite adaptor. (@lanej)
   * Fully define Mysql2 adaptor constant. (@jgonera)
   * Don't truncate schema tables in Postgres. (@billywatson)
+  * Fix issue #284. (@MartinNowak)
 
 == 1.3.0 2014-05-23
 
