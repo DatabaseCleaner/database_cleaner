@@ -401,4 +401,4 @@ DatabaseCleaner.logger = Rails.logger
 
 ## COPYRIGHT
 
-Copyright (c) 2009 Ben Mabey. See LICENSE for details.
+Copyright (c) 2014 Ben Mabey. See LICENSE for details.
