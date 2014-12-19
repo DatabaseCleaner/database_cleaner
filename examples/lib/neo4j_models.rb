@@ -6,7 +6,7 @@ class Neo4jWidget < Neo4j::Node
   end
 
   def self.count
-    Neo4j::Session.query.pluck('count(*) AS result').first
+    Neo4j::Session.query.match('n').pluck('COUNT(n)').first
   end
 end
 
