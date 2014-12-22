@@ -14,6 +14,7 @@ Feature: database cleaning
     | ORM          |
     | ActiveRecord |
     | DataMapper   |
+    | Sequel       |
     | MongoMapper  |
     | Mongoid      |
     | CouchPotato  |
