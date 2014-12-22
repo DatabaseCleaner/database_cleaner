@@ -7,6 +7,7 @@
   * Add support for neo4j. (@dpisarewski)
   * Cache collection names in mongo's truncation strategy. (@nyarly)
   * Support for mongoid multiple connections. (@nyarly)
+  * Support for deletion with Sequel. (@cyberdelia)
 
 === Bug Fixes
   * Fix `undefined method error` with DataMapper SQLite adaptor. (@lanej)
