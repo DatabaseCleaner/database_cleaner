@@ -16,19 +16,19 @@ module DatabaseCleaner
       def start
         self.class.check_fiber_brokenness
 
-        @fibers||= []
-        db= self.db
-        f= Fiber.new do
+        @fibers ||= []
+        db = self.db
+        f = Fiber.new do
           db.transaction(:rollback => :always, :savepoint => true) do
             Fiber.yield
           end
         end
         f.resume
-        @fibers<< f
+        @fibers << f
       end
 
       def clean
-        f= @fibers.pop
+        f = @fibers.pop
         f.resume
       end
 
