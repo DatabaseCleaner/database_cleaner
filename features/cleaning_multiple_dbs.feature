@@ -15,6 +15,8 @@ Feature: multiple database cleaning
   | ActiveRecord | truncation    |
   | ActiveRecord | deletion      |
   | DataMapper   | truncation    |
+  | Sequel       | truncation    |
   | MongoMapper  | truncation    |
   | DataMapper   | transaction   |
   | ActiveRecord | transaction   |
+  | Sequel       | transaction   |
