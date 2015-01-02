@@ -172,8 +172,14 @@ module DatabaseCleaner
       # but then the table is cleaned.  In other words, this function tells us if the given table
       # was ever inserted into.
       def has_been_used?(table)
+        return has_rows?(table) unless has_sequence?(table)
+
         cur_val = select_value("SELECT currval('#{table}_id_seq');").to_i rescue 0
         cur_val > 0
+      end
+      
+      def has_sequence?(table)
+        select_value("SELECT true FROM pg_class WHERE relname = '#{table}_id_seq';")
       end
 
       def has_rows?(table)

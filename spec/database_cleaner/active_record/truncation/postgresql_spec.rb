@@ -25,6 +25,13 @@ module ActiveRecord
           User.count.should eq 0
         end
 
+        it "truncates the table without id sequence" do
+          2.times { Agent.create }
+
+          connection.truncate_table('agents')
+          Agent.count.should eq 0
+        end
+
         it "resets AUTO_INCREMENT index of table" do
           2.times { User.create }
           User.delete_all
@@ -48,4 +55,3 @@ module ActiveRecord
     end
   end
 end
-
