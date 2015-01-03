@@ -1,4 +1,4 @@
-source "http://rubygems.org"
+source "https://rubygems.org"
 # TODO: move these to the gemspec...
 
 group :development, :test do
@@ -6,7 +6,6 @@ group :development, :test do
   gem "ruby-debug", :platform => :ruby_18
   gem "ruby-debug19", :platform => :ruby_19
   gem "bundler"
-  gem "jeweler"
 
   gem "json_pure"
 

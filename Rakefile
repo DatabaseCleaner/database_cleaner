@@ -3,26 +3,10 @@ require "bundler"
 Bundler.setup
 
 require 'rake'
-
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |s|
-    s.name = "database_cleaner"
-    s.summary = %Q{Strategies for cleaning databases.  Can be used to ensure a clean state for testing.}
-    s.email = "ben@benmabey.com"
-    s.homepage = "http://github.com/bmabey/database_cleaner"
-    s.description = "Strategies for cleaning databases.  Can be used to ensure a clean state for testing."
-    s.files = FileList["[A-Z]*.*", "{examples,lib,features,spec}/**/*", "Rakefile", "cucumber.yml"]
-    s.authors = ["Ben Mabey"]
-    # s.licence  = 'MIT'
-  end
-rescue LoadError
-  puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
-end
-
 require 'rspec/core'
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec) do |spec|
+  
   spec.pattern = FileList['spec/**/*_spec.rb']
 end
 
