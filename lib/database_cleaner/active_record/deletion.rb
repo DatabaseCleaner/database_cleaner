@@ -58,14 +58,8 @@ module DatabaseCleaner::ActiveRecord
       result.map{ |row| row[0] } - ['schema_migrations']
     end
 
-    def information_schema_exists? connection
-      @information_schema_exists ||=
-        begin
-          connection.execute("SELECT * FROM information_schema.tables")
-          true
-        rescue
-          false
-        end
+    def information_schema_exists?(connection)
+      @information_schema_exists ||= connection.execute("SHOW DATABASES LIKE 'information_schema'").any?
     end
   end
 
