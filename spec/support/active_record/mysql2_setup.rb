@@ -8,18 +8,18 @@ module MySQL2Helper
   # require 'logger'
   # ActiveRecord::Base.logger = Logger.new(STDERR)
 
-  def config
+  def default_config
     db_config['mysql2']
   end
 
   def create_db
-    establish_connection(config.merge(:database => nil))
+    establish_connection(default_config.merge(:database => nil))
 
-    ActiveRecord::Base.connection.drop_database config['database'] rescue nil
-    ActiveRecord::Base.connection.create_database config['database']
+    ActiveRecord::Base.connection.drop_database default_config['database'] rescue nil
+    ActiveRecord::Base.connection.create_database default_config['database']
   end
 
-  def establish_connection config = config
+  def establish_connection(config = default_config)
     ActiveRecord::Base.establish_connection config
   end
 

@@ -6,21 +6,21 @@ module SQLite3Helper
 
   # ActiveRecord::Base.logger = Logger.new(STDERR)
 
-  def config
+  def default_config
     db_config['sqlite3']
   end
 
   def create_db
-    @encoding = config['encoding'] || ENV['CHARSET'] || 'utf8'
+    @encoding = default_config['encoding'] || ENV['CHARSET'] || 'utf8'
     begin
-      establish_connection(config.merge('database' => 'sqlite3', 'schema_search_path' => 'public'))
+      establish_connection(default_config.merge('database' => 'sqlite3', 'schema_search_path' => 'public'))
     rescue Exception => e
       $stderr.puts e, *(e.backtrace)
-      $stderr.puts "Couldn't create database for #{config.inspect}"
+      $stderr.puts "Couldn't create database for #{default_config.inspect}"
     end
   end
 
-  def establish_connection config = config
+  def establish_connection(config = default_config)
     ActiveRecord::Base.establish_connection(config)
   end
 
