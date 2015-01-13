@@ -28,7 +28,7 @@ group :development, :test do
 
   gem "sequel", "~> 3.21.0"
   #gem "ibm_db"  # I don't want to add this dependency, even as a dev one since it requires DB2 to be installed
-  gem 'mysql', '~> 2.8.1'
+  gem 'mysql', '~> 2.9.1'
   gem 'mysql2'
   gem 'pg'
   gem 'ohm', '~> 0.1.3'
