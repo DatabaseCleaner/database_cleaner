@@ -6,22 +6,22 @@ module PostgreSQLHelper
 
   # ActiveRecord::Base.logger = Logger.new(STDERR)
 
-  def config
+  def default_config
     db_config['postgres']
   end
 
   def create_db
-    @encoding = config['encoding'] || ENV['CHARSET'] || 'utf8'
+    @encoding = default_config['encoding'] || ENV['CHARSET'] || 'utf8'
     begin
-      establish_connection(config.merge('database' => 'postgres', 'schema_search_path' => 'public'))
-      ActiveRecord::Base.connection.create_database(config['database'], config.merge('encoding' => @encoding))
+      establish_connection(default_config.merge('database' => 'postgres', 'schema_search_path' => 'public'))
+      ActiveRecord::Base.connection.create_database(default_config['database'], default_config.merge('encoding' => @encoding))
     rescue Exception => e
       $stderr.puts e, *(e.backtrace)
-      $stderr.puts "Couldn't create database for #{config.inspect}"
+      $stderr.puts "Couldn't create database for #{default_config.inspect}"
     end
   end
 
-  def establish_connection config = config
+  def establish_connection(config = default_config)
     ActiveRecord::Base.establish_connection(config)
   end
 

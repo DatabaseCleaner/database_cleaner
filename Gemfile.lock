@@ -162,7 +162,7 @@ GEM
     multi_json (1.2.0)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
-    mysql (2.8.1)
+    mysql (2.9.1)
     mysql2 (0.3.16)
     neo4j-community (2.1.5)
     neo4j-core (3.0.8)
@@ -279,7 +279,7 @@ DEPENDENCIES
   mongoid
   mongoid-tree
   moped
-  mysql (~> 2.8.1)
+  mysql (~> 2.9.1)
   mysql2
   neo4j-core
   ohm (~> 0.1.3)
