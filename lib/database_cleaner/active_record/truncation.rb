@@ -190,7 +190,10 @@ module DatabaseCleaner
         rows = select_rows <<-_SQL
           SELECT schemaname || '.' || tablename
           FROM pg_tables
-          WHERE tablename !~ '_prt_' AND schemaname = ANY (current_schemas(false))
+          WHERE 
+            tablename !~ '_prt_' AND 
+            tablename <> '#{::ActiveRecord::Migrator.schema_migrations_table_name}' AND 
+            schemaname = ANY (current_schemas(false))
         _SQL
         rows.collect { |result| result.first }
       end
