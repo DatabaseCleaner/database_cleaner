@@ -31,8 +31,8 @@ module PostgreSQLHelper
     active_record_load_schema
   end
 
-  def active_record_gp_migrate
-    `dropdb #{config['database']}`
+  def active_record_pg_migrate
+    `dropdb #{default_config['database']}`
     create_db
     establish_connection
     ActiveRecord::Migrator.migrate 'spec/support/active_record/migrations'
