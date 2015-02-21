@@ -140,6 +140,8 @@ Gem::Specification.new do |s|
     "spec/support/data_mapper/sqlite3_setup.rb"
   ]
   s.homepage = "http://github.com/DatabaseCleaner/database_cleaner"
+  s.license = 'MIT'
+
   s.rubygems_version = "2.4.5"
   s.summary = "Strategies for cleaning databases.  Can be used to ensure a clean state for testing."
 
