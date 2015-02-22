@@ -42,6 +42,15 @@ module ActiveRecord
         end
       end
 
+      describe ":except option cleanup" do
+        it "should not truncate the tables specified in the :except option" do
+          2.times { User.create }
+
+          ::DatabaseCleaner::ActiveRecord:Truncation.new(:except => ['user']).clean
+          expect( User.count ).to eq 2
+        end
+      end
+
       describe '#database_cleaner_table_cache' do
         it 'should default to the list of tables with their schema' do
           connection.database_cleaner_table_cache.first.should match(/^public\./)
