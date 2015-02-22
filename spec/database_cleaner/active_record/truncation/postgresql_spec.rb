@@ -55,7 +55,7 @@ module ActiveRecord
         it "should not truncate the tables specified in the :except option" do
           2.times { User.create }
 
-          ::DatabaseCleaner::ActiveRecord:Truncation.new(:except => ['user']).clean
+          ::DatabaseCleaner::ActiveRecord::Truncation.new(:except => ['user']).clean
           expect( User.count ).to eq 2
         end
       end
