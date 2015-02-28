@@ -1,5 +1,3 @@
-require 'mongoid'
-
 module DatabaseCleaner
   module Mongo
     def self.available_strategies
