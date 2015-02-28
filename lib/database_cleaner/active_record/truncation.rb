@@ -24,7 +24,7 @@ module DatabaseCleaner
       def database_cleaner_view_cache
         @views ||= select_values("select table_name from information_schema.views where table_schema = '#{current_database}'") rescue []
       end
-      
+
       def database_cleaner_table_cache
         # the adapters don't do caching (#130) but we make the assumption that the list stays the same in tests
         @database_cleaner_tables ||= tables
@@ -177,7 +177,7 @@ module DatabaseCleaner
         cur_val = select_value("SELECT currval('#{table}_id_seq');").to_i rescue 0
         cur_val > 0
       end
-      
+
       def has_sequence?(table)
         select_value("SELECT true FROM pg_class WHERE relname = '#{table}_id_seq';")
       end
@@ -245,7 +245,14 @@ module DatabaseCleaner::ActiveRecord
 
     def tables_to_truncate(connection)
       tables_in_db = cache_tables? ? connection.database_cleaner_table_cache : connection.tables
-      (@only || tables_in_db) - @tables_to_exclude - connection.database_cleaner_view_cache
+      to_reject = (@tables_to_exclude + connection.database_cleaner_view_cache)
+      (@only || tables_in_db).reject do |table|
+          if ( m = table.match(/([^.]+)$/) )
+            to_reject.include?(m[1])
+          else
+            false
+          end
+        end
     end
 
     # overwritten
