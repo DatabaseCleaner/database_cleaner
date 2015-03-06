@@ -23,10 +23,11 @@ module DatabaseCleaner
           session.use(db)
         end
 
-        session.command(listCollections: 1)[:cursor][:firstBatch].map do |collection|
-          collection[:name]
-        end.reject do |collection_name|
-          collection_name =~ /system|\$/
+        session.command(listCollections: 1)['cursor']['firstBatch'].map do |collection|
+          collection['name']
+        end
+        .reject do |collection_name|
+          collection_name =~ /\.system\.|\$/
         end
       end
 
