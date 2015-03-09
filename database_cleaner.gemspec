@@ -1,12 +1,14 @@
+version = YAML.load_file 'VERSION.yml'
+
 Gem::Specification.new do |s|
   s.name = "database_cleaner"
-  s.version = "1.4.0"
+  s.version = "#{version[:major]}.#{version[:minor]}.#{version[:patch]}"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Ben Mabey"]
   s.date = "2015-01-02"
-  s.description = "Strategies for cleaning databases.  Can be used to ensure a clean state for testing."
+  s.description = "Strategies for cleaning databases. Can be used to ensure a clean state for testing."
   s.email = "ben@benmabey.com"
   s.extra_rdoc_files = [
     "LICENSE",
