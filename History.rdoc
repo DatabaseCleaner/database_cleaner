@@ -1,7 +1,13 @@
 == Development (master)
 
-=== New Features/Changes
+== 1.4.1 2015-03-09
   * Support for deletion with Sequel. (@cyberdelia)
+  * Use ActiveRecord::Base configuration when different from config file. (@wendy0402)
+  * Removed dependency of Mongo. (@codegourmet)
+  * Fixed issue with tables schema prefix in Postgres. (@phoenixek12)
+  * Use ruby 1.8 syntax. (@daniel-g)
+  * Added license to gemspec. (@chrismar035)
+  * Improved coverage for migrations table. (@jonallured)
 
 == 1.4.0 2014-12-17
 
