@@ -84,6 +84,34 @@ my_db:
           subject.load_config
         end
 
+        context 'use ActiveRecord::Base.configuration' do
+          it 'when config file different with it' do
+            ::ActiveRecord::Base.stub(:configurations).and_return({ "my_db" =>{ "database" => "two"} })
+            subject.load_config
+            subject.connection_hash.should eq({ "database" => "two"})
+          end
+        end
+
+        context 'use config file' do
+          it 'when config file same with it' do
+            ::ActiveRecord::Base.stub(:configurations).and_return({ "my_db" =>{ "database" => "one"} })
+            subject.load_config
+            subject.connection_hash.should eq({ "database" => "one"})
+          end
+
+          it 'when ::ActiveRecord::Base.configurations nil' do
+            ::ActiveRecord::Base.stub(:configurations).and_return(nil)
+            subject.load_config
+            subject.connection_hash.should eq({ "database" => "one"})
+          end
+
+          it 'when ::ActiveRecord::Base.configurations empty' do
+            ::ActiveRecord::Base.stub(:configurations).and_return({})
+            subject.load_config
+            subject.connection_hash.should eq({ "database" => "one"})
+          end
+        end
+
         it "should store the relevant config in connection_hash" do
           subject.load_config
           subject.connection_hash.should eq( "database" => "one" )

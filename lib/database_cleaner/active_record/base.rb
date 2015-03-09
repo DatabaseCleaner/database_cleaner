@@ -34,8 +34,17 @@ module DatabaseCleaner
       def load_config
         if self.db != :default && self.db.is_a?(Symbol) && File.file?(ActiveRecord.config_file_location)
           connection_details = YAML::load(ERB.new(IO.read(ActiveRecord.config_file_location)).result)
-          @connection_hash   = connection_details[self.db.to_s]
+          @connection_hash   = valid_config(connection_details)[self.db.to_s]
         end
+      end
+
+      def valid_config(connection_file)
+        if !::ActiveRecord::Base.configurations.nil? && !::ActiveRecord::Base.configurations.empty?
+          if connection_file != ::ActiveRecord::Base.configurations
+            return ::ActiveRecord::Base.configurations
+          end
+        end
+        connection_file
       end
 
       def connection_class
