@@ -190,9 +190,9 @@ module DatabaseCleaner
         rows = select_rows <<-_SQL
           SELECT schemaname || '.' || tablename
           FROM pg_tables
-          WHERE 
-            tablename !~ '_prt_' AND 
-            tablename <> '#{::ActiveRecord::Migrator.schema_migrations_table_name}' AND 
+          WHERE
+            tablename !~ '_prt_' AND
+            tablename <> '#{::ActiveRecord::Migrator.schema_migrations_table_name}' AND
             schemaname = ANY (current_schemas(false))
         _SQL
         rows.collect { |result| result.first }
@@ -247,12 +247,12 @@ module DatabaseCleaner::ActiveRecord
       tables_in_db = cache_tables? ? connection.database_cleaner_table_cache : connection.tables
       to_reject = (@tables_to_exclude + connection.database_cleaner_view_cache)
       (@only || tables_in_db).reject do |table|
-          if ( m = table.match(/([^.]+)$/) )
-            to_reject.include?(m[1])
-          else
-            false
-          end
+        if ( m = table.match(/([^.]+)$/) )
+          to_reject.include?(m[1])
+        else
+          false
         end
+      end
     end
 
     # overwritten
