@@ -1,3 +1,5 @@
+require 'yaml'
+
 version = YAML.load_file 'VERSION.yml'
 
 Gem::Specification.new do |s|
