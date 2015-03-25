@@ -54,8 +54,8 @@ module DatabaseCleaner::ActiveRecord
 
     def tables_with_new_rows(connection)
       @db_name ||= connection.instance_variable_get('@config')[:database]
-      result = connection.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = '#{@db_name}' AND table_rows > 0")
-      result.map{ |row| row[0] } - ['schema_migrations']
+      result = connection.exec_query("SELECT table_name FROM information_schema.tables WHERE table_schema = '#{@db_name}' AND table_rows > 0")
+      result.map{ |row| row['table_name'] } - ['schema_migrations']
     end
 
     def information_schema_exists? connection
