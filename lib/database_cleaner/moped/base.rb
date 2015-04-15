@@ -25,6 +25,10 @@ module DatabaseCleaner
         @host ||= '127.0.0.1:27017'
       end
 
+      def db_version
+        @db_version ||= session.command('buildinfo' => 1)['version']
+      end
+
       private
 
       def session
