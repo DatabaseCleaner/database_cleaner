@@ -20,10 +20,7 @@ module DatabaseCleaner
       def mongoid_collection_names
         @@mongoid_collection_names ||= Hash.new{|h,k| h[k]=[]}.tap do |names|
           ObjectSpace.each_object(Class) do |klass|
-            next unless klass.ancestors.map(&:to_s).include?('Mongoid::Document')
-            next if klass.embedded
-            next if klass.collection_name.empty?
-            names[klass.db.name] << klass.collection_name
+            (names[klass.db.name] << klass.collection_name) if valid_collection_name?(klass)
           end
         end
       end
@@ -51,6 +48,14 @@ module DatabaseCleaner
         end
 
         db_collections
+      end
+
+      private
+
+      def valid_collection_name?(klass)
+        klass.ancestors.map(&:to_s).include?('Mongoid::Document') &&
+        !klass.embedded &&
+        !klass.collection_name.empty?
       end
     end
   end
