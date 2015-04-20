@@ -42,7 +42,7 @@ module DatabaseCleaner
 
     def connections
       # double yuck.. can't wait to deprecate this whole class...
-      unless @cleaners
+      unless defined?(@cleaners) && @cleaners
         autodetected = ::DatabaseCleaner::Base.new
         add_cleaner(autodetected.orm)
       end
