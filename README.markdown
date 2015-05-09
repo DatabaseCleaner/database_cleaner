@@ -224,7 +224,7 @@ end
 ```ruby
 DatabaseCleaner.strategy = :transaction
 
-class MiniTest::Spec
+class Minitest::Spec
   before :each do
     DatabaseCleaner.start
   end
