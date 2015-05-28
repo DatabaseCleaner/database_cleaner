@@ -86,6 +86,19 @@ module DatabaseCleaner
       end
     end
 
+    module FbAdapter
+      def delete_table(table_name)
+        execute("DELETE FROM #{quote_table_name(table_name)};")
+        sequence_name = default_sequence_name(table_name)
+        execute("ALTER SEQUENCE #{sequence_name} RESTART WITH 0;") rescue nil
+      end
+      alias truncate_table delete_table
+
+      def truncate_tables(tables)
+        tables.each { |t| truncate_table(t) }
+      end
+    end
+
     module IBM_DBAdapter
       def truncate_table(table_name)
         execute("TRUNCATE #{quote_table_name(table_name)} IMMEDIATE")
@@ -222,6 +235,7 @@ module ActiveRecord
     IBM_DBAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::IBM_DBAdapter } if defined?(IBM_DBAdapter)
     SQLServerAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::TruncateOrDelete } if defined?(SQLServerAdapter)
     OracleEnhancedAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::OracleAdapter } if defined?(OracleEnhancedAdapter)
+    FbAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::FbAdapter } if defined?(FbAdapter)
   end
 end
 
