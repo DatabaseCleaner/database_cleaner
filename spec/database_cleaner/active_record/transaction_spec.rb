@@ -7,7 +7,11 @@ module DatabaseCleaner
 
     describe Transaction do
       let (:connection) { double("connection") }
+      let (:connection_2) { double("connection") }
+      let (:connection_pool) { double("connection_pool")}
       before(:each) do
+        ::ActiveRecord::Base.stub(:connection_pool).and_return(connection_pool)
+        connection_pool.stub(:connections).and_return([connection])
         ::ActiveRecord::Base.stub(:connection).and_return(connection)
       end
 
@@ -80,6 +84,40 @@ module DatabaseCleaner
             connection.stub(:rollback_db_transaction)
 
             ::ActiveRecord::Base.should_receive(:decrement_open_transactions)
+            Transaction.new.clean
+          end
+
+          it "should rollback open transactions in all connections" do
+            connection_pool.stub(:connections).and_return([connection, connection_2])
+
+            connection.should_receive(:open_transactions).and_return(1)
+            connection.stub(:respond_to?).with(:decrement_open_transactions).and_return(false)
+            connection.stub(:respond_to?).with(:rollback_transaction_records, true).and_return(false)
+            connection.stub(:respond_to?).with(:rollback_transaction).and_return(false)
+            connection.stub(:rollback_db_transaction)
+
+            connection_2.should_receive(:open_transactions).and_return(1)
+            connection_2.stub(:respond_to?).with(:decrement_open_transactions).and_return(false)
+            connection_2.stub(:respond_to?).with(:rollback_transaction_records, true).and_return(false)
+            connection_2.stub(:respond_to?).with(:rollback_transaction).and_return(false)
+            connection_2.stub(:rollback_db_transaction)
+
+            ::ActiveRecord::Base.should_receive(:decrement_open_transactions).twice
+            Transaction.new.clean
+          end
+
+          it "should rollback open transactions in all connections with an open transaction" do
+            connection_pool.stub(:connections).and_return([connection, connection_2])
+
+            connection.should_receive(:open_transactions).and_return(1)
+            connection.stub(:respond_to?).with(:decrement_open_transactions).and_return(false)
+            connection.stub(:respond_to?).with(:rollback_transaction_records, true).and_return(false)
+            connection.stub(:respond_to?).with(:rollback_transaction).and_return(false)
+            connection.stub(:rollback_db_transaction)
+
+            connection_2.should_receive(:open_transactions).and_return(0)
+
+            ::ActiveRecord::Base.should_receive(:decrement_open_transactions).exactly(1).times
             Transaction.new.clean
           end
         end
