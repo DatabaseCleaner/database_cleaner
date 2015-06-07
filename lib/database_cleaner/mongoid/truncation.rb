@@ -1,6 +1,7 @@
 require 'database_cleaner/mongoid/base'
 require 'database_cleaner/generic/truncation'
 require 'database_cleaner/mongo/truncation_mixin'
+require 'database_cleaner/mongo2/truncation_mixin'
 require 'database_cleaner/moped/truncation_base'
 require 'mongoid/version'
 
@@ -40,35 +41,8 @@ module DatabaseCleaner
 
       else
 
-        def clean
-          if @only
-            collections.each { |c| database[c].find.delete_many if @only.include?(c) }
-          else
-            collections.each { |c| database[c].find.delete_many unless @tables_to_exclude.include?(c) }
-          end
-          true
-        end
+        include ::DatabaseCleaner::Mongo2::TruncationMixin
 
-        private
-
-        def collections
-          if db != :default
-            database.use(db)
-          end
-
-          database['system.namespaces'].find(:name => { '$not' => /\.system\.|\$/ }).to_a.map do |collection|
-            _, name = collection['name'].split('.', 2)
-            name
-          end
-        end
-
-        def database
-          if not(@db.nil? or @db == :default)
-            ::Mongoid::Clients.with_name(@db)
-          else
-            ::Mongoid::Clients.default
-          end
-        end
       end
     end
   end
