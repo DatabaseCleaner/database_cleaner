@@ -219,6 +219,32 @@ RSpec.configure do |config|
 end
 ```
 
+### RSpec with Capybara Example
+
+If you're using Capybara with RSpec and using an external browser (not using RackTest) you'll almost certainly need to use truncation rather than transactions for tests tagged `:js`.
+
+```ruby
+RSpec.configure do |config|
+
+  config.use_transactional_fixtures = false
+
+  config.before(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.before(:each) do |example| 
+    DatabaseCleaner.strategy= example.metadata[:js] ? :truncation : :transaction
+    DatabaseCleaner.start
+  end
+
+  config.after(:each)
+    DatabaseCleaner.clean
+  end
+
+end
+```
+
+
 ### Minitest Example
 
 ```ruby
