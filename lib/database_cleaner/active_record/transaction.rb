@@ -27,24 +27,26 @@ module DatabaseCleaner::ActiveRecord
 
 
     def clean
-      return unless connection_class.connection.open_transactions > 0
+      connection_class.connection_pool.connections.each do |connection|
+        next unless connection.open_transactions > 0
 
-      if connection_class.connection.respond_to?(:rollback_transaction)
-        connection_class.connection.rollback_transaction
-      else
-        connection_class.connection.rollback_db_transaction
-      end
-
-      # The below is for handling after_commit hooks.. see https://github.com/bmabey/database_cleaner/issues/99
-      if connection_class.connection.respond_to?(:rollback_transaction_records, true)
-        connection_class.connection.send(:rollback_transaction_records, true)
-      end
-
-      if connection_maintains_transaction_count?
-        if connection_class.connection.respond_to?(:decrement_open_transactions)
-          connection_class.connection.decrement_open_transactions
+        if connection.respond_to?(:rollback_transaction)
+          connection.rollback_transaction
         else
-          connection_class.__send__(:decrement_open_transactions)
+          connection.rollback_db_transaction
+        end
+
+        # The below is for handling after_commit hooks.. see https://github.com/bmabey/database_cleaner/issues/99
+        if connection.respond_to?(:rollback_transaction_records, true)
+          connection.send(:rollback_transaction_records, true)
+        end
+
+        if connection_maintains_transaction_count?
+          if connection.respond_to?(:decrement_open_transactions)
+            connection.decrement_open_transactions
+          else
+            connection_class.__send__(:decrement_open_transactions)
+          end
         end
       end
     end
