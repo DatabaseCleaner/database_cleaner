@@ -23,9 +23,15 @@ module DatabaseCleaner
           session.use(db)
         end
 
-        session['system.namespaces'].find(:name => { '$not' => /\.system\.|\$/ }).to_a.map do |collection|
-          _, name = collection['name'].split('.', 2)
-          name
+        if db_version.split('.').first.to_i >= 3
+          session.command(listCollections: 1, filter: { 'name' => { '$not' => /.?system\.|\$/ } })['cursor']['firstBatch'].map do |collection|
+            collection['name']
+          end
+        else
+          session['system.namespaces'].find(name: { '$not' => /\.system\.|\$/ }).to_a.map do |collection|
+            _, name = collection['name'].split('.', 2)
+            name
+          end
         end
       end
 
