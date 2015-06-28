@@ -11,9 +11,10 @@ module ::DatabaseCleaner
        end
 
        def cleaning(&block)
-         start
-         yield
-         clean
+            start
+            yield
+         ensure
+            clean
        end
 
        module ClassMethods
