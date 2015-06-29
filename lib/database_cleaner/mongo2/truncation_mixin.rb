@@ -14,10 +14,10 @@ module DatabaseCleaner
       private
 
       def database
-        if not(@db.nil? or @db == :default)
-          ::Mongoid::Clients.with_name(@db)
-        else
+        if @db.nil? || @db == :default
           ::Mongoid::Clients.default
+        else
+          ::Mongoid::Clients.with_name(@db)
         end
       end
 
