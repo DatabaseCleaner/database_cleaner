@@ -24,6 +24,13 @@ module DatabaseCleaner
         subject.db.should eq db_conf
       end
 
+      it "should respect additional connection parameters" do
+        db_conf = {:type => :server_db, :path => 'http://localhost:7474', basic_auth: {username: 'user', password: 'pass'}}
+        subject.db = db_conf
+        stub_const("Neo4j::Session", double()).should_receive(:open).with(:server_db, 'http://localhost:7474', {basic_auth: {username: 'user', password: 'pass'}}) { true }
+        subject.start
+      end
+
       it "should default to nil" do
         subject.db.should be_nil
       end
