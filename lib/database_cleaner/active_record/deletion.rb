@@ -61,7 +61,7 @@ module DatabaseCleaner::ActiveRecord
     def information_schema_exists? connection
       @information_schema_exists ||=
         begin
-          connection.execute("SELECT * FROM information_schema.tables")
+          connection.execute("SELECT 1 FROM information_schema.tables")
           true
         rescue
           false
