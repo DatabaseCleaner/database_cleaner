@@ -50,8 +50,12 @@ module DatabaseCleaner
         database[:path]
       end
 
+      def db_params
+        database.reject!{|key, value| [:type, :path].include? key }
+      end
+
       def session
-        @session ||= ::Neo4j::Session.open(db_type, db_path)
+        @session ||= ::Neo4j::Session.open(db_type, db_path, db_params)
       end
     end
   end
