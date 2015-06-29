@@ -197,7 +197,7 @@ The following options are available for ActiveRecord's `:truncation` strategy _o
 
 The following option is available for ActiveRecord's `:truncation` and `:deletion` strategy for any DB.
 
-* `:cache_tables` - When set to `true` the list of tables to truncate or delete from will only be read from the DB once, otherwise it will be read before each cleanup run. Set this to `false` if you create and drop tables in your tests. Defaults to `true`.
+* `:cache_tables` - When set to `true` the list of tables to truncate or delete from will only be read from the DB once, otherwise it will be read before each cleanup run. Set this to `false` if (1) you create and drop tables in your tests, or (2) you change Postgres schemas (`ActiveRecord::Base.connection.schema_search_path`) in your tests (for example, in a multitenancy setup with each tenant in a different Postgres schema). Defaults to `true`.
 
 
 ### RSpec Example
