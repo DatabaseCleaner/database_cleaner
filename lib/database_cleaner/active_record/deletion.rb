@@ -59,7 +59,7 @@ module DatabaseCleaner::ActiveRecord
     end
 
     def is_mysql2? connection
-      connection.class == 'ActiveRecord::ConnectionAdapters::Mysql2Adapter'
+      connection.class.to_s == 'ActiveRecord::ConnectionAdapters::Mysql2Adapter'
     end
 
     def clean
