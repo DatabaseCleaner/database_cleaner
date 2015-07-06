@@ -43,35 +43,23 @@ module ActiveRecord
 end
 
 module DatabaseCleaner::ActiveRecord
-  module SelectiveTruncation
+  class Deletion < Truncation
     def tables_to_truncate(connection)
-      if information_schema_exists?(connection)
-        (@only || tables_with_new_rows(connection)) - @tables_to_exclude
+      if is_mysql2?(connection)
+        (@only || tables_with_new_rows_mysql2(connection)) - @tables_to_exclude
       else
         super
       end
     end
 
-    def tables_with_new_rows(connection)
+    def tables_with_new_rows_mysql2(connection)
       @db_name ||= connection.instance_variable_get('@config')[:database]
       result = connection.exec_query("SELECT table_name FROM information_schema.tables WHERE table_schema = '#{@db_name}' AND table_rows > 0")
       result.map{ |row| row['table_name'] } - ['schema_migrations']
     end
 
-    def information_schema_exists? connection
-      @information_schema_exists ||=
-        begin
-          connection.execute("SELECT 1 FROM information_schema.tables")
-          true
-        rescue
-          false
-        end
-    end
-  end
-
-  class Deletion < Truncation
-    if defined?(ActiveRecord::ConnectionAdapters::Mysql2Adapter)
-      include SelectiveTruncation
+    def is_mysql2? connection
+      connection.class == 'ActiveRecord::ConnectionAdapters::Mysql2Adapter'
     end
 
     def clean
