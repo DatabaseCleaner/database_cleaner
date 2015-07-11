@@ -1,5 +1,4 @@
 require 'yaml'
-
 version = YAML.load_file 'VERSION.yml'
 
 Gem::Specification.new do |s|
@@ -149,87 +148,36 @@ Gem::Specification.new do |s|
   s.rubygems_version = "2.4.5"
   s.summary = "Strategies for cleaning databases.  Can be used to ensure a clean state for testing."
 
-  if s.respond_to? :specification_version then
-    s.specification_version = 4
+  s.add_development_dependency "rake"
+  s.add_development_dependency "bundler"
+  s.add_development_dependency "json_pure"
+  s.add_development_dependency "activerecord-mysql2-adapter" unless RUBY_PLATFORM =~ /java/
+  s.add_development_dependency "activerecord"
+  s.add_development_dependency "datamapper"
+  s.add_development_dependency "dm-migrations"
+  s.add_development_dependency "dm-sqlite-adapter"
+  s.add_development_dependency "mongoid"
+  s.add_development_dependency "tzinfo"
+  s.add_development_dependency "mongoid-tree"
+  s.add_development_dependency "mongo_mapper"
+  s.add_development_dependency "moped"
+  s.add_development_dependency "neo4j-core"
+  s.add_development_dependency "couch_potato"
+  s.add_development_dependency "sequel", "~> 3.21.0"
+  s.add_development_dependency 'ohm', '~> 0.1.3'
+  s.add_development_dependency 'guard-rspec'
+  s.add_development_dependency "rspec-rails", "~> 2.11.0"
+  s.add_development_dependency "cucumber"
 
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<rake>, [">= 0"])
-      s.add_development_dependency(%q<ruby-debug>, [">= 0"])
-      s.add_development_dependency(%q<ruby-debug19>, [">= 0"])
-      s.add_development_dependency(%q<bundler>, [">= 0"])
-      s.add_development_dependency(%q<json_pure>, [">= 0"])
-      s.add_development_dependency(%q<activerecord-mysql2-adapter>, [">= 0"])
-      s.add_development_dependency(%q<activerecord>, [">= 0"])
-      s.add_development_dependency(%q<datamapper>, [">= 0"])
-      s.add_development_dependency(%q<dm-migrations>, [">= 0"])
-      s.add_development_dependency(%q<dm-sqlite-adapter>, [">= 0"])
-      s.add_development_dependency(%q<mongoid>, [">= 0"])
-      s.add_development_dependency(%q<tzinfo>, [">= 0"])
-      s.add_development_dependency(%q<mongo_ext>, [">= 0"])
-      s.add_development_dependency(%q<bson_ext>, [">= 0"])
-      s.add_development_dependency(%q<mongoid-tree>, [">= 0"])
-      s.add_development_dependency(%q<mongo_mapper>, [">= 0"])
-      s.add_development_dependency(%q<moped>, [">= 0"])
-      s.add_development_dependency(%q<neo4j-core>, [">= 0"])
-      s.add_development_dependency(%q<couch_potato>, [">= 0"])
-      s.add_development_dependency(%q<sequel>, ["~> 3.21.0"])
-      s.add_development_dependency(%q<mysql>, ["~> 2.8.1"])
-      s.add_development_dependency(%q<mysql2>, [">= 0"])
-      s.add_development_dependency(%q<pg>, [">= 0"])
-      s.add_development_dependency(%q<ohm>, ["~> 0.1.3"])
-      s.add_development_dependency(%q<guard-rspec>, [">= 0"])
-    else
-      s.add_dependency(%q<rake>, [">= 0"])
-      s.add_dependency(%q<ruby-debug>, [">= 0"])
-      s.add_dependency(%q<ruby-debug19>, [">= 0"])
-      s.add_dependency(%q<bundler>, [">= 0"])
-      s.add_dependency(%q<json_pure>, [">= 0"])
-      s.add_dependency(%q<activerecord-mysql2-adapter>, [">= 0"])
-      s.add_dependency(%q<activerecord>, [">= 0"])
-      s.add_dependency(%q<datamapper>, [">= 0"])
-      s.add_dependency(%q<dm-migrations>, [">= 0"])
-      s.add_dependency(%q<dm-sqlite-adapter>, [">= 0"])
-      s.add_dependency(%q<mongoid>, [">= 0"])
-      s.add_dependency(%q<tzinfo>, [">= 0"])
-      s.add_dependency(%q<mongo_ext>, [">= 0"])
-      s.add_dependency(%q<bson_ext>, [">= 0"])
-      s.add_dependency(%q<mongoid-tree>, [">= 0"])
-      s.add_dependency(%q<mongo_mapper>, [">= 0"])
-      s.add_dependency(%q<moped>, [">= 0"])
-      s.add_dependency(%q<neo4j-core>, [">= 0"])
-      s.add_dependency(%q<couch_potato>, [">= 0"])
-      s.add_dependency(%q<sequel>, ["~> 3.21.0"])
-      s.add_dependency(%q<mysql>, ["~> 2.8.1"])
-      s.add_dependency(%q<mysql2>, [">= 0"])
-      s.add_dependency(%q<pg>, [">= 0"])
-      s.add_dependency(%q<ohm>, ["~> 0.1.3"])
-      s.add_dependency(%q<guard-rspec>, [">= 0"])
-    end
+  unless RUBY_PLATFORM =~ /java/
+    s.add_development_dependency "mongo_ext"
+    s.add_development_dependency "bson_ext"
+    s.add_development_dependency 'mysql', '~> 2.9.1'
+    s.add_development_dependency 'mysql2'
+    s.add_development_dependency 'pg'
+    s.add_development_dependency "sqlite3-ruby" if RUBY_VERSION < "1.9"
+    s.add_development_dependency "sqlite3" if RUBY_VERSION >= "1.9"
   else
-    s.add_dependency(%q<rake>, [">= 0"])
-    s.add_dependency(%q<ruby-debug>, [">= 0"])
-    s.add_dependency(%q<ruby-debug19>, [">= 0"])
-    s.add_dependency(%q<bundler>, [">= 0"])
-    s.add_dependency(%q<json_pure>, [">= 0"])
-    s.add_dependency(%q<activerecord-mysql2-adapter>, [">= 0"])
-    s.add_dependency(%q<activerecord>, [">= 0"])
-    s.add_dependency(%q<datamapper>, [">= 0"])
-    s.add_dependency(%q<dm-migrations>, [">= 0"])
-    s.add_dependency(%q<dm-sqlite-adapter>, [">= 0"])
-    s.add_dependency(%q<mongoid>, [">= 0"])
-    s.add_dependency(%q<tzinfo>, [">= 0"])
-    s.add_dependency(%q<mongo_ext>, [">= 0"])
-    s.add_dependency(%q<bson_ext>, [">= 0"])
-    s.add_dependency(%q<mongoid-tree>, [">= 0"])
-    s.add_dependency(%q<mongo_mapper>, [">= 0"])
-    s.add_dependency(%q<moped>, [">= 0"])
-    s.add_dependency(%q<neo4j-core>, [">= 0"])
-    s.add_dependency(%q<couch_potato>, [">= 0"])
-    s.add_dependency(%q<sequel>, ["~> 3.21.0"])
-    s.add_dependency(%q<mysql>, ["~> 2.8.1"])
-    s.add_dependency(%q<mysql2>, [">= 0"])
-    s.add_dependency(%q<pg>, [">= 0"])
-    s.add_dependency(%q<ohm>, ["~> 0.1.3"])
-    s.add_dependency(%q<guard-rspec>, [">= 0"])
+    s.add_development_dependency "activerecord-jdbc-adapter"
   end
 end
