@@ -65,45 +65,45 @@ module ::DatabaseCleaner
         it { expect{ TruncationExample.new( { :pre_count => "something"                        } ) }.to_not raise_error }
         it { expect{ TruncationExample.new( { :reset_ids => "something"                        } ) }.to_not raise_error }
 
-        context "" do
+        context do
           subject { TruncationExample.new( { :only => ["something"] } ) }
           its(:only)   { should eq ["something"] }
           its(:except) { should eq [] }
         end
 
-        context "" do
+        context do
           subject { TruncationExample.new( { :except => ["something"] } ) }
           its(:only)   { should eq nil }
           its(:except) { should include("something") }
         end
 
-        context "" do
+        context do
           subject { TruncationExample.new( { :reset_ids => ["something"] } ) }
           its(:reset_ids?) { should eq true }
         end
 
-        context "" do
+        context do
           subject { TruncationExample.new( { :reset_ids => nil } ) }
           its(:reset_ids?) { should eq false }
         end
 
-        context "" do
+        context do
           subject { TruncationExample.new( { :pre_count => ["something"] } ) }
           its(:pre_count?) { should eq true }
         end
 
-        context "" do
+        context do
           subject { TruncationExample.new( { :pre_count => nil } ) }
           its(:pre_count?) { should eq false }
         end
 
-        context "" do
+        context do
           subject { MigrationExample.new }
           its(:only)   { should eq nil }
           its(:except) { should eq %w[migration_storage_name] }
         end
 
-        context "" do
+        context do
           EXCEPT_TABLES = ["something"]
           subject { MigrationExample.new( { :except => EXCEPT_TABLES } ) }
 
