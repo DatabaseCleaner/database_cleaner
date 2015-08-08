@@ -1,0 +1,37 @@
+gem:
+  build: .
+  # proxy forwarding local ports to databases
+  command: >
+    sh -c
+    "sh -c 'socat TCP-LISTEN:6379,reuseaddr,fork,su=nobody TCP:redis.local:6379 &' &&
+    sh -c 'socat TCP-LISTEN:27017,reuseaddr,fork,su=nobody TCP:mongodb.local:27017 &' &&
+    sh -c 'socat TCP-LISTEN:5432,reuseaddr,fork,su=nobody TCP:postgres.local:5432 &' &&
+    sh -c 'socat TCP-LISTEN:3306,reuseaddr,fork,su=nobody TCP:mysql.local:3306 &' &&
+    echo 'Waiting databases be connectable.' &&
+    while ! nc -vz redis.local 6379 || ! nc -vz mongodb.local 27017 || ! nc -vz postgres.local 5432  || ! nc -vz mysql.local 3306; do echo '.'; sleep 0.3; done &&
+    rake"
+  links:
+    - redis:redis.local
+    - mysql:mysql.local
+    - mongodb:mongodb.local
+    - postgres:postgres.local
+  volumes:
+    - ./lib:/gem/lib/
+    - ./spec:/gem/spec/
+    - ./features:/gem/features/
+
+redis:
+  image: redis:3.0.3
+
+mysql:
+  image: mysql:5.6.26
+  command: "/entrypoint.sh mysqld"
+  environment:
+    - MYSQL_ROOT_PASSWORD=secret
+
+mongodb:
+  image: mongo:2.6.10
+
+postgres:
+  image: postgres:9.3.9
+  command: "/docker-entrypoint.sh postgres"
