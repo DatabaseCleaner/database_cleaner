@@ -1,6 +1,6 @@
 class CreateAgents < ActiveRecord::Migration
   def self.up
-    create_table :agents do |t|
+    create_table :agents, :force => true do |t|
       t.string :name
     end
   end
