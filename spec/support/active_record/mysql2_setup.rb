@@ -3,8 +3,6 @@ require 'support/active_record/schema_setup'
 
 
 module MySQL2Helper
-  puts "Active Record #{ActiveRecord::VERSION::STRING}, mysql2"
-
   # require 'logger'
   # ActiveRecord::Base.logger = Logger.new(STDERR)
 
@@ -13,7 +11,7 @@ module MySQL2Helper
   end
 
   def create_db
-    establish_connection(default_config.merge(:database => nil))
+    establish_connection(default_config.merge('database' => nil))
 
     ActiveRecord::Base.connection.drop_database default_config['database'] rescue nil
     ActiveRecord::Base.connection.create_database default_config['database']
