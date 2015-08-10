@@ -45,6 +45,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
 
 ADD ./ /gem/
 COPY ./db/sample.config.yml /gem/db/config.yml
+RUN ruby -e "File.open('db/config.yml', 'r+'){|f| f.write(f.read.gsub(/username: root\n  password:/, \"username: root\n  password: secret\"))}"
 
 # install gem requirements
 RUN bundle install

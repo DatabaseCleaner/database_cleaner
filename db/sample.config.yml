@@ -2,7 +2,7 @@ mysql:
   adapter: mysql
   database: database_cleaner_test
   username: root
-  password: secret
+  password:
   host: 127.0.0.1
   port: 3306
   encoding: utf8
@@ -11,7 +11,7 @@ mysql2:
   adapter: mysql2
   database: database_cleaner_test
   username: root
-  password: secret
+  password:
   host: 127.0.0.1
   port: 3306
   encoding: utf8
