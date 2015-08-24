@@ -28,7 +28,7 @@ module DatabaseCleaner
         private
 
         def session
-          ::Mongoid.default_session
+          ::Mongoid.default_client
         end
 
         def database
