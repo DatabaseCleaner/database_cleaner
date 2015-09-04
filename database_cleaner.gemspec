@@ -77,6 +77,8 @@ Gem::Specification.new do |s|
     "lib/database_cleaner/mongo/base.rb",
     "lib/database_cleaner/mongo/truncation.rb",
     "lib/database_cleaner/mongo/truncation_mixin.rb",
+    "lib/database_cleaner/mongo2/base.rb",
+    "lib/database_cleaner/mongo2/truncation_mixin.rb",
     "lib/database_cleaner/mongo_mapper/base.rb",
     "lib/database_cleaner/mongo_mapper/truncation.rb",
     "lib/database_cleaner/mongoid/base.rb",
