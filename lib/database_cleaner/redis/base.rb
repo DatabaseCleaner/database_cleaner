@@ -22,7 +22,7 @@ module DatabaseCleaner
       private
 
       def connection
-        @connection ||= url == :default ? ::Redis.connect : ::Redis.connect(:url => url)
+        @connection ||= url == :default ? ::Redis.new : ::Redis.new(:url => url)
       end
 
     end

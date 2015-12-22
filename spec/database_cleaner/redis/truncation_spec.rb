@@ -9,7 +9,7 @@ module DatabaseCleaner
     describe Truncation do
       before(:all) do
         config = YAML::load(File.open("#{File.dirname(__FILE__)}/../../../examples/config/redis.yml"))
-      @redis = ::Redis.connect :url => config['test']['url']
+      @redis = ::Redis.new :url => config['test']['url']
       end
 
       before(:each) do
