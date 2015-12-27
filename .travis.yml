@@ -7,6 +7,8 @@ rvm:
 script: "bundle exec rake"
 gemfile:
   - Gemfile
+before_install:
+  - gem install bundler -v 1.11.2
 before_script:
   - mysql -e 'create database database_cleaner_test;'
   - psql -c 'create database database_cleaner_test;' -U postgres
