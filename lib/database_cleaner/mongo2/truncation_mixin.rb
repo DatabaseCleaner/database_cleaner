@@ -26,10 +26,12 @@ module DatabaseCleaner
           database.use(db)
         end
 
-        database['system.namespaces'].find(:name => { '$not' => /\.system\.|\$/ }).to_a.map do |collection|
-          _, name = collection['name'].split('.', 2)
-          name
-        end
+        database.collections.collect { |c| c.namespace.split('.',2)[1] }
+
+        # database['system.namespaces'].find(:name => { '$not' => /\.system\.|\$/ }).to_a.map do |collection|
+        #   _, name = collection['name'].split('.', 2)
+        #   name
+        # end
       end
 
     end
