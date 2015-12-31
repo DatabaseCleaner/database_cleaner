@@ -213,6 +213,32 @@ module DatabaseCleaner
         one.should eq two
         two.should eq one
       end
+
+      it "should not be equal if orm are not the same" do
+        strategy = mock("strategy")
+        strategy.stub!(:to_ary => [strategy])
+
+        one = DatabaseCleaner::Base.new(:mongo_id, :connection => :default)
+        one.strategy = strategy
+
+        two = DatabaseCleaner::Base.new(:active_record, :connection => :default)
+        two.strategy = strategy
+
+        one.should_not eq two
+        two.should_not eq one
+      end
+
+      it "should not be equal if connection are not the same" do
+
+        one = DatabaseCleaner::Base.new(:active_record, :connection => :default)
+        one.strategy = :truncation
+
+        two = DatabaseCleaner::Base.new(:active_record, :connection => :other)
+        two.strategy = :truncation
+
+        one.should_not eq two
+        two.should_not eq one
+      end
     end
 
     describe "initialization" do
