@@ -218,10 +218,10 @@ module DatabaseCleaner
         strategy = mock("strategy")
         strategy.stub!(:to_ary => [strategy])
 
-        one = DatabaseCleaner::Base.new(:mongo_id,:connection => :default)
+        one = DatabaseCleaner::Base.new(:mongo_id, :connection => :default)
         one.strategy = strategy
 
-        two = DatabaseCleaner::Base.new(:active_record,:connection => :default)
+        two = DatabaseCleaner::Base.new(:active_record, :connection => :default)
         two.strategy = strategy
 
         one.should_not eq two
@@ -230,10 +230,10 @@ module DatabaseCleaner
 
       it "should not be equal if connection are not the same" do
 
-        one = DatabaseCleaner::Base.new(:active_record,:connection => :default)
+        one = DatabaseCleaner::Base.new(:active_record, :connection => :default)
         one.strategy = :truncation
 
-        two = DatabaseCleaner::Base.new(:active_record,:connection => :other)
+        two = DatabaseCleaner::Base.new(:active_record, :connection => :other)
         two.strategy = :truncation
 
         one.should_not eq two
