@@ -1,6 +1,12 @@
 require 'database_cleaner/null_strategy'
 module DatabaseCleaner
   class Base
+    include Comparable
+
+    def <=>(other)
+      (self.orm <=> other.orm) == 0 ? self.db <=> other.db : self.orm <=> other.orm
+    end
+
     def initialize(desired_orm = nil,opts = {})
       if [:autodetect, nil, "autodetect"].include?(desired_orm)
         autodetect
@@ -94,11 +100,6 @@ module DatabaseCleaner
 
     def auto_detected?
       !!@autodetected
-    end
-
-    #TODO make strategies directly comparable
-    def ==(other)
-      self.orm == other.orm && self.db == other.db
     end
 
     def autodetect_orm
