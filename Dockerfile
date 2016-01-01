@@ -30,6 +30,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
 	mysql-common \
 	libmysqlclient-dev \
 	libmysqlclient18 \
+  libgmp3-dev \
 	sqlite \
 	postgresql-9.3 \
 	postgresql-9.3-dbg \
