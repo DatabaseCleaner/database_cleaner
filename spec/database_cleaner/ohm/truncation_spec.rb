@@ -1,5 +1,5 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
-require 'ohm'
+require 'spec_helper'
+require 'support/connection_helpers'
 require 'database_cleaner/ohm/truncation'
 
 module DatabaseCleaner
@@ -15,9 +15,7 @@ module DatabaseCleaner
 
     describe Truncation do
       before(:all) do
-        config = YAML::load(File.open("#{File.dirname(__FILE__)}/../../../examples/config/redis.yml"))
-        ::Ohm.connect :url => config['test']['url']
-        @redis = ::Ohm.redis
+        @redis = ::ConnectionHelpers::Redis.build_ohm_connection
       end
 
       before(:each) do
@@ -25,7 +23,13 @@ module DatabaseCleaner
       end
 
       it "should flush the database" do
-        Truncation.new.clean
+        truncation.clean
+      end
+
+      def truncation(options={})
+        truncation = Truncation.new(options)
+        truncation.db = ::ConnectionHelpers::Redis.url
+        truncation
       end
 
       def create_widget(attrs={})
@@ -40,7 +44,7 @@ module DatabaseCleaner
         create_widget
         create_gadget
         @redis.keys.size.should eq 6
-        Truncation.new.clean
+        truncation.clean
         @redis.keys.size.should eq 0
       end
 
@@ -49,7 +53,7 @@ module DatabaseCleaner
           create_widget
           create_gadget
           @redis.keys.size.should eq 6
-          Truncation.new(:only => ['*Widget*']).clean
+          truncation(:only => ['*Widget*']).clean
           @redis.keys.size.should eq 3
           @redis.get('DatabaseCleaner::Ohm::Gadget:id').should eq '1'
         end
@@ -60,7 +64,7 @@ module DatabaseCleaner
           create_widget
           create_gadget
           @redis.keys.size.should eq 6
-          Truncation.new(:except => ['*Widget*']).clean
+          truncation(:except => ['*Widget*']).clean
           @redis.keys.size.should eq 3
           @redis.get('DatabaseCleaner::Ohm::Widget:id').should eq '1'
         end

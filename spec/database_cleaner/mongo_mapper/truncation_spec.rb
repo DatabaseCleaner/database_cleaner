@@ -1,4 +1,5 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
+require 'spec_helper'
+require 'support/connection_helpers'
 require 'mongo_mapper'
 require 'database_cleaner/mongo_mapper/truncation'
 require File.dirname(__FILE__) + '/mongo_examples'
@@ -10,7 +11,7 @@ module DatabaseCleaner
 
       #doing this in the file root breaks autospec, doing it before(:all) just fails the specs
       before(:all) do
-          ::MongoMapper.connection = ::Mongo::Connection.new('127.0.0.1')
+          ::MongoMapper.connection = ::ConnectionHelpers::Mongo.build_connection
           @test_db = 'database_cleaner_specs'
           ::MongoMapper.database = @test_db
       end

@@ -1,7 +1,7 @@
 module MongoTest
   class ThingBase
     def self.collection
-      @connection ||= ::Mongo::Connection.new('127.0.0.1')
+      @connection ||= ::ConnectionHelpers::Mongo.build_connection
       @db ||= @connection.db('database_cleaner_specs')
       @mongo ||= @db.collection(name) || @db.create_collection(name)
     end

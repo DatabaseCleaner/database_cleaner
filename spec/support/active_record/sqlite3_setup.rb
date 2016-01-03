@@ -1,32 +1,16 @@
-require 'support/active_record/database_setup'
+require 'support/connection_helpers'
+require 'support/database_creator'
 require 'support/active_record/schema_setup'
 
 module SQLite3Helper
-  puts "Active Record #{ActiveRecord::VERSION::STRING}, sqlite3"
+  ADAPTER = 'sqlite3'
 
-  # ActiveRecord::Base.logger = Logger.new(STDERR)
-
-  def default_config
-    db_config['sqlite3']
-  end
-
-  def create_db
-    @encoding = default_config['encoding'] || ENV['CHARSET'] || 'utf8'
-    begin
-      establish_connection(default_config.merge('database' => 'sqlite3', 'schema_search_path' => 'public'))
-    rescue Exception => e
-      $stderr.puts e, *(e.backtrace)
-      $stderr.puts "Couldn't create database for #{default_config.inspect}"
-    end
-  end
-
-  def establish_connection(config = default_config)
-    ActiveRecord::Base.establish_connection(config)
-  end
+  puts "Active Record #{ActiveRecord::VERSION::STRING}, #{ADAPTER}"
 
   def active_record_sqlite3_setup
-    create_db
-    establish_connection
+    ::ConnectionHelpers::ActiveRecord.build_connection_for ADAPTER
+    ActiveRecord::Migrator.migrate 'spec/support/active_record/migrations'
+
     active_record_load_schema
   end
 

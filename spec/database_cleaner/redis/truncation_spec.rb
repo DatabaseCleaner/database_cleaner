@@ -1,5 +1,5 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
-require 'redis'
+require 'spec_helper'
+require 'support/connection_helpers'
 require 'database_cleaner/redis/truncation'
 
 
@@ -8,8 +8,7 @@ module DatabaseCleaner
 
     describe Truncation do
       before(:all) do
-        config = YAML::load(File.open("#{File.dirname(__FILE__)}/../../../examples/config/redis.yml"))
-      @redis = ::Redis.new :url => config['test']['url']
+        @redis = ::ConnectionHelpers::Redis.build_connection
       end
 
       before(:each) do
@@ -17,7 +16,13 @@ module DatabaseCleaner
       end
 
       it "should flush the database" do
-        Truncation.new.clean
+        truncation.clean
+      end
+
+      def truncation(options={})
+        truncation = Truncation.new options
+        truncation.db = ::ConnectionHelpers::Redis.url
+        truncation
       end
 
       def create_widget(attrs={})
@@ -32,7 +37,7 @@ module DatabaseCleaner
         create_widget
         create_gadget
         @redis.keys.size.should eq 2
-        Truncation.new.clean
+        truncation.clean
         @redis.keys.size.should eq 0
       end
 
@@ -41,7 +46,7 @@ module DatabaseCleaner
           create_widget
           create_gadget
           @redis.keys.size.should eq 2
-          Truncation.new(:only => ['Widge*']).clean
+          truncation(:only => ['Widge*']).clean
           @redis.keys.size.should eq 1
           @redis.get('Gadget').should eq '1'
         end
@@ -52,7 +57,7 @@ module DatabaseCleaner
           create_widget
           create_gadget
           @redis.keys.size.should eq 2
-          Truncation.new(:except => ['Widg*']).clean
+          truncation(:except => ['Widg*']).clean
           @redis.keys.size.should eq 1
           @redis.get('Widget').should eq '1'
         end

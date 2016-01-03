@@ -1,10 +1,8 @@
 require 'spec_helper'
+require 'support/connection_helpers'
 require 'database_cleaner/sequel/truncation'
 require 'database_cleaner/shared_strategy'
-require 'sequel'
-
-# XXX: use ActiveRecord's db_config (`db/config.yml`) for CI/dev convenience
-require 'support/active_record/database_setup'
+require 'support/sequel/create_databases'
 
 module DatabaseCleaner
   module Sequel
@@ -116,17 +114,11 @@ module DatabaseCleaner
       end
     end
 
-    half_supported_configurations = [
-      {url: 'sqlite:///',   connection_options: db_config['sqlite3']},
-      {url: 'postgres:///', connection_options: db_config['postgres']},
-    ]
-    supported_configurations = [
-      {url: 'mysql:///',    connection_options: db_config['mysql']},
-      {url: 'mysql2:///',   connection_options: db_config['mysql2']}
-    ]
-    supported_configurations.each do |config|
-      describe "Sequel truncation (using a #{config[:url]} connection)" do
-        let(:db) { ::Sequel.connect(config[:url], config[:connection_options]) }
+    half_supported_databases = %w{sqlite3 postgres}
+    supported_databases = %w{mysql mysql2}
+    supported_databases.each do |db_name|
+      describe "Sequel truncation (using a #{db_name} connection)" do
+        let(:db) { ::ConnectionHelpers::Sequel.build_connection_for db_name }
 
         it_behaves_like 'a Sequel truncation strategy'
         it_behaves_like 'a truncation strategy that resets autoincrement keys by default'
@@ -170,9 +162,10 @@ module DatabaseCleaner
         end
       end
     end
-    half_supported_configurations.each do |config|
-      describe "Sequel truncation (using a #{config[:url]} connection)" do
-        let(:db) { ::Sequel.connect(config[:url], config[:connection_options]) }
+
+    half_supported_databases.each do |db_name|
+      describe "Sequel truncation (using a #{db_name} connection)" do
+        let(:db) { ::ConnectionHelpers::Sequel.build_connection_for db_name }
 
         it_behaves_like 'a Sequel truncation strategy'
         it_behaves_like 'a truncation strategy without autoincrement resets'

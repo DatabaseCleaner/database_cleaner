@@ -1,8 +1,7 @@
 module MopedTest
   class ThingBase
     def self.collection
-      @db ||= 'database_cleaner_specs'
-      @session ||= ::Moped::Session.new(['127.0.0.1:27017'], database: @db)
+      @session ||= ::ConnectionHelpers::Mongo.build_moped_connection
       @collection ||= @session[name]
     end
 

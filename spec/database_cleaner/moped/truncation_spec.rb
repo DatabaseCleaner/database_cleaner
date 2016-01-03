@@ -1,5 +1,5 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
-require 'moped'
+require 'spec_helper'
+require 'support/connection_helpers'
 require 'database_cleaner/moped/truncation'
 require File.dirname(__FILE__) + '/moped_examples'
 
@@ -10,12 +10,13 @@ module DatabaseCleaner
       let(:args) {{}}
       let(:truncation) do
         truncation = described_class.new(args)
-        truncation.db = 'database_cleaner_specs'
+        truncation.db = ::ConnectionHelpers::Mongo.database_name
+        truncation.host_port = ::ConnectionHelpers::Mongo.host_port
         truncation
       end
       #doing this in the file root breaks autospec, doing it before(:all) just fails the specs
-      before(:all) do 
-        @session = ::Moped::Session.new(['127.0.0.1:27017'], database: 'database_cleaner_specs')
+      before(:all) do
+        @session = ::ConnectionHelpers::Mongo.build_moped_connection
       end
 
       after(:each) do

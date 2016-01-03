@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
+require 'spec_helper'
 require 'active_record'
 require 'active_record/connection_adapters/mysql_adapter'
 require 'active_record/connection_adapters/mysql2_adapter'

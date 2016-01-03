@@ -8,7 +8,7 @@ module ActiveRecord
   module ConnectionAdapters
     describe "schema_migrations table" do
       it "is not truncated" do
-        active_record_pg_migrate
+        active_record_pg_setup
         DatabaseCleaner::ActiveRecord::Truncation.new.clean
         result = active_record_pg_connection.execute("select count(*) from schema_migrations;")
         result.values.first.should eq ["2"]
@@ -16,8 +16,6 @@ module ActiveRecord
     end
 
     describe do
-      before(:all) { active_record_pg_setup }
-
       let(:connection) do
         active_record_pg_connection
       end

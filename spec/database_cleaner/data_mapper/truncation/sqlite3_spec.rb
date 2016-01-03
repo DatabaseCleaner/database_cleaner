@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'dm-core'
 require 'dm-sqlite-adapter'
-require File.expand_path('../../../../support/data_mapper/sqlite3_setup', __FILE__)
+require 'support/data_mapper/sqlite3_setup'
 require 'database_cleaner/data_mapper/truncation'
 
 module DataMapper

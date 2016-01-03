@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'active_record'
 require 'support/active_record/mysql_setup'
 require 'database_cleaner/active_record/truncation'
 require 'database_cleaner/active_record/truncation/shared_fast_truncation'

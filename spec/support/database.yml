@@ -1,0 +1,47 @@
+mongodb:
+  database: database_cleaner_test
+  host: mongodb.local
+  port: 27017
+
+redis:
+  host: redis.local
+  port: 6379
+
+mysql:
+  default:
+    adapter: mysql
+    database: database_cleaner_test
+    username: root
+    password: secret
+    host: mysql.local
+    port: 3306
+    encoding: utf8
+
+mysql2:
+  default:
+    adapter: mysql2
+    database: database_cleaner_test
+    username: root
+    password: secret
+    host: mysql.local
+    port: 3306
+    encoding: utf8
+
+postgres:
+  sequel_adapter: postgres
+  default:
+    adapter: postgresql
+    database: database_cleaner_test
+    username: postgres
+    password:
+    host: postgres.local
+    encoding: unicode
+    template: template0
+
+sqlite3:
+  sequel_adapter: sqlite
+  default:
+    adapter: sqlite3
+    database: db/test.sqlite3
+    pool: 5
+    timeout: 5000

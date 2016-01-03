@@ -1,29 +1,17 @@
-require 'support/active_record/database_setup'
+require 'support/connection_helpers'
+require 'support/database_creator'
 require 'support/active_record/schema_setup'
 
-
 module MySQL2Helper
-  # require 'logger'
-  # ActiveRecord::Base.logger = Logger.new(STDERR)
+  ADAPTER = 'mysql2'
 
-  def default_config
-    db_config['mysql2']
-  end
-
-  def create_db
-    establish_connection(default_config.merge('database' => nil))
-
-    ActiveRecord::Base.connection.drop_database default_config['database'] rescue nil
-    ActiveRecord::Base.connection.create_database default_config['database']
-  end
-
-  def establish_connection(config = default_config)
-    ActiveRecord::Base.establish_connection config
-  end
+  puts "Active Record #{ActiveRecord::VERSION::STRING}, #{ADAPTER}"
 
   def active_record_mysql2_setup
-    create_db
-    establish_connection
+    ::DatabaseCreator.create_database_for ADAPTER
+    ::ConnectionHelpers::ActiveRecord.build_connection_for ADAPTER
+    ActiveRecord::Migrator.migrate 'spec/support/active_record/migrations'
+
     active_record_load_schema
   end
 
