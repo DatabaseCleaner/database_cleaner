@@ -22,7 +22,7 @@ rescue LoadError
   puts "Cucumber is not available. In order to run features, you must: sudo gem install cucumber"
 end
 
-task :default => [:spec, :features]
+task :default => [:check_connections, :spec, :features]
 
 
 desc "Cleans the project of any tmp file that should not be included in the gemspec."
@@ -38,3 +38,17 @@ end
 
 desc "Cleans the dir and builds the gem"
 task :prep => [:clean, :gemspec, :build]
+
+desc "Check if all databases can be connected"
+task :check_connections do
+  ["redis.local 6379", "mongodb.local 27017", "postgres.local 5432", "mysql.local 3306"].each do |host_port|
+    tries = 1
+    while !system("nc -vz #{host_port}")
+      if tries > 10
+        abort "! max retries exceeded to connect to #{host_port}."
+      end
+      tries += 1
+      sleep 3
+    end
+  end
+end

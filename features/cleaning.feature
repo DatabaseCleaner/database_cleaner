@@ -4,7 +4,8 @@ Feature: database cleaning
   I want to have my database in a clean state
 
   Scenario Outline: ruby app
-    Given I am using <ORM>
+    Given All database servers are running locally
+    And I am using <ORM>
     And the <Strategy> cleaning strategy
 
     When I run my scenarios that rely on a clean database

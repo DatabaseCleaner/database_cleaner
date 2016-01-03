@@ -4,19 +4,20 @@ Feature: multiple database cleaning
   I want to have my databases in a clean state
 
   Scenario Outline: ruby app
-    Given I am using <ORM>
+    Given All database servers are running locally
+    And I am using <ORM>
     And the <Strategy> cleaning strategy
 
     When I run my scenarios that rely on clean databases
     Then I should see all green
 
   Examples:
-  | ORM          | Strategy      |
-  | ActiveRecord | truncation    |
-  | ActiveRecord | deletion      |
-  | DataMapper   | truncation    |
-  | Sequel       | truncation    |
-  | MongoMapper  | truncation    |
-  | DataMapper   | transaction   |
-  | ActiveRecord | transaction   |
-  | Sequel       | transaction   |
+    | ORM          | Strategy      |
+    | ActiveRecord | truncation    |
+    | ActiveRecord | deletion      |
+    | DataMapper   | truncation    |
+    | Sequel       | truncation    |
+    | MongoMapper  | truncation    |
+    | DataMapper   | transaction   |
+    | ActiveRecord | transaction   |
+    | Sequel       | transaction   |

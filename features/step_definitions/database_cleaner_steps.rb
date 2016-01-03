@@ -1,5 +1,13 @@
 orms_pattern = /(ActiveRecord|DataMapper|Sequel|MongoMapper|Mongoid|CouchPotato|Redis|Ohm|Neo4j)/
 
+Given /^All database servers are running locally$/ do
+  # port forwarding from docker host to localhost
+  system 'socat -lf /dev/null TCP-LISTEN:6379,reuseaddr,fork,su=nobody TCP:redis.local:6379 &> /dev/null &'
+  system 'socat -lf /dev/null TCP-LISTEN:27017,reuseaddr,fork,su=nobody TCP:mongodb.local:27017 &> /dev/null &'
+  system 'socat -lf /dev/null TCP-LISTEN:5432,reuseaddr,fork,su=nobody TCP:postgres.local:5432 &> /dev/null &'
+  system 'socat -lf /dev/null TCP-LISTEN:3306,reuseaddr,fork,su=nobody TCP:mysql.local:3306 &> /dev/null &'
+end
+
 Given /^I am using #{orms_pattern}$/ do |orm|
   @feature_runner = FeatureRunner.new
   @feature_runner.orm = orm
