@@ -8,15 +8,14 @@ module DatabaseCleaner
 
     describe Truncation do
       let(:args) {{}}
-      let(:truncation) { described_class.new(args) }
-      #doing this in the file root breaks autospec, doing it before(:all) just fails the specs
-      before(:all) do
-        @test_db = 'database_cleaner_specs'
-        @session = ::Moped::Session.new(['127.0.0.1:27017'], database: @test_db)
+      let(:truncation) do
+        truncation = described_class.new(args)
+        truncation.db = 'database_cleaner_specs'
+        truncation
       end
-
-      before(:each) do
-        truncation.db = @test_db
+      #doing this in the file root breaks autospec, doing it before(:all) just fails the specs
+      before(:all) do 
+        @session = ::Moped::Session.new(['127.0.0.1:27017'], database: 'database_cleaner_specs')
       end
 
       after(:each) do
@@ -27,7 +26,8 @@ module DatabaseCleaner
         # I had to add this sanity_check garbage because I was getting non-determinisc results from mongo at times..
         # very odd and disconcerting...
         expected_counts.each do |model_class, expected_count|
-          model_class.count.should equal(expected_count), "#{model_class} expected to have a count of #{expected_count} but was #{model_class.count}"
+          actual_count = model_class.count
+          actual_count.should equal(expected_count), "#{model_class} expected to have a count of #{expected_count} but was #{actual_count}"
         end
       end
 
