@@ -246,7 +246,14 @@ See the suggested config below to temporarily enable truncation strategy
 for affected feature specs only. This config continues to use transaction
 strategy for all other specs.
 
+It's also recommended to use `append_after` to ensure `DatabaseCleaner.clean`
+runs *after* the after-test cleanup `capybara/rspec` installs.
+
 ```ruby
+require 'capybara/rspec'
+
+#...
+
 RSpec.configure do |config|
 
   config.use_transactional_fixtures = false
@@ -288,7 +295,7 @@ RSpec.configure do |config|
     DatabaseCleaner.start
   end
 
-  config.after(:each) do
+  config.append_after(:each) do
     DatabaseCleaner.clean
   end
 
