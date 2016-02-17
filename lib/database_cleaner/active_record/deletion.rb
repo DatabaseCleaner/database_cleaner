@@ -59,6 +59,7 @@ module DatabaseCleaner::ActiveRecord
     end
 
     def information_schema_exists? connection
+      return false unless connection.is_a? ActiveRecord::ConnectionAdapters::Mysql2Adapter
       @information_schema_exists ||=
         begin
           connection.execute("SELECT 1 FROM information_schema.tables")
