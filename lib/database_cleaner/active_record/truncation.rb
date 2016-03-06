@@ -95,8 +95,8 @@ module DatabaseCleaner
     module SQLiteAdapter
       def delete_table(table_name)
         execute("DELETE FROM #{quote_table_name(table_name)};")
-        if uses_sequence
-          execute("DELETE FROM sqlite_sequence where name = '#{table_name}';")
+        if has_sequence?(table_name)
+          execute("DELETE FROM sqlite_sequence where name = #{quote_table_name(table_name)};")
         end
       end
       alias truncate_table delete_table
@@ -105,11 +105,32 @@ module DatabaseCleaner
         tables.each { |t| truncate_table(t) }
       end
 
+      def pre_count_truncate_tables(tables, options = {:reset_ids => true})
+        filter = options[:reset_ids] ? method(:has_been_used?) : method(:has_rows?)
+        truncate_tables(tables.select(&filter))
+      end
+
       private
 
-      # Returns a boolean indicating if the SQLite database is using the sqlite_sequence table.
-      def uses_sequence
-        select_value("SELECT name FROM sqlite_master WHERE type='table' AND name='sqlite_sequence';")
+      # Returns a boolean indicating if the given table uses a sequence.
+      def has_sequence?(table)
+        select_value("SELECT EXISTS (SELECT 1 FROM sqlite_sequence WHERE name = #{quote_table_name(table)});").to_i > 0 rescue false
+      end
+
+      # Returns a boolean indicating if the given table has rows.
+      def has_rows?(table)
+        select_value("SELECT EXISTS (SELECT 1 FROM #{quote_table_name(table)} LIMIT 1)").to_i > 0
+      end
+
+      # Returns a boolean indicating if the given table has an auto-inc number higher than 0.
+      # Note, this is different than an empty table since an table may populated, the index increased,
+      # but then the table is cleaned.  In other words, this function tells us if the given table
+      # was ever inserted into.
+      def has_been_used?(table)
+        return true if has_rows?(table)
+
+        sequence_value = select_value("SELECT seq FROM sqlite_sequence WHERE name = #{quote_table_name(table)};").to_i rescue 0
+        sequence_value > 0
       end
     end
 

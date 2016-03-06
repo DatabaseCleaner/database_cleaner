@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'active_record'
 require 'support/active_record/sqlite3_setup'
 require 'database_cleaner/active_record/truncation'
+require 'database_cleaner/active_record/truncation/shared_fast_truncation'
 
 module ActiveRecord
   module ConnectionAdapters
@@ -34,6 +35,9 @@ module ActiveRecord
         end
       end
 
+      it_behaves_like "an adapter with pre-count truncation" do
+        let(:connection) { active_record_sqlite3_connection }
+      end
     end
   end
 end
