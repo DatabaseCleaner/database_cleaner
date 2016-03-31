@@ -202,7 +202,7 @@ module DatabaseCleaner
     describe "comparison" do
       it "should be equal if orm, connection and strategy are the same" do
         strategy = mock("strategy")
-        strategy.stub!(:to_ary => [strategy])
+        strategy.stub(:to_ary => [strategy])
 
         one = DatabaseCleaner::Base.new(:active_record,:connection => :default)
         one.strategy = strategy
@@ -216,7 +216,7 @@ module DatabaseCleaner
 
       it "should not be equal if orm are not the same" do
         strategy = mock("strategy")
-        strategy.stub!(:to_ary => [strategy])
+        strategy.stub(:to_ary => [strategy])
 
         one = DatabaseCleaner::Base.new(:mongo_id, :connection => :default)
         one.strategy = strategy
@@ -297,7 +297,7 @@ module DatabaseCleaner
     describe "strategy_db=" do
       let(:strategy) {
         mock("strategy").tap{|strategy|
-          strategy.stub!(:to_ary => [strategy])
+          strategy.stub(:to_ary => [strategy])
         }
       }
 
@@ -401,7 +401,7 @@ module DatabaseCleaner
     describe "strategy=" do
       let(:mock_strategy) {
         mock("strategy").tap{|strategy|
-        strategy.stub!(:to_ary => [strategy])
+        strategy.stub(:to_ary => [strategy])
       }
       }
 
@@ -444,7 +444,7 @@ module DatabaseCleaner
 
       it "returns the set strategy" do
         strategum = mock("strategy").tap{|strategy|
-          strategy.stub!(:to_ary => [strategy])
+          strategy.stub(:to_ary => [strategy])
         }
         subject.strategy = strategum
         subject.strategy.should eq strategum
