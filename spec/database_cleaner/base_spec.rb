@@ -9,6 +9,12 @@ require 'database_cleaner/neo4j/transaction'
 module DatabaseCleaner
   describe Base do
 
+    let(:mock_strategy) {
+      mock("strategy").tap{|strategy|
+        strategy.stub(:to_ary => [strategy])
+      }
+    }
+
     describe "autodetect" do
 
        #Cache all ORMs, we'll need them later but not now.
@@ -201,28 +207,22 @@ module DatabaseCleaner
 
     describe "comparison" do
       it "should be equal if orm, connection and strategy are the same" do
-        strategy = mock("strategy")
-        strategy.stub(:to_ary => [strategy])
-
         one = DatabaseCleaner::Base.new(:active_record,:connection => :default)
-        one.strategy = strategy
+        one.strategy = mock_strategy
 
         two = DatabaseCleaner::Base.new(:active_record,:connection => :default)
-        two.strategy = strategy
+        two.strategy = mock_strategy
 
         one.should eq two
         two.should eq one
       end
 
       it "should not be equal if orm are not the same" do
-        strategy = mock("strategy")
-        strategy.stub(:to_ary => [strategy])
-
         one = DatabaseCleaner::Base.new(:mongo_id, :connection => :default)
-        one.strategy = strategy
+        one.strategy = mock_strategy
 
         two = DatabaseCleaner::Base.new(:active_record, :connection => :default)
-        two.strategy = strategy
+        two.strategy = mock_strategy
 
         one.should_not eq two
         two.should_not eq one
@@ -295,11 +295,7 @@ module DatabaseCleaner
     end
 
     describe "strategy_db=" do
-      let(:strategy) {
-        mock("strategy").tap{|strategy|
-          strategy.stub(:to_ary => [strategy])
-        }
-      }
+      let(:strategy) { mock_strategy }
 
       before(:each) do
         subject.strategy = strategy
@@ -399,12 +395,6 @@ module DatabaseCleaner
     end
 
     describe "strategy=" do
-      let(:mock_strategy) {
-        mock("strategy").tap{|strategy|
-        strategy.stub(:to_ary => [strategy])
-      }
-      }
-
       it "should proxy symbolised strategies to create_strategy" do
         subject.should_receive(:create_strategy).with(:symbol)
         subject.strategy = :symbol
@@ -443,11 +433,8 @@ module DatabaseCleaner
       end
 
       it "returns the set strategy" do
-        strategum = mock("strategy").tap{|strategy|
-          strategy.stub(:to_ary => [strategy])
-        }
-        subject.strategy = strategum
-        subject.strategy.should eq strategum
+        subject.strategy = mock_strategy
+        subject.strategy.should eq mock_strategy
       end
     end
 
