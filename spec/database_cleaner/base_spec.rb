@@ -10,7 +10,7 @@ module DatabaseCleaner
   describe Base do
 
     let(:mock_strategy) {
-      mock("strategy").tap{|strategy|
+      double("strategy").tap{|strategy|
         strategy.stub(:to_ary => [strategy])
       }
     }
