@@ -210,7 +210,7 @@ GEM
       activesupport (= 3.0.0)
       rake (>= 0.8.4)
       thor (~> 0.14.0)
-    rake (10.3.2)
+    rake (11.1.2)
     rb-fsevent (0.9.4)
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)
@@ -280,4 +280,4 @@ DEPENDENCIES
   tzinfo
 
 BUNDLED WITH
-   1.10.5
+   1.10.6
