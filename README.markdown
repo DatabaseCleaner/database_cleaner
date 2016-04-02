@@ -76,7 +76,7 @@ Here is an overview of the strategies supported for each library:
   </tbody>
 </table>
 
-* Truncation and Deletion strategies for Neo4j will just delete all nodes and relationships from the database.
+\* Truncation and Deletion strategies for Neo4j will just delete all nodes and relationships from the database.
 
 <table>
   <tbody>
