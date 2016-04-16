@@ -14,6 +14,7 @@ module PostgreSQLHelper
     @encoding = default_config['encoding'] || ENV['CHARSET'] || 'utf8'
     begin
       establish_connection(default_config.merge('database' => 'postgres', 'schema_search_path' => 'public'))
+      ActiveRecord::Base.connection.drop_database(default_config['database']) rescue nil
       ActiveRecord::Base.connection.create_database(default_config['database'], default_config.merge('encoding' => @encoding))
     rescue Exception => e
       $stderr.puts e, *(e.backtrace)
@@ -32,7 +33,6 @@ module PostgreSQLHelper
   end
 
   def active_record_pg_migrate
-    `dropdb #{default_config['database']}`
     create_db
     establish_connection
     ActiveRecord::Migrator.migrate 'spec/support/active_record/migrations'
