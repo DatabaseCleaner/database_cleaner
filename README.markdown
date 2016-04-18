@@ -1,13 +1,25 @@
 # Database Cleaner
 
+[![Build Status](https://travis-ci.org/DatabaseCleaner/database_cleaner.svg?branch=master)](https://travis-ci.org/DatabaseCleaner/database_cleaner)
+[![Code Climate](https://codeclimate.com/github/DatabaseCleaner/database_cleaner/badges/gpa.svg)](https://codeclimate.com/github/DatabaseCleaner/database_cleaner)
+
 Database Cleaner is a set of strategies for cleaning your database in Ruby.
 
 The original use case was to ensure a clean state during tests.
 Each strategy is a small amount of code but is code that is usually needed in any ruby app that is testing with a database.
 
-ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, CouchPotato, Ohm and Redis are supported.
+## Gem Setup
 
-[![Build Status](https://travis-ci.org/DatabaseCleaner/database_cleaner.svg?branch=master)](https://travis-ci.org/DatabaseCleaner/database_cleaner) [![Code Climate](https://codeclimate.com/github/DatabaseCleaner/database_cleaner/badges/gpa.svg)](https://codeclimate.com/github/DatabaseCleaner/database_cleaner)
+```ruby
+# Gemfile
+group :test do
+  gem 'database_cleaner'
+end
+```
+
+## Supported Databases, Libraries and Strategies
+
+ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, CouchPotato, Ohm and Redis are supported.
 
 Here is an overview of the strategies supported for each library:
 
