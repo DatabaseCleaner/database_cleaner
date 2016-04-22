@@ -1,5 +1,10 @@
 == Development (master)
 
+== 1.5.3 2016-04-22
+
+=== Bug Fixes
+  * @P9GIT fixed issue #436
+
 == 1.5.2 2016-04-17
 
 === New Features/Changes
