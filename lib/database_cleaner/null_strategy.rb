@@ -14,7 +14,7 @@ module DatabaseCleaner
 
     def self.cleaning
       # no-op
-      yield
+      yield if block_given?
     end
   end
 end
