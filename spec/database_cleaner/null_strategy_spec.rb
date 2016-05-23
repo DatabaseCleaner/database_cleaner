@@ -11,8 +11,8 @@ module DatabaseCleaner
       end
 
       describe '.cleaning' do
-        it 'no-ops without a block' do
-          expect { NullStrategy.cleaning }.not_to raise_error(LocalJumpError)
+        it 'fails without a block' do
+          expect { NullStrategy.cleaning }.to raise_error(LocalJumpError)
         end
 
         it 'no-ops with a block' do
