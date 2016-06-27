@@ -43,6 +43,18 @@ module DatabaseCleaner
 
         include ::DatabaseCleaner::Mongo2::TruncationMixin
 
+        alias super_database database
+
+        private
+
+        def database
+          if ::Mongoid::VERSION > '5'
+            ::Mongoid.default_client.database
+          else
+            super_database
+          end
+        end
+
       end
     end
   end
