@@ -1,4 +1,6 @@
 require 'database_cleaner/generic/base'
+require 'neo4j-core'
+
 module DatabaseCleaner
   module Neo4j
     def self.available_strategies
@@ -13,11 +15,11 @@ module DatabaseCleaner
       end
 
       def db
-        @db ||= nil
+        @db
       end
 
       def start
-        if db_type == :embedded_db and not session.running?
+        if db_type == :embedded_db && !session.running?
           session.start
         else
           session
@@ -26,6 +28,14 @@ module DatabaseCleaner
 
       def database
         db && default_db.merge(db) || default_db
+      end
+
+      def query(*args)
+        if legacy_neo4j?
+          session._query(*args)
+        else
+          session.query(*args)
+        end
       end
 
       private
@@ -51,11 +61,34 @@ module DatabaseCleaner
       end
 
       def db_params
-        database.reject!{|key, value| [:type, :path].include? key }
+        database.reject! { |key, _| [:type, :path].include? key }
       end
 
       def session
-        @session ||= ::Neo4j::Session.open(db_type, db_path, db_params)
+        @session ||= if database[:current_session]
+                       database[:current_session]
+                     elsif legacy_neo4j?
+                       ::Neo4j::Session.open(db_type, db_path, db_params)
+                     else
+                       ::Neo4j::Core::CypherSession.new(adaptor)
+                     end
+      end
+
+      def legacy_neo4j?
+        ::Neo4j::Core::VERSION.to_f < 7
+      end
+
+      def adaptor
+        case db_type.to_sym
+        when :http
+          ::Neo4j::Core::CypherSession::Adaptors::HTTP.new(db_path, db_params)
+        when :embedded
+          ::Neo4j::Core::CypherSession::Adaptors::Embedded.new(db_path, db_params)
+        when :bolt
+          ::Neo4j::Core::CypherSession::Adaptors::Bolt.new(db_path, db_params)
+        else
+          raise "Invalid adaptor #{db_type}"
+        end
       end
     end
   end

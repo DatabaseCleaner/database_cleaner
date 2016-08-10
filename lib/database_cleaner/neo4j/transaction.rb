@@ -13,7 +13,7 @@ module DatabaseCleaner
       def start
         super
         rollback
-        self.tx = ::Neo4j::Transaction.new
+        self.tx = new_transaction
       end
 
       def clean
@@ -29,6 +29,10 @@ module DatabaseCleaner
         end
       ensure
         self.tx = nil
+      end
+
+      def new_transaction
+        legacy_neo4j? ? ::Neo4j::Transaction.new : ::Neo4j::Transaction.new(session)
       end
     end
   end
