@@ -27,7 +27,7 @@ module DatabaseCleaner
 
       def database_cleaner_table_cache
         # the adapters don't do caching (#130) but we make the assumption that the list stays the same in tests
-        @database_cleaner_tables ||= tables
+        @database_cleaner_tables ||= ::ActiveRecord::VERSION::MAJOR >= 5 ? data_sources : tables
       end
 
       def truncate_table(table_name)

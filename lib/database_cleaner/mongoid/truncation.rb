@@ -28,7 +28,7 @@ module DatabaseCleaner
         private
 
         def session
-          ::Mongoid.default_session
+          ::Mongoid::VERSION > "5.0.0" ? ::Mongoid.default_client : ::Mongoid.default_session
         end
 
         def database

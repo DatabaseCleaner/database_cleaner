@@ -1,5 +1,42 @@
 == Development (master)
 
+== 1.5.2 2016-04-17
+
+=== New Features/Changes
+  * Use default_client with mongoid 5.0 (@stjhimy)
+  * Added comparable support for strategies (@st0012)
+  * Better README instructions that suggest `append_after` (@jrochkind)
+  * Removed deprecation warnings for Rails 5.0+ (@pschambacher)
+  * Upgrade to RSpec 2.14 (@skalee)
+
+=== Bug Fixes
+  * @dmitrypol fixed issue #409
+  * @schmierkov fixed the Travis builds with PR #416
+  * @shosti fixed issue #345
+  * @kylev fixed issue #379
+  * @skalee fixed the Travis builds for Neo4j with PR #433
+
+== 1.5.1 2015-09-05
+
+== Bug Fix
+  * Added mongo2 missing files to the gemspec. (@geerzo)
+
+== 1.5.0 2015-09-02
+
+=== New Features/Changes
+  * Use ensure within the cleaning method. (@cema-sp)
+  * Restored mysql2 + jruby support. (@ahorek)
+  * Added required ruby version to gemspec. (@garethrees)
+  * Added support for Mongoid 5.0 and Mongo Ruby Driver 2.0. (@jprincipe)
+  * Added support for additional Neo4j::Session.open options. (@brienw)
+  * And a bunch of code style and README improvements
+
+=== Bug Fixes
+  * Fixed truncation for MongoDB 3. (@andreale)
+  * Fixed YAML error when building gem. (@joshnesbitt)
+  * Fixed deletion strategy for JDBC MySQL. (@DanElbert)
+  * Fixed open transactions for multiple connections. (@claptimes5)
+
 == 1.4.1 2015-03-09
   * Support for deletion with Sequel. (@cyberdelia)
   * Use ActiveRecord::Base configuration when different from config file. (@wendy0402)

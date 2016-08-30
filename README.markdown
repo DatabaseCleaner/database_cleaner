@@ -1,13 +1,25 @@
 # Database Cleaner
 
+[![Build Status](https://travis-ci.org/DatabaseCleaner/database_cleaner.svg?branch=master)](https://travis-ci.org/DatabaseCleaner/database_cleaner)
+[![Code Climate](https://codeclimate.com/github/DatabaseCleaner/database_cleaner/badges/gpa.svg)](https://codeclimate.com/github/DatabaseCleaner/database_cleaner)
+
 Database Cleaner is a set of strategies for cleaning your database in Ruby.
 
 The original use case was to ensure a clean state during tests.
 Each strategy is a small amount of code but is code that is usually needed in any ruby app that is testing with a database.
 
-ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, CouchPotato, Ohm and Redis are supported.
+## Gem Setup
 
-[![Build Status](https://travis-ci.org/DatabaseCleaner/database_cleaner.svg?branch=master)](https://travis-ci.org/DatabaseCleaner/database_cleaner) [![Code Climate](https://codeclimate.com/github/DatabaseCleaner/database_cleaner/badges/gpa.svg)](https://codeclimate.com/github/DatabaseCleaner/database_cleaner)
+```ruby
+# Gemfile
+group :test do
+  gem 'database_cleaner'
+end
+```
+
+## Supported Databases, Libraries and Strategies
+
+ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, CouchPotato, Ohm and Redis are supported.
 
 Here is an overview of the strategies supported for each library:
 
@@ -76,7 +88,7 @@ Here is an overview of the strategies supported for each library:
   </tbody>
 </table>
 
-* Truncation and Deletion strategies for Neo4j will just delete all nodes and relationships from the database.
+\* Truncation and Deletion strategies for Neo4j will just delete all nodes and relationships from the database.
 
 <table>
   <tbody>
@@ -221,23 +233,81 @@ end
 
 ### RSpec with Capybara Example
 
-If you're using Capybara with RSpec and using an external browser (not using RackTest) you'll almost certainly need to use truncation rather than transactions for tests tagged `:js`.
+You'll typically discover a feature spec is incorrectly using transaction
+instead of truncation strategy when the data created in the spec is not
+visible in the app-under-test.
+
+A frequently occurring example of this is when, after creating a user in a
+spec, the spec mysteriously fails to login with the user. This happens because
+the user is created inside of an uncommitted transaction on one database
+connection, while the login attempt is made using a separate database
+connection. This separate database connection cannot access the
+uncommitted user data created over the first database connection due to
+transaction isolation.
+
+For feature specs using a Capybara driver for an external
+JavaScript-capable browser (in practice this is all drivers except
+`:rack_test`), the Rack app under test and the specs do not share a
+database connection.
+
+When a spec and app-under-test do not share a database connection,
+you'll likely need to use the truncation strategy instead of the
+transaction strategy.
+
+See the suggested config below to temporarily enable truncation strategy
+for affected feature specs only. This config continues to use transaction
+strategy for all other specs.
+
+It's also recommended to use `append_after` to ensure `DatabaseCleaner.clean`
+runs *after* the after-test cleanup `capybara/rspec` installs.
 
 ```ruby
+require 'capybara/rspec'
+
+#...
+
 RSpec.configure do |config|
 
   config.use_transactional_fixtures = false
 
   config.before(:suite) do
+    if config.use_transactional_fixtures?
+      raise(<<-MSG)
+        Delete line `config.use_transactional_fixtures = true` from rails_helper.rb
+        (or set it to false) to prevent uncommitted transactions being used in
+        JavaScript-dependent specs.
+
+        During testing, the app-under-test that the browser driver connects to
+        uses a different database connection to the database connection used by
+        the spec. The app's database connection would not be able to access
+        uncommitted transaction data setup over the spec's database connection.
+      MSG
+    end
     DatabaseCleaner.clean_with(:truncation)
+  end  
+
+  config.before(:each) do
+    DatabaseCleaner.strategy = :transaction
   end
 
-  config.before(:each) do |example|
-    DatabaseCleaner.strategy = example.metadata[:js] ? :truncation : :transaction
+  config.before(:each, type: :feature) do
+    # :rack_test driver's Rack app under test shares database connection
+    # with the specs, so continue to use transaction strategy for speed.
+    driver_shares_db_connection_with_specs = Capybara.current_driver == :rack_test
+
+    if !driver_shares_db_connection_with_specs
+      # Driver is probably for an external browser with an app
+      # under test that does *not* share a database connection with the
+      # specs, so use truncation strategy.
+      DatabaseCleaner.strategy = :truncation
+    end
+  end
+
+  config.before(:each) do
     DatabaseCleaner.start
   end
 
-  config.after(:each) do
+  config.append_after(:each) do
     DatabaseCleaner.clean
   end
 

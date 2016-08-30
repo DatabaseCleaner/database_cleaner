@@ -118,7 +118,7 @@ module DatabaseCleaner
             connection.should_receive(:database_cleaner_table_cache).and_return([])
             connection.should_not_receive(:tables)
 
-            connection.stub!(:truncate_tables)
+            connection.stub(:truncate_tables)
             Truncation.new({ :cache_tables => true }).clean
           end
         end
@@ -128,7 +128,7 @@ module DatabaseCleaner
             connection.should_not_receive(:database_cleaner_table_cache)
             connection.should_receive(:tables).and_return([])
 
-            connection.stub!(:truncate_tables)
+            connection.stub(:truncate_tables)
             Truncation.new({ :cache_tables => false }).clean
           end
         end
