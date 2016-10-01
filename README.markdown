@@ -284,7 +284,7 @@ RSpec.configure do |config|
       MSG
     end
     DatabaseCleaner.clean_with(:truncation)
-  end  
+  end
 
   config.before(:each) do
     DatabaseCleaner.strategy = :transaction
@@ -482,7 +482,7 @@ For ActiveRecord, you add the following parameter in your database.yml file:
 test:
   adapter: postgresql
   # ...
-  min_messages: WARNING  
+  min_messages: WARNING
 </pre>
 
 ### Nothing happens in JRuby with Sequel using transactions
