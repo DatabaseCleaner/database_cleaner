@@ -17,7 +17,7 @@ module DatabaseCleaner
         before(:each) do
           db << %{
             -- PG 9.2 doesn't support IF NOT EXISTS
-            DROP SCHEMA schema2 CASCADE;
+            DROP SCHEMA IF EXISTS schema2 CASCADE;
             CREATE SCHEMA schema2;
             SET search_path = public, schema2;
             CREATE TABLE schema2.users (id int);

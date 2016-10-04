@@ -55,8 +55,10 @@ module ActiveRecord
         before(:all) do
           active_record_pg_connection.execute %{
             -- PG 9.2 doesn't support IF NOT EXISTS
-            DROP SCHEMA schema2 CASCADE;
+            DROP SCHEMA IF EXISTS schema2 CASCADE;
             CREATE SCHEMA schema2;
+          }
+          active_record_pg_connection.execute %{
             SET search_path = public, schema2;
             CREATE TABLE schema2.users (id int);
             CREATE TABLE schema2.schema2_table (id int);
@@ -79,6 +81,7 @@ module ActiveRecord
 
         after(:all) do
           active_record_pg_connection.execute "DROP SCHEMA schema2 CASCADE"
+          connection.instance_variable_set(:@database_cleaner_tables, nil)
         end
       end
 
