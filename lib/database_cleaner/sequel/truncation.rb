@@ -21,8 +21,7 @@ module DatabaseCleaner
           # * Safer. Tables outside of tables_to_truncate won't be affected.
           # * Faster. Less roundtrips to the db.
           unless (tables = tables_to_truncate(db)).empty?
-            all_tables = tables.map { |t| %("#{t}") }.join(',')
-            db.run "TRUNCATE TABLE #{all_tables};"
+            db.from(*tables).truncate
           end
         else
           tables = tables_to_truncate(db)
@@ -62,7 +61,12 @@ module DatabaseCleaner
       end
 
       def tables_to_truncate(db)
-        (@only || db.tables.map(&:to_s)) - @tables_to_exclude
+        tables = case db.database_type
+                 when :postgres then postgres_tables(db)
+                 else db.tables
+                 end
+
+        (@only || tables.map(&:to_sym)) - @tables_to_exclude.map(&:to_sym)
       end
 
       # overwritten
@@ -72,6 +76,21 @@ module DatabaseCleaner
 
       def pre_count?
         @pre_count == true
+      end
+
+      # Returns schema-qualified tables ordered by search_path
+      def postgres_tables(db)
+        rows = db[%{
+          SELECT schemaname || '__' || tablename AS tablename
+          FROM pg_tables
+          WHERE
+            tablename !~ '_prt_' AND
+            schemaname = ANY (current_schemas(false))
+          ORDER BY (SELECT idx FROM (
+            SELECT generate_series(1, array_length(current_schemas(false), 1)) AS idx, unnest(current_schemas(false)) AS tbl
+          ) foo WHERE foo.tbl::text = schemaname::text LIMIT 1)
+        }]
+        rows.collect { |result| result[:tablename].to_sym }
       end
     end
   end

@@ -51,6 +51,35 @@ module ActiveRecord
         end
       end
 
+      describe "with multiple schemas" do
+        before(:all) do
+          active_record_pg_connection.execute %{
+            CREATE SCHEMA IF NOT EXISTS schema2;
+            SET search_path = public, schema2;
+            CREATE TABLE schema2.users (id int);
+            CREATE TABLE schema2.schema2_table (id int);
+          }
+        end
+
+        it "knows about all the tables" do
+          connection.send(:tables_with_schema).join(',').should match(/^schema2/)
+        end
+
+        it "truncates all the tables" do
+          2.times do |n|
+            active_record_pg_connection.execute "INSERT INTO schema2.users VALUES(#{n}); INSERT INTO schema2_table VALUES(#{n})"
+          end
+
+          DatabaseCleaner::ActiveRecord::Truncation.new.clean
+
+          expect(active_record_pg_connection.execute("SELECT COUNT(id) AS count FROM schema2.users").first['count'].to_i).to eq(0)
+        end
+
+        after(:all) do
+          active_record_pg_connection.execute "DROP SCHEMA schema2 CASCADE"
+        end
+      end
+
       describe ":except option cleanup" do
         it "should not truncate the tables specified in the :except option" do
           2.times { User.create }
