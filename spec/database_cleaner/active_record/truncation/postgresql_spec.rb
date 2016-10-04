@@ -54,7 +54,9 @@ module ActiveRecord
       describe "with multiple schemas" do
         before(:all) do
           active_record_pg_connection.execute %{
-            CREATE SCHEMA IF NOT EXISTS schema2;
+            -- PG 9.2 doesn't support IF NOT EXISTS
+            DROP SCHEMA schema2 CASCADE;
+            CREATE SCHEMA schema2;
             SET search_path = public, schema2;
             CREATE TABLE schema2.users (id int);
             CREATE TABLE schema2.schema2_table (id int);
