@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    database_cleaner (1.5.2)
+    database_cleaner (1.5.3)
 
 GEM
   remote: https://rubygems.org/
@@ -238,7 +238,7 @@ GEM
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
       rspec-mocks (~> 2.14.0)
-    sequel (3.21.0)
+    sequel (4.39.0)
     slop (3.6.0)
     spoon (0.0.4)
       ffi
@@ -278,7 +278,7 @@ DEPENDENCIES
   pg
   rake
   rspec-rails (~> 2.14.2)
-  sequel (~> 3.21.0)
+  sequel (~> 4.0)
   sqlite3
   tzinfo
 
