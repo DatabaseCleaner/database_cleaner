@@ -49,7 +49,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "moped"
   s.add_development_dependency "neo4j-core"
   s.add_development_dependency "couch_potato"
-  s.add_development_dependency "sequel", "~> 3.21.0"
+  s.add_development_dependency "sequel", "~> 4.0"
   s.add_development_dependency 'ohm', '~> 0.1.3'
   s.add_development_dependency 'guard-rspec'
   s.add_development_dependency "rspec-rails", "~> 2.14.2"

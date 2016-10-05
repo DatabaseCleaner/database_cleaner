@@ -30,7 +30,7 @@ module DatabaseCleaner
         end
 
         it "knows about all the tables" do
-          truncation.send(:tables_to_truncate, db).should include(:schema2__users)
+          truncation.send(:tables_to_truncate, db).map { |t| "#{t.table}.#{t.column}" }.should include("schema2.schema2_table")
         end
 
         it "truncates all the tables" do
@@ -50,7 +50,7 @@ module DatabaseCleaner
             it "only truncates the correct table" do
               2.times do |n|
                 db << "INSERT INTO schema2.users VALUES(#{n})"
-                db << "INSERT INTO public.users(id) VALUES(#{n})"
+                db << "INSERT INTO public.users DEFAULT VALUES"
               end
 
               truncation.clean
@@ -73,7 +73,7 @@ module DatabaseCleaner
 
         it "works" do
           truncation.clean
-          expect(db[:i__have__underscores.identifier].count).to eq(0)
+          expect(db[::Sequel.identifier(:i__have__underscores)].count).to eq(0)
         end
 
         context "with only" do
@@ -81,7 +81,7 @@ module DatabaseCleaner
 
           it "works" do
             truncation.clean
-            expect(db[:i__have__underscores.identifier].count).to eq(0)
+            expect(db[::Sequel.identifier(:i__have__underscores)].count).to eq(0)
           end
         end
       end

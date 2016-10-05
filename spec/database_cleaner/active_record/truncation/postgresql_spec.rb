@@ -65,10 +65,6 @@ module ActiveRecord
           }
         end
 
-        it "knows about all the tables" do
-          connection.send(:tables_with_schema).join(',').should match(/^schema2/)
-        end
-
         it "truncates all the tables" do
           2.times do |n|
             active_record_pg_connection.execute "INSERT INTO schema2.users VALUES(#{n}); INSERT INTO schema2_table VALUES(#{n})"

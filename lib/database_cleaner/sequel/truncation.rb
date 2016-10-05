@@ -25,7 +25,6 @@ module DatabaseCleaner
           end
         else
           tables = tables_to_truncate(db)
-
           if pre_count?
             # Count rows before truncating
             pre_count_truncate_tables(db, tables)
@@ -39,13 +38,13 @@ module DatabaseCleaner
       private
 
       def pre_count_truncate_tables(db, tables)
-        tables = tables.reject { |table| db[table.to_sym].count == 0 }
+        tables = tables.reject { |table| db[table].count == 0 }
         truncate_tables(db, tables)
       end
 
       def truncate_tables(db, tables)
         tables.each do |table|
-          db[table.to_sym].truncate
+          db.from(table).truncate
         end
       end
 
@@ -61,12 +60,49 @@ module DatabaseCleaner
       end
 
       def tables_to_truncate(db)
-        tables = case db.database_type
-                 when :postgres then postgres_tables(db)
-                 else db.tables
-                 end
+        default_schema = case db.database_type
+                         when :postgres then db["SELECT (current_schemas(false))[1]::text AS default_schema"].get(:default_schema)
+                         end
 
-        (@only || tables.map(&:to_sym)) - @tables_to_exclude.map(&:to_sym)
+        (qualified(@only, default_schema) || db_tables(db)) - qualified(@tables_to_exclude, default_schema)
+      end
+
+      def db_tables(db)
+        case db.database_type
+        when :postgres
+          db.tables(qualify: true) do |ds|
+            # This block is needed due to a bug in Sequel <= 4.39.0
+            m = db.send(:output_identifier_meth)
+            ds.select_append(:pg_namespace__nspname).map do |r|
+              ::Sequel.qualify(m.call(r[:nspname]).to_s, m.call(r[:relname]).to_s)
+            end
+          end
+        else
+          db.tables
+        end
+      end
+
+      def qualified(arr, default_schema)
+        return nil unless arr
+        m = db.send(:output_identifier_meth)
+
+        return arr.map { |a| m.call(a) } unless default_schema
+
+        arr.map do |table|
+          case table
+          when String
+            ::Sequel.qualify(m.call(default_schema).to_s, m.call(table).to_s)
+          when Symbol
+            # Split the symbol along '__' but make sure at least two arguments are passed
+            refs = ::Sequel.split_symbol(table).tap do |obj|
+              obj[0] ||= default_schema
+            end.compact
+            ::Sequel.qualify(*refs.map { |r| m.call(r).to_s })
+          when ::Sequel::SQL::Identifier
+            ::Sequel.qualify(m.call(default_schema).to_s, m.call(table.value).to_s)
+          else table
+          end
+        end
       end
 
       # overwritten
@@ -76,21 +112,6 @@ module DatabaseCleaner
 
       def pre_count?
         @pre_count == true
-      end
-
-      # Returns schema-qualified tables ordered by search_path
-      def postgres_tables(db)
-        rows = db[%{
-          SELECT schemaname || '__' || tablename AS tablename
-          FROM pg_tables
-          WHERE
-            tablename !~ '_prt_' AND
-            schemaname = ANY (current_schemas(false))
-          ORDER BY (SELECT idx FROM (
-            SELECT generate_series(1, array_length(current_schemas(false), 1)) AS idx, unnest(current_schemas(false)) AS tbl
-          ) foo WHERE foo.tbl::text = schemaname::text LIMIT 1)
-        }]
-        rows.collect { |result| result[:tablename].to_sym }
       end
     end
   end

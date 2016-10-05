@@ -39,6 +39,18 @@ module DatabaseCleaner
             expect(db[:precious_stones]).to have(0).rows
           end
         end
+
+        context "with only" do
+          it "deletes only in the specified tables" do
+            d = Deletion.new(only: %w[replaceable_trifles])
+            d.db = db
+            d.clean
+
+            expect(db[:replaceable_trifles]).to have(0).rows
+            expect(db[:worthless_junk]).to have(1).rows
+            expect(db[:precious_stones]).to have(1).rows
+          end
+        end
       end
     end
 

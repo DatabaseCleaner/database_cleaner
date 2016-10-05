@@ -9,7 +9,7 @@ module DatabaseCleaner::Sequel
       when :postgres
         db.run('SET CONSTRAINTS ALL DEFERRED')
         tables_to_truncate(db).each do |table|
-          db.run("ALTER TABLE \"#{table}\" DISABLE TRIGGER ALL")
+          db.run("ALTER TABLE \"#{resolve_value(table.table)}\".\"#{resolve_value(table.column)}\" DISABLE TRIGGER ALL")
         end
       when :mysql
         old = db.fetch('SELECT @@FOREIGN_KEY_CHECKS').first[:@@FOREIGN_KEY_CHECKS]
@@ -20,16 +20,20 @@ module DatabaseCleaner::Sequel
       case db.database_type
       when :postgres
         tables.each do |table|
-          db.run("ALTER TABLE \"#{table}\" ENABLE TRIGGER ALL")
+          db.run("ALTER TABLE \"#{resolve_value(table.table)}\".\"#{resolve_value(table.column)}\" ENABLE TRIGGER ALL")
         end
       when :mysql
         db.run("SET FOREIGN_KEY_CHECKS = #{old}")
       end
     end
 
+    def resolve_value(value)
+      value.respond_to?(:value) ? resolve_value(value.value) : value
+    end
+
     def delete_tables(db, tables)
       tables.each do |table|
-        db[table.to_sym].delete
+        db.from(table).delete
       end
     end
 
