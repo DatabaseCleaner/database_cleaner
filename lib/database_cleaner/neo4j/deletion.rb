@@ -8,7 +8,7 @@ module DatabaseCleaner
 
       def clean
         transaction do
-          query('MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r')
+          query('MATCH (n) WHERE NOT (n:`Neo4j::Migrations::SchemaMigration`) OPTIONAL MATCH (n)-[r]-() DELETE n,r')
         end
       end
 
