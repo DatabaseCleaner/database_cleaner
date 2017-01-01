@@ -18,8 +18,8 @@ module DatabaseCleaner
       end
 
       def truncate_method_name
-        # This constant only exists in the 2.x series.
-        defined?(::Mongo::VERSION) ? :delete_many : :remove
+        # This constant doesn't exist in 1.8.x to 1.12.x versions
+        defined?(::Mongo::VERSION) && ::Mongo::VERSION >= "2.0.0" ? :delete_many : :remove
       end
     end
   end
