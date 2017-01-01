@@ -6,7 +6,7 @@ describe DatabaseCleaner::Mongo::TruncationMixin do
     Class.new do
       include DatabaseCleaner::Mongo::TruncationMixin
 
-      def initialize(database:)
+      def initialize(database)
         @tables_to_exclude = []
         @database = database
       end
@@ -24,7 +24,7 @@ describe DatabaseCleaner::Mongo::TruncationMixin do
       allow(collection).to receive(:remove)
       database = double(collections: [collection])
 
-      klass.new(database: database).clean
+      klass.new(database).clean
 
       expect(collection).to have_received(:remove)
     end
@@ -35,7 +35,7 @@ describe DatabaseCleaner::Mongo::TruncationMixin do
       allow(collection).to receive(:delete_many)
       database = double(collections: [collection])
 
-      klass.new(database: database).clean
+      klass.new(database).clean
 
       expect(collection).to have_received(:delete_many)
     end
