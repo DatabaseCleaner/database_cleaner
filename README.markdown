@@ -211,6 +211,24 @@ The following option is available for ActiveRecord's `:truncation` and `:deletio
 
 * `:cache_tables` - When set to `true` the list of tables to truncate or delete from will only be read from the DB once, otherwise it will be read before each cleanup run. Set this to `false` if (1) you create and drop tables in your tests, or (2) you change Postgres schemas (`ActiveRecord::Base.connection.schema_search_path`) in your tests (for example, in a multitenancy setup with each tenant in a different Postgres schema). Defaults to `true`.
 
+### Setting random ids when cleaning database
+
+The following is available for ActiveRecord's :truncation strategy _only_ for MySQL and Postgres.
+
+It may be useful to initialize your database with a random value for auto-increment (in case you are using MySQL) or for sequences (in case you are using Postgres).
+Simply call `clean_with` with the `:random_ids` option:
+
+```
+DatabaseCleaner.clean_with :truncation, random_ids: true
+```
+
+`:random_ids` accept the following values:
+
+* `true`: sets a random value for every table
+* an Array: specify the list of tables for which a random value must be set, the other table will be truncated and auto-increment/sequences set to 1
+* a Hash: where the keys are the table names and the values indicate the primary key column name. This is useful for Postgres only when a non-default 'id' name is given to the primary key
+
+Note: `:random_ids` option cannot be used at the same time as `:pre_count`.
 
 ### RSpec Example
 
