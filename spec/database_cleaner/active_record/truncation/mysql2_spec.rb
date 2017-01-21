@@ -32,6 +32,10 @@ module ActiveRecord
       it_behaves_like "an adapter with pre-count truncation" do
         let(:connection) { active_record_mysql2_connection }
       end
+
+      it_behaves_like "an adapter with random-ids truncation" do
+        let(:connection) { active_record_mysql2_connection }
+      end
     end
   end
 end

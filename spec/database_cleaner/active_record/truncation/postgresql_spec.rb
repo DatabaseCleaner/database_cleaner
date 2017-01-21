@@ -70,6 +70,9 @@ module ActiveRecord
         let(:connection) { active_record_pg_connection }
       end
 
+      it_behaves_like "an adapter with random-ids truncation" do
+        let(:connection) { active_record_pg_connection }
+      end
     end
   end
 end

@@ -113,6 +113,31 @@ module DatabaseCleaner
           end
         end
 
+        describe "relying on #random_ids_truncate_tables if connection allows it" do
+          subject { Truncation.new }
+
+          before do
+            connection.stub(:database_cleaner_table_cache).and_return(%w[widgets dogs])
+            connection.stub(:database_cleaner_view_cache).and_return(["widgets"])
+          end
+
+          it "should rely on #random_ids_truncate_tables if #random_ids? returns true" do
+            subject.instance_variable_set(:"@random_ids", ['list', 'of', 'tables'])
+
+            connection.should_not_receive(:truncate_tables).with(['dogs'])
+            connection.should_receive(:random_ids_truncate_tables).with(['dogs'], random_ids: ['list', 'of', 'tables'])
+
+            subject.clean
+          end
+
+          it "should not rely on #random_ids_truncate_tables if #random_ids? return false" do
+            connection.should_not_receive(:random_ids_truncate_tables)
+            connection.should_receive(:truncate_tables).with(['dogs'])
+
+            subject.clean
+          end
+        end
+
         context 'when :cache_tables is set to true' do
           it 'caches the list of tables to be truncated' do
             connection.should_receive(:database_cleaner_table_cache).and_return([])
@@ -173,6 +198,37 @@ module DatabaseCleaner
         it 'should return false if @reset_id is set to false' do
           subject.instance_variable_set(:"@reset_ids", false)
           subject.send(:reset_ids?).should eq false
+        end
+      end
+
+      describe '#random_ids?' do
+        before(:each) do
+          connection.stub(:disable_referential_integrity).and_yield
+          connection.stub(:database_cleaner_view_cache).and_return([])
+          ::ActiveRecord::Base.stub(:connection).and_return(connection)
+        end
+
+        subject { Truncation.new }
+        its(:random_ids?) { should eq false }
+
+        it 'should return false if @reset_id is not set to nil' do
+          subject.instance_variable_set(:"@random_ids", nil)
+          subject.send(:random_ids?).should eq false
+        end
+
+        it 'should return false if @reset_id is not set to true' do
+          subject.instance_variable_set(:"@random_ids", true)
+          subject.send(:random_ids?).should eq true
+        end
+
+        it 'should return false if @reset_id is an Array' do
+          subject.instance_variable_set(:"@random_ids", ['list', 'of', 'tables'])
+          subject.send(:random_ids?).should eq true
+        end
+
+        it 'should return false if @reset_id is an Hash' do
+          subject.instance_variable_set(:"@random_ids", {'tables' => 'id'})
+          subject.send(:random_ids?).should eq true
         end
       end
     end
