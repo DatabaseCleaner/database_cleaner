@@ -5,13 +5,11 @@ rvm:
   - 2.0.0
   - 2.1
   - 2.2
+  - 2.3.3
   - 2.4.0
-script: "bundle exec rake"
-gemfile:
-  - Gemfile
 before_install:
-  - gem install bundler -v 1.14.0.pre.2
   - gem update --system
+  - gem install bundler
   # install Neo4j locally:
   - wget dist.neo4j.org/neo4j-community-2.3.8-unix.tar.gz
   - tar -xzf neo4j-community-2.3.8-unix.tar.gz
