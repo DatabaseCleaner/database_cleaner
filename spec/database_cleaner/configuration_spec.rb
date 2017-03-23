@@ -278,6 +278,32 @@ describe ::DatabaseCleaner do
         ::DatabaseCleaner.connections.size.should eq 1
       end
     end
+
+    # this context illustrates bug found here: https://groups.google.com/forum/?fromgroups#!topic/database_cleaner/uQDsWXV-_8I
+    context "single orm with multiple connections" do
+
+      let(:sequel) { mock("sequel_mock") }
+
+      it "should close multiple connections (sequel)" do
+        require "sequel"
+
+        db_one = Sequel.Mock.Connection.new
+        db_two = Sequel.Mock.Connection.new
+
+        ::DatabaseCleaner[:sequel, {:connection => db_one}].strategy = :truncation
+        ::DatabaseCleaner[:sequel, {:connection => db_one}].clean_with(:truncation)
+
+        ::DatabaseCleaner[:sequel, {:connection => db_two}].strategy = :truncation
+        ::DatabaseCleaner[:sequel, {:connection => db_two}].clean_with(:truncation)
+
+        ::DatabaseCleaner[:sequel, {:connection => db_one}].start
+        ::DatabaseCleaner[:sequel, {:connection => db_two}].start
+
+        lambda { ::DatabaseCleaner[:sequel, {:connection => db_one}].stop }.should_not raise_error
+        lambda { ::DatabaseCleaner[:sequel, {:connection => db_two}].stop }.should_not raise_error
+        
+      end
+    end
   end
 
   describe "remove_duplicates" do
