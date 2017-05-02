@@ -192,7 +192,7 @@ module DatabaseCleaner
           FROM pg_tables
           WHERE
             tablename !~ '_prt_' AND
-            tablename <> '#{migration_table_name}' AND
+            tablename <> '#{::DatabaseCleaner::ActiveRecord::Base.migration_table_name}' AND
             schemaname = ANY (current_schemas(false))
         _SQL
         rows.collect { |result| result.first }
@@ -257,15 +257,7 @@ module DatabaseCleaner::ActiveRecord
 
     # overwritten
     def migration_storage_names
-      [migration_table_name]
-    end
-
-    def migration_table_name
-      if ActiveRecord::VERSION::MAJOR < 5
-        ::ActiveRecord::Migrator.schema_migrations_table_name
-      else
-        ::ActiveRecord::SchemaMigration.table_name
-      end
+      [::DatabaseCleaner::ActiveRecord::Base.migration_table_name]
     end
 
     def cache_tables?
