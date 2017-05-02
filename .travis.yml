@@ -4,7 +4,9 @@ rvm:
   - 2.0.0
   - 2.1
   - 2.2
-script: "bundle exec rake"
+script:
+  - bundle exec rspec
+  - bundle exec cucumber
 gemfile:
   - Gemfile
 before_install:
