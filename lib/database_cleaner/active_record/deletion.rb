@@ -73,7 +73,7 @@ module DatabaseCleaner::ActiveRecord
                INFORMATION_SCHEMA.TABLES
                WHERE
                table_schema = '#{db_name}'
-               AND table_name <> '#{migration_table_name}';
+               AND table_name <> '#{::DatabaseCleaner::ActiveRecord::Base.migration_table_name}';
         SQL
       end
     end
