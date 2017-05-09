@@ -1,5 +1,10 @@
 == Development (master)
 
+== 1.6.1 2017-05-09
+
+=== Bug Fixes
+  * Deletion strategy fix for ActiveRecord (@kawamoto)
+
 == 1.6.0 2017-05-04
 
 === New Features/Changes
