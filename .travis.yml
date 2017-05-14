@@ -1,9 +1,12 @@
+dist: trusty
 language: ruby
 rvm:
   - 1.9.3
   - 2.0.0
   - 2.1
   - 2.2
+  - 2.3.3
+  - 2.4.0
 script:
   - bundle exec rspec
   - bundle exec cucumber
@@ -12,10 +15,10 @@ gemfile:
 before_install:
   - gem install bundler -v 1.14.6
   # install Neo4j locally:
-  - wget dist.neo4j.org/neo4j-community-2.3.3-unix.tar.gz
-  - tar -xzf neo4j-community-2.3.3-unix.tar.gz
-  - sed -i.bak s/dbms.security.auth_enabled=true/dbms.security.auth_enabled=false/g neo4j-community-2.3.3/conf/neo4j-server.properties
-  - neo4j-community-2.3.3/bin/neo4j start
+  - wget dist.neo4j.org/neo4j-community-2.3.8-unix.tar.gz
+  - tar -xzf neo4j-community-2.3.8-unix.tar.gz
+  - sed -i.bak s/dbms.security.auth_enabled=true/dbms.security.auth_enabled=false/g neo4j-community-2.3.8/conf/neo4j-server.properties
+  - neo4j-community-2.3.8/bin/neo4j start
 before_script:
   - mysql -e 'create database database_cleaner_test;'
   - psql -c 'create database database_cleaner_test;' -U postgres
