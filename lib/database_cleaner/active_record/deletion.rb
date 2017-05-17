@@ -72,7 +72,7 @@ module DatabaseCleaner::ActiveRecord
                INFORMATION_SCHEMA.TABLES
                WHERE
                table_schema = '#{db_name}'
-               AND #{::DatabaseCleaner::ActiveRecord::Base.exclusion_condition};
+               AND #{::DatabaseCleaner::ActiveRecord::Base.exclusion_condition('table_name')};
         SQL
       end
     end
