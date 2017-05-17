@@ -181,6 +181,12 @@ my_db:
 
             subject.connection_class
           end
+
+          it "returns the connection class" do
+            ::ActiveRecord::Base.stub(:establish_connection)
+
+            subject.connection_class.should eq ::ActiveRecord::Base
+          end
         end
       end
     end
