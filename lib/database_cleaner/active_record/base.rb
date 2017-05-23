@@ -57,6 +57,14 @@ module DatabaseCleaner
                               end
       end
 
+      def self.migration_table_name
+        if ::ActiveRecord::VERSION::MAJOR < 5
+          ::ActiveRecord::Migrator.schema_migrations_table_name
+        else
+          ::ActiveRecord::SchemaMigration.table_name
+        end
+      end
+
       private
 
       def lookup_from_connection_pool

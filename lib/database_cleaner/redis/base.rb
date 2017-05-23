@@ -25,7 +25,7 @@ module DatabaseCleaner
         @connection ||= begin
           if url == :default
             ::Redis.new
-          elsif db.class.is_a?(::Redis) # pass directly the connection
+          elsif db.is_a?(::Redis) # pass directly the connection
             db
           else
             ::Redis.new(:url => url)

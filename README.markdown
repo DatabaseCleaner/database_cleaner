@@ -166,7 +166,7 @@ passed to [`keys`](http://redis.io/commands/keys)).
 
 (I should point out the truncation strategy will never truncate your schema_migrations table.)
 
-Some strategies need to be started before tests are run (for example the `:transaction` strategy needs to know to open up a transaction). This can be accomplished by calling `DatabaseCleaner.start` at the beginning of the run, or by running the tests inside a block to `Database.cleaning`. So you would have:
+Some strategies need to be started before tests are run (for example the `:transaction` strategy needs to know to open up a transaction). This can be accomplished by calling `DatabaseCleaner.start` at the beginning of the run, or by running the tests inside a block to `DatabaseCleaner.cleaning`. So you would have:
 
 ```ruby
 require 'database_cleaner'
@@ -284,7 +284,7 @@ RSpec.configure do |config|
       MSG
     end
     DatabaseCleaner.clean_with(:truncation)
-  end  
+  end
 
   config.before(:each) do
     DatabaseCleaner.strategy = :transaction
@@ -482,7 +482,7 @@ For ActiveRecord, you add the following parameter in your database.yml file:
 test:
   adapter: postgresql
   # ...
-  min_messages: WARNING  
+  min_messages: WARNING
 </pre>
 
 ### Nothing happens in JRuby with Sequel using transactions

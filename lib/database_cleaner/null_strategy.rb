@@ -11,5 +11,10 @@ module DatabaseCleaner
     def self.clean
       # no-op
     end
+
+    def self.cleaning(&block)
+      # no-op
+      yield
+    end
   end
 end
