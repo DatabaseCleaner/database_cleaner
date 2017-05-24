@@ -87,7 +87,6 @@ module DatabaseCleaner
         ::ActiveRecord::Base.establish_connection(connection_hash)
         ::ActiveRecord::Base
       end
-
     end
   end
 end

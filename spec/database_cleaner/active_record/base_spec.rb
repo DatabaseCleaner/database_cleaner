@@ -179,7 +179,7 @@ my_db:
           it "establish a connection using ActiveRecord::Base" do
             ::ActiveRecord::Base.should_receive(:establish_connection).with(hash)
 
-            subject.connection_class
+            expect(subject.connection_class).to eq ::ActiveRecord::Base
           end
         end
       end
