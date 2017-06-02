@@ -68,7 +68,7 @@ module DatabaseCleaner
       def self.exclusion_condition(column_name)
         result = " #{column_name} <> '#{::DatabaseCleaner::ActiveRecord::Base.migration_table_name}' "
         if ::ActiveRecord::VERSION::MAJOR >= 5
-          result += " AND #{column_name} <> '#{ActiveRecord::Base.internal_metadata_table_name}' "
+          result += " AND #{column_name} <> '#{::ActiveRecord::Base.internal_metadata_table_name}' "
         end
         result
       end
