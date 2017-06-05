@@ -13,6 +13,7 @@ require 'active_record/connection_adapters/abstract_adapter'
 end
 
 require "database_cleaner/generic/truncation"
+require 'database_cleaner/active_record/tools'
 require 'database_cleaner/active_record/base'
 
 module DatabaseCleaner
@@ -42,6 +43,8 @@ module DatabaseCleaner
     end
 
     module AbstractMysqlAdapter
+      include ::DatabaseCleaner::ActiveRecord::Tools
+
       def truncate_table(table_name)
         execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
       end
@@ -53,6 +56,15 @@ module DatabaseCleaner
       def pre_count_truncate_tables(tables, options = {:reset_ids => true})
         filter = options[:reset_ids] ? method(:has_been_used?) : method(:has_rows?)
         truncate_tables(tables.select(&filter))
+      end
+
+      def set_random_id(table_name)
+        execute("ALTER TABLE #{quote_table_name(table_name)} AUTO_INCREMENT = #{rand(1000) * 10};")
+      end
+
+      def random_ids_truncate_tables(tables, options = {:random_ids => true})
+        truncate_tables(tables)
+        _filter_tables_from_ids_param(tables, options[:random_ids]).each { |t| set_random_id(t) }
       end
 
       private
@@ -130,6 +142,8 @@ module DatabaseCleaner
     end
 
     module PostgreSQLAdapter
+      include ::DatabaseCleaner::ActiveRecord::Tools
+
       def db_version
         @db_version ||= postgresql_version
       end
@@ -154,6 +168,19 @@ module DatabaseCleaner
       def pre_count_truncate_tables(tables, options = {:reset_ids => true})
         filter = options[:reset_ids] ? method(:has_been_used?) : method(:has_rows?)
         truncate_tables(tables.select(&filter))
+      end
+
+      def set_random_id(table_name, column_name)
+        execute("ALTER SEQUENCE #{table_name}_#{column_name}_seq RESTART WITH #{rand(1000) * 10};")
+      end
+
+      def random_ids_truncate_tables(tables, options = {:random_ids => true})
+        ids = options[:random_ids]
+        truncate_tables(tables)
+        _filter_tables_from_ids_param(tables, ids).each do |table_name|
+          column_name = ids.is_a?(Hash) ? ids.stringify_keys[table_name] : 'id'
+          set_random_id(table_name, column_name)
+        end
       end
 
       def database_cleaner_table_cache
@@ -235,6 +262,8 @@ module DatabaseCleaner::ActiveRecord
       connection.disable_referential_integrity do
         if pre_count? && connection.respond_to?(:pre_count_truncate_tables)
           connection.pre_count_truncate_tables(tables_to_truncate(connection), {:reset_ids => reset_ids?})
+        elsif random_ids? && connection.respond_to?(:random_ids_truncate_tables)
+          connection.random_ids_truncate_tables(tables_to_truncate(connection), {:random_ids => @random_ids})
         else
           connection.truncate_tables(tables_to_truncate(connection))
         end
@@ -270,6 +299,10 @@ module DatabaseCleaner::ActiveRecord
 
     def reset_ids?
       @reset_ids != false
+    end
+
+    def random_ids?
+      !!@random_ids
     end
   end
 end

@@ -21,6 +21,10 @@ module ::DatabaseCleaner
       def pre_count?
         !!@pre_count
       end
+
+      def random_ids?
+        !!@random_ids
+      end
     end
 
     class MigrationExample < TruncationExample
@@ -58,12 +62,17 @@ module ::DatabaseCleaner
           expect{ TruncationExample.new {} }.to_not raise_error
         end
 
-        it { expect{ TruncationExample.new( { :a_random_param => "should raise ArgumentError"  } ) }.to     raise_error(ArgumentError) }
-        it { expect{ TruncationExample.new( { :except => "something",:only => "something else" } ) }.to     raise_error(ArgumentError) }
-        it { expect{ TruncationExample.new( { :only   => "something"                           } ) }.to_not raise_error }
-        it { expect{ TruncationExample.new( { :except => "something"                           } ) }.to_not raise_error }
-        it { expect{ TruncationExample.new( { :pre_count => "something"                        } ) }.to_not raise_error }
-        it { expect{ TruncationExample.new( { :reset_ids => "something"                        } ) }.to_not raise_error }
+        it { expect{ TruncationExample.new( { :a_random_param => "should raise ArgumentError"            } ) }.to     raise_error(ArgumentError) }
+        it { expect{ TruncationExample.new( { :except => "something", :only => "something else"          } ) }.to     raise_error(ArgumentError) }
+        it { expect{ TruncationExample.new( { :pre_count => "something", :random_ids => "something else" } ) }.to     raise_error(ArgumentError) }
+        it { expect{ TruncationExample.new( { :random_ids => "something",                                } ) }.to     raise_error(ArgumentError) }
+        it { expect{ TruncationExample.new( { :only   => "something"                                     } ) }.to_not raise_error }
+        it { expect{ TruncationExample.new( { :except => "something"                                     } ) }.to_not raise_error }
+        it { expect{ TruncationExample.new( { :pre_count => "something"                                  } ) }.to_not raise_error }
+        it { expect{ TruncationExample.new( { :reset_ids => "something"                                  } ) }.to_not raise_error }
+        it { expect{ TruncationExample.new( { :random_ids => true                                        } ) }.to_not raise_error }
+        it { expect{ TruncationExample.new( { :random_ids => %w[something]                               } ) }.to_not raise_error }
+        it { expect{ TruncationExample.new( { :random_ids => {some: 'stuff'}                             } ) }.to_not raise_error }
 
         context "" do
           subject { TruncationExample.new( { :only => ["something"] } ) }
@@ -95,6 +104,16 @@ module ::DatabaseCleaner
         context "" do
           subject { TruncationExample.new( { :pre_count => nil } ) }
           its(:pre_count?) { should eq false }
+        end
+
+        context "" do
+          subject { TruncationExample.new( { :random_ids => ["something"] } ) }
+          its(:random_ids?) { should eq true }
+        end
+
+        context "" do
+          subject { TruncationExample.new }
+          its(:random_ids?) { should eq false }
         end
 
         context "" do
