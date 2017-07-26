@@ -66,8 +66,9 @@ module DatabaseCleaner::ActiveRecord
       if @cache_tables && !@table_stats_query.nil?
         return @table_stats_query
       else
+        quote_start, quote_end = connection.quote_table_name('T').split('T')
         @table_stats_query = connection.select_values(<<-SQL).join(' UNION ')
-               SELECT CONCAT('SELECT \"', table_name, '\" AS table_name, COUNT(*) AS exact_row_count FROM ', table_name)
+               SELECT CONCAT('SELECT \"', table_name, '\" AS table_name, COUNT(*) AS exact_row_count FROM #{quote_start}', table_name, '#{quote_end}')
                FROM
                INFORMATION_SCHEMA.TABLES
                WHERE
