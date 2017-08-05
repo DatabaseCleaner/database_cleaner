@@ -63,22 +63,21 @@ module DatabaseCleaner
         select_value("SELECT EXISTS (SELECT 1 FROM #{quote_table_name(table)} LIMIT 1)").to_i
       end
 
-      # Returns a boolean indicating if the given table has an auto-inc number higher than 0.
-      # Note, this is different than an empty table since an table may populated, the index increased,
-      # but then the table is cleaned.  In other words, this function tells us if the given table
-      # was ever inserted into.
-      def has_been_used?(table)
-        if has_rows?(table)
-          true
-        else
-          # Patch for MysqlAdapter with ActiveRecord 3.2.7 later
-          # select_value("SELECT 1") #=> "1"
-          select_value(<<-SQL).to_i > 1 # returns nil if not present
-          SELECT Auto_increment
+      def auto_increment_value(table)
+        select_value(<<-SQL).to_i
+          SELECT auto_increment
           FROM information_schema.tables
-          WHERE table_name='#{table}';
-          SQL
-        end
+          WHERE table_name = '#{table}'
+          AND table_schema = database()
+        SQL
+      end
+
+      # This method tells us if the given table has been inserted into since its
+      # last truncation. Note that the table might have been populated, which
+      # increased the auto-increment counter, but then cleaned again such that
+      # it appears empty now.
+      def has_been_used?(table)
+        has_rows?(table) || auto_increment_value(table) > 1
       end
 
       def has_rows?(table)
