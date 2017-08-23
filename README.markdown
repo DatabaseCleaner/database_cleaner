@@ -65,7 +65,7 @@ Here is an overview of the strategies supported for each library:
       <td> Sequel</td>
       <td> <b>Yes</b></td>
       <td> Yes</td>
-      <td> No</td>
+      <td> Yes</td>
     </tr>
     <tr>
       <td>Redis</td>
