@@ -66,14 +66,16 @@ module DatabaseCleaner::ActiveRecord
       if @cache_tables && !@table_stats_query.nil?
         return @table_stats_query
       else
-        @table_stats_query = connection.select_values(<<-SQL).join(' UNION ')
-               SELECT CONCAT('SELECT \"', table_name, '\" AS table_name, COUNT(*) AS exact_row_count FROM ', table_name)
-               FROM
-               INFORMATION_SCHEMA.TABLES
-               WHERE
-               table_schema = '#{db_name}'
-               AND #{::DatabaseCleaner::ActiveRecord::Base.exclusion_condition('table_name')};
+        tables = connection.select_values(<<-SQL)
+          SELECT table_name
+          FROM information_schema.tables
+          WHERE table_schema = '#{db_name}'
+          AND #{::DatabaseCleaner::ActiveRecord::Base.exclusion_condition('table_name')};
         SQL
+        queries = tables.map do |table|
+          "SELECT #{connection.quote(table)} AS table_name, COUNT(*) AS exact_row_count FROM #{connection.quote_table_name(table)}"
+        end
+        @table_stats_query = queries.join(' UNION ')
       end
     end
 
