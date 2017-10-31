@@ -192,7 +192,7 @@ module DatabaseCleaner
           FROM pg_tables
           WHERE
             tablename !~ '_prt_' AND
-            tablename <> '#{::DatabaseCleaner::ActiveRecord::Base.migration_table_name}' AND
+            #{::DatabaseCleaner::ActiveRecord::Base.exclusion_condition('tablename')} AND
             schemaname = ANY (current_schemas(false))
         _SQL
         rows.collect { |result| result.first }

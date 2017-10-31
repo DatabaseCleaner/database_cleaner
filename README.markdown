@@ -65,7 +65,7 @@ Here is an overview of the strategies supported for each library:
       <td> Sequel</td>
       <td> <b>Yes</b></td>
       <td> Yes</td>
-      <td> No</td>
+      <td> Yes</td>
     </tr>
     <tr>
       <td>Redis</td>
@@ -363,7 +363,7 @@ This should cover the basics of tear down between scenarios and keeping your dat
 
 For more examples see the section ["Why?"](#why).
 
-## How to use with multiple ORM's
+## How to use with multiple ORMs
 
 Sometimes you need to use multiple ORMs in your application.
 
