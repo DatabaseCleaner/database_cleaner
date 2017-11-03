@@ -25,8 +25,7 @@ Gem::Specification.new do |s|
     "VERSION.yml",
     "cucumber.yml"]
 
-  s.files += Dir['examples/**/*'] + Dir['features/**/*'] + Dir['lib/**/*.rb'] +
-             Dir['spec/**/*']
+  s.files += Dir['lib/**/*.rb']
 
   s.homepage = "http://github.com/DatabaseCleaner/database_cleaner"
   s.license = 'MIT'
