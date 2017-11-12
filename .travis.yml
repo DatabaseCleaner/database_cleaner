@@ -8,7 +8,6 @@ rvm:
   - 2.3.3
   - 2.4.1
 before_install:
-  - gem install bundler
   # install Neo4j locally:
   - wget dist.neo4j.org/neo4j-community-2.3.8-unix.tar.gz
   - tar -xzf neo4j-community-2.3.8-unix.tar.gz
