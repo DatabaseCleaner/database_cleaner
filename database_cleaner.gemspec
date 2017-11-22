@@ -8,9 +8,9 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.required_ruby_version = ">= 1.9.3"
   s.require_paths = ["lib"]
-  s.authors = ["Ben Mabey"]
+  s.authors = ["Ben Mabey", "Ernesto Tagwerker"]
   s.description = "Strategies for cleaning databases. Can be used to ensure a clean state for testing."
-  s.email = "ben@benmabey.com"
+  s.email = "ernesto@ombulabs.com"
   s.extra_rdoc_files = [
     "LICENSE",
     "README.markdown",
