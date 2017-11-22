@@ -1,5 +1,17 @@
 == Development (master)
 
+=== Bug Fixes
+  * Remove unnecessary folders from gem: https://github.com/DatabaseCleaner/database_cleaner/pull/508
+
+== 1.6.2 2017-10-29
+
+=== Bug Fixes
+  * ActiveRecord::Base namespace patch: https://github.com/DatabaseCleaner/database_cleaner/pull/490
+  * Better exclusion condition based on Rails version: https://github.com/DatabaseCleaner/database_cleaner/pull/487
+
+=== Changes
+  * Better documentation. Typos were fixed. Sequel deletion is supported: https://github.com/DatabaseCleaner/database_cleaner/pull/500
+
 == 1.6.1 2017-05-09
 
 === Bug Fixes
