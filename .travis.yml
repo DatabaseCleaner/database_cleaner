@@ -4,13 +4,13 @@ rvm:
   - 2.0.0
   - 2.1
   - 2.2
+  - 2.3
 script:
   - bundle exec rspec
   - bundle exec cucumber
 gemfile:
   - Gemfile
 before_install:
-  - gem install bundler -v 1.14.6
   # install Neo4j locally:
   - wget dist.neo4j.org/neo4j-community-2.3.3-unix.tar.gz
   - tar -xzf neo4j-community-2.3.3-unix.tar.gz
