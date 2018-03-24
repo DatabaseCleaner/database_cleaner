@@ -502,6 +502,29 @@ Dir["#{Rails.root}/app/models/**/*.rb"].each do |model|
 end
 ```
 
+## Safeguards
+
+DatabaseCleaner comes with safeguards against:
+
+* Running in production (checking for `ENV`, `RACK_ENV`, and `RAILS_ENV`)
+* Running against a remote database (checking for a `DATABASE_URL` that does not include `localhost`)
+
+Both safeguards can be disabled separately as follows.
+
+Using environment variables:
+
+```
+export DATABASE_CLEANER_ALLOW_PRODUCTION=true
+export DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true
+```
+
+In Ruby:
+
+```ruby
+DatabaseCleaner.allow_production = true
+DatabaseCleaner.allow_remote_database_url = true
+```
+
 ## Debugging
 
 In rare cases DatabaseCleaner will encounter errors that it will log.  By default it uses STDOUT set to the ERROR level but you can configure this to use whatever Logger you desire.
