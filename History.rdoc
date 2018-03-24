@@ -3,6 +3,9 @@
 === Bug Fixes
   * Remove unnecessary folders from gem: https://github.com/DatabaseCleaner/database_cleaner/pull/508
 
+=== Changes
+  * Safeguard against running in production or running against a remote database
+
 == 1.6.2 2017-10-29
 
 === Bug Fixes
