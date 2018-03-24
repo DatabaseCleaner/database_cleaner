@@ -1,21 +1,70 @@
 module DatabaseCleaner
-  DatabaseUrlSpecified = Class.new(Exception)
-
   class Safeguard
-    def run
-      return if skip?
-      raise DatabaseUrlSpecified if env_db_url?
+    class Error < Exception
+      class RemoteDatabaseUrl < Error
+        def initialize
+          super("ENV['DATABASE_URL'] is set to a remote URL. Please refer to https://github.com/DatabaseCleaner/database_cleaner#safeguards")
+        end
+      end
+
+      class ProductionEnv < Error
+        def initialize(env)
+          super("ENV['#{env}'] is set to production. Please refer to https://github.com/DatabaseCleaner/database_cleaner#safeguards")
+        end
+      end
     end
 
-    private
-
-      def env_db_url?
-        url = ENV['DATABASE_URL']
-        url && !url.include?('localhost')
+    class RemoteDatabaseUrl
+      def run
+        raise Error::RemoteDatabaseUrl if !skip? && given?
       end
 
-      def skip?
-        !!ENV['DATABASE_CLEANER_SKIP_SAFEGUARD']
+      private
+
+        def given?
+          remote?(ENV['DATABASE_URL'])
+        end
+
+        def remote?(url)
+          url && !url.include?('localhost')
+        end
+
+        def skip?
+          ENV['DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL'] ||
+            DatabaseCleaner.allow_remote_database_url
+        end
+    end
+
+    class Production
+      KEYS = %w(ENV RACK_ENV RAILS_ENV)
+
+      def run
+        raise Error::ProductionEnv.new(key) if !skip? && given?
       end
+
+      private
+
+        def given?
+          !!key
+        end
+
+        def key
+          @key ||= KEYS.detect { |key| ENV[key] == 'production' }
+        end
+
+        def skip?
+          ENV['DATABASE_CLEANER_ALLOW_PRODUCTION'] ||
+            DatabaseCleaner.allow_production
+        end
+    end
+
+    CHECKS = [
+      RemoteDatabaseUrl,
+      Production
+    ]
+
+    def run
+      CHECKS.each { |const| const.new.run }
+    end
   end
 end
