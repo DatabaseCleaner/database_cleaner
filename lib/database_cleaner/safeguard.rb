@@ -15,6 +15,8 @@ module DatabaseCleaner
     end
 
     class RemoteDatabaseUrl
+      LOCAL = %w(localhost 127.0.0.1)
+
       def run
         raise Error::RemoteDatabaseUrl if !skip? && given?
       end
@@ -26,7 +28,7 @@ module DatabaseCleaner
         end
 
         def remote?(url)
-          url && !url.include?('localhost')
+          url && !LOCAL.any? { |str| url.include?(str) }
         end
 
         def skip?

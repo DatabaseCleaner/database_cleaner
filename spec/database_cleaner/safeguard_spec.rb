@@ -21,8 +21,16 @@ module DatabaseCleaner
         end
       end
 
-      describe 'to a local url' do
+      describe 'to a localhost url' do
         env DATABASE_URL: 'postgres://localhost'
+
+        it 'does not raise' do
+          expect { cleaner.start }.to_not raise_error
+        end
+      end
+
+      describe 'to a 127.0.0.1 url' do
+        env DATABASE_URL: 'postgres://127.0.0.1'
 
         it 'does not raise' do
           expect { cleaner.start }.to_not raise_error
