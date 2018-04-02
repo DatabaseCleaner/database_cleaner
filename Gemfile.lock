@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    database_cleaner (1.6.2)
+    database_cleaner (1.6.3)
 
 GEM
   remote: https://rubygems.org/
