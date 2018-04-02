@@ -1,20 +1,19 @@
 require 'spec_helper'
-require 'support/env'
 require 'active_record'
 require 'database_cleaner/active_record/transaction'
 
 module DatabaseCleaner
   describe Safeguard do
-    include Support::Env
-
     let(:strategy) { DatabaseCleaner::ActiveRecord::Transaction }
     let(:cleaner)  { Base.new(:autodetect) }
 
     before { allow_any_instance_of(strategy).to receive(:start) }
 
     describe 'DATABASE_URL is set' do
+      before { stub_const('ENV', 'DATABASE_URL' => database_url) }
+
       describe 'to any value' do
-        env DATABASE_URL: 'postgres://remote.host'
+        let(:database_url) { 'postgres://remote.host' }
 
         it 'raises' do
           expect { cleaner.start }.to raise_error(Safeguard::Error::RemoteDatabaseUrl)
@@ -22,7 +21,7 @@ module DatabaseCleaner
       end
 
       describe 'to a localhost url' do
-        env DATABASE_URL: 'postgres://localhost'
+        let(:database_url) { 'postgres://localhost' }
 
         it 'does not raise' do
           expect { cleaner.start }.to_not raise_error
@@ -30,7 +29,7 @@ module DatabaseCleaner
       end
 
       describe 'to a 127.0.0.1 url' do
-        env DATABASE_URL: 'postgres://127.0.0.1'
+        let(:database_url) { 'postgres://127.0.0.1' }
 
         it 'does not raise' do
           expect { cleaner.start }.to_not raise_error
@@ -38,7 +37,8 @@ module DatabaseCleaner
       end
 
       describe 'DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL is set' do
-        env DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL: true
+        let(:database_url) { 'postgres://remote.host' }
+        before { stub_const('ENV', 'DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL' => true) }
 
         it 'does not raise' do
           expect { cleaner.start }.to_not raise_error
@@ -46,6 +46,7 @@ module DatabaseCleaner
       end
 
       describe 'DatabaseCleaner.allow_remote_database_url is true' do
+        let(:database_url) { 'postgres://remote.host' }
         before { DatabaseCleaner.allow_remote_database_url = true }
         after  { DatabaseCleaner.allow_remote_database_url = nil }
 
@@ -58,7 +59,7 @@ module DatabaseCleaner
     describe 'ENV is set to production' do
       %w(ENV RACK_ENV RAILS_ENV).each do |key|
         describe "on #{key}" do
-          env key => 'production'
+          before { stub_const('ENV', key => "production") }
 
           it 'raises' do
             expect { cleaner.start }.to raise_error(Safeguard::Error::ProductionEnv)
@@ -66,7 +67,7 @@ module DatabaseCleaner
         end
 
         describe 'DATABASE_CLEANER_ALLOW_PRODUCTION is set' do
-          env DATABASE_CLEANER_ALLOW_PRODUCTION: true
+          before { stub_const('ENV', 'DATABASE_CLEANER_ALLOW_PRODUCTION' => true) }
 
           it 'does not raise' do
             expect { cleaner.start }.to_not raise_error
