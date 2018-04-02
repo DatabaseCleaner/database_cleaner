@@ -1,4 +1,5 @@
 require 'database_cleaner/null_strategy'
+require 'database_cleaner/safeguard'
 module DatabaseCleaner
   class Base
     include Comparable
@@ -15,6 +16,7 @@ module DatabaseCleaner
       end
       self.db = opts[:connection] || opts[:model] if opts.has_key?(:connection) || opts.has_key?(:model)
       set_default_orm_strategy
+      Safeguard.new.run
     end
 
     def db=(desired_db)
