@@ -1,10 +1,18 @@
 == Development (master)
 
 === Bug Fixes
+=== Changes
+
+== 1.7.0 2017-04-19
+
+=== Bug Fixes
   * Remove unnecessary folders from gem: https://github.com/DatabaseCleaner/database_cleaner/pull/508
+  * Properly quote table names: https://github.com/DatabaseCleaner/database_cleaner/pull/501
+  * Use more idiomatic Ruby in README: https://github.com/DatabaseCleaner/database_cleaner/pull/510
+  * Return ::ActiveRecord::Base from `establish_connection`: https://github.com/DatabaseCleaner/database_cleaner/pull/399
 
 === Changes
-  * Safeguard against running in production or running against a remote database
+  * Safeguard against running in production or running against a remote database: https://github.com/DatabaseCleaner/database_cleaner/pull/521
 
 == 1.6.2 2017-10-29
 
