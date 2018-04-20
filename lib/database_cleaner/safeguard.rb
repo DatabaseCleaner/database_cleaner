@@ -12,7 +12,34 @@ module DatabaseCleaner
           super("ENV['#{env}'] is set to production. Please refer to https://github.com/DatabaseCleaner/database_cleaner#safeguards")
         end
       end
+
+      class NotWhitelistedUrl < Error
+        def initialize
+          super("ENV['DATABASE_URL'] is set to a URL that is not on the whitelist. Please refer to https://github.com/DatabaseCleaner/database_cleaner#safeguards")
+        end
+      end
     end
+
+    class WhitelistedUrl
+      def run
+        raise Error::NotWhitelistedUrl if !skip? && given?
+      end
+
+      private
+
+        def given?
+          !whitelisted?(ENV['DATABASE_URL'])
+        end
+
+        def whitelisted?(url)
+          DatabaseCleaner.url_whitelist.include?(url)
+        end
+
+        def skip?
+          !DatabaseCleaner.url_whitelist
+        end
+    end
+
 
     class RemoteDatabaseUrl
       LOCAL = %w(localhost 127.0.0.1)
@@ -33,7 +60,8 @@ module DatabaseCleaner
 
         def skip?
           ENV['DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL'] ||
-            DatabaseCleaner.allow_remote_database_url
+            DatabaseCleaner.allow_remote_database_url ||
+            DatabaseCleaner.url_whitelist
         end
     end
 
@@ -62,7 +90,8 @@ module DatabaseCleaner
 
     CHECKS = [
       RemoteDatabaseUrl,
-      Production
+      Production,
+      WhitelistedUrl
     ]
 
     def run
