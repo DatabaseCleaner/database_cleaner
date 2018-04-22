@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.version = "#{version[:major]}.#{version[:minor]}.#{version[:patch]}"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.required_ruby_version = ">= 1.9.3"
+  s.required_ruby_version = ">= 2.0.0"
   s.require_paths = ["lib"]
   s.authors = ["Ben Mabey", "Ernesto Tagwerker"]
   s.description = "Strategies for cleaning databases. Can be used to ensure a clean state for testing."
@@ -60,8 +60,7 @@ Gem::Specification.new do |s|
     s.add_development_dependency 'mysql', '~> 2.9.1'
     s.add_development_dependency 'mysql2'
     s.add_development_dependency 'pg'
-    s.add_development_dependency "sqlite3-ruby" if RUBY_VERSION < "1.9"
-    s.add_development_dependency "sqlite3" if RUBY_VERSION >= "1.9"
+    s.add_development_dependency "sqlite3"
   else
     s.add_development_dependency "activerecord-jdbc-adapter"
   end
