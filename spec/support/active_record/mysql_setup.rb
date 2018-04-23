@@ -23,6 +23,7 @@ module MySQLHelper
   end
 
   def active_record_mysql_setup
+    patch_mysql_adapter
     create_db
     establish_connection
     active_record_load_schema
@@ -30,6 +31,11 @@ module MySQLHelper
 
   def active_record_mysql_connection
     ActiveRecord::Base.connection
+  end
+
+  def patch_mysql_adapter
+    # remove DEFAULT NULL from column definition, which is an error on primary keys in MySQL 5.7.3+
+    ActiveRecord::ConnectionAdapters::MysqlAdapter::NATIVE_DATABASE_TYPES[:primary_key] = "int(11) auto_increment PRIMARY KEY"
   end
 end
 

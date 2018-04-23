@@ -1,7 +1,6 @@
 require 'support/active_record/database_setup'
 require 'support/active_record/schema_setup'
 
-
 module MySQL2Helper
   puts "Active Record #{ActiveRecord::VERSION::STRING}, mysql2"
 
@@ -24,6 +23,7 @@ module MySQL2Helper
   end
 
   def active_record_mysql2_setup
+    patch_mysql2_adapter
     create_db
     establish_connection
     active_record_load_schema
@@ -31,6 +31,11 @@ module MySQL2Helper
 
   def active_record_mysql2_connection
     ActiveRecord::Base.connection
+  end
+
+  def patch_mysql2_adapter
+    # remove DEFAULT NULL from column definition, which is an error on primary keys in MySQL 5.7.3+
+    ActiveRecord::ConnectionAdapters::Mysql2Adapter::NATIVE_DATABASE_TYPES[:primary_key] = "int(11) auto_increment PRIMARY KEY"
   end
 end
 
