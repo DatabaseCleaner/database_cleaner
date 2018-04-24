@@ -6,7 +6,7 @@ rvm:
   - 2.2
 script:
   - bundle exec rspec
-  # - bundle exec cucumber
+  - bundle exec cucumber
 gemfile:
   - Gemfile
 before_install:
