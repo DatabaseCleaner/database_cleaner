@@ -4,9 +4,9 @@ module DatabaseCleaner
 
       def clean
         if @only
-          collections.each { |c| c.send(truncate_method_name) if @only.include?(c.name) }
+          collections.each { |c| puts c.send(truncate_method_name) if @only.include?(c.name) }
         else
-          collections.each { |c| c.send(truncate_method_name) unless @tables_to_exclude.include?(c.name) }
+          collections.each { |c| puts c.send(truncate_method_name) unless @tables_to_exclude.include?(c.name) }
         end
         wait_for_truncations_to_finish
         true
