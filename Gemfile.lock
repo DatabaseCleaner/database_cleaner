@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    database_cleaner (1.6.3)
+    database_cleaner (1.7.0)
 
 GEM
   remote: https://rubygems.org/
@@ -283,4 +283,4 @@ DEPENDENCIES
   tzinfo
 
 BUNDLED WITH
-   1.15.0
+   1.16.1
