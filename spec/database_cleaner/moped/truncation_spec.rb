@@ -21,6 +21,7 @@ module DatabaseCleaner
 
       after(:each) do
         @session.drop
+        @session.command(getlasterror: 1)
       end
 
       def ensure_counts(expected_counts)
