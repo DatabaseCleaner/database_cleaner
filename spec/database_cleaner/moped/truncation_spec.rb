@@ -27,7 +27,8 @@ module DatabaseCleaner
         # I had to add this sanity_check garbage because I was getting non-determinisc results from mongo at times..
         # very odd and disconcerting...
         expected_counts.each do |model_class, expected_count|
-          model_class.count.should eq(expected_count), "#{model_class} expected to have a count of #{expected_count} but was #{model_class.count}"
+          actual_count = model_class.count
+          actual_count.should eq(expected_count), "#{model_class} expected to have a count of #{expected_count} but was #{actual_count}"
         end
       end
 

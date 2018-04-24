@@ -25,7 +25,8 @@ module DatabaseCleaner
         sanity_check = expected_counts.delete(:sanity_check)
         begin
           expected_counts.each do |model_class, expected_count|
-            model_class.count.should eq(expected_count), "#{model_class} expected to have a count of #{expected_count} but was #{model_class.count}"
+            actual_count = model_class.count
+            actual_count.should eq(expected_count), "#{model_class} expected to have a count of #{expected_count} but was #{actual_count}"
           end
         rescue RSpec::Expectations::ExpectationNotMetError => e
           raise !sanity_check ? e : RSpec::ExpectationNotMetError::ExpectationNotMetError.new("SANITY CHECK FAILURE! This should never happen here: #{e.message}")
@@ -40,7 +41,7 @@ module DatabaseCleaner
         Gadget.new({:name => 'some gadget'}.merge(attrs)).save!
       end
 
-      xit "truncates all collections by default" do
+      it "truncates all collections by default" do
         create_widget
         create_gadget
         ensure_counts(Widget => 1, Gadget => 1, :sanity_check => true)
@@ -49,7 +50,7 @@ module DatabaseCleaner
       end
 
       context "when collections are provided to the :only option" do
-        xit "only truncates the specified collections" do
+        it "only truncates the specified collections" do
           create_widget
           create_gadget
           ensure_counts(Widget => 1, Gadget => 1, :sanity_check => true)
@@ -59,7 +60,7 @@ module DatabaseCleaner
       end
 
       context "when collections are provided to the :except option" do
-        xit "truncates all but the specified collections" do
+        it "truncates all but the specified collections" do
           create_widget
           create_gadget
           ensure_counts(Widget => 1, Gadget => 1, :sanity_check => true)
