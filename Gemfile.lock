@@ -265,7 +265,6 @@ DEPENDENCIES
   dm-migrations
   dm-sqlite-adapter
   guard-rspec
-  json_pure
   mongo_ext
   mongo_mapper
   mongoid

@@ -1,37 +1,30 @@
-#Hilarious as it seems, this is necessary so bundle exec cucumber works for mongoid cukeage (I'm assuming mongomapper is automatically present because its a git repo)
-Object.send(:remove_const, 'MongoMapper')  if defined?(::MongoMapper)
-
-require 'rubygems'
-require 'bundler'
-
-Bundler.setup
+require 'bundler/setup'
 require 'rspec/expectations'
-#require 'ruby-debug'
 
-DB_DIR = "#{File.dirname(__FILE__)}/../../db"
+DB_DIR = "#{__dir__}/../../db"
 
 orm         = ENV['ORM']
 another_orm = ENV['ANOTHER_ORM']
 strategy    = ENV['STRATEGY']
 multiple_db = ENV['MULTIPLE_DBS']
 
-config = YAML::load(File.open("#{File.dirname(__FILE__)}/../../config/redis.yml"))
+config = YAML::load(File.open("#{__dir__}/../../config/redis.yml"))
 ENV['REDIS_URL'] = config['test']['url']
 ENV['REDIS_URL_ONE'] = config['one']['url']
 ENV['REDIS_URL_TWO'] = config['two']['url']
 
 if orm && strategy
-  $:.unshift(File.dirname(__FILE__) + '/../../../lib')
+  $:.unshift "#{__dir__}/../../../lib"
   require 'database_cleaner'
   require 'database_cleaner/cucumber'
-  require "#{File.dirname(__FILE__)}/../../lib/#{orm.downcase}_models"
+  require "#{__dir__}/../../lib/#{orm.downcase}_models"
 
   if another_orm
-    require "#{File.dirname(__FILE__)}/../../lib/#{another_orm.downcase}_models"
+    require "#{__dir__}/../../lib/#{another_orm.downcase}_models"
   end
 
   if multiple_db
-    DatabaseCleaner.app_root = "#{File.dirname(__FILE__)}/../.."
+    DatabaseCleaner.app_root = "#{__dir__}/../.."
     orm_sym = orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym
 
     case orm_sym

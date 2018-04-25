@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
+require_relative './../../spec_helper'
 require 'ohm'
 require 'database_cleaner/ohm/truncation'
 
@@ -15,7 +15,7 @@ module DatabaseCleaner
 
     describe Truncation do
       before(:all) do
-        config = YAML::load(File.open("#{File.dirname(__FILE__)}/../../../examples/config/redis.yml"))
+        config = YAML::load(File.open("#{__dir__}/../../../examples/config/redis.yml"))
         ::Ohm.connect :url => config['test']['url']
         @redis = ::Ohm.redis
       end

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
+require_relative './../../spec_helper'
 require 'redis'
 require 'database_cleaner/redis/truncation'
 
@@ -8,7 +8,7 @@ module DatabaseCleaner
 
     describe Truncation do
       before(:all) do
-        config = YAML::load(File.open("#{File.dirname(__FILE__)}/../../../examples/config/redis.yml"))
+        config = YAML::load(File.open("#{__dir__}/../../../examples/config/redis.yml"))
       @redis = ::Redis.new :url => config['test']['url']
       end
 
