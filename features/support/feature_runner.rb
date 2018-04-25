@@ -11,7 +11,7 @@ class FeatureRunner
   end
 
   def go(feature)
-    full_dir ||= File.expand_path(File.dirname(__FILE__) + "/../../examples/")
+    full_dir ||= File.expand_path("#{__dir__}/../../examples/")
     Dir.chdir(full_dir) do
 
 

@@ -1,6 +1,6 @@
 Given /^I have setup database cleaner to clean multiple databases using redis$/ do
   #DatabaseCleaner
-  # require "#{File.dirname(__FILE__)}/../../../lib/redis_models"
+  # require "#{__dir__}/../../../lib/redis_models"
   #
   # DatabaseCleaner[:redis, {:connection => ENV['REDIS_URL_ONE']} ].strategy = :truncation
   # DatabaseCleaner[:redis, {:connection => ENV['REDIS_URL_TWO']} ].strategy = :truncation

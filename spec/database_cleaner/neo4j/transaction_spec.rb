@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
+require_relative './../../spec_helper'
 require 'neo4j-core'
 require 'database_cleaner/neo4j/transaction'
 
