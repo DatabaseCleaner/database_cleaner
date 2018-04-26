@@ -121,9 +121,9 @@ describe ::DatabaseCleaner do
 
   context "connection/db retrieval" do
     it "should retrieve a db rather than create a new one" do
-      pending
-      connection = ::DatabaseCleaner[:active_record].strategy = :truncation
-      ::DatabaseCleaner[:active_record].should eq connection
+      connection = ::DatabaseCleaner[:active_record]
+      ::DatabaseCleaner[:active_record].strategy = :truncation
+      ::DatabaseCleaner[:active_record].should equal connection
     end
   end
 
@@ -243,7 +243,7 @@ describe ::DatabaseCleaner do
     # plausably want to force orm/strategy change on two sets of orm that differ only on db
     context "multiple orm proxy methods" do
 
-      pending "should proxy orm to all connections and remove duplicate connections" do
+      it "should proxy orm to all connections and remove duplicate connections" do
         active_record_1 = double("active_mock_on_db_one").as_null_object
         active_record_2 = double("active_mock_on_db_two").as_null_object
         data_mapper_1   = double("data_mock_on_db_one").as_null_object
@@ -254,6 +254,8 @@ describe ::DatabaseCleaner do
         active_record_2.should_receive(:orm=).with(:data_mapper)
         data_mapper_1.should_receive(:orm=).with(:data_mapper)
 
+        active_record_1.should_receive(:==).with(active_record_2).and_return(false)
+        active_record_2.should_receive(:==).with(data_mapper_1).and_return(false)
         active_record_1.should_receive(:==).with(data_mapper_1).and_return(true)
 
         ::DatabaseCleaner.connections.size.should eq 3
