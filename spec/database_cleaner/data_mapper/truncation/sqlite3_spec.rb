@@ -24,7 +24,7 @@ module DataMapper
           2.times { DmUser.create }
 
           connection.truncate_table(DmUser.storage_names[:default])
-          DmUser.count.should eq 0
+          expect(DmUser.count).to eq 0
         end
 
         it "resets AUTO_INCREMENT index of table" do
@@ -33,7 +33,7 @@ module DataMapper
 
           connection.truncate_table(DmUser.storage_names[:default])
 
-          DmUser.create.id.should eq 1
+          expect(DmUser.create.id).to eq 1
         end
       end
     end

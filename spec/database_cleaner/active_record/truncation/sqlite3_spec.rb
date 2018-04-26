@@ -21,7 +21,7 @@ module ActiveRecord
           2.times { User.create }
 
           connection.truncate_table('users')
-          User.count.should eq 0
+          expect(User.count).to eq 0
         end
 
         it "resets AUTO_INCREMENT index of table" do
@@ -30,7 +30,7 @@ module ActiveRecord
 
           connection.truncate_table('users')
 
-          User.create.id.should eq 1
+          expect(User.create.id).to eq 1
         end
       end
 

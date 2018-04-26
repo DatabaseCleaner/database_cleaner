@@ -3,11 +3,11 @@ require 'spec_helper'
 module DatabaseCleaner
   describe NullStrategy do
       it 'responds to .start' do
-        expect { NullStrategy.start }.not_to raise_error(NoMethodError)
+        expect { NullStrategy.start }.not_to raise_error
       end
 
       it 'responds to .clean' do
-        expect { NullStrategy.clean }.not_to raise_error(NoMethodError)
+        expect { NullStrategy.clean }.not_to raise_error
       end
 
       describe '.cleaning' do

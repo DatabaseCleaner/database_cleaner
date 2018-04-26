@@ -1,15 +1,15 @@
 shared_examples_for "a generic strategy" do
-  it { should respond_to(:db)  }
+  it { is_expected.to respond_to(:db)  }
 end
 
 shared_examples_for "a generic truncation strategy" do
-  it { should respond_to(:start) }
-  it { should respond_to(:clean) }
-  it { should respond_to(:cleaning) }
+  it { is_expected.to respond_to(:start) }
+  it { is_expected.to respond_to(:clean) }
+  it { is_expected.to respond_to(:cleaning) }
 end
 
 shared_examples_for "a generic transaction strategy" do
-  it { should respond_to(:start) }
-  it { should respond_to(:clean) }
-  it { should respond_to(:cleaning) }
+  it { is_expected.to respond_to(:start) }
+  it { is_expected.to respond_to(:clean) }
+  it { is_expected.to respond_to(:cleaning) }
 end

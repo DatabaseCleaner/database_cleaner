@@ -39,19 +39,19 @@ module DatabaseCleaner
       it "truncates all keys by default" do
         create_widget
         create_gadget
-        @redis.keys.size.should eq 6
+        expect(@redis.keys.size).to eq 6
         Truncation.new.clean
-        @redis.keys.size.should eq 0
+        expect(@redis.keys.size).to eq 0
       end
 
       context "when keys are provided to the :only option" do
         it "only truncates the specified keys" do
           create_widget
           create_gadget
-          @redis.keys.size.should eq 6
+          expect(@redis.keys.size).to eq 6
           Truncation.new(:only => ['*Widget*']).clean
-          @redis.keys.size.should eq 3
-          @redis.get('DatabaseCleaner::Ohm::Gadget:id').should eq '1'
+          expect(@redis.keys.size).to eq 3
+          expect(@redis.get('DatabaseCleaner::Ohm::Gadget:id')).to eq '1'
         end
       end
 
@@ -59,10 +59,10 @@ module DatabaseCleaner
         it "truncates all but the specified keys" do
           create_widget
           create_gadget
-          @redis.keys.size.should eq 6
+          expect(@redis.keys.size).to eq 6
           Truncation.new(:except => ['*Widget*']).clean
-          @redis.keys.size.should eq 3
-          @redis.get('DatabaseCleaner::Ohm::Widget:id').should eq '1'
+          expect(@redis.keys.size).to eq 3
+          expect(@redis.get('DatabaseCleaner::Ohm::Widget:id')).to eq '1'
         end
       end
     end

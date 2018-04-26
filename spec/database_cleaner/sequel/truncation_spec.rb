@@ -134,17 +134,17 @@ module DatabaseCleaner
           subject { Truncation.new.tap { |t| t.db = db } }
 
           it 'should return false initially' do
-            subject.send(:pre_count?).should eq false
+            expect(subject.send(:pre_count?)).to eq false
           end
 
           it 'should return true if @reset_id is set and non false or nil' do
             subject.instance_variable_set(:"@pre_count", true)
-            subject.send(:pre_count?).should eq true
+            expect(subject.send(:pre_count?)).to eq true
           end
 
           it 'should return false if @reset_id is set to false' do
             subject.instance_variable_set(:"@pre_count", false)
-            subject.send(:pre_count?).should eq false
+            expect(subject.send(:pre_count?)).to eq false
           end
         end
 
@@ -154,8 +154,8 @@ module DatabaseCleaner
           it "should rely on #pre_count_truncate_tables if #pre_count? returns true" do
             subject.instance_variable_set(:"@pre_count", true)
 
-            subject.should_not_receive(:truncate_tables)
-            subject.should_receive(:pre_count_truncate_tables)
+            expect(subject).not_to receive(:truncate_tables)
+            expect(subject).to receive(:pre_count_truncate_tables)
 
             subject.clean
           end
@@ -163,8 +163,8 @@ module DatabaseCleaner
           it "should not rely on #pre_count_truncate_tables if #pre_count? return false" do
             subject.instance_variable_set(:"@pre_count", false)
 
-            subject.should_not_receive(:pre_count_truncate_tables)
-            subject.should_receive(:truncate_tables)
+            expect(subject).not_to receive(:pre_count_truncate_tables)
+            expect(subject).to receive(:truncate_tables)
 
             subject.clean
           end

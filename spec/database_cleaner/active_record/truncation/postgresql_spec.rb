@@ -11,7 +11,7 @@ module ActiveRecord
         PostgreSQLHelper.active_record_pg_migrate
         DatabaseCleaner::ActiveRecord::Truncation.new.clean
         result = PostgreSQLHelper.active_record_pg_connection.execute("select count(*) from schema_migrations;")
-        result.values.first.should eq ["2"]
+        expect(result.values.first).to eq ["2"]
       end
     end
 
@@ -31,14 +31,14 @@ module ActiveRecord
           2.times { User.create }
 
           connection.truncate_table('users')
-          User.count.should eq 0
+          expect(User.count).to eq 0
         end
 
         it "truncates the table without id sequence" do
           2.times { Agent.create }
 
           connection.truncate_table('agents')
-          Agent.count.should eq 0
+          expect(Agent.count).to eq 0
         end
 
         it "resets AUTO_INCREMENT index of table" do
@@ -47,7 +47,7 @@ module ActiveRecord
 
           connection.truncate_table('users')
 
-          User.create.id.should eq 1
+          expect(User.create.id).to eq 1
         end
       end
 
@@ -62,7 +62,7 @@ module ActiveRecord
 
       describe '#database_cleaner_table_cache' do
         it 'should default to the list of tables with their schema' do
-          connection.database_cleaner_table_cache.first.should match(/^public\./)
+          expect(connection.database_cleaner_table_cache.first).to match(/^public\./)
         end
       end
 

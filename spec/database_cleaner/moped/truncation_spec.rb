@@ -29,7 +29,7 @@ module DatabaseCleaner
         # very odd and disconcerting...
         expected_counts.each do |model_class, expected_count|
           actual_count = model_class.count
-          actual_count.should eq(expected_count), "#{model_class} expected to have a count of #{expected_count} but was #{actual_count}"
+          expect(actual_count).to eq(expected_count), "#{model_class} expected to have a count of #{expected_count} but was #{actual_count}"
         end
       end
 

@@ -26,7 +26,7 @@ module DatabaseCleaner
         begin
           expected_counts.each do |model_class, expected_count|
             actual_count = model_class.count
-            actual_count.should eq(expected_count), "#{model_class} expected to have a count of #{expected_count} but was #{actual_count}"
+            expect(actual_count).to eq(expected_count), "#{model_class} expected to have a count of #{expected_count} but was #{actual_count}"
           end
         rescue RSpec::Expectations::ExpectationNotMetError => e
           raise !sanity_check ? e : RSpec::ExpectationNotMetError::ExpectationNotMetError.new("SANITY CHECK FAILURE! This should never happen here: #{e.message}")
