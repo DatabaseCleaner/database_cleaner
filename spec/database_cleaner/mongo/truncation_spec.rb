@@ -19,15 +19,6 @@ module DatabaseCleaner
         @connection.drop_database(@test_db)
       end
 
-      def ensure_counts(expected_counts)
-        # I had to add this sanity_check garbage because I was getting non-determinisc results from mongo at times..
-        # very odd and disconcerting...
-        expected_counts.each do |model_class, expected_count|
-          actual_count = model_class.count
-          expect(actual_count).to eq(expected_count), "#{model_class} expected to have a count of #{expected_count} but was #{actual_count}"
-        end
-      end
-
       def create_widget(attrs={})
         MongoTest::Widget.new({:name => 'some widget'}.merge(attrs)).save!
       end
@@ -39,9 +30,9 @@ module DatabaseCleaner
       it "truncates all collections by default" do
         create_widget
         create_gadget
-        ensure_counts(MongoTest::Widget => 1, MongoTest::Gadget => 1)
-        truncation.clean
-        ensure_counts(MongoTest::Widget => 0, MongoTest::Gadget => 0)
+        expect { truncation.clean }.to change {
+          [MongoTest::Widget.count, MongoTest::Gadget.count]
+        }.from([1,1]).to([0,0])
       end
 
       context "when collections are provided to the :only option" do
@@ -49,9 +40,9 @@ module DatabaseCleaner
         it "only truncates the specified collections" do
           create_widget
           create_gadget
-          ensure_counts(MongoTest::Widget => 1, MongoTest::Gadget => 1)
-          truncation.clean
-          ensure_counts(MongoTest::Widget => 0, MongoTest::Gadget => 1)
+          expect { truncation.clean }.to change {
+            [MongoTest::Widget.count, MongoTest::Gadget.count]
+          }.from([1,1]).to([0,1])
         end
       end
 
@@ -60,9 +51,9 @@ module DatabaseCleaner
         it "truncates all but the specified collections" do
           create_widget
           create_gadget
-          ensure_counts(MongoTest::Widget => 1, MongoTest::Gadget => 1)
-          truncation.clean
-          ensure_counts(MongoTest::Widget => 1, MongoTest::Gadget => 0)
+          expect { truncation.clean }.to change {
+            [MongoTest::Widget.count, MongoTest::Gadget.count]
+          }.from([1,1]).to([1,0])
         end
       end
 

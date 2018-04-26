@@ -23,15 +23,6 @@ module DatabaseCleaner
         @session.command(getlasterror: 1)
       end
 
-      def ensure_counts(expected_counts)
-        # I had to add this sanity_check garbage because I was getting non-deterministic results from mongo at times..
-        # very odd and disconcerting...
-        expected_counts.each do |model_class, expected_count|
-          actual_count = model_class.count
-          expect(actual_count).to eq(expected_count), "#{model_class} expected to have a count of #{expected_count} but was #{actual_count}"
-        end
-      end
-
       def create_widget(attrs={})
         MopedTest::Widget.new({:name => 'some widget'}.merge(attrs)).save!
       end
@@ -48,9 +39,9 @@ module DatabaseCleaner
         create_widget
         create_gadget
         create_system
-        ensure_counts(MopedTest::Widget => 1, MopedTest::Gadget => 1, MopedTest::System => 1)
-        truncation.clean
-        ensure_counts(MopedTest::Widget => 0, MopedTest::Gadget => 0, MopedTest::System => 0)
+        expect { truncation.clean }.to change {
+          [MopedTest::Widget.count, MopedTest::Gadget.count, MopedTest::System.count]
+        }.from([1,1,1]).to([0,0,0])
       end
 
       context "when collections are provided to the :only option" do
@@ -58,9 +49,9 @@ module DatabaseCleaner
         it "only truncates the specified collections" do
           create_widget
           create_gadget
-          ensure_counts(MopedTest::Widget => 1, MopedTest::Gadget => 1)
-          truncation.clean
-          ensure_counts(MopedTest::Widget => 0, MopedTest::Gadget => 1)
+          expect { truncation.clean }.to change {
+            [MopedTest::Widget.count, MopedTest::Gadget.count, MopedTest::System.count]
+          }.from([1,1,0]).to([0,1,0])
         end
       end
 
@@ -69,9 +60,9 @@ module DatabaseCleaner
         it "truncates all but the specified collections" do
           create_widget
           create_gadget
-          ensure_counts(MopedTest::Widget => 1, MopedTest::Gadget => 1)
-          truncation.clean
-          ensure_counts(MopedTest::Widget => 1, MopedTest::Gadget => 0)
+          expect { truncation.clean }.to change {
+            [MopedTest::Widget.count, MopedTest::Gadget.count, MopedTest::System.count]
+          }.from([1,1,0]).to([1,0,0])
         end
       end
 
