@@ -36,6 +36,14 @@ module DatabaseCleaner
         end
       end
 
+      describe 'to a sqlite db' do
+        let(:database_url) { 'sqlite3:tmp/db.sqlite3' }
+
+        it 'does not raise' do
+          expect { cleaner.start }.to_not raise_error
+        end
+      end
+
       describe 'DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL is set' do
         let(:database_url) { 'postgres://remote.host' }
         before { stub_const('ENV', 'DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL' => true) }
