@@ -1,6 +1,6 @@
 Given /^I have setup database cleaner to clean multiple databases using ohm$/ do
   #DatabaseCleaner
-  # require "#{File.dirname(__FILE__)}/../../../lib/ohm_models"
+  # require "#{__dir__}/../../../lib/ohm_models"
   #
   # DatabaseCleaner[:ohm, {:connection => ENV['REDIS_URL_ONE']} ].strategy = :truncation
   # DatabaseCleaner[:ohm, {:connection => ENV['REDIS_URL_TWO']} ].strategy = :truncation

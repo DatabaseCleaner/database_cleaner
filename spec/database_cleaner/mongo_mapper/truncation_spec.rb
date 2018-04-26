@@ -1,7 +1,7 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
+require_relative './../../spec_helper'
 require 'mongo_mapper'
 require 'database_cleaner/mongo_mapper/truncation'
-require File.dirname(__FILE__) + '/mongo_examples'
+require_relative './mongo_examples'
 
 module DatabaseCleaner
   module MongoMapper

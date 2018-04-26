@@ -1,7 +1,7 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
+require_relative './../../spec_helper'
 require 'moped'
 require 'database_cleaner/moped/truncation'
-require File.dirname(__FILE__) + '/moped_examples'
+require_relative './moped_examples'
 
 module DatabaseCleaner
   module Moped

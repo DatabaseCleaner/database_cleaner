@@ -1,6 +1,6 @@
 Given /^I have setup database cleaner to clean multiple databases using mongomapper$/ do
   #DatabaseCleaner
-  # require "#{File.dirname(__FILE__)}/../../../lib/datamapper_models"
+  # require "#{__dir__}/../../../lib/datamapper_models"
   #
   # DatabaseCleaner[:datamapper, {:connection => :one} ].strategy = :truncation
   # DatabaseCleaner[:datamapper, {:connection => :two} ].strategy = :truncation

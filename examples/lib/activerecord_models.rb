@@ -4,7 +4,7 @@ databases_config = {
   "two" => {"adapter" => "#{"jdbc" if defined?(JRUBY_VERSION)}sqlite3", "database" => "#{DB_DIR}/activerecord_two.db"}
 }
 
-File.open("#{File.dirname(__FILE__)}/../config/database.yml", 'w') do |file|
+File.open("#{__dir__}/../config/database.yml", 'w') do |file|
   file.write(YAML.dump(databases_config))
 end
 
