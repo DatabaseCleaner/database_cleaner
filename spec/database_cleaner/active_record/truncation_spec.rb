@@ -66,13 +66,13 @@ module DatabaseCleaner
         end
 
         it "should raise an error when :only and :except options are used" do
-          expect(running {
+          expect {
             Truncation.new(:except => ['widgets'], :only => ['widgets'])
-          }).to raise_error(ArgumentError)
+          }.to raise_error(ArgumentError)
         end
 
         it "should raise an error when invalid options are provided" do
-          expect(running { Truncation.new(:foo => 'bar') }).to raise_error(ArgumentError)
+          expect { Truncation.new(:foo => 'bar') }.to raise_error(ArgumentError)
         end
 
         it "should not truncate views" do

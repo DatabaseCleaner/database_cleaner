@@ -74,7 +74,7 @@ module DatabaseCleaner
        let(:cleaner) { DatabaseCleaner::Base.new :autodetect }
 
        it "should raise an error when no ORM is detected" do
-         expect(running { cleaner }).to raise_error(DatabaseCleaner::NoORMDetected)
+         expect { cleaner }.to raise_error(DatabaseCleaner::NoORMDetected)
        end
 
        it "should detect ActiveRecord first" do

@@ -18,21 +18,21 @@ module DatabaseCleaner
       end
 
       it "should raise an error when the :only option is used" do
-        expect(running {
+        expect {
           Truncation.new(:only => ['document-type'])
-        }).to raise_error(ArgumentError)
+        }.to raise_error(ArgumentError)
       end
 
       it "should raise an error when the :except option is used" do
-        expect(running {
+        expect {
           Truncation.new(:except => ['document-type'])
-        }).to raise_error(ArgumentError)
+        }.to raise_error(ArgumentError)
       end
 
       it "should raise an error when invalid options are provided" do
-        expect(running {
+        expect {
           Truncation.new(:foo => 'bar')
-        }).to raise_error(ArgumentError)
+        }.to raise_error(ArgumentError)
       end
     end
 
