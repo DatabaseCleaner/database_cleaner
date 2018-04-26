@@ -15,60 +15,17 @@ module DatabaseCleaner
     }
 
     describe "autodetect" do
-
-       #Cache all ORMs, we'll need them later but not now.
-       before(:all) do
-         Temp_AR = ::ActiveRecord if defined?(::ActiveRecord) and not defined?(Temp_AR)
-         Temp_DM = ::DataMapper   if defined?(::DataMapper)   and not defined?(Temp_DM)
-         Temp_MM = ::MongoMapper  if defined?(::MongoMapper)  and not defined?(Temp_MM)
-         Temp_MO = ::Mongoid      if defined?(::Mongoid)      and not defined?(Temp_MO)
-         Temp_CP = ::CouchPotato  if defined?(::CouchPotato)  and not defined?(Temp_CP)
-         Temp_SQ = ::Sequel       if defined?(::Sequel)       and not defined?(Temp_SQ)
-         Temp_MP = ::Moped        if defined?(::Moped)        and not defined?(Temp_MP)
-         Temp_RS = ::Redis        if defined?(::Redis)        and not defined?(Temp_RS)
-         Temp_OH = ::Ohm          if defined?(::Ohm)          and not defined?(Temp_OH)
-         Temp_NJ = ::Neo4j        if defined?(::Neo4j)        and not defined?(Temp_NJ)
-       end
-
-       #Remove all ORM mocks and restore from cache
-       after(:all) do
-         Object.send(:remove_const, 'ActiveRecord') if defined?(::ActiveRecord)
-         Object.send(:remove_const, 'DataMapper')   if defined?(::DataMapper)
-         Object.send(:remove_const, 'MongoMapper')  if defined?(::MongoMapper)
-         Object.send(:remove_const, 'Mongoid')      if defined?(::Mongoid)
-         Object.send(:remove_const, 'CouchPotato')  if defined?(::CouchPotato)
-         Object.send(:remove_const, 'Sequel')       if defined?(::Sequel)
-         Object.send(:remove_const, 'Moped')        if defined?(::Moped)
-         Object.send(:remove_const, 'Ohm')          if defined?(::Ohm)
-         Object.send(:remove_const, 'Redis')        if defined?(::Redis)
-         Object.send(:remove_const, 'Neo4j')        if defined?(::Neo4j)
-
-
-         # Restore ORMs
-         ::ActiveRecord = Temp_AR if defined? Temp_AR
-         ::DataMapper   = Temp_DM if defined? Temp_DM
-         ::MongoMapper  = Temp_MM if defined? Temp_MM
-         ::Mongoid      = Temp_MO if defined? Temp_MO
-         ::CouchPotato  = Temp_CP if defined? Temp_CP
-         ::Sequel       = Temp_SQ if defined? Temp_SQ
-         ::Moped        = Temp_MP if defined? Temp_MP
-         ::Ohm          = Temp_OH if defined? Temp_OH
-         ::Redis        = Temp_RS if defined? Temp_RS
-         ::Neo4j        = Temp_NJ if defined? Temp_NJ
-       end
-
-       #reset the orm mocks
-       before(:each) do
-         Object.send(:remove_const, 'ActiveRecord') if defined?(::ActiveRecord)
-         Object.send(:remove_const, 'DataMapper')   if defined?(::DataMapper)
-         Object.send(:remove_const, 'MongoMapper')  if defined?(::MongoMapper)
-         Object.send(:remove_const, 'Mongoid')      if defined?(::Mongoid)
-         Object.send(:remove_const, 'CouchPotato')  if defined?(::CouchPotato)
-         Object.send(:remove_const, 'Sequel')       if defined?(::Sequel)
-         Object.send(:remove_const, 'Moped')        if defined?(::Moped)
-         Object.send(:remove_const, 'Ohm')          if defined?(::Ohm)
-         Object.send(:remove_const, 'Redis')        if defined?(::Redis)
-         Object.send(:remove_const, 'Neo4j')        if defined?(::Neo4j)
+       before do
+         hide_const("ActiveRecord")
+         hide_const("DataMapper")
+         hide_const("MongoMapper")
+         hide_const("Mongoid")
+         hide_const("CouchPotato")
+         hide_const("Sequel")
+         hide_const("Moped")
+         hide_const("Redis")
+         hide_const("Ohm")
+         hide_const("Neo4j")
        end
 
        let(:cleaner) { DatabaseCleaner::Base.new :autodetect }
@@ -78,112 +35,112 @@ module DatabaseCleaner
        end
 
        it "should detect ActiveRecord first" do
-         Object.const_set('ActiveRecord','Actively mocking records.')
-         Object.const_set('DataMapper',  'Mapping data mocks')
-         Object.const_set('MongoMapper', 'Mapping mock mongos')
-         Object.const_set('Mongoid',     'Mongoid mock')
-         Object.const_set('CouchPotato', 'Couching mock potatos')
-         Object.const_set('Sequel',      'Sequel mock')
-         Object.const_set('Moped',       'Moped mock')
-         Object.const_set('Ohm',         'Ohm mock')
-         Object.const_set('Redis',       'Redis mock')
-         Object.const_set('Neo4j',       'Neo4j mock')
+         stub_const('ActiveRecord','Actively mocking records.')
+         stub_const('DataMapper',  'Mapping data mocks')
+         stub_const('MongoMapper', 'Mapping mock mongos')
+         stub_const('Mongoid',     'Mongoid mock')
+         stub_const('CouchPotato', 'Couching mock potatos')
+         stub_const('Sequel',      'Sequel mock')
+         stub_const('Moped',       'Moped mock')
+         stub_const('Ohm',         'Ohm mock')
+         stub_const('Redis',       'Redis mock')
+         stub_const('Neo4j',       'Neo4j mock')
 
          expect(cleaner.orm).to eq :active_record
          expect(cleaner).to be_auto_detected
        end
 
        it "should detect DataMapper second" do
-         Object.const_set('DataMapper',  'Mapping data mocks')
-         Object.const_set('MongoMapper', 'Mapping mock mongos')
-         Object.const_set('Mongoid',     'Mongoid mock')
-         Object.const_set('CouchPotato', 'Couching mock potatos')
-         Object.const_set('Sequel',      'Sequel mock')
-         Object.const_set('Moped',       'Moped mock')
-         Object.const_set('Ohm',         'Ohm mock')
-         Object.const_set('Redis',       'Redis mock')
-         Object.const_set('Neo4j',       'Neo4j mock')
+         stub_const('DataMapper',  'Mapping data mocks')
+         stub_const('MongoMapper', 'Mapping mock mongos')
+         stub_const('Mongoid',     'Mongoid mock')
+         stub_const('CouchPotato', 'Couching mock potatos')
+         stub_const('Sequel',      'Sequel mock')
+         stub_const('Moped',       'Moped mock')
+         stub_const('Ohm',         'Ohm mock')
+         stub_const('Redis',       'Redis mock')
+         stub_const('Neo4j',       'Neo4j mock')
 
          expect(cleaner.orm).to eq :data_mapper
          expect(cleaner).to be_auto_detected
        end
 
        it "should detect MongoMapper third" do
-         Object.const_set('MongoMapper', 'Mapping mock mongos')
-         Object.const_set('Mongoid',     'Mongoid mock')
-         Object.const_set('CouchPotato', 'Couching mock potatos')
-         Object.const_set('Sequel',      'Sequel mock')
-         Object.const_set('Moped',       'Moped mock')
-         Object.const_set('Ohm',         'Ohm mock')
-         Object.const_set('Redis',       'Redis mock')
-         Object.const_set('Neo4j',       'Neo4j mock')
+         stub_const('MongoMapper', 'Mapping mock mongos')
+         stub_const('Mongoid',     'Mongoid mock')
+         stub_const('CouchPotato', 'Couching mock potatos')
+         stub_const('Sequel',      'Sequel mock')
+         stub_const('Moped',       'Moped mock')
+         stub_const('Ohm',         'Ohm mock')
+         stub_const('Redis',       'Redis mock')
+         stub_const('Neo4j',       'Neo4j mock')
 
          expect(cleaner.orm).to eq :mongo_mapper
          expect(cleaner).to be_auto_detected
        end
 
        it "should detect Mongoid fourth" do
-         Object.const_set('Mongoid',     'Mongoid mock')
-         Object.const_set('CouchPotato', 'Couching mock potatos')
-         Object.const_set('Sequel',      'Sequel mock')
-         Object.const_set('Moped',       'Moped mock')
-         Object.const_set('Ohm',         'Ohm mock')
-         Object.const_set('Redis',       'Redis mock')
-         Object.const_set('Neo4j',       'Neo4j mock')
+         stub_const('Mongoid',     'Mongoid mock')
+         stub_const('CouchPotato', 'Couching mock potatos')
+         stub_const('Sequel',      'Sequel mock')
+         stub_const('Moped',       'Moped mock')
+         stub_const('Ohm',         'Ohm mock')
+         stub_const('Redis',       'Redis mock')
+         stub_const('Neo4j',       'Neo4j mock')
 
          expect(cleaner.orm).to eq :mongoid
          expect(cleaner).to be_auto_detected
        end
 
        it "should detect CouchPotato fifth" do
-         Object.const_set('CouchPotato', 'Couching mock potatos')
-         Object.const_set('Sequel',      'Sequel mock')
-         Object.const_set('Moped',       'Moped mock')
-         Object.const_set('Ohm',         'Ohm mock')
-         Object.const_set('Redis',       'Redis mock')
-         Object.const_set('Neo4j',       'Neo4j mock')
+         stub_const('CouchPotato', 'Couching mock potatos')
+         stub_const('Sequel',      'Sequel mock')
+         stub_const('Moped',       'Moped mock')
+         stub_const('Ohm',         'Ohm mock')
+         stub_const('Redis',       'Redis mock')
+         stub_const('Neo4j',       'Neo4j mock')
 
          expect(cleaner.orm).to eq :couch_potato
          expect(cleaner).to be_auto_detected
        end
 
        it "should detect Sequel sixth" do
-         Object.const_set('Sequel', 'Sequel mock')
-         Object.const_set('Moped',  'Moped mock')
-         Object.const_set('Ohm',    'Ohm mock')
-         Object.const_set('Redis',  'Redis mock')
-         Object.const_set('Neo4j',  'Neo4j mock')
+         stub_const('Sequel', 'Sequel mock')
+         stub_const('Moped',  'Moped mock')
+         stub_const('Ohm',    'Ohm mock')
+         stub_const('Redis',  'Redis mock')
+         stub_const('Neo4j',  'Neo4j mock')
 
          expect(cleaner.orm).to eq :sequel
          expect(cleaner).to be_auto_detected
        end
 
        it 'detects Moped seventh' do
-         Object.const_set('Moped', 'Moped mock')
+         stub_const('Moped', 'Moped mock')
 
          expect(cleaner.orm).to eq :moped
          expect(cleaner).to be_auto_detected
        end
 
        it 'detects Ohm eighth' do
-         Object.const_set('Ohm',    'Ohm mock')
-         Object.const_set('Redis',  'Redis mock')
-         Object.const_set('Neo4j',  'Neo4j mock')
+         stub_const('Ohm',    'Ohm mock')
+         stub_const('Redis',  'Redis mock')
+         stub_const('Neo4j',  'Neo4j mock')
 
          expect(cleaner.orm).to eq :ohm
          expect(cleaner).to be_auto_detected
        end
 
        it 'detects Redis ninth' do
-         Object.const_set('Redis', 'Redis mock')
-         Object.const_set('Neo4j', 'Neo4j mock')
+         stub_const('Redis', 'Redis mock')
+         stub_const('Neo4j', 'Neo4j mock')
 
          expect(cleaner.orm).to eq :redis
          expect(cleaner).to be_auto_detected
        end
 
        it 'detects Neo4j tenth' do
-         Object.const_set('Neo4j', 'Neo4j mock')
+         stub_const('Neo4j', 'Neo4j mock')
 
          expect(cleaner.orm).to eq :neo4j
          expect(cleaner).to be_auto_detected

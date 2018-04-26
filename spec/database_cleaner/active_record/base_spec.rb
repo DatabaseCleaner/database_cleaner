@@ -9,33 +9,35 @@ class FakeModel
   end
 end
 
-module DatabaseCleaner
-  describe ActiveRecord do
-    it { is_expected.to respond_to(:available_strategies) }
+describe DatabaseCleaner::ActiveRecord do
+  it { is_expected.to respond_to(:available_strategies) }
 
-    describe "config_file_location" do
-      subject { ActiveRecord.config_file_location }
-
-      it "should default to DatabaseCleaner.root / config / database.yml" do
-        ActiveRecord.config_file_location=nil
-        expect(DatabaseCleaner).to receive(:app_root).and_return("/path/to")
-        expect(subject).to eq '/path/to/config/database.yml'
-      end
+  describe "config_file_location" do
+    after do
+      # prevent global state leakage
+      DatabaseCleaner::ActiveRecord.config_file_location=nil
     end
 
+    it "should default to DatabaseCleaner.root / config / database.yml" do
+      DatabaseCleaner::ActiveRecord.config_file_location=nil
+      expect(DatabaseCleaner).to receive(:app_root).and_return("/path/to")
+      expect(DatabaseCleaner::ActiveRecord.config_file_location).to eq '/path/to/config/database.yml'
+    end
   end
+end
 
+module DatabaseCleaner
   module ActiveRecord
     class ExampleStrategy
-      include ::DatabaseCleaner::ActiveRecord::Base
+      include DatabaseCleaner::ActiveRecord::Base
     end
 
     describe ExampleStrategy do
-      let :config_location do
-        '/path/to/config/database.yml'
-      end
+      let(:config_location) { '/path/to/config/database.yml' }
 
-      before { allow(::DatabaseCleaner::ActiveRecord).to receive(:config_file_location).and_return(config_location) }
+      before do
+        allow(DatabaseCleaner::ActiveRecord).to receive(:config_file_location).and_return(config_location)
+      end
 
       it_should_behave_like "a generic strategy"
 
