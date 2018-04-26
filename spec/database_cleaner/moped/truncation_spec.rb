@@ -1,4 +1,3 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
 require 'moped'
 require 'database_cleaner/moped/truncation'
 require File.dirname(__FILE__) + '/moped_examples'

@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'active_record'
 require 'support/active_record/mysql2_setup'
 require 'database_cleaner/active_record/truncation'

@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'database_cleaner/sequel/deletion'
 require 'database_cleaner/shared_strategy'
 require 'sequel'

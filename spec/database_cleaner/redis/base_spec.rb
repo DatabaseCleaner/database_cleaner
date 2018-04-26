@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'redis'
 require 'database_cleaner/redis/base'
 require 'database_cleaner/shared_strategy'

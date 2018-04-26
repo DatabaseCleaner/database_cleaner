@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'database_cleaner/data_mapper/base'
 require 'database_cleaner/shared_strategy'
 

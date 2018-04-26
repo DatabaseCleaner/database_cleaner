@@ -1,4 +1,3 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
 require 'database_cleaner/couch_potato/truncation'
 require 'couch_potato'
 

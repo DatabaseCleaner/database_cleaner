@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'database_cleaner/neo4j/base'
 require 'database_cleaner/shared_strategy'
 

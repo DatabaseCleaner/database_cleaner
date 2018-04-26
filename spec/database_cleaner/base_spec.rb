@@ -1,4 +1,3 @@
-require File.dirname(__FILE__) + '/../spec_helper'
 require 'database_cleaner/active_record/transaction'
 require 'database_cleaner/data_mapper/transaction'
 require 'database_cleaner/mongo_mapper/truncation'

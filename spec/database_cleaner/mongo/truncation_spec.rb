@@ -1,4 +1,3 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
 require 'mongo'
 require 'database_cleaner/mongo/truncation'
 require File.dirname(__FILE__) + '/mongo_examples'

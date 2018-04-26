@@ -1,4 +1,3 @@
-require 'spec_helper'
 module ArrayHelper
   def zipmap(array, vals)
     Hash[*(array.zip(vals).flatten)]

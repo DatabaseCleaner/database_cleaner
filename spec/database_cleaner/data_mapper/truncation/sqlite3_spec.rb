@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'dm-core'
 require 'dm-sqlite-adapter'
 require 'support/data_mapper/sqlite3_setup'

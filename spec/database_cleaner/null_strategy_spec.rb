@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "database_cleaner/null_strategy"
 
 module DatabaseCleaner
   describe NullStrategy do
