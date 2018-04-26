@@ -6,10 +6,10 @@ require 'database_cleaner/active_record/truncation'
 module ActiveRecord
   module ConnectionAdapters
     describe do
-      before(:all) { active_record_sqlite3_setup }
+      before(:all) { SQLite3Helper.active_record_sqlite3_setup }
 
       let(:connection) do
-        active_record_sqlite3_connection
+        SQLite3Helper.active_record_sqlite3_connection
       end
 
       before(:each) do

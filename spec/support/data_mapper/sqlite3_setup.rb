@@ -2,6 +2,7 @@ require 'support/active_record/database_setup'
 require 'support/data_mapper/schema_setup'
 
 module DataMapperSQLite3Helper
+  extend self
 
   puts "DataMapper #{DataMapper::VERSION}, sqlite3"
 
@@ -34,6 +35,3 @@ module DataMapperSQLite3Helper
   end
 end
 
-RSpec.configure do |c|
-  c.include(DataMapperSQLite3Helper)
-end

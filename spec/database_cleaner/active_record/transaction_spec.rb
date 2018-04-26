@@ -21,23 +21,19 @@ module DatabaseCleaner
             before do
               connection.stub(:transaction)
               connection.stub(begin_transaction_method)
-              connection.stub(:respond_to?).with(:begin_transaction).and_return(:begin_transaction == begin_transaction_method)
             end
 
             it "should increment open transactions if possible" do
-              connection.stub(:respond_to?).with(:increment_open_transactions).and_return(true)
               connection.should_receive(:increment_open_transactions)
               Transaction.new.start
             end
 
             it "should tell ActiveRecord to increment connection if its not possible to increment current connection" do
-              connection.stub(:respond_to?).with(:increment_open_transactions).and_return(false)
               ::ActiveRecord::Base.should_receive(:increment_open_transactions)
               Transaction.new.start
             end
 
             it "should start a transaction" do
-              connection.stub(:respond_to?).with(:increment_open_transactions).and_return(true)
               connection.stub(:increment_open_transactions)
               connection.should_receive(begin_transaction_method)
               connection.should_receive(:transaction)
@@ -61,9 +57,6 @@ module DatabaseCleaner
           it "should decrement open transactions if possible" do
             connection.should_receive(:open_transactions).and_return(1)
 
-            connection.stub(:respond_to?).with(:decrement_open_transactions).and_return(true)
-            connection.stub(:respond_to?).with(:rollback_transaction_records, true).and_return(false)
-            connection.stub(:respond_to?).with(:rollback_transaction).and_return(false)
             connection.stub(:rollback_db_transaction)
 
             connection.should_receive(:decrement_open_transactions)
@@ -78,9 +71,6 @@ module DatabaseCleaner
 
           it "should decrement connection via ActiveRecord::Base if connection won't" do
             connection.should_receive(:open_transactions).and_return(1)
-            connection.stub(:respond_to?).with(:decrement_open_transactions).and_return(false)
-            connection.stub(:respond_to?).with(:rollback_transaction_records, true).and_return(false)
-            connection.stub(:respond_to?).with(:rollback_transaction).and_return(false)
             connection.stub(:rollback_db_transaction)
 
             ::ActiveRecord::Base.should_receive(:decrement_open_transactions)
@@ -91,15 +81,9 @@ module DatabaseCleaner
             connection_pool.stub(:connections).and_return([connection, connection_2])
 
             connection.should_receive(:open_transactions).and_return(1)
-            connection.stub(:respond_to?).with(:decrement_open_transactions).and_return(false)
-            connection.stub(:respond_to?).with(:rollback_transaction_records, true).and_return(false)
-            connection.stub(:respond_to?).with(:rollback_transaction).and_return(false)
             connection.stub(:rollback_db_transaction)
 
             connection_2.should_receive(:open_transactions).and_return(1)
-            connection_2.stub(:respond_to?).with(:decrement_open_transactions).and_return(false)
-            connection_2.stub(:respond_to?).with(:rollback_transaction_records, true).and_return(false)
-            connection_2.stub(:respond_to?).with(:rollback_transaction).and_return(false)
             connection_2.stub(:rollback_db_transaction)
 
             ::ActiveRecord::Base.should_receive(:decrement_open_transactions).twice
@@ -110,9 +94,6 @@ module DatabaseCleaner
             connection_pool.stub(:connections).and_return([connection, connection_2])
 
             connection.should_receive(:open_transactions).and_return(1)
-            connection.stub(:respond_to?).with(:decrement_open_transactions).and_return(false)
-            connection.stub(:respond_to?).with(:rollback_transaction_records, true).and_return(false)
-            connection.stub(:respond_to?).with(:rollback_transaction).and_return(false)
             connection.stub(:rollback_db_transaction)
 
             connection_2.should_receive(:open_transactions).and_return(0)
@@ -150,8 +131,6 @@ module DatabaseCleaner
 
           it "should decrement connection via ActiveRecord::Base if connection won't" do
             connection.should_receive(:open_transactions).and_return(1)
-            connection.stub(:respond_to?).with(:rollback_transaction_records, true).and_return(false)
-            connection.stub(:respond_to?).with(:rollback_transaction).and_return(true)
             connection.stub(:rollback_transaction)
 
             ::ActiveRecord::Base.should_not_receive(:decrement_open_transactions)

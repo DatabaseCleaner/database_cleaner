@@ -2,6 +2,8 @@ require 'support/active_record/database_setup'
 require 'support/active_record/schema_setup'
 
 module MySQLHelper
+  extend self
+
   puts "Active Record #{ActiveRecord::VERSION::STRING}, mysql"
 
   # require 'logger'
@@ -39,6 +41,3 @@ module MySQLHelper
   end
 end
 
-RSpec.configure do |c|
-  c.include MySQLHelper
-end

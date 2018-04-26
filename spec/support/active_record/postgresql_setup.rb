@@ -2,6 +2,8 @@ require 'support/active_record/database_setup'
 require 'support/active_record/schema_setup'
 
 module PostgreSQLHelper
+  extend self
+
   puts "Active Record #{ActiveRecord::VERSION::STRING}, pg"
 
   # ActiveRecord::Base.logger = Logger.new(STDERR)
@@ -43,6 +45,3 @@ module PostgreSQLHelper
   end
 end
 
-RSpec.configure do |c|
-  c.include PostgreSQLHelper
-end

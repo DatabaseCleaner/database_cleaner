@@ -302,14 +302,11 @@ module DatabaseCleaner
       end
 
       it "should check that strategy supports db specification" do
-        strategy.should_receive(:respond_to?).with(:db=).and_return(true)
         strategy.stub(:db=)
         subject.strategy_db = :a_db
       end
 
       context "when strategy supports db specification" do
-        before(:each) { strategy.stub(:respond_to?).with(:db=).and_return true }
-
         it "should pass db to the strategy" do
           strategy.should_receive(:db=).with(:a_db)
           subject.strategy_db = :a_db
@@ -317,8 +314,6 @@ module DatabaseCleaner
       end
 
       context "when strategy doesn't supports db specification" do
-        before(:each) { strategy.stub(:respond_to?).with(:db=).and_return false }
-
         it "should check to see if db is :default" do
           db = double("default")
           db.should_receive(:==).with(:default).and_return(true)
@@ -540,7 +535,6 @@ module DatabaseCleaner
         end
 
         it "should use available_strategies (for the error message) if its available" do
-          strategy_class.stub(:respond_to?).with(:available_strategies).and_return(true)
           strategy_class.should_receive(:available_strategies).and_return([])
 
           subject.stub(:orm_module).and_return(strategy_class)

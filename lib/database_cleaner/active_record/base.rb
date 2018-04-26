@@ -79,7 +79,7 @@ module DatabaseCleaner
         if ::ActiveRecord::Base.respond_to?(:descendants)
           database_name = connection_hash["database"] || connection_hash[:database]
           models        = ::ActiveRecord::Base.descendants
-          models.detect { |m| m.connection_pool.spec.config[:database] == database_name }
+          models.select(&:connection_pool).detect { |m| m.connection_pool.spec.config[:database] == database_name }
         end
       end
 
