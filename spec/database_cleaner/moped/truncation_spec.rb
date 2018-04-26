@@ -25,7 +25,7 @@ module DatabaseCleaner
       end
 
       def ensure_counts(expected_counts)
-        # I had to add this sanity_check garbage because I was getting non-determinisc results from mongo at times..
+        # I had to add this sanity_check garbage because I was getting non-deterministic results from mongo at times..
         # very odd and disconcerting...
         expected_counts.each do |model_class, expected_count|
           actual_count = model_class.count
