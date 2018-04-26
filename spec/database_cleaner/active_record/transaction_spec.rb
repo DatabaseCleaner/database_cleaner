@@ -163,11 +163,11 @@ module DatabaseCleaner
       describe "#connection_maintains_transaction_count?" do
         it "should return true if the major active record version is < 4" do
           stub_const("ActiveRecord::VERSION::MAJOR", 3)
-          Transaction.new.connection_maintains_transaction_count?.should be_true
+          Transaction.new.connection_maintains_transaction_count?.should be_truthy
         end
         it "should return false if the major active record version is > 3" do
           stub_const("ActiveRecord::VERSION::MAJOR", 4)
-          Transaction.new.connection_maintains_transaction_count?.should be_false
+          Transaction.new.connection_maintains_transaction_count?.should be_falsey
         end
       end
 

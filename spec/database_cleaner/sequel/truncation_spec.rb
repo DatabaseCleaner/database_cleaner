@@ -38,9 +38,9 @@ module DatabaseCleaner
             t.db = db
             t.clean
 
-            expect(db[:replaceable_trifles]).to have(0).rows
-            expect(db[:worthless_junk]).to have(0).rows
-            expect(db[:precious_stones]).to have(0).rows
+            expect(db[:replaceable_trifles]).to be_empty
+            expect(db[:worthless_junk]).to be_empty
+            expect(db[:precious_stones]).to be_empty
           end
         end
         context 'when the Truncation is restricted to "only: [...]" some tables' do
@@ -49,9 +49,9 @@ module DatabaseCleaner
             t.db = db
             t.clean
 
-            expect(db[:replaceable_trifles]).to have(0).rows
-            expect(db[:worthless_junk]).to have(0).rows
-            expect(db[:precious_stones]).to have(1).rows
+            expect(db[:replaceable_trifles]).to be_empty
+            expect(db[:worthless_junk]).to be_empty
+            expect(db[:precious_stones].count).to eq(1)
           end
         end
         context 'when the Truncation is restricted to "except: [...]" some tables' do
@@ -62,7 +62,7 @@ module DatabaseCleaner
 
             expect(db[:replaceable_trifles]).to be_empty
             expect(db[:worthless_junk]).to be_empty
-            expect(db[:precious_stones]).to have(1).item
+            expect(db[:precious_stones].count).to eq(1)
           end
         end
       end
@@ -70,6 +70,7 @@ module DatabaseCleaner
 
     shared_examples_for 'a truncation strategy without autoincrement resets' do
       it "leaves AUTO_INCREMENT index alone by default (BUG: it should be reset instead)" do
+        pending
         # Jordan Hollinger made everything reset auto increment IDs
         # in commit 6a0104382647e5c06578aeac586c0333c8944492 so I'm pretty sure
         # everything is meant to reset by default.
@@ -84,9 +85,7 @@ module DatabaseCleaner
         truncation.clean
 
         id_after_clean = table.insert
-        pending('the bug being fixed') do
-          expect(id_after_clean).to eq 1
-        end
+        expect(id_after_clean).to eq 1
       end
       # XXX: it'd be really nice if Truncation accepted db: constructor parameter
       let(:truncation) do
@@ -134,7 +133,9 @@ module DatabaseCleaner
         describe '#pre_count?' do
           subject { Truncation.new.tap { |t| t.db = db } }
 
-          its(:pre_count?) { should eq false }
+          it 'should return false initially' do
+            subject.send(:pre_count?).should eq false
+          end
 
           it 'should return true if @reset_id is set and non false or nil' do
             subject.instance_variable_set(:"@pre_count", true)

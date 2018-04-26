@@ -34,9 +34,9 @@ module DatabaseCleaner
             d.db = db
             d.clean
 
-            expect(db[:replaceable_trifles]).to have(0).rows
-            expect(db[:worthless_junk]).to have(0).rows
-            expect(db[:precious_stones]).to have(0).rows
+            expect(db[:replaceable_trifles]).to be_empty
+            expect(db[:worthless_junk]).to be_empty
+            expect(db[:precious_stones]).to be_empty
           end
         end
       end

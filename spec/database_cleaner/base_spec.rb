@@ -508,12 +508,12 @@ module DatabaseCleaner
     describe "auto_detected?" do
       it "should return true unless @autodetected is nil" do
         subject.instance_variable_set("@autodetected","not nil")
-        subject.auto_detected?.should be_true
+        subject.auto_detected?.should be_truthy
       end
 
       it "should return false if @autodetect is nil" do
         subject.instance_variable_set("@autodetected",nil)
-        subject.auto_detected?.should be_false
+        subject.auto_detected?.should be_falsey
       end
     end
 

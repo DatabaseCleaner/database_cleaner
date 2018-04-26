@@ -172,8 +172,7 @@ my_db:
         end
 
         context "when connection_hash is set" do
-          let(:hash) { double("hash") }
-          before { ::ActiveRecord::Base.stub(:respond_to?).and_return(false) }
+          let(:hash) { {} }
           before { subject.stub(:connection_hash).and_return(hash) }
 
           it "establish a connection using ActiveRecord::Base" do
