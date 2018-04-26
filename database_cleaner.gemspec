@@ -45,6 +45,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "tzinfo"
   s.add_development_dependency "mongoid-tree"
   s.add_development_dependency "mongo_mapper"
+  s.add_development_dependency "mongo", "~> 1.12.0"
   s.add_development_dependency "moped"
   s.add_development_dependency "neo4j-core"
   s.add_development_dependency "couch_potato"
