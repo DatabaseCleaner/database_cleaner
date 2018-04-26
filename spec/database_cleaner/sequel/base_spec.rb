@@ -22,10 +22,6 @@ module DatabaseCleaner
         expect(subject.db).to eq :my_db
       end
 
-      it "should default to :default" do
-        expect(subject.db).to eq :default
-      end
-
       pending "I figure out how to use Sequel and write some real tests for it..."
     end
   end

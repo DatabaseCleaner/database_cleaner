@@ -3,35 +3,41 @@ require 'support/active_record/mysql2_setup'
 require 'database_cleaner/active_record/truncation'
 require 'database_cleaner/active_record/truncation/shared_fast_truncation'
 
-module ActiveRecord
-  module ConnectionAdapters
-    describe do
-      before(:all) { MySQL2Helper.active_record_mysql2_setup }
+describe DatabaseCleaner::ActiveRecord::Truncation do
+  let(:helper) { MySQL2Helper.new }
 
-      let(:connection) { MySQL2Helper.active_record_mysql2_connection }
+  let(:connection) do
+    helper.active_record_mysql2_connection
+  end
 
-      describe "#truncate_table" do
-        it "should truncate the table" do
-          2.times { User.create }
+  around do |example|
+    helper.active_record_mysql2_setup
 
-          connection.truncate_table('users')
-          expect(User.count).to eq 0
-        end
+    example.run
 
-        it "should reset AUTO_INCREMENT index of table" do
-          2.times { User.create }
-          User.delete_all
+    helper.active_record_mysql2_teardown
+  end
 
-          connection.truncate_table('users')
+  describe "AR connection adapter monkeypatches" do
+    describe "#truncate_table" do
+      it "should truncate the table" do
+        2.times { User.create }
 
-          expect(User.create.id).to eq 1
-        end
+        connection.truncate_table('users')
+        expect(User.count).to eq 0
       end
 
-      it_behaves_like "an adapter with pre-count truncation" do
-        let(:connection) { MySQL2Helper.active_record_mysql2_connection }
+      it "should reset AUTO_INCREMENT index of table" do
+        2.times { User.create }
+        User.delete_all
+
+        connection.truncate_table('users')
+
+        expect(User.create.id).to eq 1
       end
     end
+
+    it_behaves_like "an adapter with pre-count truncation"
   end
 end
 

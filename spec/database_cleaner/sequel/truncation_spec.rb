@@ -1,7 +1,7 @@
 require 'database_cleaner/sequel/truncation'
 require 'database_cleaner/shared_strategy'
 require 'sequel'
-
+require 'support/sequel/sequel_setup'
 # XXX: use ActiveRecord's db_config (`db/config.yml`) for CI/dev convenience
 require 'support/active_record/database_setup'
 
@@ -22,7 +22,7 @@ module DatabaseCleaner
       end
 
       context 'when several tables have data' do
-        before(:each) do
+        before do
           db.create_table!(:precious_stones) { primary_key :id }
           db.create_table!(:replaceable_trifles)  { primary_key :id }
           db.create_table!(:worthless_junk)  { primary_key :id }
@@ -122,12 +122,23 @@ module DatabaseCleaner
       {url: 'mysql:///',    connection_options: db_config['mysql']},
       {url: 'mysql2:///',   connection_options: db_config['mysql2']}
     ]
+
     supported_configurations.each do |config|
       describe "Sequel truncation (using a #{config[:url]} connection)" do
+        around do |example|
+          helper = SequelHelper.new(config)
+          helper.setup
+
+          example.run
+
+          helper.teardown
+        end
+
         let(:db) { ::Sequel.connect(config[:url], config[:connection_options]) }
 
         it_behaves_like 'a Sequel truncation strategy'
         it_behaves_like 'a truncation strategy that resets autoincrement keys by default'
+
 
         describe '#pre_count?' do
           subject { Truncation.new.tap { |t| t.db = db } }
@@ -170,8 +181,18 @@ module DatabaseCleaner
         end
       end
     end
+
     half_supported_configurations.each do |config|
       describe "Sequel truncation (using a #{config[:url]} connection)" do
+        around do |example|
+          helper = SequelHelper.new(config)
+          helper.setup
+
+          example.run
+
+          helper.teardown
+        end
+
         let(:db) { ::Sequel.connect(config[:url], config[:connection_options]) }
 
         it_behaves_like 'a Sequel truncation strategy'

@@ -1,61 +1,42 @@
 require 'redis'
 require 'database_cleaner/redis/truncation'
 
+describe DatabaseCleaner::Redis::Truncation do
+  around do |example|
+    config = YAML::load(File.open("#{File.dirname(__FILE__)}/../../../examples/config/redis.yml"))
+    @redis = ::Redis.new :url => config['test']['url']
 
-module DatabaseCleaner
-  module Redis
+    example.run
 
-    describe Truncation do
-      before(:all) do
-        config = YAML::load(File.open("#{File.dirname(__FILE__)}/../../../examples/config/redis.yml"))
-      @redis = ::Redis.new :url => config['test']['url']
-      end
+    @redis.flushdb
+  end
 
-      before(:each) do
-        @redis.flushdb
-      end
+  before do
+    @redis.set 'Widget', 1
+    @redis.set 'Gadget', 1
+  end
 
-      it "should flush the database" do
-        Truncation.new.clean
-      end
+  context "by default" do
+    it "truncates all keys" do
+      expect { subject.clean }.to change { @redis.keys.size }.from(2).to(0)
+    end
+  end
 
-      def create_widget(attrs={})
-        @redis.set 'Widget', 1
-      end
+  context "when keys are provided to the :only option" do
+    subject { described_class.new(only: ['Widge*']) }
 
-      def create_gadget(attrs={})
-        @redis.set 'Gadget', 1
-      end
+    it "only truncates the specified keys" do
+      expect { subject.clean }.to change { @redis.keys.size }.from(2).to(1)
+      expect(@redis.get('Gadget')).to eq '1'
+    end
+  end
 
-      it "truncates all keys by default" do
-        create_widget
-        create_gadget
-        expect(@redis.keys.size).to eq 2
-        Truncation.new.clean
-        expect(@redis.keys.size).to eq 0
-      end
+  context "when keys are provided to the :except option" do
+    subject { described_class.new(except: ['Widg*']) }
 
-      context "when keys are provided to the :only option" do
-        it "only truncates the specified keys" do
-          create_widget
-          create_gadget
-          expect(@redis.keys.size).to eq 2
-          Truncation.new(:only => ['Widge*']).clean
-          expect(@redis.keys.size).to eq 1
-          expect(@redis.get('Gadget')).to eq '1'
-        end
-      end
-
-      context "when keys are provided to the :except option" do
-        it "truncates all but the specified keys" do
-          create_widget
-          create_gadget
-          expect(@redis.keys.size).to eq 2
-          Truncation.new(:except => ['Widg*']).clean
-          expect(@redis.keys.size).to eq 1
-          expect(@redis.get('Widget')).to eq '1'
-        end
-      end
+    it "truncates all but the specified keys" do
+      expect { subject.clean }.to change { @redis.keys.size }.from(2).to(1)
+      expect(@redis.get('Widget')).to eq '1'
     end
   end
 end

@@ -1,6 +1,8 @@
 require 'database_cleaner/sequel/deletion'
 require 'database_cleaner/shared_strategy'
 require 'sequel'
+require 'support/sequel/sequel_setup'
+# XXX: use ActiveRecord's db_config (`db/config.yml`) for CI/dev convenience
 require 'support/active_record/database_setup'
 
 module DatabaseCleaner
@@ -43,12 +45,21 @@ module DatabaseCleaner
 
     supported_configurations = [
       { :url => 'mysql:///', :connection_options => db_config['mysql'] },
-      { :url => 'postgres:///', :connection_options => db_config['postgres'] }
+      { :url => 'postgres:///', :connection_options => db_config['postgres'] },
     ]
 
     supported_configurations.each do |config|
       describe "Sequel deletion (using a #{config[:url]} connection)" do
         let(:db) { ::Sequel.connect(config[:url], config[:connection_options]) }
+
+        around do |example|
+          helper = SequelHelper.new(config)
+          helper.setup
+
+          example.run
+
+          helper.teardown
+        end
 
         it_behaves_like 'a Sequel deletion strategy'
       end

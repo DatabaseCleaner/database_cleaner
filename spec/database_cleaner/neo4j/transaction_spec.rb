@@ -1,5 +1,6 @@
 require 'neo4j-core'
 require 'database_cleaner/neo4j/transaction'
+require 'database_cleaner/shared_strategy'
 
 module DatabaseCleaner
   module Neo4j
