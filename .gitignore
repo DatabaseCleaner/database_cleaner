@@ -13,3 +13,4 @@ db/test.sqlite3
 .rvmrc
 .ruby-version
 .vagrant
+.idea/
