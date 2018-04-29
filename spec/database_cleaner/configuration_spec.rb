@@ -304,45 +304,4 @@ RSpec.describe DatabaseCleaner do
       expect(DatabaseCleaner.app_root).to eq '/path/to'
     end
   end
-
-  describe "orm_module" do
-    subject { DatabaseCleaner }
-
-    let(:mod) { double }
-
-    it "should return DatabaseCleaner::ActiveRecord for :active_record" do
-      stub_const "DatabaseCleaner::ActiveRecord", mod
-      expect(subject.orm_module(:active_record)).to eq mod
-    end
-
-    it "should return DatabaseCleaner::DataMapper for :data_mapper" do
-      stub_const "DatabaseCleaner::DataMapper", mod
-      expect(subject.orm_module(:data_mapper)).to eq mod
-    end
-
-    it "should return DatabaseCleaner::MongoMapper for :mongo_mapper" do
-      stub_const "DatabaseCleaner::MongoMapper", mod
-      expect(subject.orm_module(:mongo_mapper)).to eq mod
-    end
-
-    it "should return DatabaseCleaner::Mongoid for :mongoid" do
-      stub_const "DatabaseCleaner::Mongoid", mod
-      expect(subject.orm_module(:mongoid)).to eq mod
-    end
-
-    it "should return DatabaseCleaner::Mongo for :mongo" do
-      stub_const "DatabaseCleaner::Mongo", mod
-      expect(subject.orm_module(:mongo)).to eq mod
-    end
-
-    it "should return DatabaseCleaner::CouchPotato for :couch_potato" do
-      stub_const "DatabaseCleaner::CouchPotato", mod
-      expect(subject.orm_module(:couch_potato)).to eq mod
-    end
-
-    it "should return DatabaseCleaner::Neo4j for :neo4j" do
-      stub_const "DatabaseCleaner::Neo4j", mod
-      expect(subject.orm_module(:neo4j)).to eq mod
-    end
-  end
 end

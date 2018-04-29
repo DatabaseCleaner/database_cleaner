@@ -148,16 +148,48 @@ module DatabaseCleaner
     end
 
     describe "orm_module" do
-      it "should ask ::DatabaseCleaner what the module is for its orm" do
-        orm = double("orm")
-        mockule = double("module")
+      let(:mod) { double(const_get: Class.new) } # stub strategy lookup
 
-        cleaner = ::DatabaseCleaner::Base.new
-        expect(cleaner).to receive(:orm).and_return(orm)
+      it "should return DatabaseCleaner::ActiveRecord for :active_record" do
+        stub_const "DatabaseCleaner::ActiveRecord", mod
+        subject.orm = :active_record
+        expect(subject.send(:orm_module)).to eq mod
+      end
 
-        expect(::DatabaseCleaner).to receive(:orm_module).with(orm).and_return(mockule)
+      it "should return DatabaseCleaner::DataMapper for :data_mapper" do
+        stub_const "DatabaseCleaner::DataMapper", mod
+        subject.orm = :data_mapper
+        expect(subject.send(:orm_module)).to eq mod
+      end
 
-        expect(cleaner.send(:orm_module)).to eq mockule
+      it "should return DatabaseCleaner::MongoMapper for :mongo_mapper" do
+        stub_const "DatabaseCleaner::MongoMapper", mod
+        subject.orm = :mongo_mapper
+        expect(subject.send(:orm_module)).to eq mod
+      end
+
+      it "should return DatabaseCleaner::Mongoid for :mongoid" do
+        stub_const "DatabaseCleaner::Mongoid", mod
+        subject.orm = :mongoid
+        expect(subject.send(:orm_module)).to eq mod
+      end
+
+      it "should return DatabaseCleaner::Mongo for :mongo" do
+        stub_const "DatabaseCleaner::Mongo", mod
+        subject.orm = :mongo
+        expect(subject.send(:orm_module)).to eq mod
+      end
+
+      it "should return DatabaseCleaner::CouchPotato for :couch_potato" do
+        stub_const "DatabaseCleaner::CouchPotato", mod
+        subject.orm = :couch_potato
+        expect(subject.send(:orm_module)).to eq mod
+      end
+
+      it "should return DatabaseCleaner::Neo4j for :neo4j" do
+        stub_const "DatabaseCleaner::Neo4j", mod
+        subject.orm = :neo4j
+        expect(subject.send(:orm_module)).to eq mod
       end
     end
 
