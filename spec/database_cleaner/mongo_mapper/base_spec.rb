@@ -2,7 +2,7 @@ require 'database_cleaner/mongo_mapper/base'
 require 'database_cleaner/shared_strategy'
 
 module DatabaseCleaner
-  describe MongoMapper do
+  RSpec.describe MongoMapper do
     it { is_expected.to respond_to(:available_strategies) }
   end
 
@@ -11,7 +11,7 @@ module DatabaseCleaner
       include ::DatabaseCleaner::MongoMapper::Base
     end
 
-    describe ExampleStrategy do
+    RSpec.describe ExampleStrategy do
 
       it_should_behave_like "a generic strategy"
 

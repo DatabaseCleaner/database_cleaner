@@ -2,7 +2,7 @@ require 'mongo'
 require 'database_cleaner/mongo/truncation'
 require File.dirname(__FILE__) + '/mongo_examples'
 
-describe DatabaseCleaner::Mongo::Truncation do
+RSpec.describe DatabaseCleaner::Mongo::Truncation do
   around do |example|
     connection = Mongo::Connection.new('127.0.0.1')
     db_name = 'database_cleaner_specs'

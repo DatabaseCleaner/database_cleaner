@@ -3,7 +3,7 @@ require 'database_cleaner/redis/base'
 require 'database_cleaner/shared_strategy'
 
 module DatabaseCleaner
-  describe Redis do
+  RSpec.describe Redis do
     it { is_expected.to respond_to(:available_strategies) }
   end
 
@@ -12,7 +12,7 @@ module DatabaseCleaner
       include ::DatabaseCleaner::Redis::Base
     end
 
-    describe ExampleStrategy do
+    RSpec.describe ExampleStrategy do
 
       it_should_behave_like "a generic strategy"
       it { is_expected.to respond_to(:db) }

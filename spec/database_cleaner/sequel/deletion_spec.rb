@@ -7,11 +7,11 @@ require 'support/active_record/database_setup'
 
 module DatabaseCleaner
   module Sequel
-    describe Deletion do
+    RSpec.describe Deletion do
       it_should_behave_like "a generic strategy"
     end
 
-    shared_examples 'a Sequel deletion strategy' do
+    RSpec.shared_examples 'a Sequel deletion strategy' do
       let(:deletion) do
         d = Deletion.new
         d.db = db
@@ -49,7 +49,7 @@ module DatabaseCleaner
     ]
 
     supported_configurations.each do |config|
-      describe "Sequel deletion (using a #{config[:url]} connection)" do
+      RSpec.describe "Sequel deletion (using a #{config[:url]} connection)" do
         let(:db) { ::Sequel.connect(config[:url], config[:connection_options]) }
 
         around do |example|

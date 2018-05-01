@@ -4,7 +4,7 @@ require 'couch_potato'
 module DatabaseCleaner
   module CouchPotato
 
-    describe Truncation do
+    RSpec.describe Truncation do
       let(:database) { double('database') }
 
       before(:each) do

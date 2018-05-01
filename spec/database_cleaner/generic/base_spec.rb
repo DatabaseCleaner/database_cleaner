@@ -10,7 +10,7 @@ module ::DatabaseCleaner
       def start; end
     end
 
-    describe ExampleStrategy do
+    RSpec.describe ExampleStrategy do
       context "class methods" do
         subject { ExampleStrategy }
 

@@ -2,7 +2,7 @@ require 'mongo_mapper'
 require 'database_cleaner/mongo_mapper/truncation'
 require File.dirname(__FILE__) + '/mongo_examples'
 
-describe DatabaseCleaner::MongoMapper::Truncation do
+RSpec.describe DatabaseCleaner::MongoMapper::Truncation do
   around do |example|
     MongoMapper.connection = Mongo::Connection.new('127.0.0.1')
     db_name = 'database_cleaner_specs'

@@ -2,7 +2,7 @@ require 'moped'
 require 'database_cleaner/moped/truncation'
 require File.dirname(__FILE__) + '/moped_examples'
 
-describe DatabaseCleaner::Moped::Truncation do
+RSpec.describe DatabaseCleaner::Moped::Truncation do
   around do |example|
     db_name = 'database_cleaner_specs'
     session = ::Moped::Session.new(['127.0.0.1:27017'], database: db_name)

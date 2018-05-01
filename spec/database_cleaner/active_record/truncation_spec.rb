@@ -10,7 +10,7 @@ module ActiveRecord
   module ConnectionAdapters
     #JdbcAdapter IBM_DBAdapter
     [ MysqlAdapter, Mysql2Adapter, SQLite3Adapter, PostgreSQLAdapter ].each do |adapter|
-      describe adapter, "#truncate_table" do
+      RSpec.describe adapter, "#truncate_table" do
         it "responds" do
           expect(adapter.instance_methods).to include(:truncate_table)
         end
@@ -22,7 +22,7 @@ end
 module DatabaseCleaner
   module ActiveRecord
 
-    describe Truncation do
+    RSpec.describe Truncation do
       let(:connection) { double('connection') }
 
       before(:each) do

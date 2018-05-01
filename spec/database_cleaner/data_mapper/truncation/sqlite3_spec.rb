@@ -3,7 +3,7 @@ require 'dm-sqlite-adapter'
 require 'support/data_mapper/sqlite3_setup'
 require 'database_cleaner/data_mapper/truncation'
 
-describe DatabaseCleaner::DataMapper::Truncation do
+RSpec.describe DatabaseCleaner::DataMapper::Truncation do
   let(:helper) { DataMapperSQLite3Helper.new }
 
   let(:connection) do

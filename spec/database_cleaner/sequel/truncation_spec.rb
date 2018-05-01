@@ -7,12 +7,12 @@ require 'support/active_record/database_setup'
 
 module DatabaseCleaner
   module Sequel
-    describe Truncation do
+    RSpec.describe Truncation do
       it_should_behave_like "a generic strategy"
       it_should_behave_like "a generic truncation strategy"
     end
 
-    shared_examples 'a Sequel truncation strategy' do
+    RSpec.shared_examples 'a Sequel truncation strategy' do
 
       # XXX: it'd be really nice if Truncation accepted db: constructor parameter
       let(:truncation) do
@@ -67,7 +67,7 @@ module DatabaseCleaner
       end
     end
 
-    shared_examples_for 'a truncation strategy without autoincrement resets' do
+    RSpec.shared_examples_for 'a truncation strategy without autoincrement resets' do
       it "leaves AUTO_INCREMENT index alone by default (BUG: it should be reset instead)" do
         pending
         # Jordan Hollinger made everything reset auto increment IDs
@@ -94,7 +94,7 @@ module DatabaseCleaner
       end
     end
 
-    shared_examples_for 'a truncation strategy that resets autoincrement keys by default' do
+    RSpec.shared_examples_for 'a truncation strategy that resets autoincrement keys by default' do
       it "resets AUTO_INCREMENT primary keys" do
         db.create_table!(:replaceable_trifles) { primary_key :id }
         table = db[:replaceable_trifles]
@@ -124,7 +124,7 @@ module DatabaseCleaner
     ]
 
     supported_configurations.each do |config|
-      describe "Sequel truncation (using a #{config[:url]} connection)" do
+      RSpec.describe "Sequel truncation (using a #{config[:url]} connection)" do
         around do |example|
           helper = SequelHelper.new(config)
           helper.setup
@@ -183,7 +183,7 @@ module DatabaseCleaner
     end
 
     half_supported_configurations.each do |config|
-      describe "Sequel truncation (using a #{config[:url]} connection)" do
+      RSpec.describe "Sequel truncation (using a #{config[:url]} connection)" do
         around do |example|
           helper = SequelHelper.new(config)
           helper.setup

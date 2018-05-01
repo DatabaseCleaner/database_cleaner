@@ -20,7 +20,7 @@ module DatabaseCleaner
   end
 end
 
-describe DatabaseCleaner do
+RSpec.describe DatabaseCleaner do
   before(:each) { DatabaseCleaner.reset }
 
   context "orm specification" do

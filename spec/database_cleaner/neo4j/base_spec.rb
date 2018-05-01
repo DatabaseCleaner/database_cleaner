@@ -2,7 +2,7 @@ require 'database_cleaner/neo4j/base'
 require 'database_cleaner/shared_strategy'
 
 module DatabaseCleaner
-  describe Neo4j do
+  RSpec.describe Neo4j do
     it { is_expected.to respond_to(:available_strategies) }
   end
 
@@ -11,7 +11,7 @@ module DatabaseCleaner
       include ::DatabaseCleaner::Neo4j::Base
     end
 
-    describe ExampleStrategy do
+    RSpec.describe ExampleStrategy do
 
       it_should_behave_like "a generic strategy"
       it { is_expected.to respond_to(:db) }

@@ -11,7 +11,7 @@ module OhmTests
   end
 end
 
-describe DatabaseCleaner::Ohm::Truncation do
+RSpec.describe DatabaseCleaner::Ohm::Truncation do
   around do |example|
     config = YAML::load(File.open("#{File.dirname(__FILE__)}/../../../examples/config/redis.yml"))
     Ohm.connect url: config['test']['url']

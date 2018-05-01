@@ -4,7 +4,7 @@ require 'active_record'
 module DatabaseCleaner
   module ActiveRecord
 
-    describe Transaction do
+    RSpec.describe Transaction do
       let (:connection) { double("connection") }
       let (:connection_2) { double("connection") }
       let (:connection_pool) { double("connection_pool")}

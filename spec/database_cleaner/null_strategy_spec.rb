@@ -1,7 +1,7 @@
 require "database_cleaner/null_strategy"
 
 module DatabaseCleaner
-  describe NullStrategy do
+  RSpec.describe NullStrategy do
     it 'responds to .start' do
       expect { NullStrategy.start }.not_to raise_error
     end

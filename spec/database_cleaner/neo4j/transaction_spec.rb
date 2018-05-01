@@ -5,7 +5,7 @@ require 'database_cleaner/shared_strategy'
 module DatabaseCleaner
   module Neo4j
 
-    describe Transaction do
+    RSpec.describe Transaction do
       before(:all) do
         DatabaseCleaner[:neo4j, :connection => {:type => :server_db, :path => 'http://localhost:7474'}]
       end

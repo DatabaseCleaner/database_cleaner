@@ -1,7 +1,7 @@
 require 'redis'
 require 'database_cleaner/redis/truncation'
 
-describe DatabaseCleaner::Redis::Truncation do
+RSpec.describe DatabaseCleaner::Redis::Truncation do
   around do |example|
     config = YAML::load(File.open("#{File.dirname(__FILE__)}/../../../examples/config/redis.yml"))
     @redis = ::Redis.new :url => config['test']['url']

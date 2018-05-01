@@ -5,7 +5,7 @@ require 'database_cleaner/shared_strategy'
 module DatabaseCleaner
   module DataMapper
 
-    describe Transaction do
+    RSpec.describe Transaction do
       it_should_behave_like "a generic strategy"
       it_should_behave_like "a generic transaction strategy"
 

@@ -9,7 +9,7 @@ class FakeModel
   end
 end
 
-describe DatabaseCleaner::ActiveRecord do
+RSpec.describe DatabaseCleaner::ActiveRecord do
   it { is_expected.to respond_to(:available_strategies) }
 
   describe "config_file_location" do
@@ -32,7 +32,7 @@ module DatabaseCleaner
       include DatabaseCleaner::ActiveRecord::Base
     end
 
-    describe ExampleStrategy do
+    RSpec.describe ExampleStrategy do
       let(:config_location) { '/path/to/config/database.yml' }
 
       before do

@@ -2,7 +2,7 @@ require 'active_record'
 require 'support/active_record/sqlite3_setup'
 require 'database_cleaner/active_record/truncation'
 
-describe DatabaseCleaner::ActiveRecord::Truncation do
+RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
   let(:helper) { SQLite3Helper.new }
 
   let(:connection) do

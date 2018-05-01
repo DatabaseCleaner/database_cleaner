@@ -6,7 +6,7 @@ require 'database_cleaner/couch_potato/truncation'
 require 'database_cleaner/neo4j/transaction'
 
 module DatabaseCleaner
-  describe Base do
+  RSpec.describe Base do
 
     let(:mock_strategy) {
       double("strategy").tap{|strategy|

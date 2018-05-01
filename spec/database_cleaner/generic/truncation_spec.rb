@@ -28,7 +28,7 @@ module ::DatabaseCleaner
       end
     end
 
-    describe TruncationExample do
+    RSpec.describe TruncationExample do
       subject(:truncation_example) { TruncationExample.new }
 
       it "will start" do
