@@ -7,6 +7,13 @@ end
 
 module DatabaseCleaner
   class << self
+    delegate [
+      :reset,
+      :connections_stub,
+    ] => :configuration
+  end
+
+  class Configuration
     def reset
       @cleaners = nil
       @connections = nil
@@ -139,7 +146,11 @@ RSpec.describe DatabaseCleaner do
   end
 
   context "single orm single connection" do
-    let(:connection) { DatabaseCleaner.connections.first }
+    let(:connection) { double}
+
+    before do
+      DatabaseCleaner.connections_stub([connection])
+    end
 
     it "should proxy strategy=" do
       stratagem = double("stratagem")
@@ -183,8 +194,8 @@ RSpec.describe DatabaseCleaner do
       let(:active_record) { double("active_mock") }
       let(:data_mapper)   { double("data_mock")   }
 
-      before(:each) do
-        allow(DatabaseCleaner).to receive(:connections).and_return([active_record,data_mapper])
+      before do
+        DatabaseCleaner.connections_stub([active_record,data_mapper])
       end
 
       it "should proxy orm to all connections" do

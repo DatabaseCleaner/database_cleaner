@@ -1,17 +1,12 @@
 require 'database_cleaner/base'
+require 'forwardable'
 
 module DatabaseCleaner
 
   class NoORMDetected < StandardError;   end
   class UnknownStrategySpecified < ArgumentError;   end
 
-  class << self
-    def init_cleaners
-      @cleaners ||= {}
-      # ghetto ordered hash.. maintains 1.8 compat and old API
-      @connections ||= []
-    end
-
+  class Configuration
     def [](orm,opts = {})
       raise NoORMDetected unless orm
       init_cleaners
@@ -22,43 +17,15 @@ module DatabaseCleaner
       else
         add_cleaner(orm, opts)
       end
-    end
-
-    def add_cleaner(orm,opts = {})
-      init_cleaners
-      cleaner = DatabaseCleaner::Base.new(orm,opts)
-      @cleaners[[orm, opts]] = cleaner
-      @connections << cleaner
-      cleaner
-    end
-
-    def app_root=(desired_root)
-      @app_root = desired_root
-    end
+    end 
+    attr_accessor :app_root, :logger
 
     def app_root
       @app_root ||= Dir.pwd
     end
 
-    def connections
-      # double yuck.. can't wait to deprecate this whole class...
-      unless defined?(@cleaners) && @cleaners
-        autodetected = ::DatabaseCleaner::Base.new
-        add_cleaner(autodetected.orm)
-      end
-      @connections
-    end
-
-    def logger=(log_source)
-      @logger = log_source
-    end
-
     def logger
-      return @logger if @logger
-
-      @logger = Logger.new(STDOUT)
-      @logger.level = Logger::ERROR
-      @logger
+      @logger ||= Logger.new(STDOUT).tap { |l| l.level = Logger::ERROR }
     end
 
     def strategy=(stratagem)
@@ -93,12 +60,70 @@ module DatabaseCleaner
 
     alias clean_with! clean_with
 
+    # TODO deprecate and then privatize the following methods:
+
+    def init_cleaners
+      @cleaners ||= {}
+      # ghetto ordered hash.. maintains 1.8 compat and old API
+      @connections ||= []
+    end
+
+    def add_cleaner(orm,opts = {})
+      init_cleaners
+      cleaner = DatabaseCleaner::Base.new(orm,opts)
+      @cleaners[[orm, opts]] = cleaner
+      @connections << cleaner
+      cleaner
+    end
+
+    def connections
+      # double yuck.. can't wait to deprecate this whole class...
+      unless defined?(@cleaners) && @cleaners
+        autodetected = ::DatabaseCleaner::Base.new
+        add_cleaner(autodetected.orm)
+      end
+      @connections
+    end
+
     def remove_duplicates
       temp = []
       connections.each do |connect|
         temp.push connect unless temp.include? connect
       end
       @connections = temp
+    end
+  end
+
+
+  class << self
+    extend Forwardable
+    delegate [
+      :[],
+      :app_root=,
+      :app_root,
+      :logger=,
+      :logger,
+      :strategy=,
+      :orm=,
+      :start,
+      :clean,
+      :clean_with,
+      :cleaning,
+
+      # TODO deprecate
+      :clean!,
+      :clean_with!,
+
+      # TODO deprecate and then privatize the following methods:
+
+      :init_cleaners,
+      :add_cleaner,
+      :connections,
+      :remove_duplicates,
+    ] => :configuration
+
+    def configuration
+      @configuration ||= Configuration.new
     end
   end
 end
