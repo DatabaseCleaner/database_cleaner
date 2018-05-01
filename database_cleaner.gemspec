@@ -51,6 +51,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency "couch_potato"
   s.add_development_dependency "sequel", "~> 3.21.0"
   s.add_development_dependency 'ohm', '~> 0.1.3'
+  s.add_development_dependency 'guard-rspec'
+  s.add_development_dependency "listen", "~> 3.0.0" # 3.1 requires Ruby >= 2.2
   s.add_development_dependency "rspec"
   s.add_development_dependency "cucumber"
 
