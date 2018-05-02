@@ -15,7 +15,7 @@ module DatabaseCleaner
     end
 
     class RemoteDatabaseUrl
-      LOCAL = %w(localhost 127.0.0.1 sqlite3:)
+      LOCAL = %w(localhost .local 127.0.0.1 sqlite3:)
 
       def run
         raise Error::RemoteDatabaseUrl if !skip? && given?
