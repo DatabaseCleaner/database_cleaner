@@ -507,7 +507,7 @@ end
 DatabaseCleaner comes with safeguards against:
 
 * Running in production (checking for `ENV`, `RACK_ENV`, and `RAILS_ENV`)
-* Running against a remote database (checking for a `DATABASE_URL` that does not include `localhost`)
+* Running against a remote database (checking for a `DATABASE_URL` that does not include `localhost`, `.local` or `127.0.0.1`)
 
 Both safeguards can be disabled separately as follows.
 
