@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'database_cleaner/generic/truncation'
 
 module ::DatabaseCleaner
@@ -29,7 +28,7 @@ module ::DatabaseCleaner
       end
     end
 
-    describe TruncationExample do
+    RSpec.describe TruncationExample do
       subject(:truncation_example) { TruncationExample.new }
 
       it "will start" do
@@ -41,14 +40,13 @@ module ::DatabaseCleaner
       end
 
       context "private methods" do
-        it { should_not respond_to(:tables_to_truncate) }
+        it { is_expected.not_to respond_to(:tables_to_truncate) }
 
         it 'expects #tables_to_truncate to be implemented later' do
           expect{ truncation_example.send :tables_to_truncate }.to raise_error(NotImplementedError)
         end
 
-        it { should_not respond_to(:migration_storage_names) }
-        its(:migration_storage_names) { should be_empty }
+        it { is_expected.not_to respond_to(:migration_storage_names) }
       end
 
       describe "initialize" do
@@ -67,40 +65,40 @@ module ::DatabaseCleaner
 
         context "" do
           subject { TruncationExample.new( { :only => ["something"] } ) }
-          its(:only)   { should eq ["something"] }
-          its(:except) { should eq [] }
+          it { expect(subject.only).to eq ["something"] }
+          it { expect(subject.except).to eq [] }
         end
 
         context "" do
           subject { TruncationExample.new( { :except => ["something"] } ) }
-          its(:only)   { should eq nil }
-          its(:except) { should include("something") }
+          it { expect(subject.only).to eq nil }
+          it { expect(subject.except).to include("something") }
         end
 
         context "" do
           subject { TruncationExample.new( { :reset_ids => ["something"] } ) }
-          its(:reset_ids?) { should eq true }
+          it { expect(subject.reset_ids?).to eq true }
         end
 
         context "" do
           subject { TruncationExample.new( { :reset_ids => nil } ) }
-          its(:reset_ids?) { should eq false }
+          it { expect(subject.reset_ids?).to eq false }
         end
 
         context "" do
           subject { TruncationExample.new( { :pre_count => ["something"] } ) }
-          its(:pre_count?) { should eq true }
+          it { expect(subject.pre_count?).to eq true }
         end
 
         context "" do
           subject { TruncationExample.new( { :pre_count => nil } ) }
-          its(:pre_count?) { should eq false }
+          it { expect(subject.pre_count?).to eq false }
         end
 
         context "" do
           subject { MigrationExample.new }
-          its(:only)   { should eq nil }
-          its(:except) { should eq %w[migration_storage_name] }
+          it { expect(subject.only).to eq nil }
+          it { expect(subject.except).to eq %w[migration_storage_name] }
         end
 
         context "" do
@@ -108,8 +106,8 @@ module ::DatabaseCleaner
           subject { MigrationExample.new( { :except => EXCEPT_TABLES } ) }
 
           it "should not modify the array of excepted tables" do
-            subject.except.should include("migration_storage_name")
-            EXCEPT_TABLES.should_not include("migration_storage_name")
+            expect(subject.except).to include("migration_storage_name")
+            expect(EXCEPT_TABLES).not_to include("migration_storage_name")
           end
         end
       end

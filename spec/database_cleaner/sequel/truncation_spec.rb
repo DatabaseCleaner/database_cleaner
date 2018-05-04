@@ -1,19 +1,18 @@
-require 'spec_helper'
 require 'database_cleaner/sequel/truncation'
 require 'database_cleaner/shared_strategy'
 require 'sequel'
-
+require 'support/sequel/sequel_setup'
 # XXX: use ActiveRecord's db_config (`db/config.yml`) for CI/dev convenience
 require 'support/active_record/database_setup'
 
 module DatabaseCleaner
   module Sequel
-    describe Truncation do
+    RSpec.describe Truncation do
       it_should_behave_like "a generic strategy"
       it_should_behave_like "a generic truncation strategy"
     end
 
-    shared_examples 'a Sequel truncation strategy' do
+    RSpec.shared_examples 'a Sequel truncation strategy' do
 
       # XXX: it'd be really nice if Truncation accepted db: constructor parameter
       let(:truncation) do
@@ -23,7 +22,7 @@ module DatabaseCleaner
       end
 
       context 'when several tables have data' do
-        before(:each) do
+        before do
           db.create_table!(:precious_stones) { primary_key :id }
           db.create_table!(:replaceable_trifles)  { primary_key :id }
           db.create_table!(:worthless_junk)  { primary_key :id }
@@ -38,9 +37,9 @@ module DatabaseCleaner
             t.db = db
             t.clean
 
-            expect(db[:replaceable_trifles]).to have(0).rows
-            expect(db[:worthless_junk]).to have(0).rows
-            expect(db[:precious_stones]).to have(0).rows
+            expect(db[:replaceable_trifles]).to be_empty
+            expect(db[:worthless_junk]).to be_empty
+            expect(db[:precious_stones]).to be_empty
           end
         end
         context 'when the Truncation is restricted to "only: [...]" some tables' do
@@ -49,9 +48,9 @@ module DatabaseCleaner
             t.db = db
             t.clean
 
-            expect(db[:replaceable_trifles]).to have(0).rows
-            expect(db[:worthless_junk]).to have(0).rows
-            expect(db[:precious_stones]).to have(1).rows
+            expect(db[:replaceable_trifles]).to be_empty
+            expect(db[:worthless_junk]).to be_empty
+            expect(db[:precious_stones].count).to eq(1)
           end
         end
         context 'when the Truncation is restricted to "except: [...]" some tables' do
@@ -62,14 +61,15 @@ module DatabaseCleaner
 
             expect(db[:replaceable_trifles]).to be_empty
             expect(db[:worthless_junk]).to be_empty
-            expect(db[:precious_stones]).to have(1).item
+            expect(db[:precious_stones].count).to eq(1)
           end
         end
       end
     end
 
-    shared_examples_for 'a truncation strategy without autoincrement resets' do
+    RSpec.shared_examples_for 'a truncation strategy without autoincrement resets' do
       it "leaves AUTO_INCREMENT index alone by default (BUG: it should be reset instead)" do
+        pending
         # Jordan Hollinger made everything reset auto increment IDs
         # in commit 6a0104382647e5c06578aeac586c0333c8944492 so I'm pretty sure
         # everything is meant to reset by default.
@@ -84,9 +84,7 @@ module DatabaseCleaner
         truncation.clean
 
         id_after_clean = table.insert
-        pending('the bug being fixed') do
-          expect(id_after_clean).to eq 1
-        end
+        expect(id_after_clean).to eq 1
       end
       # XXX: it'd be really nice if Truncation accepted db: constructor parameter
       let(:truncation) do
@@ -96,7 +94,7 @@ module DatabaseCleaner
       end
     end
 
-    shared_examples_for 'a truncation strategy that resets autoincrement keys by default' do
+    RSpec.shared_examples_for 'a truncation strategy that resets autoincrement keys by default' do
       it "resets AUTO_INCREMENT primary keys" do
         db.create_table!(:replaceable_trifles) { primary_key :id }
         table = db[:replaceable_trifles]
@@ -124,26 +122,39 @@ module DatabaseCleaner
       {url: 'mysql:///',    connection_options: db_config['mysql']},
       {url: 'mysql2:///',   connection_options: db_config['mysql2']}
     ]
+
     supported_configurations.each do |config|
-      describe "Sequel truncation (using a #{config[:url]} connection)" do
+      RSpec.describe "Sequel truncation (using a #{config[:url]} connection)" do
+        around do |example|
+          helper = SequelHelper.new(config)
+          helper.setup
+
+          example.run
+
+          helper.teardown
+        end
+
         let(:db) { ::Sequel.connect(config[:url], config[:connection_options]) }
 
         it_behaves_like 'a Sequel truncation strategy'
         it_behaves_like 'a truncation strategy that resets autoincrement keys by default'
 
+
         describe '#pre_count?' do
           subject { Truncation.new.tap { |t| t.db = db } }
 
-          its(:pre_count?) { should eq false }
+          it 'should return false initially' do
+            expect(subject.send(:pre_count?)).to eq false
+          end
 
           it 'should return true if @reset_id is set and non false or nil' do
             subject.instance_variable_set(:"@pre_count", true)
-            subject.send(:pre_count?).should eq true
+            expect(subject.send(:pre_count?)).to eq true
           end
 
           it 'should return false if @reset_id is set to false' do
             subject.instance_variable_set(:"@pre_count", false)
-            subject.send(:pre_count?).should eq false
+            expect(subject.send(:pre_count?)).to eq false
           end
         end
 
@@ -153,8 +164,8 @@ module DatabaseCleaner
           it "should rely on #pre_count_truncate_tables if #pre_count? returns true" do
             subject.instance_variable_set(:"@pre_count", true)
 
-            subject.should_not_receive(:truncate_tables)
-            subject.should_receive(:pre_count_truncate_tables)
+            expect(subject).not_to receive(:truncate_tables)
+            expect(subject).to receive(:pre_count_truncate_tables)
 
             subject.clean
           end
@@ -162,16 +173,26 @@ module DatabaseCleaner
           it "should not rely on #pre_count_truncate_tables if #pre_count? return false" do
             subject.instance_variable_set(:"@pre_count", false)
 
-            subject.should_not_receive(:pre_count_truncate_tables)
-            subject.should_receive(:truncate_tables)
+            expect(subject).not_to receive(:pre_count_truncate_tables)
+            expect(subject).to receive(:truncate_tables)
 
             subject.clean
           end
         end
       end
     end
+
     half_supported_configurations.each do |config|
-      describe "Sequel truncation (using a #{config[:url]} connection)" do
+      RSpec.describe "Sequel truncation (using a #{config[:url]} connection)" do
+        around do |example|
+          helper = SequelHelper.new(config)
+          helper.setup
+
+          example.run
+
+          helper.teardown
+        end
+
         let(:db) { ::Sequel.connect(config[:url], config[:connection_options]) }
 
         it_behaves_like 'a Sequel truncation strategy'

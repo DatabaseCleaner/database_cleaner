@@ -1,5 +1,5 @@
 module MopedTest
-  class ThingBase
+  class Base
     def self.collection
       @db ||= 'database_cleaner_specs'
       @session ||= ::Moped::Session.new(['127.0.0.1:27017'], database: @db)
@@ -19,11 +19,11 @@ module MopedTest
     end
   end
 
-  class Widget < ThingBase
+  class Widget < Base
   end
-  class Gadget < ThingBase
+  class Gadget < Base
   end
-  class System < ThingBase
+  class System < Base
     def self.collection
       super
       @collection = @session['system_logs']

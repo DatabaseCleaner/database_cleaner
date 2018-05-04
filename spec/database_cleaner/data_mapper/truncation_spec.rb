@@ -3,7 +3,7 @@ require 'database_cleaner/shared_strategy'
 
 module DatabaseCleaner
   module DataMapper
-    describe Truncation do
+    RSpec.describe Truncation do
       it_should_behave_like "a generic strategy"
       it_should_behave_like "a generic truncation strategy"
     end

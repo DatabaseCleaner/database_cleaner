@@ -1,39 +1,38 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
 require 'database_cleaner/couch_potato/truncation'
 require 'couch_potato'
 
 module DatabaseCleaner
   module CouchPotato
 
-    describe Truncation do
+    RSpec.describe Truncation do
       let(:database) { double('database') }
 
       before(:each) do
-        ::CouchPotato.stub(:couchrest_database).and_return(database)
+        allow(::CouchPotato).to receive(:couchrest_database).and_return(database)
       end
 
       it "should re-create the database" do
-        database.should_receive(:recreate!)
+        expect(database).to receive(:recreate!)
 
         Truncation.new.clean
       end
 
       it "should raise an error when the :only option is used" do
-        running {
+        expect {
           Truncation.new(:only => ['document-type'])
-        }.should raise_error(ArgumentError)
+        }.to raise_error(ArgumentError)
       end
 
       it "should raise an error when the :except option is used" do
-        running {
+        expect {
           Truncation.new(:except => ['document-type'])
-        }.should raise_error(ArgumentError)
+        }.to raise_error(ArgumentError)
       end
 
       it "should raise an error when invalid options are provided" do
-        running {
+        expect {
           Truncation.new(:foo => 'bar')
-        }.should raise_error(ArgumentError)
+        }.to raise_error(ArgumentError)
       end
     end
 

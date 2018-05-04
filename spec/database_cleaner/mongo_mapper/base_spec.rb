@@ -1,10 +1,9 @@
-require 'spec_helper'
 require 'database_cleaner/mongo_mapper/base'
 require 'database_cleaner/shared_strategy'
 
 module DatabaseCleaner
-  describe MongoMapper do
-    it { should respond_to(:available_strategies) }
+  RSpec.describe MongoMapper do
+    it { is_expected.to respond_to(:available_strategies) }
   end
 
   module MongoMapper
@@ -12,20 +11,20 @@ module DatabaseCleaner
       include ::DatabaseCleaner::MongoMapper::Base
     end
 
-    describe ExampleStrategy do
+    RSpec.describe ExampleStrategy do
 
       it_should_behave_like "a generic strategy"
 
       describe "db" do
-        it { should respond_to(:db=) }
+        it { is_expected.to respond_to(:db=) }
 
         it "should store my desired db" do
           subject.db = :my_db
-          subject.db.should eq :my_db
+          expect(subject.db).to eq :my_db
         end
 
         it "should default to :default" do
-          subject.db.should eq :default
+          expect(subject.db).to eq :default
         end
       end
     end

@@ -1,13 +1,13 @@
 module MongoTest
-  class ThingBase
+  class Base
     def self.collection
-      @connection ||= ::Mongo::Connection.new('127.0.0.1')
+      @connection ||= Mongo::Connection.new('127.0.0.1')
       @db ||= @connection.db('database_cleaner_specs')
-      @mongo ||= @db.collection(name) || @db.create_collection(name)
+      @collection ||= @db.collection(name) || @db.create_collection(name)
     end
 
     def self.count
-      @mongo.count
+      @collection.count
     end
 
     def initialize(attrs={})
@@ -19,8 +19,8 @@ module MongoTest
     end
   end
 
-  class Widget < ThingBase
+  class Widget < Base
   end
-  class Gadget < ThingBase
+  class Gadget < Base
   end
 end

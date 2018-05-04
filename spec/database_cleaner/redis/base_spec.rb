@@ -1,11 +1,10 @@
-require 'spec_helper'
 require 'redis'
 require 'database_cleaner/redis/base'
 require 'database_cleaner/shared_strategy'
 
 module DatabaseCleaner
-  describe Redis do
-    it { should respond_to(:available_strategies) }
+  RSpec.describe Redis do
+    it { is_expected.to respond_to(:available_strategies) }
   end
 
   module Redis
@@ -13,17 +12,17 @@ module DatabaseCleaner
       include ::DatabaseCleaner::Redis::Base
     end
 
-    describe ExampleStrategy do
+    RSpec.describe ExampleStrategy do
 
       it_should_behave_like "a generic strategy"
-      it { should respond_to(:db) }
-      it { should respond_to(:db=) }
+      it { is_expected.to respond_to(:db) }
+      it { is_expected.to respond_to(:db=) }
 
       context "when passing url" do
         it "should store my describe db" do
           url = 'redis://localhost:6379/2'
           subject.db = 'redis://localhost:6379/2'
-          subject.db.should eq url
+          expect(subject.db).to eq url
         end
       end
 
@@ -31,12 +30,12 @@ module DatabaseCleaner
         it "should store my describe db" do
           connection = ::Redis.new :url => 'redis://localhost:6379/2'
           subject.db = connection
-          subject.db.should eq connection
+          expect(subject.db).to eq connection
         end
       end
 
       it "should default to :default" do
-        subject.db.should eq :default
+        expect(subject.db).to eq :default
       end
     end
   end

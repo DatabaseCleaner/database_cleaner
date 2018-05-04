@@ -1,4 +1,4 @@
-shared_examples_for "an adapter with pre-count truncation" do
+RSpec.shared_examples_for "an adapter with pre-count truncation" do
   describe "#pre_count_truncate_tables" do
     
     context "with :reset_ids set true" do
@@ -6,7 +6,7 @@ shared_examples_for "an adapter with pre-count truncation" do
         2.times { User.create }
 
         connection.pre_count_truncate_tables(%w[users], :reset_ids => true)
-        User.count.should be_zero
+        expect(User.count).to be_zero
       end
 
       it "resets AUTO_INCREMENT index of table" do
@@ -14,7 +14,7 @@ shared_examples_for "an adapter with pre-count truncation" do
         User.delete_all
 
         connection.pre_count_truncate_tables(%w[users]) # true is also the default
-        User.create.id.should eq 1
+        expect(User.create.id).to eq 1
       end
     end
 
@@ -24,7 +24,7 @@ shared_examples_for "an adapter with pre-count truncation" do
         2.times { User.create }
 
         connection.pre_count_truncate_tables(%w[users], :reset_ids => false)
-        User.count.should be_zero
+        expect(User.count).to be_zero
       end
 
       it "does not reset AUTO_INCREMENT index of table" do
@@ -33,7 +33,7 @@ shared_examples_for "an adapter with pre-count truncation" do
 
         connection.pre_count_truncate_tables(%w[users], :reset_ids => false)
 
-        User.create.id.should eq 3
+        expect(User.create.id).to eq 3
       end
     end
   end

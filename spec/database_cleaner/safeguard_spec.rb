@@ -1,9 +1,8 @@
-require 'spec_helper'
 require 'active_record'
 require 'database_cleaner/active_record/transaction'
 
 module DatabaseCleaner
-  describe Safeguard do
+  RSpec.describe Safeguard do
     let(:strategy) { DatabaseCleaner::ActiveRecord::Transaction }
     let(:cleaner)  { Base.new(:autodetect) }
 
