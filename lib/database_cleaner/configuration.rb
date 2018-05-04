@@ -1,5 +1,4 @@
 require 'database_cleaner/base'
-require 'forwardable'
 
 module DatabaseCleaner
 
@@ -91,39 +90,6 @@ module DatabaseCleaner
         temp.push connect unless temp.include? connect
       end
       @connections = temp
-    end
-  end
-
-
-  class << self
-    extend Forwardable
-    delegate [
-      :[],
-      :app_root=,
-      :app_root,
-      :logger=,
-      :logger,
-      :strategy=,
-      :orm=,
-      :start,
-      :clean,
-      :clean_with,
-      :cleaning,
-
-      # TODO deprecate
-      :clean!,
-      :clean_with!,
-
-      # TODO deprecate and then privatize the following methods:
-
-      :init_cleaners,
-      :add_cleaner,
-      :connections,
-      :remove_duplicates,
-    ] => :configuration
-
-    def configuration
-      @configuration ||= Configuration.new
     end
   end
 end
