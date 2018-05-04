@@ -11,7 +11,7 @@ When /^I create a widget using activerecord$/ do
 end
 
 Then /^I should see ([\d]+) widget using activerecord$/ do |widget_count|
-  ActiveRecordWidget.count.should == widget_count.to_i
+  expect(ActiveRecordWidget.count).to eq widget_count.to_i
 end
 
 When /^I create a widget in one db using activerecord$/ do
@@ -23,9 +23,9 @@ When /^I create a widget in another db using activerecord$/ do
 end
 
 Then /^I should see ([\d]+) widget in one db using activerecord$/ do |widget_count|
-  ActiveRecordWidgetUsingDatabaseOne.count.should == widget_count.to_i
+  expect(ActiveRecordWidgetUsingDatabaseOne.count).to eq widget_count.to_i
 end
 
 Then /^I should see ([\d]+) widget in another db using activerecord$/ do |widget_count|
-  ActiveRecordWidgetUsingDatabaseTwo.count.should == widget_count.to_i
+  expect(ActiveRecordWidgetUsingDatabaseTwo.count).to eq widget_count.to_i
 end

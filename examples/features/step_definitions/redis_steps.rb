@@ -11,7 +11,7 @@ When /^I create a widget using redis$/ do
 end
 
 Then /^I should see ([\d]+) widget using redis$/ do |widget_count|
-  RedisWidget.count.should == widget_count.to_i
+  expect(RedisWidget.count).to eq widget_count.to_i
 end
 
 When /^I create a widget in one db using redis$/ do
@@ -23,9 +23,9 @@ When /^I create a widget in another db using redis$/ do
 end
 
 Then /^I should see ([\d]+) widget in one db using redis$/ do |widget_count|
-  RedisWidgetUsingDatabaseOne.count.should == widget_count.to_i
+  expect(RedisWidgetUsingDatabaseOne.count).to eq widget_count.to_i
 end
 
 Then /^I should see ([\d]+) widget in another db using redis$/ do |widget_count|
-  RedisWidgetUsingDatabaseTwo.count.should == widget_count.to_i
+  expect(RedisWidgetUsingDatabaseTwo.count).to eq widget_count.to_i
 end
