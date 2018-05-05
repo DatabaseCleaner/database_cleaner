@@ -6,21 +6,21 @@ class PostgreSQLHelper
 
   # ActiveRecord::Base.logger = Logger.new(STDERR)
 
-  def active_record_pg_setup
+  def setup
     create_db
     establish_connection
     active_record_load_schema
   end
 
-  def active_record_pg_migrate
+  def migrate
     ActiveRecord::Migrator.migrate 'spec/support/active_record/migrations'
   end
 
-  def active_record_pg_connection
+  def connection
     ActiveRecord::Base.connection
   end
 
-  def active_record_pg_teardown
+  def teardown
     ActiveRecord::Base.connection.execute "DROP TABLE users, agents;"
   rescue ActiveRecord::StatementInvalid
   end

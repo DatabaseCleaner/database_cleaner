@@ -6,17 +6,17 @@ class SQLite3Helper
 
   # ActiveRecord::Base.logger = Logger.new(STDERR)
 
-  def active_record_sqlite3_setup
+  def setup
     create_db
     establish_connection
     active_record_load_schema
   end
 
-  def active_record_sqlite3_connection
+  def connection
     ActiveRecord::Base.connection
   end
 
-  def active_record_sqlite3_teardown
+  def teardown
     ActiveRecord::Base.connection.truncate_table('users')
     ActiveRecord::Base.connection.truncate_table('agents')
   end

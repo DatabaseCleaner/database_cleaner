@@ -7,18 +7,18 @@ class MySQL2Helper
   # require 'logger'
   # ActiveRecord::Base.logger = Logger.new(STDERR)
 
-  def active_record_mysql2_setup
+  def setup
     patch_mysql2_adapter
     create_db
     establish_connection
     active_record_load_schema
   end
 
-  def active_record_mysql2_connection
+  def connection
     ActiveRecord::Base.connection
   end
 
-  def active_record_mysql2_teardown
+  def teardown
     ActiveRecord::Base.connection.drop_database default_config['database']
   end
 
