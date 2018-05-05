@@ -1,24 +1,7 @@
-require 'support/active_record/database_setup'
-require 'support/active_record/schema_setup'
+require 'support/active_record/base_helper'
 
-class PostgreSQLHelper
+class PostgreSQLHelper < BaseHelper
   puts "Active Record #{ActiveRecord::VERSION::STRING}, pg"
-
-  # ActiveRecord::Base.logger = Logger.new(STDERR)
-
-  def setup
-    create_db
-    establish_connection
-    active_record_load_schema
-  end
-
-  def migrate
-    ActiveRecord::Migrator.migrate 'spec/support/active_record/migrations'
-  end
-
-  def connection
-    ActiveRecord::Base.connection
-  end
 
   def teardown
     ActiveRecord::Base.connection.execute "DROP TABLE users, agents;"
@@ -36,10 +19,6 @@ class PostgreSQLHelper
     establish_connection(default_config.merge('database' => 'postgres', 'schema_search_path' => 'public'))
     ActiveRecord::Base.connection.create_database(default_config['database'], default_config.merge('encoding' => @encoding))
   rescue ActiveRecord::StatementInvalid
-  end
-
-  def establish_connection(config = default_config)
-    ActiveRecord::Base.establish_connection(config)
   end
 end
 

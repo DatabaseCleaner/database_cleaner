@@ -1,25 +1,11 @@
-require 'support/active_record/database_setup'
-require 'support/active_record/schema_setup'
+require 'support/active_record/base_helper'
 
-class MySQL2Helper
+class MySQL2Helper < BaseHelper
   puts "Active Record #{ActiveRecord::VERSION::STRING}, mysql2"
-
-  # require 'logger'
-  # ActiveRecord::Base.logger = Logger.new(STDERR)
 
   def setup
     patch_mysql2_adapter
-    create_db
-    establish_connection
-    active_record_load_schema
-  end
-
-  def connection
-    ActiveRecord::Base.connection
-  end
-
-  def teardown
-    ActiveRecord::Base.connection.drop_database default_config['database']
+    super
   end
 
   private
@@ -33,10 +19,6 @@ class MySQL2Helper
 
     ActiveRecord::Base.connection.drop_database default_config['database'] rescue nil
     ActiveRecord::Base.connection.create_database default_config['database']
-  end
-
-  def establish_connection(config = default_config)
-    ActiveRecord::Base.establish_connection config
   end
 
   def patch_mysql2_adapter

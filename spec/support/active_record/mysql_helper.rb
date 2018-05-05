@@ -1,24 +1,11 @@
-require 'support/active_record/database_setup'
-require 'support/active_record/schema_setup'
+require 'support/active_record/base_helper'
 
-class MySQLHelper
+class MySQLHelper < BaseHelper
   puts "Active Record #{ActiveRecord::VERSION::STRING}, mysql"
-
-  # require 'logger'
-  # ActiveRecord::Base.logger = Logger.new(STDERR)
 
   def setup
     patch_mysql_adapter
-    create_db
-    active_record_load_schema
-  end
-
-  def connection
-    ActiveRecord::Base.connection
-  end
-
-  def teardown
-    ActiveRecord::Base.connection.drop_database default_config['database']
+    super
   end
 
   private
