@@ -8,7 +8,9 @@ end
 
 class SequelHelper < Struct.new(:config)
   def setup
-    if config[:url] == "postgres:///" || config[:url] == "sqlite:///"
+    if config[:url] == "sqlite:///"
+      # NO-OP
+    elsif config[:url] == "postgres:///"
       ::Sequel.connect(config[:url], config[:connection_options].merge('database' => 'postgres')) do |db|
         begin
           db.execute "CREATE DATABASE #{database}"

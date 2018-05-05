@@ -9,10 +9,6 @@ class SQLite3Helper < ActiveRecordHelper
     db_config['sqlite3']
   end
 
-  def establish_connection
-    super default_config.merge('database' => 'sqlite3', 'schema_search_path' => 'public')
-  end
-
   def create_db
     # NO-OP
   end

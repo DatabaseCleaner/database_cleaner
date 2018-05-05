@@ -10,7 +10,7 @@ class PostgreSQLHelper < ActiveRecordHelper
   end
 
   def create_db
-    establish_connection default_config.merge('database' => 'postgres', 'schema_search_path' => 'public')
+    establish_connection default_config.merge('database' => 'postgres')
     connection.execute "CREATE DATABASE #{default_config['database']}"
   rescue ActiveRecord::StatementInvalid
   end
