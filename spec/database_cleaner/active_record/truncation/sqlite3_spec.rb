@@ -1,4 +1,3 @@
-require 'active_record'
 require 'support/active_record/sqlite3_helper'
 require 'database_cleaner/active_record/truncation'
 

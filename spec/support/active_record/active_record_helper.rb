@@ -1,3 +1,4 @@
+require 'active_record'
 require 'support/database_helper'
 
 class ActiveRecordHelper < DatabaseHelper
