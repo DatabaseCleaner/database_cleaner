@@ -20,13 +20,21 @@ class BaseHelper
   end
 
   def teardown
-    ActiveRecord::Base.connection.drop_database default_config['database']
+    tables = %w(users agents)
+    tables.each do |table|
+      connection.execute "DROP TABLE IF EXISTS #{table}"
+    end
   end
 
   private
 
   def establish_connection(config = default_config)
     ActiveRecord::Base.establish_connection(config)
+  end
+
+  def create_db
+    establish_connection default_config.merge("database" => nil)
+    connection.execute "CREATE DATABASE IF NOT EXISTS #{default_config['database']}"
   end
 end
 
