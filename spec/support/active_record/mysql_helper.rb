@@ -1,6 +1,6 @@
-require 'support/active_record/base_helper'
+require 'support/active_record/active_record_helper'
 
-class MySQLHelper < BaseHelper
+class MySQLHelper < ActiveRecordHelper
   puts "Active Record #{ActiveRecord::VERSION::STRING}, mysql"
 
   def setup

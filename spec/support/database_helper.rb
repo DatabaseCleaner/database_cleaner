@@ -1,7 +1,6 @@
-require 'support/active_record/database_setup'
-require 'support/active_record/schema_setup'
+require 'yaml'
 
-class BaseHelper
+class DatabaseHelper
   # require 'logger'
   # ActiveRecord::Base.logger = Logger.new(STDERR)
 
@@ -11,12 +10,8 @@ class BaseHelper
     active_record_load_schema
   end
 
-  def migrate
-    ActiveRecord::Migrator.migrate 'spec/support/active_record/migrations'
-  end
-
   def connection
-    ActiveRecord::Base.connection
+    raise NotImplementedError
   end
 
   def teardown
@@ -29,12 +24,21 @@ class BaseHelper
   private
 
   def establish_connection(config = default_config)
-    ActiveRecord::Base.establish_connection(config)
+    raise NotImplementedError
   end
 
   def create_db
     establish_connection default_config.merge("database" => nil)
     connection.execute "CREATE DATABASE IF NOT EXISTS #{default_config['database']}"
+  end
+
+  def db_config
+    config_path = 'db/config.yml'
+    @db_config ||= YAML.load(IO.read(config_path))
+  end
+
+  def default_config
+    raise NotImplementedError
   end
 end
 

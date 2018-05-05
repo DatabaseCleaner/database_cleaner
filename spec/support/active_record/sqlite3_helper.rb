@@ -1,6 +1,6 @@
-require 'support/active_record/base_helper'
+require 'support/active_record/active_record_helper'
 
-class SQLite3Helper < BaseHelper
+class SQLite3Helper < ActiveRecordHelper
   puts "Active Record #{ActiveRecord::VERSION::STRING}, sqlite3"
 
   private
