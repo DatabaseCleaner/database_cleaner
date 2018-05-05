@@ -1,12 +1,11 @@
 require 'sequel'
-require 'yaml'
+require 'support/database_helper'
 
 def db_config
-  config_path = 'db/config.yml'
-  @db_config ||= YAML.load(IO.read(config_path))
+  SequelHelper.new.send(:db_config)
 end
 
-class SequelHelper < Struct.new(:config)
+class SequelHelper < DatabaseHelper
   def setup
     if config[:url] == "sqlite:///"
       # NO-OP

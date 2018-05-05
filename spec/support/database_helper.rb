@@ -1,6 +1,6 @@
 require 'yaml'
 
-class DatabaseHelper
+class DatabaseHelper < Struct.new(:config)
   # require 'logger'
   # ActiveRecord::Base.logger = Logger.new(STDERR)
 
