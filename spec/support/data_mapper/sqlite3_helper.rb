@@ -2,17 +2,26 @@ require 'dm-core'
 require 'dm-sqlite-adapter'
 require 'support/database_helper'
 
-class ::DmUser
-  include DataMapper::Resource
-
-  self.storage_names[:default] = 'users'
-
-  property :id, Serial
-  property :name, String
-end
-
 class DataMapperSQLite3Helper < DatabaseHelper
   puts "DataMapper #{DataMapper::VERSION}, sqlite3"
+
+  def setup
+    Kernel.const_set "User", Class.new
+    User.instance_eval do
+      include DataMapper::Resource
+
+      storage_names[:default] = 'users'
+
+      property :id, User::Serial
+      property :name, String
+    end
+
+    super
+  end
+
+  def teardown
+    Kernel.send :remove_const, "User" if defined?(User)
+  end
 
   def connection
     DataMapper.repository.adapter

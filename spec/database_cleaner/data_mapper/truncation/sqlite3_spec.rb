@@ -14,18 +14,18 @@ RSpec.describe DatabaseCleaner::DataMapper::Truncation do
 
   describe "DM connection adapter monkeypatches" do
     before do
-      2.times { DmUser.create }
+      2.times { User.create }
     end
 
     describe "#truncate_table" do
       it "truncates the table" do
-        connection.truncate_table(DmUser.storage_names[:default])
-        expect(DmUser.count).to eq 0
+        connection.truncate_table(User.storage_names[:default])
+        expect(User.count).to eq 0
       end
 
       it "resets AUTO_INCREMENT index of table" do
-        connection.truncate_table(DmUser.storage_names[:default])
-        expect(DmUser.create.id).to eq 1
+        connection.truncate_table(User.storage_names[:default])
+        expect(User.create.id).to eq 1
       end
     end
   end
