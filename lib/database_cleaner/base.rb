@@ -1,5 +1,6 @@
 require 'database_cleaner/null_strategy'
 require 'database_cleaner/safeguard'
+
 module DatabaseCleaner
   class Base
     include Comparable
@@ -75,7 +76,7 @@ module DatabaseCleaner
     end
 
     def strategy
-      @strategy ||= NullStrategy
+      @strategy ||= NullStrategy.new
     end
 
     def orm=(desired_orm)

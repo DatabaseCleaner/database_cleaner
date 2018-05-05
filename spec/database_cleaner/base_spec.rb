@@ -380,7 +380,7 @@ module DatabaseCleaner
       subject { ::DatabaseCleaner::Base.new :a_orm }
 
       it "returns a null strategy when strategy is not set and undetectable" do
-        expect(subject.strategy).to eq DatabaseCleaner::NullStrategy
+        expect(subject.strategy).to be_a(DatabaseCleaner::NullStrategy)
       end
 
       it "returns the set strategy" do
