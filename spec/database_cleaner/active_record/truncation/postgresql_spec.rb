@@ -63,8 +63,6 @@ RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
 
   describe "schema_migrations table" do
     it "is not truncated" do
-      helper.teardown
-      helper.migrate
 
       subject.clean
 
