@@ -1,7 +1,18 @@
 require 'support/database_helper'
-require 'support/active_record/schema_setup'
 
 class ActiveRecordHelper < DatabaseHelper
+  def setup
+    Kernel.const_set "User", Class.new(ActiveRecord::Base)
+    Kernel.const_set "Agent", Class.new(ActiveRecord::Base)
+    super
+  end
+
+  def teardown
+    super
+    Kernel.send :remove_const, "User" if defined?(User)
+    Kernel.send :remove_const, "Agent" if defined?(Agent)
+  end
+
   def migrate
     ActiveRecord::Migrator.migrate 'spec/support/active_record/migrations'
   end

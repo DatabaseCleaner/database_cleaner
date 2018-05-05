@@ -1,7 +1,6 @@
 require 'active_record'
 require 'database_cleaner/active_record/base'
 require 'database_cleaner/shared_strategy'
-require 'support/active_record/schema_setup'
 
 class FakeModel
   def self.connection

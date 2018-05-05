@@ -7,7 +7,7 @@ class DatabaseHelper
   def setup
     create_db
     establish_connection
-    active_record_load_schema
+    load_schema
   end
 
   def connection
@@ -39,6 +39,21 @@ class DatabaseHelper
 
   def default_config
     raise NotImplementedError
+  end
+
+  def load_schema
+    connection.execute <<-SQL
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        name INTEGER
+      );
+    SQL
+
+    connection.execute <<-SQL
+      CREATE TABLE IF NOT EXISTS agents (
+        name INTEGER
+      );
+    SQL
   end
 end
 
