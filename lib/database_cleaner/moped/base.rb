@@ -32,7 +32,7 @@ module DatabaseCleaner
       private
 
       def session
-        ::Moped::Session.new([host], database: db)
+        @session ||= ::Moped::Session.new([host], database: db)
       end
     end
   end
