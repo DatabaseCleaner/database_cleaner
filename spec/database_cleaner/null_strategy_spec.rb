@@ -3,23 +3,23 @@ require "database_cleaner/null_strategy"
 module DatabaseCleaner
   RSpec.describe NullStrategy do
     it 'responds to .start' do
-      expect { NullStrategy.start }.not_to raise_error
+      expect { subject.start }.not_to raise_error
     end
 
     it 'responds to .clean' do
-      expect { NullStrategy.clean }.not_to raise_error
+      expect { subject.clean }.not_to raise_error
     end
 
     describe '.cleaning' do
       it 'fails without a block' do
-        expect { NullStrategy.cleaning }.to raise_error(LocalJumpError)
+        expect { subject.cleaning }.to raise_error(LocalJumpError)
       end
 
       it 'no-ops with a block' do
         effect = double
         expect(effect).to receive(:occur).once
 
-        NullStrategy.cleaning do
+        subject.cleaning do
           effect.occur
         end
       end
