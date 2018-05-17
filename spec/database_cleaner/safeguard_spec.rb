@@ -1,12 +1,6 @@
-require 'active_record'
-require 'database_cleaner/active_record/transaction'
-
 module DatabaseCleaner
   RSpec.describe Safeguard do
-    let(:strategy) { DatabaseCleaner::ActiveRecord::Transaction }
-    let(:cleaner)  { Base.new(:autodetect) }
-
-    before { allow_any_instance_of(strategy).to receive(:start) }
+    let(:cleaner)  { Base.new(:null) }
 
     describe 'DATABASE_URL is set' do
       before { stub_const('ENV', 'DATABASE_URL' => database_url) }

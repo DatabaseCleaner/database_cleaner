@@ -1,20 +1,15 @@
-require 'active_record'
-require 'support/active_record/sqlite3_setup'
+require 'support/active_record/sqlite3_helper'
 require 'database_cleaner/active_record/truncation'
 
 RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
   let(:helper) { SQLite3Helper.new }
 
-  let(:connection) do
-    helper.active_record_sqlite3_connection
-  end
+  let(:connection) { helper.connection }
 
   around do |example|
-    helper.active_record_sqlite3_setup
-
+    helper.setup
     example.run
-
-    helper.active_record_sqlite3_teardown
+    helper.teardown
   end
 
   describe "AR connection adapter monkeypatches" do

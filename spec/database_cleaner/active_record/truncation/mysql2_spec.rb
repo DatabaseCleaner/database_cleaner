@@ -1,21 +1,16 @@
-require 'active_record'
-require 'support/active_record/mysql2_setup'
+require 'support/active_record/mysql2_helper'
 require 'database_cleaner/active_record/truncation'
 require 'database_cleaner/active_record/truncation/shared_fast_truncation'
 
 RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
   let(:helper) { MySQL2Helper.new }
 
-  let(:connection) do
-    helper.active_record_mysql2_connection
-  end
+  let(:connection) { helper.connection }
 
   around do |example|
-    helper.active_record_mysql2_setup
-
+    helper.setup
     example.run
-
-    helper.active_record_mysql2_teardown
+    helper.teardown
   end
 
   describe "AR connection adapter monkeypatches" do
@@ -24,6 +19,7 @@ RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
         2.times { User.create }
 
         connection.truncate_table('users')
+
         expect(User.count).to eq 0
       end
 
