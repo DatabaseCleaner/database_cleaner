@@ -11,7 +11,7 @@ When /^I create a widget using couchpotato$/ do
 end
 
 Then /^I should see ([\d]+) widget using couchpotato$/ do |widget_count|
-  CouchPotatoWidget.count.should == widget_count.to_i
+  expect(CouchPotatoWidget.count).to eq widget_count.to_i
 end
 
 When /^I create a widget in one db using couchpotato$/ do
@@ -23,9 +23,9 @@ When /^I create a widget in another db using couchpotato$/ do
 end
 
 Then /^I should see ([\d]+) widget in one db using couchpotato$/ do |widget_count|
-  CouchPotatoWidgetUsingDatabaseOne.count.should == widget_count.to_i
+  expect(CouchPotatoWidgetUsingDatabaseOne.count).to eq widget_count.to_i
 end
 
 Then /^I should see ([\d]+) widget in another db using couchpotato$/ do |widget_count|
-  CouchPotatoWidgetUsingDatabaseTwo.count.should == widget_count.to_i
+  expect(CouchPotatoWidgetUsingDatabaseTwo.count).to eq widget_count.to_i
 end

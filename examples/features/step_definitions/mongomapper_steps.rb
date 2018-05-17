@@ -11,7 +11,7 @@ When /^I create a widget using mongomapper$/ do
 end
 
 Then /^I should see ([\d]+) widget using mongomapper$/ do |widget_count|
-  MongoMapperWidget.count.should == widget_count.to_i
+  expect(MongoMapperWidget.count).to eq widget_count.to_i
 end
 
 When /^I create a widget in one db using mongomapper$/ do
@@ -23,9 +23,9 @@ When /^I create a widget in another db using mongomapper$/ do
 end
 
 Then /^I should see ([\d]+) widget in one db using mongomapper$/ do |widget_count|
-  MongoMapperWidgetUsingDatabaseOne.count.should == widget_count.to_i
+  expect(MongoMapperWidgetUsingDatabaseOne.count).to eq widget_count.to_i
 end
 
 Then /^I should see ([\d]+) widget in another db using mongomapper$/ do |widget_count|
-  MongoMapperWidgetUsingDatabaseTwo.count.should == widget_count.to_i
+  expect(MongoMapperWidgetUsingDatabaseTwo.count).to eq widget_count.to_i
 end
