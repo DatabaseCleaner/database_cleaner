@@ -129,31 +129,22 @@ module DatabaseCleaner
         end
       end
 
-      describe "connection_hash" do
-        it "should store connection_hash" do
-          subject.connection_hash = { :key => "value" }
-          expect(subject.connection_hash).to eq( :key => "value" )
-        end
-      end
-
       describe "connection_class" do
-        it { expect { subject.connection_class }.to_not raise_error }
         it "should default to ActiveRecord::Base" do
           expect(subject.connection_class).to eq ::ActiveRecord::Base
         end
 
         context "with database models" do
           context "connection_hash is set" do
-            it "allows for database models to be passed in" do
+            it "reuses the model's connection" do
+              subject.connection_hash = {}
               subject.db = FakeModel
-              subject.connection_hash = { }
-              subject.load_config
               expect(subject.connection_class).to eq FakeModel
             end
           end
 
           context "connection_hash is not set" do
-            it "allows for database models to be passed in" do
+            it "reuses the model's connection" do
               subject.db = FakeModel
               expect(subject.connection_class).to eq FakeModel
             end
@@ -162,11 +153,10 @@ module DatabaseCleaner
 
         context "when connection_hash is set" do
           let(:hash) { {} }
-          before { allow(subject).to receive(:connection_hash).and_return(hash) }
+          before { subject.connection_hash = hash }
 
-          it "establish a connection using ActiveRecord::Base" do
+          it "establishes a connection with it" do
             expect(::ActiveRecord::Base).to receive(:establish_connection).with(hash)
-
             expect(subject.connection_class).to eq ::ActiveRecord::Base
           end
         end
