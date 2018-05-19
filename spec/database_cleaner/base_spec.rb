@@ -194,12 +194,9 @@ module DatabaseCleaner
     end
 
     describe "comparison" do
-      it "should be equal if orm, connection and strategy are the same" do
-        one = DatabaseCleaner::Base.new(:active_record,:connection => :default)
-        one.strategy = mock_strategy
-
-        two = DatabaseCleaner::Base.new(:active_record,:connection => :default)
-        two.strategy = mock_strategy
+      it "should be equal if orm and connection are the same" do
+        one = DatabaseCleaner::Base.new(:active_record, :connection => :default)
+        two = DatabaseCleaner::Base.new(:active_record, :connection => :default)
 
         expect(one).to eq two
         expect(two).to eq one
@@ -207,22 +204,15 @@ module DatabaseCleaner
 
       it "should not be equal if orm are not the same" do
         one = DatabaseCleaner::Base.new(:mongo_id, :connection => :default)
-        one.strategy = mock_strategy
-
         two = DatabaseCleaner::Base.new(:active_record, :connection => :default)
-        two.strategy = mock_strategy
 
         expect(one).not_to eq two
         expect(two).not_to eq one
       end
 
       it "should not be equal if connection are not the same" do
-
         one = DatabaseCleaner::Base.new(:active_record, :connection => :default)
-        one.strategy = :truncation
-
         two = DatabaseCleaner::Base.new(:active_record, :connection => :other)
-        two.strategy = :truncation
 
         expect(one).not_to eq two
         expect(two).not_to eq one
@@ -231,7 +221,7 @@ module DatabaseCleaner
 
     describe "initialization" do
       context "db specified" do
-        subject { ::DatabaseCleaner::Base.new(:active_record,:connection => :my_db) }
+        subject { ::DatabaseCleaner::Base.new(:active_record, :connection => :my_db) }
 
         it "should store db from :connection in params hash" do
           expect(subject.db).to eq :my_db
