@@ -10,6 +10,7 @@ require 'rspec/expectations'
 
 DB_DIR = "#{File.dirname(__FILE__)}/../../db"
 
+use_gems    = ENV['USE_GEMS']
 orm         = ENV['ORM']
 another_orm = ENV['ANOTHER_ORM']
 strategy    = ENV['STRATEGY']
@@ -20,15 +21,25 @@ ENV['REDIS_URL'] = config['test']['url']
 ENV['REDIS_URL_ONE'] = config['one']['url']
 ENV['REDIS_URL_TWO'] = config['two']['url']
 
+require "active_support/core_ext/string/inflections"
+
 if orm && strategy
-  $:.unshift(File.dirname(__FILE__) + '/../../../lib')
-  require 'database_cleaner'
-  require 'database_cleaner/cucumber'
+  if use_gems
+    require "database_cleaner-#{orm.underscore}"
+  else
+    $:.unshift(File.dirname(__FILE__) + '/../../../lib')
+    require "database_cleaner"
+  end
   require "#{File.dirname(__FILE__)}/../../lib/#{orm.downcase}_models"
 
   if another_orm
+    if use_gems
+      require "database_cleaner-#{another_orm.underscore}"
+    end
     require "#{File.dirname(__FILE__)}/../../lib/#{another_orm.downcase}_models"
   end
+
+  require 'database_cleaner/cucumber'
 
   if multiple_db
     DatabaseCleaner.app_root = "#{File.dirname(__FILE__)}/../.."

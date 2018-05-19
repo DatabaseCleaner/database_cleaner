@@ -1,4 +1,5 @@
 class FeatureRunner
+  attr_accessor :use_gems
   attr_accessor :orm
   attr_accessor :another_orm
   attr_accessor :multiple_databases
@@ -15,6 +16,7 @@ class FeatureRunner
     Dir.chdir(full_dir) do
 
 
+      ENV['USE_GEMS']     = use_gems ? "true" : nil
       ENV['ORM']          = orm
       ENV['STRATEGY']     = strategy
 

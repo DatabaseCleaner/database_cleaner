@@ -1,4 +1,9 @@
 PATH
+  remote: adapters
+  specs:
+    database_cleaner-active_record (0.1.0)
+
+PATH
   remote: .
   specs:
     database_cleaner (1.7.0)
@@ -247,6 +252,7 @@ DEPENDENCIES
   couch_potato
   cucumber
   database_cleaner!
+  database_cleaner-active_record!
   datamapper
   dm-migrations
   dm-sqlite-adapter
