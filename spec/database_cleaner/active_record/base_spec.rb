@@ -15,11 +15,12 @@ RSpec.describe DatabaseCleaner::ActiveRecord do
     after do
       # prevent global state leakage
       DatabaseCleaner::ActiveRecord.config_file_location=nil
+      DatabaseCleaner.app_root = nil
     end
 
-    it "should default to DatabaseCleaner.root / config / database.yml" do
-      DatabaseCleaner::ActiveRecord.config_file_location=nil
-      expect(DatabaseCleaner).to receive(:app_root).and_return("/path/to")
+    it "should default to \#{DatabaseCleaner.app_root}/config/database.yml" do
+      DatabaseCleaner::ActiveRecord.config_file_location = nil
+      DatabaseCleaner.app_root = "/path/to"
       expect(DatabaseCleaner::ActiveRecord.config_file_location).to eq '/path/to/config/database.yml'
     end
   end
@@ -34,8 +35,10 @@ module DatabaseCleaner
     RSpec.describe ExampleStrategy do
       let(:config_location) { '/path/to/config/database.yml' }
 
-      before do
-        allow(DatabaseCleaner::ActiveRecord).to receive(:config_file_location).and_return(config_location)
+      around do |example|
+        DatabaseCleaner::ActiveRecord.config_file_location = config_location
+        example.run
+        DatabaseCleaner::ActiveRecord.config_file_location = nil
       end
 
       it_should_behave_like "a generic strategy"
