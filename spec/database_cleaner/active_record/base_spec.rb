@@ -55,14 +55,7 @@ module DatabaseCleaner
       end
 
       describe "db=" do
-        before do
-          yaml       = <<-Y
-my_db:
-  database: <%= "ONE".downcase %>
-          Y
-          allow(File).to receive(:file?).with(config_location).and_return(true)
-          allow(IO).to receive(:read).with(config_location).and_return(yaml)
-        end
+        let(:config_location) { "spec/support/active_record/example.database.yml" }
 
         it "should process erb in the config" do
           subject.db = :my_db
