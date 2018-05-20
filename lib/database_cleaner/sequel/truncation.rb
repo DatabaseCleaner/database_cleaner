@@ -14,39 +14,40 @@ module DatabaseCleaner
       def clean
         return unless dirty?
 
+        tables = tables_to_truncate(db)
+
+        # Count rows before truncating
+        if pre_count?
+          tables = pre_count_tables(tables)
+        end
+
         case db.database_type
         when :postgres
           # PostgreSQL requires all tables with FKs to be truncates in the same command, or have the CASCADE keyword
           # appended. Bulk truncation without CASCADE is:
           # * Safer. Tables outside of tables_to_truncate won't be affected.
           # * Faster. Less roundtrips to the db.
-          unless (tables = tables_to_truncate(db)).empty?
-            all_tables = tables.map { |t| %("#{t}") }.join(',')
-            db.run "TRUNCATE TABLE #{all_tables};"
+          unless tables.empty?
+            tables_sql = tables.map { |t| %("#{t}") }.join(',')
+            db.run "TRUNCATE TABLE #{tables_sql} RESTART IDENTITY;"
           end
         else
-          tables = tables_to_truncate(db)
-
-          if pre_count?
-            # Count rows before truncating
-            pre_count_truncate_tables(db, tables)
-          else
-            # Truncate each table normally
-            truncate_tables(db, tables)
-          end
+          truncate_tables(db, tables)
         end
       end
 
       private
 
-      def pre_count_truncate_tables(db, tables)
-        tables = tables.reject { |table| db[table.to_sym].count == 0 }
-        truncate_tables(db, tables)
+      def pre_count_tables tables
+        tables.reject { |table| db[table.to_sym].count == 0 }
       end
 
       def truncate_tables(db, tables)
         tables.each do |table|
           db[table.to_sym].truncate
+          if db.database_type == :sqlite && db.table_exists?(:sqlite_sequence)
+            db[:sqlite_sequence].where(name: table).delete
+          end
         end
       end
 

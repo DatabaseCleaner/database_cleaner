@@ -10,14 +10,6 @@ module DatabaseCleaner
     end
 
     RSpec.shared_examples 'a Sequel truncation strategy' do
-
-      # XXX: it'd be really nice if Truncation accepted db: constructor parameter
-      let(:truncation) do
-        t = Truncation.new
-        t.db = db
-        t
-      end
-
       context 'when several tables have data' do
         before do
           db.create_table!(:precious_stones) { primary_key :id }
@@ -64,63 +56,13 @@ module DatabaseCleaner
       end
     end
 
-    RSpec.shared_examples_for 'a truncation strategy without autoincrement resets' do
-      it "leaves AUTO_INCREMENT index alone by default (BUG: it should be reset instead)" do
-        pending
-        # Jordan Hollinger made everything reset auto increment IDs
-        # in commit 6a0104382647e5c06578aeac586c0333c8944492 so I'm pretty sure
-        # everything is meant to reset by default.
-        #
-        # For Postgres, db[:mytable].truncate(restart: true) should work.
-        # For SQLite, db[:sqlite_sequence].where(name: 'mytable').delete
-
-        db.create_table!(:replaceable_trifles) { primary_key :id }
-        table = db[:replaceable_trifles]
-        2.times { table.insert }
-
-        truncation.clean
-
-        id_after_clean = table.insert
-        expect(id_after_clean).to eq 1
-      end
-      # XXX: it'd be really nice if Truncation accepted db: constructor parameter
-      let(:truncation) do
-        t = Truncation.new
-        t.db = db
-        t
-      end
-    end
-
-    RSpec.shared_examples_for 'a truncation strategy that resets autoincrement keys by default' do
-      it "resets AUTO_INCREMENT primary keys" do
-        db.create_table!(:replaceable_trifles) { primary_key :id }
-        table = db[:replaceable_trifles]
-        2.times { table.insert }
-
-        truncation.clean
-
-        id_after_clean = table.insert
-        expect(id_after_clean).to eq 1
-      end
-
-      # XXX: it'd be really nice if Truncation accepted db: constructor parameter
-      let(:truncation) do
-        t = Truncation.new
-        t.db = db
-        t
-      end
-    end
-
-    half_supported_configurations = [
+    configurations = [
+      {url: 'mysql:///',    connection_options: db_config['mysql']},
+      {url: 'mysql2:///',   connection_options: db_config['mysql2']},
       {url: 'sqlite:///',   connection_options: db_config['sqlite3']},
       {url: 'postgres:///', connection_options: db_config['postgres']},
     ]
-    supported_configurations = [
-      {url: 'mysql:///',    connection_options: db_config['mysql']},
-      {url: 'mysql2:///',   connection_options: db_config['mysql2']}
-    ]
-
-    supported_configurations.each do |config|
+    configurations.each do |config|
       RSpec.describe "Sequel truncation (using a #{config[:url]} connection)" do
         around do |example|
           helper = SequelHelper.new(config)
@@ -132,9 +74,9 @@ module DatabaseCleaner
         end
 
         let(:db) { ::Sequel.connect(config[:url], config[:connection_options]) }
+        subject { Truncation.new.tap { |t| t.db = db } }
 
         it_behaves_like 'a Sequel truncation strategy'
-        it_behaves_like 'a truncation strategy that resets autoincrement keys by default'
 
 
         describe '#pre_count?' do
@@ -155,45 +97,36 @@ module DatabaseCleaner
           end
         end
 
-        describe "relying on #pre_count_truncate_tables if asked to" do
-          subject { Truncation.new.tap { |t| t.db = db } }
-
-          it "should rely on #pre_count_truncate_tables if #pre_count? returns true" do
+        describe "relying on #pre_count_tables if asked to" do
+          it "should rely on #pre_count_tables if #pre_count? returns true" do
             subject.instance_variable_set(:"@pre_count", true)
 
-            expect(subject).not_to receive(:truncate_tables)
-            expect(subject).to receive(:pre_count_truncate_tables)
+            expect(subject).to receive(:pre_count_tables).and_return([])
 
             subject.clean
           end
 
-          it "should not rely on #pre_count_truncate_tables if #pre_count? return false" do
+          it "should not rely on #pre_count_tables if #pre_count? return false" do
             subject.instance_variable_set(:"@pre_count", false)
 
-            expect(subject).not_to receive(:pre_count_truncate_tables)
-            expect(subject).to receive(:truncate_tables)
+            expect(subject).not_to receive(:pre_count_tables)
 
             subject.clean
           end
         end
-      end
-    end
 
-    half_supported_configurations.each do |config|
-      RSpec.describe "Sequel truncation (using a #{config[:url]} connection)" do
-        around do |example|
-          helper = SequelHelper.new(config)
-          helper.setup
+        describe 'auto increment sequences' do
+          it "resets AUTO_INCREMENT primary key seqeunce" do
+            db.create_table!(:replaceable_trifles) { primary_key :id }
+            table = db[:replaceable_trifles]
+            2.times { table.insert }
 
-          example.run
+            subject.clean
 
-          helper.teardown
+            id_after_clean = table.insert
+            expect(id_after_clean).to eq 1
+          end
         end
-
-        let(:db) { ::Sequel.connect(config[:url], config[:connection_options]) }
-
-        it_behaves_like 'a Sequel truncation strategy'
-        it_behaves_like 'a truncation strategy without autoincrement resets'
       end
     end
   end
