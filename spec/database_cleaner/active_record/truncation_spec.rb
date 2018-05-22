@@ -18,87 +18,79 @@ RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
       end
 
       describe '#clean' do
-        before do
-          2.times { User.create! }
-          2.times { Agent.create! }
-        end
+        context "with records" do
+          before do
+            2.times { User.create! }
+            2.times { Agent.create! }
+          end
 
-        it "should truncate all tables" do
-          expect { subject.clean }
-            .to change { [User.count, Agent.count] }
-            .from([2,2])
-            .to([0,0])
-        end
+          it "should truncate all tables" do
+            expect { subject.clean }
+              .to change { [User.count, Agent.count] }
+              .from([2,2])
+              .to([0,0])
+          end
 
-        it "should reset AUTO_INCREMENT index of table" do
-          subject.clean
-          expect(User.create.id).to eq 1
-        end
+          it "should reset AUTO_INCREMENT index of table" do
+            subject.clean
+            expect(User.create.id).to eq 1
+          end
 
-        xit "should not reset AUTO_INCREMENT index of table if :reset_ids is false" do
-          described_class.new(reset_ids: false).clean
-          expect(User.create.id).to eq 3
-        end
+          xit "should not reset AUTO_INCREMENT index of table if :reset_ids is false" do
+            described_class.new(reset_ids: false).clean
+            expect(User.create.id).to eq 3
+          end
 
-        it "should truncate all tables except for schema_migrations" do
-          subject.clean
-          count = connection.select_value("select count(*) from schema_migrations;").to_i
-          expect(count).to eq 2
-        end
+          it "should truncate all tables except for schema_migrations" do
+            subject.clean
+            count = connection.select_value("select count(*) from schema_migrations;").to_i
+            expect(count).to eq 2
+          end
 
-        it "should only truncate the tables specified in the :only option when provided" do
-          expect { described_class.new(only: ['agents']).clean }
-            .to change { [User.count, Agent.count] }
-            .from([2,2])
-            .to([2,0])
-        end
+          it "should only truncate the tables specified in the :only option when provided" do
+            expect { described_class.new(only: ['agents']).clean }
+              .to change { [User.count, Agent.count] }
+              .from([2,2])
+              .to([2,0])
+          end
 
-        it "should not truncate the tables specified in the :except option" do
-          expect { described_class.new(except: ['users']).clean }
-            .to change { [User.count, Agent.count] }
-            .from([2,2])
-            .to([2,0])
-        end
+          it "should not truncate the tables specified in the :except option" do
+            expect { described_class.new(except: ['users']).clean }
+              .to change { [User.count, Agent.count] }
+              .from([2,2])
+              .to([2,0])
+          end
 
-        it "should raise an error when :only and :except options are used" do
-          expect {
-            described_class.new(except: ['widgets'], only: ['widgets'])
-          }.to raise_error(ArgumentError)
-        end
+          it "should raise an error when :only and :except options are used" do
+            expect {
+              described_class.new(except: ['widgets'], only: ['widgets'])
+            }.to raise_error(ArgumentError)
+          end
 
-        it "should raise an error when invalid options are provided" do
-          expect { described_class.new(foo: 'bar') }.to raise_error(ArgumentError)
-        end
+          it "should raise an error when invalid options are provided" do
+            expect { described_class.new(foo: 'bar') }.to raise_error(ArgumentError)
+          end
 
-        it "should not truncate views" do
-          allow(connection).to receive(:database_cleaner_table_cache).and_return(%w[widgets dogs])
-          allow(connection).to receive(:database_cleaner_view_cache).and_return(["widgets"])
-
-          expect(connection).to receive(:truncate_tables).with(['dogs'])
-
-          subject.clean
-        end
-
-        describe "relying on #pre_count_truncate_tables if connection allows it" do
-          it "should rely on #pre_count_truncate_tables if pre_count is set" do
+          it "should not truncate views" do
             allow(connection).to receive(:database_cleaner_table_cache).and_return(%w[widgets dogs])
             allow(connection).to receive(:database_cleaner_view_cache).and_return(["widgets"])
 
-            subject = described_class.new(pre_count: true)
-
-            expect(connection).not_to receive(:truncate_tables).with(['dogs'])
-            expect(connection).to receive(:pre_count_truncate_tables).with(['dogs'], :reset_ids => true)
+            expect(connection).to receive(:truncate_tables).with(['dogs'])
 
             subject.clean
           end
+        end
 
-          it "should not rely on #pre_count_truncate_tables if pre_count is not set" do
-            allow(connection).to receive(:database_cleaner_table_cache).and_return(%w[widgets dogs])
-            allow(connection).to receive(:database_cleaner_view_cache).and_return(["widgets"])
+        describe "with pre_count optimization option" do
+          subject { described_class.new(pre_count: true) }
 
-            expect(connection).not_to receive(:pre_count_truncate_tables).with(['dogs'], :reset_ids => true)
-            expect(connection).to receive(:truncate_tables).with(['dogs'])
+          it "only truncates non-empty tables" do
+            pending if helper.db == :sqlite3
+            pending if helper.db == :postgres
 
+            User.create!
+
+            expect(connection).to receive(:truncate_tables).with(['users'])
             subject.clean
           end
         end
