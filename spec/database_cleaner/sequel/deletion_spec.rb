@@ -9,7 +9,7 @@ module DatabaseCleaner
 
       %w[mysql mysql2 sqlite3 postgres].map(&:to_sym).each do |db|
         context "using a #{db} connection" do
-          let(:helper) { SequelHelper.new(nil, db) }
+          let(:helper) { SequelHelper.new(db) }
 
           around do |example|
             helper.setup

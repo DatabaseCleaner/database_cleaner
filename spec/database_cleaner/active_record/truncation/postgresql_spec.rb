@@ -3,7 +3,7 @@ require 'database_cleaner/active_record/truncation'
 require 'database_cleaner/active_record/truncation/shared_fast_truncation'
 
 RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
-  let(:helper) { ActiveRecordHelper.new(nil, :postgres) }
+  let(:helper) { ActiveRecordHelper.new(:postgres) }
 
   let(:connection) { helper.connection }
 

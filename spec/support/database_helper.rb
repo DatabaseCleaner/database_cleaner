@@ -1,6 +1,6 @@
 require 'yaml'
 
-class DatabaseHelper < Struct.new(:config, :db)
+class DatabaseHelper < Struct.new(:db)
   def setup
     create_db
     establish_connection
