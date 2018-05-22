@@ -1,68 +1,63 @@
-require 'active_record'
-require 'active_record/connection_adapters/mysql_adapter'
-require 'active_record/connection_adapters/mysql2_adapter'
-require 'active_record/connection_adapters/sqlite3_adapter'
-require 'active_record/connection_adapters/postgresql_adapter'
-
+require 'support/active_record_helper'
 require 'database_cleaner/active_record/truncation'
 
-module ActiveRecord
-  module ConnectionAdapters
-    #JdbcAdapter IBM_DBAdapter
-    [ MysqlAdapter, Mysql2Adapter, SQLite3Adapter, PostgreSQLAdapter ].each do |adapter|
-      RSpec.describe adapter, "#truncate_table" do
-        it "responds" do
-          expect(adapter.instance_methods).to include(:truncate_table)
-        end
+RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
+  ActiveRecordHelper.with_all_dbs do |helper|
+    context "using a #{helper.db} connection" do
+      around do |example|
+        helper.setup
+        example.run
+        helper.teardown
       end
-    end
-  end
-end
 
-module DatabaseCleaner
-  module ActiveRecord
+      let(:connection) { helper.connection }
 
-    RSpec.describe Truncation do
-      let(:connection) { double('connection') }
-
-      before(:each) do
+      before do
         allow(connection).to receive(:disable_referential_integrity).and_yield
         allow(connection).to receive(:database_cleaner_view_cache).and_return([])
-        allow(::ActiveRecord::Base).to receive(:connection).and_return(connection)
       end
 
       describe '#clean' do
-        it "should truncate all tables except for schema_migrations" do
-          allow(connection).to receive(:database_cleaner_table_cache).and_return(%w[schema_migrations widgets dogs])
-
-          expect(connection).to receive(:truncate_tables).with(['widgets', 'dogs'])
-          subject.clean
+        before do
+          2.times { User.create! }
+          2.times { Agent.create! }
         end
 
-        it "should use ActiveRecord's SchemaMigration.table_name" do
-          allow(connection).to receive(:database_cleaner_table_cache).and_return(%w[pre_schema_migrations_suf widgets dogs])
-          allow(::ActiveRecord::Base).to receive(:table_name_prefix).and_return('pre_')
-          allow(::ActiveRecord::Base).to receive(:table_name_suffix).and_return('_suf')
+        it "should truncate all tables" do
+          expect { subject.clean }
+            .to change { [User.count, Agent.count] }
+            .from([2,2])
+            .to([0,0])
+        end
 
-          expect(connection).to receive(:truncate_tables).with(['widgets', 'dogs'])
-
+        it "should reset AUTO_INCREMENT index of table" do
           subject.clean
+          expect(User.create.id).to eq 1
+        end
+
+        xit "should not reset AUTO_INCREMENT index of table if :reset_ids is false" do
+          described_class.new(reset_ids: false).clean
+          expect(User.create.id).to eq 3
+        end
+
+        it "should truncate all tables except for schema_migrations" do
+          subject.clean
+          count = connection.select_value("select count(*) from schema_migrations;").to_i
+          expect(count).to eq 2
         end
 
         it "should only truncate the tables specified in the :only option when provided" do
-          allow(connection).to receive(:database_cleaner_table_cache).and_return(%w[schema_migrations widgets dogs])
-
-          expect(connection).to receive(:truncate_tables).with(['widgets'])
-
-          described_class.new(only: ['widgets']).clean
+          expect { described_class.new(only: ['agents']).clean }
+            .to change { [User.count, Agent.count] }
+            .from([2,2])
+            .to([2,0])
         end
 
         it "should not truncate the tables specified in the :except option" do
-          allow(connection).to receive(:database_cleaner_table_cache).and_return(%w[schema_migrations widgets dogs])
-
-          expect(connection).to receive(:truncate_tables).with(['dogs'])
-
-          described_class.new(except: ['widgets']).clean
+          expect { described_class.new(except: ['users']).clean }
+            .to change { [User.count, Agent.count] }
+            .from([2,2])
+            .to([2,0])
         end
 
         it "should raise an error when :only and :except options are used" do
