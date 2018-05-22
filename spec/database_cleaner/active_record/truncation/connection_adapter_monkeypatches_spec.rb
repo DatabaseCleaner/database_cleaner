@@ -81,30 +81,30 @@ RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
           end
         end
 
-        if helper.db == :postgres
-          describe ":except option cleanup" do
-            it "should not truncate the tables specified in the :except option" do
-              2.times { User.create }
+        describe ":except option cleanup" do
+          it "should not truncate the tables specified in the :except option" do
+            2.times { User.create }
 
-              described_class.new(except: ['users']).clean
+            described_class.new(except: ['users']).clean
 
-              expect( User.count ).to eq 2
-            end
+            expect( User.count ).to eq 2
           end
+        end
 
+        describe "schema_migrations table" do
+          it "is not truncated" do
+
+            subject.clean
+
+            count = connection.select_value("select count(*) from schema_migrations;").to_i
+            expect(count).to eq 2
+          end
+        end
+
+        if helper.db == :postgres
           describe '#database_cleaner_table_cache' do
             it 'should default to the list of tables with their schema' do
               expect(connection.database_cleaner_table_cache.first).to match(/^public\./)
-            end
-          end
-
-          describe "schema_migrations table" do
-            it "is not truncated" do
-
-              subject.clean
-
-              result = connection.execute("select count(*) from schema_migrations;")
-              expect(result.values.first).to eq ["2"]
             end
           end
         end
