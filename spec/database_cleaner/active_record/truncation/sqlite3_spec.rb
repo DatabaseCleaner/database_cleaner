@@ -1,4 +1,4 @@
-require 'support/active_record/active_record_helper'
+require 'support/active_record_helper'
 require 'database_cleaner/active_record/truncation'
 
 RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do

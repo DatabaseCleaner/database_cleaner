@@ -55,7 +55,7 @@ module DatabaseCleaner
       end
 
       describe "db=" do
-        let(:config_location) { "spec/support/active_record/example.database.yml" }
+        let(:config_location) { "spec/support/example.database.yml" }
 
         it "should process erb in the config" do
           subject.db = :my_db

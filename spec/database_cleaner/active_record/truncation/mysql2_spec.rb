@@ -1,4 +1,4 @@
-require 'support/active_record/active_record_helper'
+require 'support/active_record_helper'
 require 'database_cleaner/active_record/truncation'
 require 'database_cleaner/active_record/truncation/shared_fast_truncation'
 
