@@ -8,14 +8,9 @@ module DatabaseCleaner
       it_should_behave_like "a generic strategy"
       it_should_behave_like "a generic truncation strategy"
 
-      [
-        { url: 'mysql:///',    connection_options: db_config['mysql'] },
-        { url: 'mysql2:///',   connection_options: db_config['mysql2'] },
-        { url: 'sqlite:///',   connection_options: db_config['sqlite3'] },
-        { url: 'postgres:///', connection_options: db_config['postgres'] },
-      ].each do |config|
-        context "using a #{config[:url]} connection" do
-          let(:helper) { SequelHelper.new(config) }
+      %w[mysql mysql2 sqlite3 postgres].map(&:to_sym).each do |db|
+        context "using a #{db} connection" do
+          let(:helper) { SequelHelper.new(nil, db) }
 
           around do |example|
             helper.setup
@@ -23,22 +18,22 @@ module DatabaseCleaner
             helper.teardown
           end
 
-          let(:db) { helper.connection }
+          let(:connection) { helper.connection }
 
-          before { subject.db = db }
+          before { subject.db = connection }
 
           context 'when several tables have data' do
             before do
-              db[:users].insert
-              db[:agents].insert
+              connection[:users].insert
+              connection[:agents].insert
             end
 
             context 'by default' do
               it 'truncates all the tables' do
                 subject.clean
 
-                expect(db[:users]).to be_empty
-                expect(db[:agents]).to be_empty
+                expect(connection[:users]).to be_empty
+                expect(connection[:agents]).to be_empty
               end
             end
 
@@ -48,8 +43,8 @@ module DatabaseCleaner
               it 'truncates only the mentioned tables (and leaves the rest alone)' do
                 subject.clean
 
-                expect(db[:users]).to be_empty
-                expect(db[:agents].count).to eq(1)
+                expect(connection[:users]).to be_empty
+                expect(connection[:agents].count).to eq(1)
               end
             end
 
@@ -59,15 +54,15 @@ module DatabaseCleaner
               it 'leaves the mentioned tables alone (and truncates the rest)' do
                 subject.clean
 
-                expect(db[:users].count).to eq(1)
-                expect(db[:agents]).to be_empty
+                expect(connection[:users].count).to eq(1)
+                expect(connection[:agents]).to be_empty
               end
             end
           end
 
           describe 'auto increment sequences' do
             it "resets AUTO_INCREMENT primary key seqeunce" do
-              table = db[:users]
+              table = connection[:users]
               2.times { table.insert }
 
               subject.clean
@@ -80,12 +75,12 @@ module DatabaseCleaner
           describe "with pre_count optimization option" do
             subject { described_class.new(pre_count: true) }
 
-            before { db[:users].insert }
+            before { connection[:users].insert }
 
             it "only truncates non-empty tables" do
-              sql = case config[:url]
-              when 'sqlite:///' then ["DELETE FROM `users`", anything]
-              when 'postgres:///' then ['TRUNCATE TABLE "users" RESTART IDENTITY;', anything]
+              sql = case helper.db
+              when :sqlite3 then ["DELETE FROM `users`", anything]
+              when :postgres then ['TRUNCATE TABLE "users" RESTART IDENTITY;', anything]
               else ["TRUNCATE TABLE `users`", anything]
               end
               expect(subject.db).to receive(:execute_ddl).once.with(*sql)

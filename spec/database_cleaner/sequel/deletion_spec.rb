@@ -7,14 +7,9 @@ module DatabaseCleaner
     RSpec.describe Deletion do
       it_should_behave_like "a generic strategy"
 
-      [
-        { url: 'mysql:///',    connection_options: db_config['mysql'] },
-        { url: 'mysql2:///',   connection_options: db_config['mysql2'] },
-        { url: 'sqlite:///',   connection_options: db_config['sqlite3'] },
-        { url: 'postgres:///', connection_options: db_config['postgres'] },
-      ].each do |config|
-        context "using a #{config[:url]} connection" do
-          let(:helper) { SequelHelper.new(config) }
+      %w[mysql mysql2 sqlite3 postgres].map(&:to_sym).each do |db|
+        context "using a #{db} connection" do
+          let(:helper) { SequelHelper.new(nil, db) }
 
           around do |example|
             helper.setup
@@ -22,22 +17,22 @@ module DatabaseCleaner
             helper.teardown
           end
 
-          let(:db) { helper.connection }
+          let(:connection) { helper.connection }
 
-          before { subject.db = db }
+          before { subject.db = connection }
 
           context 'when several tables have data' do
             before do
-              db[:users].insert
-              db[:agents].insert
+              connection[:users].insert
+              connection[:agents].insert
             end
 
             context 'by default' do
               it 'deletes all the tables' do
                 subject.clean
 
-                expect(db[:users]).to be_empty
-                expect(db[:agents]).to be_empty
+                expect(connection[:users]).to be_empty
+                expect(connection[:agents]).to be_empty
               end
             end
           end

@@ -1,18 +1,13 @@
 require 'yaml'
 
 class DatabaseHelper < Struct.new(:config, :db)
-  # require 'logger'
-  # ActiveRecord::Base.logger = Logger.new(STDERR)
-
   def setup
     create_db
     establish_connection
     load_schema
   end
 
-  def connection
-    raise NotImplementedError
-  end
+  attr_reader :connection
 
   def teardown
     drop_db
@@ -28,11 +23,8 @@ class DatabaseHelper < Struct.new(:config, :db)
     if db == :sqlite3
       # NO-OP
     elsif db == :postgres
-      begin
-        establish_connection default_config.merge('database' => 'postgres')
-        connection.execute "CREATE DATABASE #{default_config['database']}"
-      rescue ActiveRecord::StatementInvalid
-      end
+      establish_connection default_config.merge('database' => 'postgres')
+      connection.execute "CREATE DATABASE #{default_config['database']}" rescue nil
     else
       establish_connection default_config.merge("database" => nil)
       connection.execute "CREATE DATABASE IF NOT EXISTS #{default_config['database']}"
