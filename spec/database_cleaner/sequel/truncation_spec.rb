@@ -15,8 +15,9 @@ module DatabaseCleaner
         { url: 'postgres:///', connection_options: db_config['postgres'] },
       ].each do |config|
         context "using a #{config[:url]} connection" do
+          let(:helper) { SequelHelper.new(config) }
+
           around do |example|
-            helper = SequelHelper.new(config)
             helper.setup
 
             example.run
@@ -24,16 +25,12 @@ module DatabaseCleaner
             helper.teardown
           end
 
-          let(:db) { ::Sequel.connect(config[:url], config[:connection_options]) }
+          let(:db) { helper.connection }
 
           before { subject.db = db }
 
           context 'when several tables have data' do
             before do
-              db.create_table!(:precious_stones) { primary_key :id }
-              db.create_table!(:replaceable_trifles) { primary_key :id }
-              db.create_table!(:worthless_junk) { primary_key :id }
-
               db[:precious_stones].insert
               db[:replaceable_trifles].insert
               db[:worthless_junk].insert
@@ -76,7 +73,6 @@ module DatabaseCleaner
 
           describe 'auto increment sequences' do
             it "resets AUTO_INCREMENT primary key seqeunce" do
-              db.create_table!(:replaceable_trifles) { primary_key :id }
               table = db[:replaceable_trifles]
               2.times { table.insert }
 
@@ -90,11 +86,7 @@ module DatabaseCleaner
           describe "with pre_count optimization option" do
             subject { described_class.new(pre_count: true) }
 
-            before do
-              db.create_table!(:precious_stones) { primary_key :id }
-              db.create_table!(:replaceable_trifles) { primary_key :id }
-              db[:precious_stones].insert
-            end
+            before { db[:precious_stones].insert }
 
             it "only truncates non-empty tables" do
               sql = case config[:url]
