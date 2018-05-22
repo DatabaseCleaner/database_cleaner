@@ -8,20 +8,6 @@ end
 class SequelHelper < DatabaseHelper
   attr_reader :connection
 
-  def teardown
-    if config[:url] == "postgres:///" || config[:url] == "sqlite:///"
-      ::Sequel.connect(config[:url], config[:connection_options]) do |db|
-        db.execute "DROP TABLE IF EXISTS users"
-        db.execute "DROP TABLE IF EXISTS agents"
-      end
-    else
-      ::Sequel.connect(config[:url], config[:connection_options].merge('database' => nil)) do |db|
-        db.execute "DROP DATABASE IF EXISTS #{database}"
-      end
-    end
-  rescue SQLite3::BusyException
-  end
-
   private
 
   def establish_connection
@@ -42,6 +28,24 @@ class SequelHelper < DatabaseHelper
       ::Sequel.connect(config[:url], config[:connection_options].merge('database' => nil)) do |db|
         db.execute "DROP DATABASE IF EXISTS #{database}"
         db.execute "CREATE DATABASE #{database}"
+      end
+    end
+  end
+
+  def drop_db
+    if config[:url] == "sqlite:///"
+      begin
+        File.unlink(db_config['sqlite3']['database'])
+      rescue Errno::ENOENT
+      end
+    elsif config[:url] == "postgres:///"
+      ::Sequel.connect(config[:url], config[:connection_options]) do |db|
+        db.execute "DROP TABLE IF EXISTS users"
+        db.execute "DROP TABLE IF EXISTS agents"
+      end
+    else
+      ::Sequel.connect(config[:url], config[:connection_options].merge('database' => nil)) do |db|
+        db.execute "DROP DATABASE IF EXISTS #{database}"
       end
     end
   end

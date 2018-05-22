@@ -14,5 +14,11 @@ class PostgreSQLHelper < ActiveRecordHelper
     connection.execute "CREATE DATABASE #{default_config['database']}"
   rescue ActiveRecord::StatementInvalid
   end
+
+  def drop_db
+    # FIXME
+    connection.execute "DROP TABLE IF EXISTS users"
+    connection.execute "DROP TABLE IF EXISTS agents"
+  end
 end
 

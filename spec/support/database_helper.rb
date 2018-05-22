@@ -15,10 +15,7 @@ class DatabaseHelper < Struct.new(:config)
   end
 
   def teardown
-    tables = %w(users agents)
-    tables.each do |table|
-      connection.execute "DROP TABLE IF EXISTS #{table}"
-    end
+    drop_db
   end
 
   private
@@ -30,15 +27,6 @@ class DatabaseHelper < Struct.new(:config)
   def create_db
     establish_connection default_config.merge("database" => nil)
     connection.execute "CREATE DATABASE IF NOT EXISTS #{default_config['database']}"
-  end
-
-  def db_config
-    config_path = 'db/config.yml'
-    @db_config ||= YAML.load(IO.read(config_path))
-  end
-
-  def default_config
-    raise NotImplementedError
   end
 
   def load_schema
@@ -54,6 +42,19 @@ class DatabaseHelper < Struct.new(:config)
         name INTEGER
       );
     SQL
+  end
+
+  def drop_db
+    connection.execute "DROP DATABASE IF EXISTS #{default_config['database']}"
+  end
+
+  def db_config
+    config_path = 'db/config.yml'
+    @db_config ||= YAML.load(IO.read(config_path))
+  end
+
+  def default_config
+    raise NotImplementedError
   end
 end
 

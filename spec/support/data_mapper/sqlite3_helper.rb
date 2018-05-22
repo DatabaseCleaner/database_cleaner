@@ -6,6 +6,8 @@ class DataMapperSQLite3Helper < DatabaseHelper
   puts "DataMapper #{DataMapper::VERSION}, sqlite3"
 
   def setup
+    super
+
     Kernel.const_set "User", Class.new
     User.instance_eval do
       include DataMapper::Resource
@@ -15,12 +17,12 @@ class DataMapperSQLite3Helper < DatabaseHelper
       property :id, User::Serial
       property :name, String
     end
-
-    super
   end
 
   def teardown
     Kernel.send :remove_const, "User" if defined?(User)
+
+    super
   end
 
   def connection
@@ -35,6 +37,11 @@ class DataMapperSQLite3Helper < DatabaseHelper
 
   def create_db
     # NO-OP
+  end
+
+  def drop_db
+    File.unlink(db_config['sqlite3']['database'])
+  rescue Errno::ENOENT
   end
 
   def establish_connection(config = default_config)

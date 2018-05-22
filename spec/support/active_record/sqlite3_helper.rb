@@ -12,5 +12,10 @@ class SQLite3Helper < ActiveRecordHelper
   def create_db
     # NO-OP
   end
+
+  def drop_db
+    File.unlink(db_config['sqlite3']['database'])
+  rescue Errno::ENOENT
+  end
 end
 
