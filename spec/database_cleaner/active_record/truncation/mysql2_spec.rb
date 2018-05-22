@@ -1,9 +1,9 @@
-require 'support/active_record/mysql2_helper'
+require 'support/active_record/active_record_helper'
 require 'database_cleaner/active_record/truncation'
 require 'database_cleaner/active_record/truncation/shared_fast_truncation'
 
 RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
-  let(:helper) { MySQL2Helper.new }
+  let(:helper) { ActiveRecordHelper.new(nil, :mysql2) }
 
   let(:connection) { helper.connection }
 

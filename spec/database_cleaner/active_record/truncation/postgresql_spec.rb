@@ -1,9 +1,9 @@
-require 'support/active_record/postgresql_helper'
+require 'support/active_record/active_record_helper'
 require 'database_cleaner/active_record/truncation'
 require 'database_cleaner/active_record/truncation/shared_fast_truncation'
 
 RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
-  let(:helper) { PostgreSQLHelper.new }
+  let(:helper) { ActiveRecordHelper.new(nil, :postgres) }
 
   let(:connection) { helper.connection }
 

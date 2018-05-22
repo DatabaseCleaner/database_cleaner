@@ -1,6 +1,6 @@
 require 'yaml'
 
-class DatabaseHelper < Struct.new(:config)
+class DatabaseHelper < Struct.new(:config, :db)
   # require 'logger'
   # ActiveRecord::Base.logger = Logger.new(STDERR)
 
@@ -25,8 +25,18 @@ class DatabaseHelper < Struct.new(:config)
   end
 
   def create_db
-    establish_connection default_config.merge("database" => nil)
-    connection.execute "CREATE DATABASE IF NOT EXISTS #{default_config['database']}"
+    if db == :sqlite3
+      # NO-OP
+    elsif db == :postgres
+      begin
+        establish_connection default_config.merge('database' => 'postgres')
+        connection.execute "CREATE DATABASE #{default_config['database']}"
+      rescue ActiveRecord::StatementInvalid
+      end
+    else
+      establish_connection default_config.merge("database" => nil)
+      connection.execute "CREATE DATABASE IF NOT EXISTS #{default_config['database']}"
+    end
   end
 
   def load_schema
@@ -45,7 +55,18 @@ class DatabaseHelper < Struct.new(:config)
   end
 
   def drop_db
-    connection.execute "DROP DATABASE IF EXISTS #{default_config['database']}"
+    if db == :sqlite3
+      begin
+        File.unlink(db_config['sqlite3']['database'])
+      rescue Errno::ENOENT
+      end
+    elsif db == :postgres
+      # FIXME
+      connection.execute "DROP TABLE IF EXISTS users"
+      connection.execute "DROP TABLE IF EXISTS agents"
+    else
+      connection.execute "DROP DATABASE IF EXISTS #{default_config['database']}"
+    end
   end
 
   def db_config
@@ -54,7 +75,7 @@ class DatabaseHelper < Struct.new(:config)
   end
 
   def default_config
-    raise NotImplementedError
+    db_config[db.to_s]
   end
 end
 
