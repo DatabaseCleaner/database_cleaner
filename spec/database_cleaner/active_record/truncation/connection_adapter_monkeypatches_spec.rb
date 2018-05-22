@@ -1,19 +1,16 @@
 require 'support/active_record_helper'
 require 'database_cleaner/active_record/truncation'
-require 'database_cleaner/active_record/truncation/shared_fast_truncation'
 
 RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
-  %w[mysql mysql2 sqlite3 postgres].map(&:to_sym).each do |db|
-    context "using a #{db} connection" do
-      let(:helper) { ActiveRecordHelper.new(db) }
-
-      let(:connection) { helper.connection }
-
+  ActiveRecordHelper.with_all_dbs do |helper|
+    context "using a #{helper.db} connection" do
       around do |example|
         helper.setup
         example.run
         helper.teardown
       end
+
+      let(:connection) { helper.connection }
 
       describe "AR connection adapter monkeypatches" do
         describe "#truncate_table" do
@@ -43,7 +40,7 @@ RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
           end
         end
 
-        unless db == :sqlite3
+        unless helper.db == :sqlite3
           describe "#pre_count_truncate_tables" do
 
             context "with :reset_ids set true" do
@@ -84,7 +81,7 @@ RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
           end
         end
 
-        if db == :postgres
+        if helper.db == :postgres
           describe ":except option cleanup" do
             it "should not truncate the tables specified in the :except option" do
               2.times { User.create }
@@ -100,8 +97,6 @@ RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
               expect(connection.database_cleaner_table_cache.first).to match(/^public\./)
             end
           end
-
-          it_behaves_like "an adapter with pre-count truncation"
 
           describe "schema_migrations table" do
             it "is not truncated" do

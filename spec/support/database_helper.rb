@@ -1,6 +1,12 @@
 require 'yaml'
 
 class DatabaseHelper < Struct.new(:db)
+  def self.with_all_dbs &block
+    %w[mysql mysql2 sqlite3 postgres].map(&:to_sym).each do |db|
+      yield new(db)
+    end
+  end
+
   def setup
     create_db
     establish_connection

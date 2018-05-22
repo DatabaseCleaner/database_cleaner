@@ -8,10 +8,8 @@ module DatabaseCleaner
       it_should_behave_like "a generic strategy"
       it_should_behave_like "a generic truncation strategy"
 
-      %w[mysql mysql2 sqlite3 postgres].map(&:to_sym).each do |db|
-        context "using a #{db} connection" do
-          let(:helper) { SequelHelper.new(db) }
-
+      SequelHelper.with_all_dbs do |helper|
+        context "using a #{helper.db} connection" do
           around do |example|
             helper.setup
             example.run
