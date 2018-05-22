@@ -11,9 +11,8 @@ class SequelHelper < DatabaseHelper
   def teardown
     if config[:url] == "postgres:///" || config[:url] == "sqlite:///"
       ::Sequel.connect(config[:url], config[:connection_options]) do |db|
-        db.execute "DROP TABLE IF EXISTS precious_stones"
-        db.execute "DROP TABLE IF EXISTS replaceable_trifles"
-        db.execute "DROP TABLE IF EXISTS worthless_junk"
+        db.execute "DROP TABLE IF EXISTS users"
+        db.execute "DROP TABLE IF EXISTS agents"
       end
     else
       ::Sequel.connect(config[:url], config[:connection_options].merge('database' => nil)) do |db|
@@ -48,9 +47,8 @@ class SequelHelper < DatabaseHelper
   end
 
   def load_schema
-    connection.create_table!(:precious_stones) { primary_key :id }
-    connection.create_table!(:replaceable_trifles) { primary_key :id }
-    connection.create_table!(:worthless_junk) { primary_key :id }
+    connection.create_table!(:users) { primary_key :id }
+    connection.create_table!(:agents) { primary_key :id }
   end
 
   def database

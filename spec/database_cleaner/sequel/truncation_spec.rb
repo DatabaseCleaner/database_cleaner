@@ -19,9 +19,7 @@ module DatabaseCleaner
 
           around do |example|
             helper.setup
-
             example.run
-
             helper.teardown
           end
 
@@ -31,49 +29,45 @@ module DatabaseCleaner
 
           context 'when several tables have data' do
             before do
-              db[:precious_stones].insert
-              db[:replaceable_trifles].insert
-              db[:worthless_junk].insert
+              db[:users].insert
+              db[:agents].insert
             end
 
             context 'by default' do
               it 'truncates all the tables' do
                 subject.clean
 
-                expect(db[:replaceable_trifles]).to be_empty
-                expect(db[:worthless_junk]).to be_empty
-                expect(db[:precious_stones]).to be_empty
+                expect(db[:users]).to be_empty
+                expect(db[:agents]).to be_empty
               end
             end
 
             context 'restricted to "only: [...]" some tables' do
-              subject { described_class.new(only: ['worthless_junk', 'replaceable_trifles']) }
+              subject { described_class.new(only: ['users']) }
 
               it 'truncates only the mentioned tables (and leaves the rest alone)' do
                 subject.clean
 
-                expect(db[:replaceable_trifles]).to be_empty
-                expect(db[:worthless_junk]).to be_empty
-                expect(db[:precious_stones].count).to eq(1)
+                expect(db[:users]).to be_empty
+                expect(db[:agents].count).to eq(1)
               end
             end
 
             context 'restricted to "except: [...]" some tables' do
-              subject { described_class.new(except: ['precious_stones']) } # XXX: Strings only, symbols are ignored
+              subject { described_class.new(except: ['users']) } # XXX: Strings only, symbols are ignored
 
               it 'leaves the mentioned tables alone (and truncates the rest)' do
                 subject.clean
 
-                expect(db[:replaceable_trifles]).to be_empty
-                expect(db[:worthless_junk]).to be_empty
-                expect(db[:precious_stones].count).to eq(1)
+                expect(db[:users].count).to eq(1)
+                expect(db[:agents]).to be_empty
               end
             end
           end
 
           describe 'auto increment sequences' do
             it "resets AUTO_INCREMENT primary key seqeunce" do
-              table = db[:replaceable_trifles]
+              table = db[:users]
               2.times { table.insert }
 
               subject.clean
@@ -86,13 +80,13 @@ module DatabaseCleaner
           describe "with pre_count optimization option" do
             subject { described_class.new(pre_count: true) }
 
-            before { db[:precious_stones].insert }
+            before { db[:users].insert }
 
             it "only truncates non-empty tables" do
               sql = case config[:url]
-              when 'sqlite:///' then ["DELETE FROM `precious_stones`", anything]
-              when 'postgres:///' then ['TRUNCATE TABLE "precious_stones" RESTART IDENTITY;', anything]
-              else ["TRUNCATE TABLE `precious_stones`", anything]
+              when 'sqlite:///' then ["DELETE FROM `users`", anything]
+              when 'postgres:///' then ['TRUNCATE TABLE "users" RESTART IDENTITY;', anything]
+              else ["TRUNCATE TABLE `users`", anything]
               end
               expect(subject.db).to receive(:execute_ddl).once.with(*sql)
               subject.clean
