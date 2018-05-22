@@ -2,9 +2,7 @@ require 'dm-core'
 require 'dm-sqlite-adapter'
 require 'support/database_helper'
 
-class DataMapperSQLite3Helper < DatabaseHelper
-  puts "DataMapper #{DataMapper::VERSION}, sqlite3"
-
+class DataMapperHelper < DatabaseHelper
   def setup
     super
 
@@ -30,19 +28,6 @@ class DataMapperSQLite3Helper < DatabaseHelper
   end
 
   private
-
-  def default_config
-    db_config['sqlite3']
-  end
-
-  def create_db
-    # NO-OP
-  end
-
-  def drop_db
-    File.unlink(db_config['sqlite3']['database'])
-  rescue Errno::ENOENT
-  end
 
   def establish_connection(config = default_config)
     DataMapper.setup(:default, config)

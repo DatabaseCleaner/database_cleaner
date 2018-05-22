@@ -1,8 +1,8 @@
-require 'support/data_mapper/sqlite3_helper'
+require 'support/data_mapper/data_mapper_helper'
 require 'database_cleaner/data_mapper/truncation'
 
 RSpec.describe DatabaseCleaner::DataMapper::Truncation do
-  let(:helper) { DataMapperSQLite3Helper.new }
+  let(:helper) { DataMapperHelper.new(nil, :sqlite3) }
 
   let(:connection) { helper.connection }
 
