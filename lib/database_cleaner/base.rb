@@ -163,14 +163,16 @@ module DatabaseCleaner
     rescue NameError
       $stderr.puts <<-TEXT
         Requiring the `database_cleaner` gem directly is deprecated, and will raise an error in database_cleaner 2.0. Instead, please require the specific gem (or gems) for your ORM.
-        For example, replace `gem "database_cleaner"` with `gem "database_cleaner-active_record"` in your Gemfile. See ### for more information.
+        For example, replace `gem "database_cleaner"` with `gem "database_cleaner-#{orm}"` in your Gemfile.
       TEXT
-      begin
-        require "database_cleaner/#{orm.to_s}/#{strategy.to_s}"
-      rescue LoadError
-        raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!  Available strategies: #{orm_module.available_strategies.join(', ')}"
-      end
+      require_orm_strategy(orm, strategy)
       retry
+    end
+
+    def require_orm_strategy(orm, strategy)
+      require "database_cleaner/#{orm.to_s}/#{strategy.to_s}"
+    rescue LoadError
+      raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!  Available strategies: #{orm_module.available_strategies.join(', ')}"
     end
 
     def autodetect
