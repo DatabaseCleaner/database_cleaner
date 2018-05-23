@@ -1,5 +1,4 @@
 module ArrayHelper
-
   def zipmap(array, vals)
     Hash[*(array.zip(vals).flatten)]
   end
@@ -11,7 +10,6 @@ module DatabaseCleaner
     # hackey, hack.. connections needs to stick around until I can properly deprecate the API
     def connections_stub(array)
       @cleaners = ArrayHelper.zipmap((1..array.size).to_a, array)
-      @connections = array
     end
   end
 end
