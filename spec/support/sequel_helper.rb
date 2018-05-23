@@ -1,7 +1,7 @@
 require 'sequel'
-require 'support/database_helper'
+require 'database_cleaner/spec/database_helper'
 
-class SequelHelper < DatabaseHelper
+class SequelHelper < DatabaseCleaner::Spec::DatabaseHelper
   private
 
   def establish_connection(config = default_config)

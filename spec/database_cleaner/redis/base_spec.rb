@@ -1,6 +1,6 @@
 require 'redis'
 require 'database_cleaner/redis/base'
-require 'database_cleaner/shared_strategy'
+require 'database_cleaner/spec'
 
 module DatabaseCleaner
   RSpec.describe Redis do

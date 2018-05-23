@@ -1,5 +1,5 @@
 require 'database_cleaner/sequel/base'
-require 'database_cleaner/shared_strategy'
+require 'database_cleaner/spec'
 require 'sequel'
 
 module DatabaseCleaner
