@@ -132,7 +132,30 @@ module DatabaseCleaner
     private
 
     def orm_module
-      ::DatabaseCleaner.orm_module(orm)
+      case orm
+        when :active_record
+          DatabaseCleaner::ActiveRecord
+        when :data_mapper
+          DatabaseCleaner::DataMapper
+        when :mongo
+          DatabaseCleaner::Mongo
+        when :mongoid
+          DatabaseCleaner::Mongoid
+        when :mongo_mapper
+          DatabaseCleaner::MongoMapper
+        when :moped
+          DatabaseCleaner::Moped
+        when :couch_potato
+          DatabaseCleaner::CouchPotato
+        when :sequel
+          DatabaseCleaner::Sequel
+        when :ohm
+          DatabaseCleaner::Ohm
+        when :redis
+          DatabaseCleaner::Redis
+        when :neo4j
+          DatabaseCleaner::Neo4j
+      end
     end
 
     def orm_strategy(strategy)
