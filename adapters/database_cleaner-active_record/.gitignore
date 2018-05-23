@@ -5,7 +5,9 @@
 /doc/
 /pkg/
 /spec/reports/
+/spec/support/config.yml
 /tmp/
+!/tmp/.keep
 
 # rspec failure tracking
 .rspec_status

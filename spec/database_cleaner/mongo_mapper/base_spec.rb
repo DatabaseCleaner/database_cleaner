@@ -1,5 +1,5 @@
 require 'database_cleaner/mongo_mapper/base'
-require 'database_cleaner/shared_strategy'
+require 'database_cleaner/spec'
 
 module DatabaseCleaner
   RSpec.describe MongoMapper do

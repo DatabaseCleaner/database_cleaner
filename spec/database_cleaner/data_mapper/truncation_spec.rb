@@ -1,5 +1,5 @@
 require 'database_cleaner/data_mapper/truncation'
-require 'database_cleaner/shared_strategy'
+require 'database_cleaner/spec'
 
 module DatabaseCleaner
   module DataMapper

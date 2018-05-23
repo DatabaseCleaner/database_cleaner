@@ -1,5 +1,5 @@
 require 'database_cleaner/neo4j/base'
-require 'database_cleaner/shared_strategy'
+require 'database_cleaner/spec'
 
 module DatabaseCleaner
   RSpec.describe Neo4j do
