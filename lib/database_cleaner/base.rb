@@ -168,11 +168,7 @@ module DatabaseCleaner
       begin
         require "database_cleaner/#{orm.to_s}/#{strategy.to_s}"
       rescue LoadError
-        if orm_module.respond_to?(:available_strategies)
-          raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!  Available strategies: #{orm_module.available_strategies.join(', ')}"
-        else
-          raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!"
-        end
+        raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!  Available strategies: #{orm_module.available_strategies.join(', ')}"
       end
       retry
     end
