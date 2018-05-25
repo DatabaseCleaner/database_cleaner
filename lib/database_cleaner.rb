@@ -30,7 +30,7 @@ module DatabaseCleaner
       :remove_duplicates,
     ] => :configuration
 
-    attr_accessor :allow_remote_database_url, :allow_production
+    attr_accessor :allow_remote_database_url, :allow_production, :url_whitelist
 
     def can_detect_orm?
       DatabaseCleaner::Base.autodetect_orm

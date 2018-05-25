@@ -63,6 +63,45 @@ module DatabaseCleaner
           expect { cleaner.start }.to_not raise_error
         end
       end
+
+      describe 'DatabaseCleaner.url_whitelist is set' do
+        let(:url_whitelist) { ['postgres://postgres@localhost', 'postgres://foo.bar'] }
+
+        before { DatabaseCleaner.url_whitelist = url_whitelist }
+        after  { DatabaseCleaner.url_whitelist = nil }
+
+        describe 'A remote url is on the whitelist' do
+          let(:database_url) { 'postgres://foo.bar' }
+
+          it 'does not raise' do
+            expect { cleaner.start }.to_not raise_error
+          end
+        end
+
+        describe 'A remote url is not on the whitelist' do
+          let(:database_url) { 'postgress://bar.baz' }
+
+          it 'raises a whitelist error' do
+            expect { cleaner.start }.to raise_error(Safeguard::Error::NotWhitelistedUrl)
+          end
+        end
+
+        describe 'A local url is on the whitelist' do
+          let(:database_url) { 'postgres://postgres@localhost' }
+
+          it 'does not raise' do
+            expect { cleaner.start }.to_not raise_error
+          end
+        end
+
+        describe 'A local url is not on the whitelist' do
+          let(:database_url) { 'postgres://localhost' }
+
+          it 'raises a whitelist error' do
+            expect { cleaner.start }.to raise_error(Safeguard::Error::NotWhitelistedUrl)
+          end
+        end
+      end
     end
 
     describe 'ENV is set to production' do
