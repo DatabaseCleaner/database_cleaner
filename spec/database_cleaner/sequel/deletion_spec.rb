@@ -1,16 +1,14 @@
-require 'spec_helper'
 require 'database_cleaner/sequel/deletion'
 require 'database_cleaner/shared_strategy'
-require 'sequel'
-require 'support/active_record/database_setup'
+require 'support/sequel/sequel_helper'
 
 module DatabaseCleaner
   module Sequel
-    describe Deletion do
+    RSpec.describe Deletion do
       it_should_behave_like "a generic strategy"
     end
 
-    shared_examples 'a Sequel deletion strategy' do
+    RSpec.shared_examples 'a Sequel deletion strategy' do
       let(:deletion) do
         d = Deletion.new
         d.db = db
@@ -34,9 +32,9 @@ module DatabaseCleaner
             d.db = db
             d.clean
 
-            expect(db[:replaceable_trifles]).to have(0).rows
-            expect(db[:worthless_junk]).to have(0).rows
-            expect(db[:precious_stones]).to have(0).rows
+            expect(db[:replaceable_trifles]).to be_empty
+            expect(db[:worthless_junk]).to be_empty
+            expect(db[:precious_stones]).to be_empty
           end
         end
       end
@@ -44,12 +42,21 @@ module DatabaseCleaner
 
     supported_configurations = [
       { :url => 'mysql:///', :connection_options => db_config['mysql'] },
-      { :url => 'postgres:///', :connection_options => db_config['postgres'] }
+      { :url => 'postgres:///', :connection_options => db_config['postgres'] },
     ]
 
     supported_configurations.each do |config|
-      describe "Sequel deletion (using a #{config[:url]} connection)" do
+      RSpec.describe "Sequel deletion (using a #{config[:url]} connection)" do
         let(:db) { ::Sequel.connect(config[:url], config[:connection_options]) }
+
+        around do |example|
+          helper = SequelHelper.new(config)
+          helper.setup
+
+          example.run
+
+          helper.teardown
+        end
 
         it_behaves_like 'a Sequel deletion strategy'
       end

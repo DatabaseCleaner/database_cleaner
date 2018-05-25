@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'database_cleaner/shared_strategy'
 require 'database_cleaner/generic/base'
 require 'active_record'
@@ -11,7 +10,7 @@ module ::DatabaseCleaner
       def start; end
     end
 
-    describe ExampleStrategy do
+    RSpec.describe ExampleStrategy do
       context "class methods" do
         subject { ExampleStrategy }
 
@@ -35,14 +34,14 @@ module ::DatabaseCleaner
         let (:strategy) { ExampleStrategy.new }
         before do
           # DatabaseCleaner.strategy = :truncation
-          connection.stub(:disable_referential_integrity).and_yield
-          connection.stub(:database_cleaner_view_cache).and_return([])
-          connection.stub(:database_cleaner_table_cache).and_return([])
-          ::ActiveRecord::Base.stub(:connection).and_return(connection)
+          allow(connection).to receive(:disable_referential_integrity).and_yield
+          allow(connection).to receive(:database_cleaner_view_cache).and_return([])
+          allow(connection).to receive(:database_cleaner_table_cache).and_return([])
+          allow(::ActiveRecord::Base).to receive(:connection).and_return(connection)
         end
 
         it "calls #clean even if there is an exception" do
-          strategy.should_receive :clean
+          expect(strategy).to receive :clean
           expect do
             strategy.cleaning do
               raise NoMethodError
@@ -51,7 +50,7 @@ module ::DatabaseCleaner
         end
 
         it "calls #clean after processing the block" do
-          strategy.should_receive :clean
+          expect(strategy).to receive :clean
           strategy.cleaning do
           end
         end

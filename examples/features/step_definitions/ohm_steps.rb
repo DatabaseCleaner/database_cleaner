@@ -11,7 +11,7 @@ When /^I create a widget using ohm$/ do
 end
 
 Then /^I should see ([\d]+) widget using ohm$/ do |widget_count|
-  OhmWidget.count.should == widget_count.to_i
+  expect(OhmWidget.count).to eq widget_count.to_i
 end
 
 When /^I create a widget in one db using ohm$/ do
@@ -23,9 +23,9 @@ When /^I create a widget in another db using ohm$/ do
 end
 
 Then /^I should see ([\d]+) widget in one db using ohm$/ do |widget_count|
-  OhmWidgetUsingDatabaseOne.count.should == widget_count.to_i
+  expect(OhmWidgetUsingDatabaseOne.count).to eq widget_count.to_i
 end
 
 Then /^I should see ([\d]+) widget in another db using ohm$/ do |widget_count|
-  OhmWidgetUsingDatabaseTwo.count.should == widget_count.to_i
+  expect(OhmWidgetUsingDatabaseTwo.count).to eq widget_count.to_i
 end

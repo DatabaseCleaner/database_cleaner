@@ -1,5 +1,6 @@
 require 'database_cleaner/null_strategy'
 require 'database_cleaner/safeguard'
+
 module DatabaseCleaner
   class Base
     include Comparable
@@ -75,7 +76,7 @@ module DatabaseCleaner
     end
 
     def strategy
-      @strategy ||= NullStrategy
+      @strategy ||= NullStrategy.new
     end
 
     def orm=(desired_orm)
@@ -131,7 +132,30 @@ module DatabaseCleaner
     private
 
     def orm_module
-      ::DatabaseCleaner.orm_module(orm)
+      case orm
+        when :active_record
+          DatabaseCleaner::ActiveRecord
+        when :data_mapper
+          DatabaseCleaner::DataMapper
+        when :mongo
+          DatabaseCleaner::Mongo
+        when :mongoid
+          DatabaseCleaner::Mongoid
+        when :mongo_mapper
+          DatabaseCleaner::MongoMapper
+        when :moped
+          DatabaseCleaner::Moped
+        when :couch_potato
+          DatabaseCleaner::CouchPotato
+        when :sequel
+          DatabaseCleaner::Sequel
+        when :ohm
+          DatabaseCleaner::Ohm
+        when :redis
+          DatabaseCleaner::Redis
+        when :neo4j
+          DatabaseCleaner::Neo4j
+      end
     end
 
     def orm_strategy(strategy)

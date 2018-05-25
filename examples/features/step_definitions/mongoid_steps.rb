@@ -3,7 +3,7 @@ When /^I create a widget using mongoid$/ do
 end
 
 Then /^I should see ([\d]+) widget using mongoid$/ do |widget_count|
-  MongoidWidget.count.should == widget_count.to_i
+  expect(MongoidWidget.count).to eq widget_count.to_i
 end
 
 When /^I create a widget in one db using mongoid$/ do
@@ -15,9 +15,9 @@ When /^I create a widget in another db using mongoid$/ do
 end
 
 Then /^I should see ([\d]+) widget in one db using mongoid$/ do |widget_count|
-  MongoidWidgetUsingDatabaseOne.count.should == widget_count.to_i
+  expect(MongoidWidgetUsingDatabaseOne.count).to eq widget_count.to_i
 end
 
 Then /^I should see ([\d]+) widget in another db using mongoid$/ do |widget_count|
-  MongoidWidgetUsingDatabaseTwo.count.should == widget_count.to_i
+  expect(MongoidWidgetUsingDatabaseTwo.count).to eq widget_count.to_i
 end

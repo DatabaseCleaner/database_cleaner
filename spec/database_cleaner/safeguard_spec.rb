@@ -1,13 +1,6 @@
-require 'spec_helper'
-require 'active_record'
-require 'database_cleaner/active_record/transaction'
-
 module DatabaseCleaner
-  describe Safeguard do
-    let(:strategy) { DatabaseCleaner::ActiveRecord::Transaction }
-    let(:cleaner)  { Base.new(:autodetect) }
-
-    before { allow_any_instance_of(strategy).to receive(:start) }
+  RSpec.describe Safeguard do
+    let(:cleaner)  { Base.new(:null) }
 
     describe 'DATABASE_URL is set' do
       before { stub_const('ENV', 'DATABASE_URL' => database_url) }
@@ -28,8 +21,24 @@ module DatabaseCleaner
         end
       end
 
+      describe 'to a local tld url' do
+        let(:database_url) { 'postgres://postgres.local' }
+
+        it 'does not raise' do
+          expect { cleaner.start }.to_not raise_error
+        end
+      end
+
       describe 'to a 127.0.0.1 url' do
         let(:database_url) { 'postgres://127.0.0.1' }
+
+        it 'does not raise' do
+          expect { cleaner.start }.to_not raise_error
+        end
+      end
+
+      describe 'to a sqlite db' do
+        let(:database_url) { 'sqlite3:tmp/db.sqlite3' }
 
         it 'does not raise' do
           expect { cleaner.start }.to_not raise_error

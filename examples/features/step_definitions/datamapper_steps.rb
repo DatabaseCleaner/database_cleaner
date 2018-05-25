@@ -11,7 +11,7 @@ When /^I create a widget using datamapper$/ do
 end
 
 Then /^I should see ([\d]+) widget using datamapper$/ do |widget_count|
-  DataMapperWidget.count.should == widget_count.to_i
+  expect(DataMapperWidget.count).to eq widget_count.to_i
 end
 
 When /^I create a widget in one db using datamapper$/ do
@@ -29,9 +29,9 @@ When /^I create a widget in another db using datamapper$/ do
 end
 
 Then /^I should see ([\d]+) widget in one db using datamapper$/ do |widget_count|
-  DataMapperWidgetUsingDatabaseOne.count.should == widget_count.to_i
+  expect(DataMapperWidgetUsingDatabaseOne.count).to eq widget_count.to_i
 end
 
 Then /^I should see ([\d]+) widget in another db using datamapper$/ do |widget_count|
-  DataMapperWidgetUsingDatabaseTwo.count.should == widget_count.to_i
+  expect(DataMapperWidgetUsingDatabaseTwo.count).to eq widget_count.to_i
 end

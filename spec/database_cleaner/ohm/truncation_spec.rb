@@ -1,70 +1,54 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
 require 'ohm'
 require 'database_cleaner/ohm/truncation'
 
-module DatabaseCleaner
-  module Ohm
+module OhmTests
+  class Widget < ::Ohm::Model
+    attribute :name
+  end
 
-    class Widget < ::Ohm::Model
-      attribute :name
+  class Gadget < ::Ohm::Model
+    attribute :name
+  end
+end
+
+RSpec.describe DatabaseCleaner::Ohm::Truncation do
+  around do |example|
+    config = YAML::load(File.open("#{File.dirname(__FILE__)}/../../../examples/config/redis.yml"))
+    Ohm.connect url: config['test']['url']
+    @redis = Ohm.redis
+
+    example.run
+
+    @redis.flushdb
+  end
+
+  before do
+    OhmTests::Widget.new(name: 'some widget').save
+    OhmTests::Gadget.new(name: 'some gadget').save
+  end
+
+  context "by default" do
+    it "truncates all keys" do
+      expect { subject.clean }.to change { @redis.keys.size }.from(6).to(0)
     end
+  end
 
-    class Gadget < ::Ohm::Model
-      attribute :name
+  context "when keys are provided to the :only option" do
+    subject { described_class.new(only: ['*Widget*']) }
+
+    it "only truncates the specified keys" do
+      expect { subject.clean }.to change { @redis.keys.size }.from(6).to(3)
+      expect(@redis.get('OhmTests::Gadget:id')).to eq '1'
     end
+  end
 
-    describe Truncation do
-      before(:all) do
-        config = YAML::load(File.open("#{File.dirname(__FILE__)}/../../../examples/config/redis.yml"))
-        ::Ohm.connect :url => config['test']['url']
-        @redis = ::Ohm.redis
-      end
+  context "when keys are provided to the :except option" do
+    subject { described_class.new(except: ['*Widget*']) }
 
-      before(:each) do
-        @redis.flushdb
-      end
-
-      it "should flush the database" do
-        Truncation.new.clean
-      end
-
-      def create_widget(attrs={})
-        Widget.new({:name => 'some widget'}.merge(attrs)).save
-      end
-
-      def create_gadget(attrs={})
-        Gadget.new({:name => 'some gadget'}.merge(attrs)).save
-      end
-
-      it "truncates all keys by default" do
-        create_widget
-        create_gadget
-        @redis.keys.size.should eq 6
-        Truncation.new.clean
-        @redis.keys.size.should eq 0
-      end
-
-      context "when keys are provided to the :only option" do
-        it "only truncates the specified keys" do
-          create_widget
-          create_gadget
-          @redis.keys.size.should eq 6
-          Truncation.new(:only => ['*Widget*']).clean
-          @redis.keys.size.should eq 3
-          @redis.get('DatabaseCleaner::Ohm::Gadget:id').should eq '1'
-        end
-      end
-
-      context "when keys are provided to the :except option" do
-        it "truncates all but the specified keys" do
-          create_widget
-          create_gadget
-          @redis.keys.size.should eq 6
-          Truncation.new(:except => ['*Widget*']).clean
-          @redis.keys.size.should eq 3
-          @redis.get('DatabaseCleaner::Ohm::Widget:id').should eq '1'
-        end
-      end
+    it "truncates all but the specified keys" do
+      expect { subject.clean }.to change { @redis.keys.size }.from(6).to(3)
+      expect(@redis.get('OhmTests::Widget:id')).to eq '1'
     end
   end
 end
+

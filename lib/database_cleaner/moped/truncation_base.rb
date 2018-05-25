@@ -13,6 +13,7 @@ module DatabaseCleaner
         else
           collections.each { |c| session[c].find.remove_all unless @tables_to_exclude.include?(c) }
         end
+        wait_for_removals_to_finish
         true
       end
 
@@ -35,6 +36,9 @@ module DatabaseCleaner
         end
       end
 
+      def wait_for_removals_to_finish
+        session.command(getlasterror: 1)
+      end
     end
   end
 end

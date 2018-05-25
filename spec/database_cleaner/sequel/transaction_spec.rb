@@ -1,11 +1,10 @@
-require 'spec_helper'
 require 'database_cleaner/sequel/transaction'
 require 'database_cleaner/shared_strategy'
-require 'sequel'
+require 'support/sequel/sequel_helper'
 
 module DatabaseCleaner
   module Sequel
-    describe Transaction do
+    RSpec.describe Transaction do
       it_should_behave_like "a generic strategy"
       it_should_behave_like "a generic transaction strategy"
 

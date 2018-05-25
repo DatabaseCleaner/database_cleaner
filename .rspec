@@ -1,4 +1,4 @@
 --color
 --format documentation
-mtime
---backtrace
+--require spec_helper
+--order rand

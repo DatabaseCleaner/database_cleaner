@@ -45,13 +45,15 @@ Gem::Specification.new do |s|
   s.add_development_dependency "tzinfo"
   s.add_development_dependency "mongoid-tree"
   s.add_development_dependency "mongo_mapper"
+  s.add_development_dependency "mongo", "~> 1.12.0"
   s.add_development_dependency "moped"
   s.add_development_dependency "neo4j-core"
   s.add_development_dependency "couch_potato"
   s.add_development_dependency "sequel", "~> 3.21.0"
   s.add_development_dependency 'ohm', '~> 0.1.3'
   s.add_development_dependency 'guard-rspec'
-  s.add_development_dependency "rspec-rails", "~> 2.14.2"
+  s.add_development_dependency "listen", "~> 3.0.0" # 3.1 requires Ruby >= 2.2
+  s.add_development_dependency "rspec"
   s.add_development_dependency "cucumber"
 
   unless RUBY_PLATFORM =~ /java/

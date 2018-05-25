@@ -4,7 +4,7 @@ require 'active_record/connection_adapters/abstract_adapter'
 
 #Load available connection adapters
 %w(
-  abstract_mysql_adapter postgresql_adapter sqlite3_adapter mysql_adapter mysql2_adapter
+  abstract_mysql_adapter postgresql_adapter sqlite3_adapter mysql_adapter mysql2_adapter oracle_enhanced_adapter
 ).each do |known_adapter|
   begin
     require "active_record/connection_adapters/#{known_adapter}"
