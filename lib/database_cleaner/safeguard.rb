@@ -22,17 +22,14 @@ module DatabaseCleaner
 
     class WhitelistedUrl
       def run
-        raise Error::NotWhitelistedUrl if !skip? && given?
+        return if skip?
+        raise Error::NotWhitelistedUrl if database_url_not_whitelisted?
       end
 
       private
 
-        def given?
-          !whitelisted?(ENV['DATABASE_URL'])
-        end
-
-        def whitelisted?(url)
-          DatabaseCleaner.url_whitelist.include?(url)
+        def database_url_not_whitelisted?
+          !DatabaseCleaner.url_whitelist.include?(ENV['DATABASE_URL'])
         end
 
         def skip?
