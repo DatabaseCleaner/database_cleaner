@@ -1,8 +1,8 @@
-require 'support/data_mapper/sqlite3_helper'
+require 'support/data_mapper_helper'
 require 'database_cleaner/data_mapper/truncation'
 
 RSpec.describe DatabaseCleaner::DataMapper::Truncation do
-  let(:helper) { DataMapperSQLite3Helper.new }
+  let(:helper) { DataMapperHelper.new(:sqlite3) }
 
   let(:connection) { helper.connection }
 
@@ -13,18 +13,12 @@ RSpec.describe DatabaseCleaner::DataMapper::Truncation do
   end
 
   describe "DM connection adapter monkeypatches" do
-    before do
-      2.times { User.create }
-    end
+    before { 2.times { User.create } }
 
     describe "#truncate_table" do
-      it "truncates the table" do
+      it "truncates the table and resets AUTO_INCREMENT index of table" do
         connection.truncate_table(User.storage_names[:default])
         expect(User.count).to eq 0
-      end
-
-      it "resets AUTO_INCREMENT index of table" do
-        connection.truncate_table(User.storage_names[:default])
         expect(User.create.id).to eq 1
       end
     end

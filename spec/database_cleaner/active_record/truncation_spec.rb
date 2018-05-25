@@ -1,113 +1,96 @@
-require 'active_record'
-require 'active_record/connection_adapters/mysql_adapter'
-require 'active_record/connection_adapters/mysql2_adapter'
-require 'active_record/connection_adapters/sqlite3_adapter'
-require 'active_record/connection_adapters/postgresql_adapter'
-
+require 'support/active_record_helper'
 require 'database_cleaner/active_record/truncation'
 
-module ActiveRecord
-  module ConnectionAdapters
-    #JdbcAdapter IBM_DBAdapter
-    [ MysqlAdapter, Mysql2Adapter, SQLite3Adapter, PostgreSQLAdapter ].each do |adapter|
-      RSpec.describe adapter, "#truncate_table" do
-        it "responds" do
-          expect(adapter.instance_methods).to include(:truncate_table)
-        end
+RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
+  ActiveRecordHelper.with_all_dbs do |helper|
+    context "using a #{helper.db} connection" do
+      around do |example|
+        helper.setup
+        example.run
+        helper.teardown
       end
-    end
-  end
-end
 
-module DatabaseCleaner
-  module ActiveRecord
+      let(:connection) { helper.connection }
 
-    RSpec.describe Truncation do
-      let(:connection) { double('connection') }
-
-      before(:each) do
+      before do
         allow(connection).to receive(:disable_referential_integrity).and_yield
         allow(connection).to receive(:database_cleaner_view_cache).and_return([])
-        allow(::ActiveRecord::Base).to receive(:connection).and_return(connection)
       end
 
       describe '#clean' do
-        it "should truncate all tables except for schema_migrations" do
-          allow(connection).to receive(:database_cleaner_table_cache).and_return(%w[schema_migrations widgets dogs])
+        context "with records" do
+          before do
+            2.times { User.create! }
+            2.times { Agent.create! }
+          end
 
-          expect(connection).to receive(:truncate_tables).with(['widgets', 'dogs'])
-          Truncation.new.clean
-        end
+          it "should truncate all tables" do
+            expect { subject.clean }
+              .to change { [User.count, Agent.count] }
+              .from([2,2])
+              .to([0,0])
+          end
 
-        it "should use ActiveRecord's SchemaMigration.table_name" do
-          allow(connection).to receive(:database_cleaner_table_cache).and_return(%w[pre_schema_migrations_suf widgets dogs])
-          allow(::ActiveRecord::Base).to receive(:table_name_prefix).and_return('pre_')
-          allow(::ActiveRecord::Base).to receive(:table_name_suffix).and_return('_suf')
+          it "should reset AUTO_INCREMENT index of table" do
+            subject.clean
+            expect(User.create.id).to eq 1
+          end
 
-          expect(connection).to receive(:truncate_tables).with(['widgets', 'dogs'])
+          xit "should not reset AUTO_INCREMENT index of table if :reset_ids is false" do
+            described_class.new(reset_ids: false).clean
+            expect(User.create.id).to eq 3
+          end
 
-          Truncation.new.clean
-        end
+          it "should truncate all tables except for schema_migrations" do
+            subject.clean
+            count = connection.select_value("select count(*) from schema_migrations;").to_i
+            expect(count).to eq 2
+          end
 
-        it "should only truncate the tables specified in the :only option when provided" do
-          allow(connection).to receive(:database_cleaner_table_cache).and_return(%w[schema_migrations widgets dogs])
+          it "should only truncate the tables specified in the :only option when provided" do
+            expect { described_class.new(only: ['agents']).clean }
+              .to change { [User.count, Agent.count] }
+              .from([2,2])
+              .to([2,0])
+          end
 
-          expect(connection).to receive(:truncate_tables).with(['widgets'])
+          it "should not truncate the tables specified in the :except option" do
+            expect { described_class.new(except: ['users']).clean }
+              .to change { [User.count, Agent.count] }
+              .from([2,2])
+              .to([2,0])
+          end
 
-          Truncation.new(:only => ['widgets']).clean
-        end
+          it "should raise an error when :only and :except options are used" do
+            expect {
+              described_class.new(except: ['widgets'], only: ['widgets'])
+            }.to raise_error(ArgumentError)
+          end
 
-        it "should not truncate the tables specified in the :except option" do
-          allow(connection).to receive(:database_cleaner_table_cache).and_return(%w[schema_migrations widgets dogs])
+          it "should raise an error when invalid options are provided" do
+            expect { described_class.new(foo: 'bar') }.to raise_error(ArgumentError)
+          end
 
-          expect(connection).to receive(:truncate_tables).with(['dogs'])
-
-          Truncation.new(:except => ['widgets']).clean
-        end
-
-        it "should raise an error when :only and :except options are used" do
-          expect {
-            Truncation.new(:except => ['widgets'], :only => ['widgets'])
-          }.to raise_error(ArgumentError)
-        end
-
-        it "should raise an error when invalid options are provided" do
-          expect { Truncation.new(:foo => 'bar') }.to raise_error(ArgumentError)
-        end
-
-        it "should not truncate views" do
-          allow(connection).to receive(:database_cleaner_table_cache).and_return(%w[widgets dogs])
-          allow(connection).to receive(:database_cleaner_view_cache).and_return(["widgets"])
-
-          expect(connection).to receive(:truncate_tables).with(['dogs'])
-
-          Truncation.new.clean
-        end
-
-        describe "relying on #pre_count_truncate_tables if connection allows it" do
-          subject { Truncation.new }
-
-          it "should rely on #pre_count_truncate_tables if #pre_count? returns true" do
+          it "should not truncate views" do
             allow(connection).to receive(:database_cleaner_table_cache).and_return(%w[widgets dogs])
             allow(connection).to receive(:database_cleaner_view_cache).and_return(["widgets"])
 
-            subject.instance_variable_set(:"@pre_count", true)
-
-            expect(connection).not_to receive(:truncate_tables).with(['dogs'])
-            expect(connection).to receive(:pre_count_truncate_tables).with(['dogs'], :reset_ids => true)
+            expect(connection).to receive(:truncate_tables).with(['dogs'])
 
             subject.clean
           end
+        end
 
-          it "should not rely on #pre_count_truncate_tables if #pre_count? return false" do
-            allow(connection).to receive(:database_cleaner_table_cache).and_return(%w[widgets dogs])
-            allow(connection).to receive(:database_cleaner_view_cache).and_return(["widgets"])
+        describe "with pre_count optimization option" do
+          subject { described_class.new(pre_count: true) }
 
-            subject.instance_variable_set(:"@pre_count", false)
+          it "only truncates non-empty tables" do
+            pending if helper.db == :sqlite3
+            pending if helper.db == :postgres
 
-            expect(connection).not_to receive(:pre_count_truncate_tables).with(['dogs'], :reset_ids => true)
-            expect(connection).to receive(:truncate_tables).with(['dogs'])
+            User.create!
 
+            expect(connection).to receive(:truncate_tables).with(['users'])
             subject.clean
           end
         end
@@ -118,7 +101,7 @@ module DatabaseCleaner
             expect(connection).not_to receive(:tables)
 
             allow(connection).to receive(:truncate_tables)
-            Truncation.new({ :cache_tables => true }).clean
+            described_class.new(cache_tables: true).clean
           end
         end
 
@@ -128,56 +111,8 @@ module DatabaseCleaner
             expect(connection).to receive(:tables).and_return([])
 
             allow(connection).to receive(:truncate_tables)
-            Truncation.new({ :cache_tables => false }).clean
+            described_class.new(cache_tables: false).clean
           end
-        end
-      end
-
-      describe '#pre_count?' do
-        before(:each) do
-          allow(connection).to receive(:disable_referential_integrity).and_yield
-          allow(connection).to receive(:database_cleaner_view_cache).and_return([])
-          allow(::ActiveRecord::Base).to receive(:connection).and_return(connection)
-        end
-
-        subject { Truncation.new }
-
-        it 'should return false initially' do
-          expect(subject.send(:pre_count?)).to eq false
-        end
-
-        it 'should return true if @reset_id is set and non false or nil' do
-          subject.instance_variable_set(:"@pre_count", true)
-          expect(subject.send(:pre_count?)).to eq true
-        end
-
-        it 'should return false if @reset_id is set to false' do
-          subject.instance_variable_set(:"@pre_count", false)
-          expect(subject.send(:pre_count?)).to eq false
-        end
-      end
-
-      describe '#reset_ids?' do
-        before(:each) do
-          allow(connection).to receive(:disable_referential_integrity).and_yield
-          allow(connection).to receive(:database_cleaner_view_cache).and_return([])
-          allow(::ActiveRecord::Base).to receive(:connection).and_return(connection)
-        end
-
-        subject { Truncation.new }
-
-        it 'should return true initially' do
-          expect(subject.send(:reset_ids?)).to eq true
-        end
-
-        it 'should return true if @reset_id is set and non falsey' do
-          subject.instance_variable_set(:"@reset_ids", 'Something')
-          expect(subject.send(:reset_ids?)).to eq true
-        end
-
-        it 'should return false if @reset_id is set to false' do
-          subject.instance_variable_set(:"@reset_ids", false)
-          expect(subject.send(:reset_ids?)).to eq false
         end
       end
     end

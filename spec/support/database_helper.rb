@@ -1,8 +1,11 @@
 require 'yaml'
 
-class DatabaseHelper < Struct.new(:config)
-  # require 'logger'
-  # ActiveRecord::Base.logger = Logger.new(STDERR)
+class DatabaseHelper < Struct.new(:db)
+  def self.with_all_dbs &block
+    %w[mysql mysql2 sqlite3 postgres].map(&:to_sym).each do |db|
+      yield new(db)
+    end
+  end
 
   def setup
     create_db
@@ -10,15 +13,10 @@ class DatabaseHelper < Struct.new(:config)
     load_schema
   end
 
-  def connection
-    raise NotImplementedError
-  end
+  attr_reader :connection
 
   def teardown
-    tables = %w(users agents)
-    tables.each do |table|
-      connection.execute "DROP TABLE IF EXISTS #{table}"
-    end
+    drop_db
   end
 
   private
@@ -28,17 +26,15 @@ class DatabaseHelper < Struct.new(:config)
   end
 
   def create_db
-    establish_connection default_config.merge("database" => nil)
-    connection.execute "CREATE DATABASE IF NOT EXISTS #{default_config['database']}"
-  end
-
-  def db_config
-    config_path = 'db/config.yml'
-    @db_config ||= YAML.load(IO.read(config_path))
-  end
-
-  def default_config
-    raise NotImplementedError
+    if db == :sqlite3
+      # NO-OP
+    elsif db == :postgres
+      establish_connection default_config.merge('database' => 'postgres')
+      connection.execute "CREATE DATABASE #{default_config['database']}" rescue nil
+    else
+      establish_connection default_config.merge("database" => nil)
+      connection.execute "CREATE DATABASE IF NOT EXISTS #{default_config['database']}"
+    end
   end
 
   def load_schema
@@ -54,6 +50,30 @@ class DatabaseHelper < Struct.new(:config)
         name INTEGER
       );
     SQL
+  end
+
+  def drop_db
+    if db == :sqlite3
+      begin
+        File.unlink(db_config['sqlite3']['database'])
+      rescue Errno::ENOENT
+      end
+    elsif db == :postgres
+      # FIXME
+      connection.execute "DROP TABLE IF EXISTS users"
+      connection.execute "DROP TABLE IF EXISTS agents"
+    else
+      connection.execute "DROP DATABASE IF EXISTS #{default_config['database']}"
+    end
+  end
+
+  def db_config
+    config_path = 'db/config.yml'
+    @db_config ||= YAML.load(IO.read(config_path))
+  end
+
+  def default_config
+    db_config[db.to_s]
   end
 end
 

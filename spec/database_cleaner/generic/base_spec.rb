@@ -51,8 +51,7 @@ module ::DatabaseCleaner
 
         it "calls #clean after processing the block" do
           expect(strategy).to receive :clean
-          strategy.cleaning do
-          end
+          strategy.cleaning {}
         end
       end
     end

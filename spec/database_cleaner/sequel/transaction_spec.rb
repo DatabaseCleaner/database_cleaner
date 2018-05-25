@@ -1,6 +1,6 @@
 require 'database_cleaner/sequel/transaction'
 require 'database_cleaner/shared_strategy'
-require 'support/sequel/sequel_helper'
+require 'support/sequel_helper'
 
 module DatabaseCleaner
   module Sequel
