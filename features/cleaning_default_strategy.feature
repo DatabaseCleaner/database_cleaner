@@ -20,6 +20,7 @@ Feature: database cleaning
     | Neo4j        |
     | Ohm          |
     | Redis        |
+    | Sequel       |
 
   Scenario Outline: ruby app
     Given I am using <ORM>

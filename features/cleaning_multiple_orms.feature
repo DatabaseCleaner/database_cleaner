@@ -18,6 +18,7 @@ Feature: database cleaning using multiple ORMs
     | ActiveRecord | Neo4j        |
     | ActiveRecord | Ohm          |
     | ActiveRecord | Redis        |
+    | ActiveRecord | Sequel       |
     | CouchPotato  | ActiveRecord |
     | CouchPotato  | DataMapper   |
     | CouchPotato  | Mongoid      |
@@ -25,6 +26,7 @@ Feature: database cleaning using multiple ORMs
     | CouchPotato  | Neo4j        |
     | CouchPotato  | Ohm          |
     | CouchPotato  | Redis        |
+    | CouchPotato  | Sequel       |
     | DataMapper   | ActiveRecord |
     | DataMapper   | CouchPotato  |
     | DataMapper   | Mongoid      |
@@ -32,6 +34,7 @@ Feature: database cleaning using multiple ORMs
     | DataMapper   | Neo4j        |
     | DataMapper   | Ohm          |
     | DataMapper   | Redis        |
+    | DataMapper   | Sequel       |
     | Mongoid      | ActiveRecord |
     | Mongoid      | CouchPotato  |
     | Mongoid      | DataMapper   |
@@ -39,6 +42,7 @@ Feature: database cleaning using multiple ORMs
     | Mongoid      | Neo4j        |
     | Mongoid      | Ohm          |
     | Mongoid      | Redis        |
+    | Mongoid      | Sequel       |
     | MongoMapper  | ActiveRecord |
     | MongoMapper  | CouchPotato  |
     | MongoMapper  | DataMapper   |
@@ -46,6 +50,7 @@ Feature: database cleaning using multiple ORMs
     | MongoMapper  | Neo4j        |
     | MongoMapper  | Ohm          |
     | MongoMapper  | Redis        |
+    | MongoMapper  | Sequel       |
     | Neo4j        | ActiveRecord |
     | Neo4j        | CouchPotato  |
     | Neo4j        | DataMapper   |
@@ -53,6 +58,7 @@ Feature: database cleaning using multiple ORMs
     | Neo4j        | MongoMapper  |
     | Neo4j        | Ohm          |
     | Neo4j        | Redis        |
+    | Neo4j        | Sequel       |
     | Ohm          | ActiveRecord |
     | Ohm          | CouchPotato  |
     | Ohm          | DataMapper   |
@@ -60,13 +66,23 @@ Feature: database cleaning using multiple ORMs
     | Ohm          | MongoMapper  |
     | Ohm          | Neo4j        |
     | Ohm          | Redis        |
+    | Ohm          | Sequel       |
     | Redis        | ActiveRecord |
-    | Redis        | DataMapper   |
     | Redis        | CouchPotato  |
+    | Redis        | DataMapper   |
     | Redis        | Mongoid      |
     | Redis        | MongoMapper  |
     | Redis        | Neo4j        |
     | Redis        | Ohm          |
+    | Redis        | Sequel       |
+    | Sequel       | ActiveRecord |
+    | Sequel       | CouchPotato  |
+    | Sequel       | DataMapper   |
+    | Sequel       | Mongoid      |
+    | Sequel       | MongoMapper  |
+    | Sequel       | Neo4j        |
+    | Sequel       | Ohm          |
+    | Sequel       | Redis        |
 
   Scenario Outline: ruby app
     Given I am using <ORM1> and <ORM2>

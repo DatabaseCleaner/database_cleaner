@@ -11,4 +11,5 @@ path "./adapters" do
   gem "database_cleaner-neo4j"
   gem "database_cleaner-ohm"
   gem "database_cleaner-redis"
+  gem "database_cleaner-sequel"
 end
