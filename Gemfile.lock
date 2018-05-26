@@ -35,6 +35,9 @@ PATH
       database_cleaner (~> 1.8.0)
       database_cleaner-redis (~> 1.8.0)
       ohm
+    database_cleaner-redis (1.8.0)
+      database_cleaner (~> 1.8.0)
+      redis
 
 GEM
   remote: https://rubygems.org/
@@ -289,6 +292,7 @@ DEPENDENCIES
   database_cleaner-moped!
   database_cleaner-neo4j!
   database_cleaner-ohm!
+  database_cleaner-redis!
   datamapper
   dm-migrations
   dm-sqlite-adapter

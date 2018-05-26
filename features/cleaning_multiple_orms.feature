@@ -17,42 +17,56 @@ Feature: database cleaning using multiple ORMs
     | ActiveRecord | MongoMapper  |
     | ActiveRecord | Neo4j        |
     | ActiveRecord | Ohm          |
+    | ActiveRecord | Redis        |
     | CouchPotato  | ActiveRecord |
     | CouchPotato  | DataMapper   |
     | CouchPotato  | Mongoid      |
     | CouchPotato  | MongoMapper  |
     | CouchPotato  | Neo4j        |
     | CouchPotato  | Ohm          |
+    | CouchPotato  | Redis        |
     | DataMapper   | ActiveRecord |
     | DataMapper   | CouchPotato  |
     | DataMapper   | Mongoid      |
     | DataMapper   | MongoMapper  |
     | DataMapper   | Neo4j        |
     | DataMapper   | Ohm          |
+    | DataMapper   | Redis        |
     | Mongoid      | ActiveRecord |
     | Mongoid      | CouchPotato  |
     | Mongoid      | DataMapper   |
     | Mongoid      | MongoMapper  |
     | Mongoid      | Neo4j        |
     | Mongoid      | Ohm          |
+    | Mongoid      | Redis        |
     | MongoMapper  | ActiveRecord |
     | MongoMapper  | CouchPotato  |
     | MongoMapper  | DataMapper   |
     | MongoMapper  | Mongoid      |
     | MongoMapper  | Neo4j        |
     | MongoMapper  | Ohm          |
+    | MongoMapper  | Redis        |
     | Neo4j        | ActiveRecord |
     | Neo4j        | CouchPotato  |
     | Neo4j        | DataMapper   |
     | Neo4j        | Mongoid      |
     | Neo4j        | MongoMapper  |
     | Neo4j        | Ohm          |
+    | Neo4j        | Redis        |
     | Ohm          | ActiveRecord |
     | Ohm          | CouchPotato  |
     | Ohm          | DataMapper   |
     | Ohm          | Mongoid      |
     | Ohm          | MongoMapper  |
     | Ohm          | Neo4j        |
+    | Ohm          | Redis        |
+    | Redis        | ActiveRecord |
+    | Redis        | DataMapper   |
+    | Redis        | CouchPotato  |
+    | Redis        | Mongoid      |
+    | Redis        | MongoMapper  |
+    | Redis        | Neo4j        |
+    | Redis        | Ohm          |
 
   Scenario Outline: ruby app
     Given I am using <ORM1> and <ORM2>
