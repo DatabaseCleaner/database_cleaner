@@ -18,6 +18,8 @@ Feature: multiple database cleaning
     | DataMapper   | truncation    |
     | DataMapper   | transaction   |
     | MongoMapper  | truncation    |
+    | Sequel       | truncation    |
+    | Sequel       | transaction   |
 
   Scenario Outline: ruby app
     Given I am using <ORM>
