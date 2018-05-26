@@ -16,6 +16,7 @@ Feature: database cleaning
     | CouchPotato  |
     | DataMapper   |
     | Mongoid      |
+    | MongoMapper  |
 
   Scenario Outline: ruby app
     Given I am using <ORM>
