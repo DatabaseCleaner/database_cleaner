@@ -25,6 +25,9 @@ PATH
       database_cleaner (~> 1.8.0)
       database_cleaner-mongo (~> 1.8.0)
       mongoid
+    database_cleaner-moped (1.8.0)
+      database_cleaner (~> 1.8.0)
+      moped
 
 GEM
   remote: https://rubygems.org/
@@ -276,6 +279,7 @@ DEPENDENCIES
   database_cleaner-mongo!
   database_cleaner-mongo_mapper!
   database_cleaner-mongoid!
+  database_cleaner-moped!
   datamapper
   dm-migrations
   dm-sqlite-adapter
