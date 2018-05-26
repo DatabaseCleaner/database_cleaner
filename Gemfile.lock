@@ -15,6 +15,9 @@ PATH
     database_cleaner-data_mapper (1.8.0)
       database_cleaner (~> 1.8.0)
       datamapper
+    database_cleaner-mongo (1.8.0)
+      database_cleaner (~> 1.8.0)
+      mongo
 
 GEM
   remote: https://rubygems.org/
@@ -263,6 +266,7 @@ DEPENDENCIES
   database_cleaner-active_record!
   database_cleaner-couch_potato!
   database_cleaner-data_mapper!
+  database_cleaner-mongo!
   datamapper
   dm-migrations
   dm-sqlite-adapter
