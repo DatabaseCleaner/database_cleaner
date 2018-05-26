@@ -24,6 +24,7 @@ Feature: database cleaning
     | Neo4j        | truncation  |
     | Neo4j        | transaction |
     | Ohm          | truncation  |
+    | Redis        | truncation  |
 
   Scenario Outline: ruby app
     Given I am using <ORM>
