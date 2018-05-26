@@ -18,6 +18,9 @@ PATH
     database_cleaner-mongo (1.8.0)
       database_cleaner (~> 1.8.0)
       mongo
+    database_cleaner-mongo_mapper (0.1.0)
+      database_cleaner (~> 1.8.0)
+      mongo_mapper
     database_cleaner-mongoid (1.8.0)
       database_cleaner (~> 1.8.0)
       database_cleaner-mongo (~> 1.8.0)
@@ -271,6 +274,7 @@ DEPENDENCIES
   database_cleaner-couch_potato!
   database_cleaner-data_mapper!
   database_cleaner-mongo!
+  database_cleaner-mongo_mapper!
   database_cleaner-mongoid!
   datamapper
   dm-migrations

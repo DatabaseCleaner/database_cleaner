@@ -19,6 +19,7 @@ Feature: database cleaning
     | DataMapper   | transaction |
     | DataMapper   | truncation  |
     | Mongoid      | truncation  |
+    | MongoMapper  | truncation  |
 
   Scenario Outline: ruby app
     Given I am using <ORM>

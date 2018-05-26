@@ -14,15 +14,23 @@ Feature: database cleaning using multiple ORMs
     | ActiveRecord | CouchPotato  |
     | ActiveRecord | DataMapper   |
     | ActiveRecord | Mongoid      |
+    | ActiveRecord | MongoMapper  |
     | CouchPotato  | ActiveRecord |
     | CouchPotato  | DataMapper   |
     | CouchPotato  | Mongoid      |
+    | CouchPotato  | MongoMapper  |
     | DataMapper   | ActiveRecord |
     | DataMapper   | CouchPotato  |
     | DataMapper   | Mongoid      |
+    | DataMapper   | MongoMapper  |
     | Mongoid      | ActiveRecord |
     | Mongoid      | CouchPotato  |
     | Mongoid      | DataMapper   |
+    | Mongoid      | MongoMapper  |
+    | MongoMapper  | ActiveRecord |
+    | MongoMapper  | CouchPotato  |
+    | MongoMapper  | DataMapper   |
+    | MongoMapper  | Mongoid      |
 
   Scenario Outline: ruby app
     Given I am using <ORM1> and <ORM2>
