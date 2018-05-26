@@ -94,7 +94,6 @@ DEPENDENCIES
   bundler (~> 1.16)
   database_cleaner!
   database_cleaner-data_mapper!
-  dm-migrations
   dm-sqlite-adapter
   rake (~> 10.0)
   rspec (~> 3.0)
