@@ -16,6 +16,8 @@ Feature: database cleaning
     | ActiveRecord | truncation  |
     | ActiveRecord | deletion    |
     | CouchPotato  | truncation  |
+    | DataMapper   | transaction |
+    | DataMapper   | truncation  |
 
   Scenario Outline: ruby app
     Given I am using <ORM>
