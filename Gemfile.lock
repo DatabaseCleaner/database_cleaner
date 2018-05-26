@@ -9,6 +9,9 @@ PATH
     database_cleaner-active_record (1.8.0)
       activerecord
       database_cleaner (~> 1.8.0)
+    database_cleaner-couch_potato (1.8.0)
+      couch_potato
+      database_cleaner (~> 1.8.0)
 
 GEM
   remote: https://rubygems.org/
@@ -255,6 +258,7 @@ DEPENDENCIES
   cucumber
   database_cleaner!
   database_cleaner-active_record!
+  database_cleaner-couch_potato!
   datamapper
   dm-migrations
   dm-sqlite-adapter

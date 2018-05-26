@@ -13,6 +13,7 @@ Feature: database cleaning
   Examples:
     | ORM          |
     | ActiveRecord |
+    | CouchPotato  |
 
   Scenario Outline: ruby app
     Given I am using <ORM>
