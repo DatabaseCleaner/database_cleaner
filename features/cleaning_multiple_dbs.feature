@@ -15,6 +15,8 @@ Feature: multiple database cleaning
     | ActiveRecord | truncation    |
     | ActiveRecord | deletion      |
     | ActiveRecord | transaction   |
+    | DataMapper   | truncation    |
+    | DataMapper   | transaction   |
 
   Scenario Outline: ruby app
     Given I am using <ORM>

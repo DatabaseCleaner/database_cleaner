@@ -12,7 +12,11 @@ Feature: database cleaning using multiple ORMs
   Examples:
     | ORM1         | ORM2         |
     | ActiveRecord | CouchPotato  |
+    | ActiveRecord | DataMapper   |
     | CouchPotato  | ActiveRecord |
+    | CouchPotato  | DataMapper   |
+    | DataMapper   | ActiveRecord |
+    | DataMapper   | CouchPotato  |
 
   Scenario Outline: ruby app
     Given I am using <ORM1> and <ORM2>

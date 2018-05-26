@@ -14,6 +14,7 @@ Feature: database cleaning
     | ORM          |
     | ActiveRecord |
     | CouchPotato  |
+    | DataMapper   |
 
   Scenario Outline: ruby app
     Given I am using <ORM>

@@ -24,19 +24,19 @@ ENV['REDIS_URL_TWO'] = config['two']['url']
 require "active_support/core_ext/string/inflections"
 
 if orm && strategy
+  require "#{File.dirname(__FILE__)}/../../lib/#{orm.downcase}_models"
   if use_gems
     require "database_cleaner-#{orm.underscore}"
   else
     $:.unshift(File.dirname(__FILE__) + '/../../../lib')
     require "database_cleaner"
   end
-  require "#{File.dirname(__FILE__)}/../../lib/#{orm.downcase}_models"
 
   if another_orm
+    require "#{File.dirname(__FILE__)}/../../lib/#{another_orm.downcase}_models"
     if use_gems
       require "database_cleaner-#{another_orm.underscore}"
     end
-    require "#{File.dirname(__FILE__)}/../../lib/#{another_orm.downcase}_models"
   end
 
   require 'database_cleaner/cucumber'
