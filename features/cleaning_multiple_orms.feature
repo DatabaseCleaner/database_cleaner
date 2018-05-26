@@ -15,22 +15,32 @@ Feature: database cleaning using multiple ORMs
     | ActiveRecord | DataMapper   |
     | ActiveRecord | Mongoid      |
     | ActiveRecord | MongoMapper  |
+    | ActiveRecord | Neo4j        |
     | CouchPotato  | ActiveRecord |
     | CouchPotato  | DataMapper   |
     | CouchPotato  | Mongoid      |
     | CouchPotato  | MongoMapper  |
+    | CouchPotato  | Neo4j        |
     | DataMapper   | ActiveRecord |
     | DataMapper   | CouchPotato  |
     | DataMapper   | Mongoid      |
     | DataMapper   | MongoMapper  |
+    | DataMapper   | Neo4j        |
     | Mongoid      | ActiveRecord |
     | Mongoid      | CouchPotato  |
     | Mongoid      | DataMapper   |
     | Mongoid      | MongoMapper  |
+    | Mongoid      | Neo4j        |
     | MongoMapper  | ActiveRecord |
     | MongoMapper  | CouchPotato  |
     | MongoMapper  | DataMapper   |
     | MongoMapper  | Mongoid      |
+    | MongoMapper  | Neo4j        |
+    | Neo4j        | ActiveRecord |
+    | Neo4j        | CouchPotato  |
+    | Neo4j        | DataMapper   |
+    | Neo4j        | Mongoid      |
+    | Neo4j        | MongoMapper  |
 
   Scenario Outline: ruby app
     Given I am using <ORM1> and <ORM2>

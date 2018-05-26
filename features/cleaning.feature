@@ -20,6 +20,9 @@ Feature: database cleaning
     | DataMapper   | truncation  |
     | Mongoid      | truncation  |
     | MongoMapper  | truncation  |
+    | Neo4j        | deletion    |
+    | Neo4j        | truncation  |
+    | Neo4j        | transaction |
 
   Scenario Outline: ruby app
     Given I am using <ORM>
