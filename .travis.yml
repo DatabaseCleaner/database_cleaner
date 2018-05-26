@@ -5,11 +5,6 @@ rvm:
   - 2.0.0
   - 2.1
   - 2.2
-script:
-  - bundle exec rspec
-  - bundle exec cucumber
-gemfile:
-  - Gemfile
 before_install:
   - | # cached install of Neo4j locally:
     if [ ! -d neo4j-community-2.3.3/bin ];
@@ -20,9 +15,7 @@ before_install:
     fi
 before_script:
   - neo4j-community-2.3.3/bin/neo4j start
-  - mysql -e 'create database database_cleaner_test;'
-  - psql -c 'create database database_cleaner_test;' -U postgres
-  - cp db/sample.config.yml db/config.yml
+  - bin/setup
 services:
   - redis-server
   - mongodb
