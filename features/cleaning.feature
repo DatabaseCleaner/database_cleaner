@@ -18,6 +18,7 @@ Feature: database cleaning
     | CouchPotato  | truncation  |
     | DataMapper   | transaction |
     | DataMapper   | truncation  |
+    | Mongoid      | truncation  |
 
   Scenario Outline: ruby app
     Given I am using <ORM>
