@@ -18,6 +18,7 @@ Feature: database cleaning
     | Mongoid      |
     | MongoMapper  |
     | Neo4j        |
+    | Ohm          |
 
   Scenario Outline: ruby app
     Given I am using <ORM>

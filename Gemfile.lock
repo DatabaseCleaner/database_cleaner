@@ -31,6 +31,10 @@ PATH
     database_cleaner-neo4j (1.8.0)
       database_cleaner (~> 1.8.0)
       neo4j-core
+    database_cleaner-ohm (1.8.0)
+      database_cleaner (~> 1.8.0)
+      database_cleaner-redis (~> 1.8.0)
+      ohm
 
 GEM
   remote: https://rubygems.org/
@@ -284,6 +288,7 @@ DEPENDENCIES
   database_cleaner-mongoid!
   database_cleaner-moped!
   database_cleaner-neo4j!
+  database_cleaner-ohm!
   datamapper
   dm-migrations
   dm-sqlite-adapter

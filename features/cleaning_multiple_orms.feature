@@ -16,31 +16,43 @@ Feature: database cleaning using multiple ORMs
     | ActiveRecord | Mongoid      |
     | ActiveRecord | MongoMapper  |
     | ActiveRecord | Neo4j        |
+    | ActiveRecord | Ohm          |
     | CouchPotato  | ActiveRecord |
     | CouchPotato  | DataMapper   |
     | CouchPotato  | Mongoid      |
     | CouchPotato  | MongoMapper  |
     | CouchPotato  | Neo4j        |
+    | CouchPotato  | Ohm          |
     | DataMapper   | ActiveRecord |
     | DataMapper   | CouchPotato  |
     | DataMapper   | Mongoid      |
     | DataMapper   | MongoMapper  |
     | DataMapper   | Neo4j        |
+    | DataMapper   | Ohm          |
     | Mongoid      | ActiveRecord |
     | Mongoid      | CouchPotato  |
     | Mongoid      | DataMapper   |
     | Mongoid      | MongoMapper  |
     | Mongoid      | Neo4j        |
+    | Mongoid      | Ohm          |
     | MongoMapper  | ActiveRecord |
     | MongoMapper  | CouchPotato  |
     | MongoMapper  | DataMapper   |
     | MongoMapper  | Mongoid      |
     | MongoMapper  | Neo4j        |
+    | MongoMapper  | Ohm          |
     | Neo4j        | ActiveRecord |
     | Neo4j        | CouchPotato  |
     | Neo4j        | DataMapper   |
     | Neo4j        | Mongoid      |
     | Neo4j        | MongoMapper  |
+    | Neo4j        | Ohm          |
+    | Ohm          | ActiveRecord |
+    | Ohm          | CouchPotato  |
+    | Ohm          | DataMapper   |
+    | Ohm          | Mongoid      |
+    | Ohm          | MongoMapper  |
+    | Ohm          | Neo4j        |
 
   Scenario Outline: ruby app
     Given I am using <ORM1> and <ORM2>

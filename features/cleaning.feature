@@ -23,6 +23,7 @@ Feature: database cleaning
     | Neo4j        | deletion    |
     | Neo4j        | truncation  |
     | Neo4j        | transaction |
+    | Ohm          | truncation  |
 
   Scenario Outline: ruby app
     Given I am using <ORM>
