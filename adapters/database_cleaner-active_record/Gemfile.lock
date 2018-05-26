@@ -6,7 +6,7 @@ PATH
 PATH
   remote: .
   specs:
-    database_cleaner-active_record (0.1.0)
+    database_cleaner-active_record (1.8.0)
       activerecord
       database_cleaner (~> 1.8.0)
 
