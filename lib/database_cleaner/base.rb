@@ -9,28 +9,23 @@ module DatabaseCleaner
       [orm, db] <=> [other.orm, other.db]
     end
 
-    def initialize(desired_orm = nil,opts = {})
+    def initialize(desired_orm = nil, opts = {})
       if [:autodetect, nil, "autodetect"].include?(desired_orm)
         autodetect
       else
         self.orm = desired_orm
       end
       self.db = opts[:connection] || opts[:model] if opts.has_key?(:connection) || opts.has_key?(:model)
-      set_default_orm_strategy
+      self.strategy = default_orm_strategy
       Safeguard.new.run
     end
 
     def db=(desired_db)
-       self.strategy_db = desired_db
-       @db = desired_db
+      @db = self.strategy_db = desired_db
     end
 
     def strategy_db=(desired_db)
-      if strategy.respond_to? :db=
-        strategy.db = desired_db
-      elsif desired_db!= :default
-        raise ArgumentError, "You must provide a strategy object that supports non default databases when you specify a database"
-      end
+      set_strategy_db(strategy, desired_db)
     end
 
     def db
@@ -44,8 +39,7 @@ module DatabaseCleaner
 
     def clean_with(*args)
       strategy = create_strategy(*args)
-      set_strategy_db strategy, self.db
-
+      set_strategy_db strategy, db
       strategy.clean
       strategy
     end
@@ -62,17 +56,15 @@ module DatabaseCleaner
 
     def strategy=(args)
       strategy, *strategy_args = args
-       if strategy.is_a?(Symbol)
-          @strategy = create_strategy(*args)
-       elsif strategy_args.empty?
-         @strategy = strategy
-       else
-         raise ArgumentError, "You must provide a strategy object, or a symbol for a known strategy along with initialization params."
-       end
+      @strategy = if strategy.is_a?(Symbol)
+        create_strategy(*args)
+      elsif strategy_args.empty?
+        strategy
+      else
+        raise ArgumentError, "You must provide a strategy object, or a symbol for a known strategy along with initialization params."
+      end
 
-       set_strategy_db @strategy, self.db
-
-       @strategy
+      set_strategy_db @strategy, db
     end
 
     def strategy
@@ -183,14 +175,12 @@ module DatabaseCleaner
                raise(NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, Moped, or CouchPotato, Redis or Ohm loaded?")
     end
 
-    def set_default_orm_strategy
+    def default_orm_strategy
       case orm
-      when :active_record, :data_mapper, :sequel
-        self.strategy = :transaction
+      when :active_record, :data_mapper, :sequel, :neo4j
+        :transaction
       when :mongo_mapper, :mongoid, :couch_potato, :moped, :ohm, :redis
-        self.strategy = :truncation
-      when :neo4j
-        self.strategy = :transaction
+        :truncation
       end
     end
   end
