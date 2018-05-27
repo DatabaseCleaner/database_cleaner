@@ -1,8 +1,8 @@
 module DatabaseCleaner
   class Configuration
     def stub_cleaners(array)
-      @cleaners = array.each.with_index.reduce({}) do |hash, (cleaner, index)|
-        hash.merge index => cleaner
+      @cleaners = array.each.with_index.reduce(Cleaners.new) do |cleaners, (cleaner, index)|
+        cleaners.merge index => cleaner
       end
     end
   end

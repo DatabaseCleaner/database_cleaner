@@ -13,9 +13,29 @@ module DatabaseCleaner
       fetch([orm, opts]) { add_cleaner(orm, opts) }
     end 
 
-    # TODO privatize in 2.0
+    def strategy=(strategy)
+      add_cleaner(:autodetect) if none?
+      values.each { |cleaner| cleaner.strategy = strategy }
+      remove_duplicates
+    end
+
+    def orm=(orm)
+      add_cleaner(:autodetect) if none?
+      values.each { |cleaner| cleaner.orm = orm }
+      remove_duplicates
+    end
+
+    # TODO privatize the following methods in 2.0
+
     def add_cleaner(orm, opts = {})
       self[[orm, opts]] = ::DatabaseCleaner::Base.new(orm, opts)
+    end
+
+    def remove_duplicates
+      replace(reduce(Cleaners.new) do |cleaners, (key, value)|
+        cleaners[key] = value unless cleaners.values.include?(value)
+        cleaners
+      end)
     end
   end
 
@@ -25,7 +45,14 @@ module DatabaseCleaner
     end
 
     extend Forwardable
-    delegate [:[], :add_cleaner] => :cleaners
+    delegate [
+      :[],
+      :strategy=,
+      :orm=,
+
+      :add_cleaner,
+      :remove_duplicates,
+    ] => :cleaners
 
     attr_accessor :app_root, :logger, :cleaners
 
@@ -35,16 +62,6 @@ module DatabaseCleaner
 
     def logger
       @logger ||= Logger.new(STDOUT).tap { |l| l.level = Logger::ERROR }
-    end
-
-    def strategy=(stratagem)
-      connections.each { |connect| connect.strategy = stratagem }
-      remove_duplicates
-    end
-
-    def orm=(orm)
-      connections.each { |connect| connect.orm = orm }
-      remove_duplicates
     end
 
     def start
@@ -82,13 +99,6 @@ module DatabaseCleaner
       end
       add_cleaner(:autodetect) if @cleaners.none?
       @cleaners.values
-    end
-
-    def remove_duplicates
-      @cleaners = @cleaners.reduce({}) do |cleaners, (key, value)|
-        cleaners[key] = value unless cleaners.values.include?(value)
-        cleaners
-      end
     end
 
     private
