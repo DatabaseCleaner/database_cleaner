@@ -1,20 +1,31 @@
 require 'database_cleaner/base'
+require 'forwardable'
 
 module DatabaseCleaner
 
   class NoORMDetected < StandardError; end
   class UnknownStrategySpecified < ArgumentError; end
 
-  class Configuration
-    def initialize
-      @cleaners ||= {}
-    end
-
+  class Cleaners < Hash
     # FIXME this method conflates creation with lookup... both a command and a query. yuck.
     def [](orm, opts = {})
       raise NoORMDetected unless orm
-      @cleaners.fetch([orm, opts]) { add_cleaner(orm, opts) }
+      fetch([orm, opts]) { add_cleaner(orm, opts) }
     end 
+
+    # TODO privatize in 2.0
+    def add_cleaner(orm, opts = {})
+      self[[orm, opts]] = ::DatabaseCleaner::Base.new(orm, opts)
+    end
+  end
+
+  class Configuration
+    def initialize
+      @cleaners ||= Cleaners.new
+    end
+
+    extend Forwardable
+    delegate [:[], :add_cleaner] => :cleaners
 
     attr_accessor :app_root, :logger, :cleaners
 
@@ -63,10 +74,6 @@ module DatabaseCleaner
 
     def init_cleaners
       $stderr.puts "Calling `DatabaseCleaner.init_cleaners` is deprecated, and will be removed in database_cleaner 2.0 with no replacement."
-    end
-
-    def add_cleaner(orm, opts = {})
-      @cleaners[[orm, opts]] = ::DatabaseCleaner::Base.new(orm, opts)
     end
 
     def connections
