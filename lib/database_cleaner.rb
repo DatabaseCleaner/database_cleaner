@@ -20,12 +20,9 @@ module DatabaseCleaner
       :clean_with,
       :cleaning,
 
-      # TODO deprecate
+      # TODO remove in 2.0
       :clean!,
       :clean_with!,
-
-      # TODO deprecate and then privatize the following methods:
-
       :init_cleaners,
       :add_cleaner,
       :connections,
