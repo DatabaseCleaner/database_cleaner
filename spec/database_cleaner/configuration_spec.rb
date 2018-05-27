@@ -1,15 +1,9 @@
-module ArrayHelper
-  def zipmap(array, vals)
-    Hash[*(array.zip(vals).flatten)]
-  end
-  module_function :zipmap
-end
-
 module DatabaseCleaner
   class Configuration
-    # hackey, hack.. connections needs to stick around until I can properly deprecate the API
-    def connections_stub(array)
-      @cleaners = ArrayHelper.zipmap((1..array.size).to_a, array)
+    def stub_cleaners(array)
+      @cleaners = array.each.with_index.reduce({}) do |hash, (cleaner, index)|
+        hash.merge index => cleaner
+      end
     end
   end
 end
@@ -22,7 +16,8 @@ RSpec.describe DatabaseCleaner::Configuration do
 
     it "should default to autodetection" do
       require "active_record"
-      cleaner = subject.connections.first
+      subject.strategy = :truncation
+      cleaner = subject.cleaners.values.first
       expect(cleaner.orm).to eq :active_record
     end
 
@@ -30,48 +25,48 @@ RSpec.describe DatabaseCleaner::Configuration do
       cleaner = subject[:active_record]
       expect(cleaner).to be_a(DatabaseCleaner::Base)
       expect(cleaner.orm).to eq :active_record
-      expect(subject.connections).to eq [cleaner]
+      expect(subject.cleaners.values).to eq [cleaner]
     end
 
     it "should accept :data_mapper" do
       cleaner = subject[:data_mapper]
       expect(cleaner).to be_a(DatabaseCleaner::Base)
       expect(cleaner.orm).to eq :data_mapper
-      expect(subject.connections).to eq [cleaner]
+      expect(subject.cleaners.values).to eq [cleaner]
     end
 
     it "should accept :mongo_mapper" do
       cleaner = subject[:mongo_mapper]
       expect(cleaner).to be_a(DatabaseCleaner::Base)
       expect(cleaner.orm).to eq :mongo_mapper
-      expect(subject.connections).to eq [cleaner]
+      expect(subject.cleaners.values).to eq [cleaner]
     end
 
     it "should accept :couch_potato" do
       cleaner = subject[:couch_potato]
       expect(cleaner).to be_a(DatabaseCleaner::Base)
       expect(cleaner.orm).to eq :couch_potato
-      expect(subject.connections).to eq [cleaner]
+      expect(subject.cleaners.values).to eq [cleaner]
     end
 
     it "should accept :moped" do
       cleaner = subject[:moped]
       expect(cleaner).to be_a(DatabaseCleaner::Base)
       expect(cleaner.orm).to eq :moped
-      expect(subject.connections).to eq [cleaner]
+      expect(subject.cleaners.values).to eq [cleaner]
     end
 
     it 'accepts :ohm' do
       cleaner = subject[:ohm]
       expect(cleaner).to be_a(DatabaseCleaner::Base)
       expect(cleaner.orm).to eq :ohm
-      expect(subject.connections).to eq [cleaner]
+      expect(subject.cleaners.values).to eq [cleaner]
     end
 
     it "should accept multiple orm's" do
       cleaners = [subject[:couch_potato], subject[:data_mapper]]
-      expect(subject.connections.map(&:orm)).to eq [:couch_potato, :data_mapper]
-      expect(subject.connections).to eq cleaners
+      expect(subject.cleaners.values.map(&:orm)).to eq [:couch_potato, :data_mapper]
+      expect(subject.cleaners.values).to eq cleaners
     end
 
     it "should accept a connection parameter and store it" do
@@ -84,8 +79,8 @@ RSpec.describe DatabaseCleaner::Configuration do
     it "should accept multiple connections for a single orm" do
       subject[:data_mapper, connection: :first_db]
       subject[:data_mapper, connection: :second_db]
-      expect(subject.connections.map(&:orm)).to eq [:data_mapper, :data_mapper]
-      expect(subject.connections.map(&:db)).to eq [:first_db, :second_db]
+      expect(subject.cleaners.values.map(&:orm)).to eq [:data_mapper, :data_mapper]
+      expect(subject.cleaners.values.map(&:db)).to eq [:first_db, :second_db]
     end
 
     it "should accept multiple connections and multiple orms" do
@@ -93,8 +88,8 @@ RSpec.describe DatabaseCleaner::Configuration do
       subject[:active_record, connection: :second_db]
       subject[:active_record, connection: :first_db ]
       subject[:data_mapper,   connection: :second_db]
-      expect(subject.connections.map(&:orm)).to eq [:data_mapper, :active_record, :active_record, :data_mapper]
-      expect(subject.connections.map(&:db)).to eq [:first_db, :second_db, :first_db, :second_db]
+      expect(subject.cleaners.values.map(&:orm)).to eq [:data_mapper, :active_record, :active_record, :data_mapper]
+      expect(subject.cleaners.values.map(&:db)).to eq [:first_db, :second_db, :first_db, :second_db]
     end
 
     it "should retrieve a db rather than create a new one" do
@@ -142,39 +137,39 @@ RSpec.describe DatabaseCleaner::Configuration do
       end
     end
 
-    context "multiple connections" do
-      # these are relatively simple, all we need to do is make sure all connections are cleaned/started/cleaned_with appropriately.
+    context "multiple cleaners" do
+      # these are relatively simple, all we need to do is make sure all cleaners are cleaned/started/cleaned_with appropriately.
       context "simple proxy methods" do
 
         let(:active_record) { double("active_mock") }
         let(:data_mapper)   { double("data_mock")   }
 
         before do
-          subject.connections_stub([active_record,data_mapper])
+          subject.stub_cleaners([active_record,data_mapper])
         end
 
-        it "should proxy orm to all connections" do
+        it "should proxy orm to all cleaners" do
           expect(active_record).to receive(:orm=)
           expect(data_mapper).to receive(:orm=)
 
           subject.orm = double("orm")
         end
 
-        it "should proxy start to all connections" do
+        it "should proxy start to all cleaners" do
           expect(active_record).to receive(:start)
           expect(data_mapper).to receive(:start)
 
           subject.start
         end
 
-        it "should proxy clean to all connections" do
+        it "should proxy clean to all cleaners" do
           expect(active_record).to receive(:clean)
           expect(data_mapper).to receive(:clean)
 
           subject.clean
         end
 
-        it "should proxy clean_with to all connections" do
+        it "should proxy clean_with to all cleaners" do
           stratagem = double("stratgem")
           expect(active_record).to receive(:clean_with).with(stratagem)
           expect(data_mapper).to receive(:clean_with).with(stratagem)
@@ -210,7 +205,7 @@ RSpec.describe DatabaseCleaner::Configuration do
         end
       end
 
-      # ah now we have some difficulty, we mustn't allow duplicate connections to exist, but they could
+      # ah now we have some difficulty, we mustn't allow duplicate cleaners to exist, but they could
       # plausably want to force orm/strategy change on two sets of orm that differ only on db
       context "multiple orm proxy methods" do
         class FakeStrategy < Struct.new(:orm, :db, :strategy); end
@@ -221,12 +216,12 @@ RSpec.describe DatabaseCleaner::Configuration do
           let(:data_mapper_1)   { FakeStrategy.new(:data_mapper) }
 
           before do
-            subject.connections_stub [active_record_1,active_record_2,data_mapper_1]
+            subject.stub_cleaners [active_record_1,active_record_2,data_mapper_1]
           end
 
-          it "should proxy #orm= to all connections and remove duplicate connections" do
+          it "should proxy #orm= to all cleaners and remove duplicate cleaners" do
             expect { subject.orm = :data_mapper }
-              .to change { subject.connections }
+              .to change { subject.cleaners.values }
               .from([active_record_1,active_record_2,data_mapper_1])
               .to([active_record_1,active_record_2])
           end
@@ -237,12 +232,12 @@ RSpec.describe DatabaseCleaner::Configuration do
           let(:active_record_2) { FakeStrategy.new(:active_record, :default, :transaction) }
 
           before do
-            subject.connections_stub [active_record_1,active_record_2]
+            subject.stub_cleaners [active_record_1,active_record_2]
           end
 
-          it "should proxy #strategy= to all connections and remove duplicate connections" do
+          it "should proxy #strategy= to all cleaners and remove duplicate cleaners" do
             expect { subject.strategy = :truncation }
-              .to change { subject.connections }
+              .to change { subject.cleaners.values }
               .from([active_record_1,active_record_2])
               .to([active_record_1])
           end

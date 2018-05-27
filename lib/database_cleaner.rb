@@ -11,6 +11,8 @@ module DatabaseCleaner
       :app_root,
       :logger=,
       :logger,
+      :cleaners,
+      :cleaners=,
       :strategy=,
       :orm=,
       :start,

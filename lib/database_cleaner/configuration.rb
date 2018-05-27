@@ -16,7 +16,7 @@ module DatabaseCleaner
       @cleaners.fetch([orm, opts]) { add_cleaner(orm, opts) }
     end 
 
-    attr_accessor :app_root, :logger
+    attr_accessor :app_root, :logger, :cleaners
 
     def app_root
       @app_root ||= Dir.pwd
@@ -70,6 +70,9 @@ module DatabaseCleaner
     end
 
     def connections
+      if called_externally?(caller)
+        $stderr.puts "Calling `DatabaseCleaner.connections` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner.cleaners`, instead."
+      end
       add_cleaner(:autodetect) if @cleaners.none?
       @cleaners.values
     end
@@ -79,6 +82,12 @@ module DatabaseCleaner
         cleaners[key] = value unless cleaners.values.include?(value)
         cleaners
       end
+    end
+
+    private
+
+    def called_externally?(caller)
+      __FILE__ != caller.first.split(":").first
     end
   end
 end
