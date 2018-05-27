@@ -1,5 +1,7 @@
 require 'database_cleaner/null_strategy'
 require 'database_cleaner/safeguard'
+require 'database_cleaner/orm_autodetector'
+require 'active_support/core_ext/string/inflections'
 
 module DatabaseCleaner
   class Base
@@ -10,11 +12,8 @@ module DatabaseCleaner
     end
 
     def initialize(desired_orm = nil, opts = {})
-      if [:autodetect, nil, "autodetect"].include?(desired_orm)
-        autodetect
-      else
-        self.orm = desired_orm
-      end
+      @orm_autodetector = ORMAutodetector.new
+      self.orm = desired_orm
       self.db = opts[:connection] || opts[:model] if opts.has_key?(:connection) || opts.has_key?(:model)
       self.strategy = default_orm_strategy
       Safeguard.new.run
@@ -71,12 +70,19 @@ module DatabaseCleaner
       @strategy ||= NullStrategy.new
     end
 
+    attr_reader :orm
+
     def orm=(desired_orm)
-      @orm = desired_orm.to_sym
+      @orm = (desired_orm || :autodetect).to_sym
+      @orm = @orm_autodetector.orm if @orm == :autodetect
     end
 
-    def orm
-      @orm || autodetect
+    def auto_detected?
+      @orm_autodetector.autodetected?
+    end
+
+    def autodetect_orm
+      @orm_autodetector.orm
     end
 
     def start
@@ -93,61 +99,11 @@ module DatabaseCleaner
       strategy.cleaning(&block)
     end
 
-    def auto_detected?
-      !!@autodetected
-    end
-
-    def autodetect_orm
-      if defined? ::ActiveRecord
-        :active_record
-      elsif defined? ::DataMapper
-        :data_mapper
-      elsif defined? ::MongoMapper
-        :mongo_mapper
-      elsif defined? ::Mongoid
-        :mongoid
-      elsif defined? ::CouchPotato
-        :couch_potato
-      elsif defined? ::Sequel
-        :sequel
-      elsif defined? ::Moped
-        :moped
-      elsif defined? ::Ohm
-        :ohm
-      elsif defined? ::Redis
-        :redis
-      elsif defined? ::Neo4j
-        :neo4j
-      end
-    end
-
     private
 
     def orm_module
-      case orm
-        when :active_record
-          DatabaseCleaner::ActiveRecord
-        when :data_mapper
-          DatabaseCleaner::DataMapper
-        when :mongo
-          DatabaseCleaner::Mongo
-        when :mongoid
-          DatabaseCleaner::Mongoid
-        when :mongo_mapper
-          DatabaseCleaner::MongoMapper
-        when :moped
-          DatabaseCleaner::Moped
-        when :couch_potato
-          DatabaseCleaner::CouchPotato
-        when :sequel
-          DatabaseCleaner::Sequel
-        when :ohm
-          DatabaseCleaner::Ohm
-        when :redis
-          DatabaseCleaner::Redis
-        when :neo4j
-          DatabaseCleaner::Neo4j
-      end
+      return unless [:active_record, :data_mapper, :mongo, :mongoid, :mongo_mapper, :moped, :couch_potato, :sequel, :ohm, :redis, :neo4j].include?(orm)
+      DatabaseCleaner.const_get(orm.to_s.camelize)
     end
 
     def orm_strategy(strategy)
@@ -166,13 +122,6 @@ module DatabaseCleaner
       require "database_cleaner/#{orm}/#{strategy}"
     rescue LoadError
       raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!  Available strategies: #{orm_module.available_strategies.join(', ')}"
-    end
-
-    def autodetect
-      @autodetected = true
-
-      @orm ||= autodetect_orm ||
-               raise(NoORMDetected, "No known ORM was detected!  Is ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, Moped, or CouchPotato, Redis or Ohm loaded?")
     end
 
     def default_orm_strategy

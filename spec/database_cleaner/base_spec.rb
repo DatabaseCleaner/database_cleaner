@@ -22,7 +22,9 @@ module DatabaseCleaner
       end
 
       it "should raise an error when no ORM is detected" do
-        expect { subject }.to raise_error(DatabaseCleaner::NoORMDetected)
+        expect { subject }.to raise_error(DatabaseCleaner::NoORMDetected, <<-ERROR.chomp)
+No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, CouchPotato, Sequel, Moped, Ohm, Redis, or Neo4j loaded?
+        ERROR
       end
 
       it "should detect ActiveRecord first" do
@@ -378,7 +380,7 @@ module DatabaseCleaner
       end
     end
 
-    describe "auto_detected?" do
+    describe "autodetected?" do
       it "is true if auto detection was used" do
         expect(subject).to be_auto_detected
       end
