@@ -8,6 +8,8 @@ you're reading the documentation for the `master` branch.
 
 [![Build Status](https://travis-ci.org/DatabaseCleaner/database_cleaner.svg?branch=master)](https://travis-ci.org/DatabaseCleaner/database_cleaner)
 [![Code Climate](https://codeclimate.com/github/DatabaseCleaner/database_cleaner/badges/gpa.svg)](https://codeclimate.com/github/DatabaseCleaner/database_cleaner)
+![Gem Version](https://badge.fury.io/rb/database_cleaner.svg)
+[![SemVer](https://api.dependabot.com/badges/compatibility_score?dependency-name=database_cleaner&package-manager=bundler&version-scheme=semver)](https://dependabot.com/compatibility-score.html?dependency-name=database_cleaner&package-manager=bundler&version-scheme=semver)
 
 Database Cleaner is a set of gems containing strategies for cleaning your database in Ruby.
 
