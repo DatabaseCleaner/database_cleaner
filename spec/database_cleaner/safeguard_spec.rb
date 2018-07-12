@@ -37,6 +37,14 @@ module DatabaseCleaner
         end
       end
 
+      describe 'to a unix socket postgres db' do
+        let(:database_url) { 'postgres:///dbname' }
+
+        it 'does not raise' do
+          expect { cleaner.start }.to_not raise_error
+        end
+      end
+
       describe 'to a sqlite db' do
         let(:database_url) { 'sqlite3:tmp/db.sqlite3' }
 
