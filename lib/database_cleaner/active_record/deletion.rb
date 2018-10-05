@@ -53,8 +53,7 @@ module DatabaseCleaner::ActiveRecord
     end
 
     def tables_with_new_rows(connection)
-      @db_name ||= connection.instance_variable_get('@config')[:database]
-      stats = table_stats_query(connection, @db_name)
+      stats = table_stats_query(connection)
       if stats != ''
         connection.select_values(stats)
       else
@@ -62,14 +61,14 @@ module DatabaseCleaner::ActiveRecord
       end
     end
 
-    def table_stats_query(connection, db_name)
+    def table_stats_query(connection)
       if @cache_tables && !@table_stats_query.nil?
         return @table_stats_query
       else
         tables = connection.select_values(<<-SQL)
           SELECT table_name
           FROM information_schema.tables
-          WHERE table_schema = '#{db_name}'
+          WHERE table_schema = database()
           AND #{::DatabaseCleaner::ActiveRecord::Base.exclusion_condition('table_name')};
         SQL
         queries = tables.map do |table|
