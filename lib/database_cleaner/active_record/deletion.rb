@@ -56,7 +56,7 @@ module DatabaseCleaner::ActiveRecord
       @db_name ||= connection.instance_variable_get('@config')[:database]
       stats = table_stats_query(connection, @db_name)
       if stats != ''
-        connection.exec_query(stats).inject([]) {|all, stat| all << stat['table_name'] if stat['has_rows'] == 1; all }
+        connection.select_values(stats)
       else
         []
       end
@@ -73,9 +73,9 @@ module DatabaseCleaner::ActiveRecord
           AND #{::DatabaseCleaner::ActiveRecord::Base.exclusion_condition('table_name')};
         SQL
         queries = tables.map do |table|
-          "SELECT #{connection.quote(table)} AS table_name, COUNT(*) > 0 AS has_rows FROM #{connection.quote_table_name(table)}"
+          "(SELECT #{connection.quote(table)} FROM #{connection.quote_table_name(table)} LIMIT 1)"
         end
-        @table_stats_query = queries.join(' UNION ')
+        @table_stats_query = queries.join(' UNION ALL ')
       end
     end
 
