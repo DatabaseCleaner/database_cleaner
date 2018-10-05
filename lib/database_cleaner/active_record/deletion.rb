@@ -62,20 +62,22 @@ module DatabaseCleaner::ActiveRecord
     end
 
     def table_stats_query(connection)
-      if @cache_tables && !@table_stats_query.nil?
-        return @table_stats_query
-      else
-        tables = connection.select_values(<<-SQL)
-          SELECT table_name
-          FROM information_schema.tables
-          WHERE table_schema = database()
-          AND #{::DatabaseCleaner::ActiveRecord::Base.exclusion_condition('table_name')};
-        SQL
-        queries = tables.map do |table|
-          "(SELECT #{connection.quote(table)} FROM #{connection.quote_table_name(table)} LIMIT 1)"
-        end
-        @table_stats_query = queries.join(' UNION ALL ')
+      @table_stats_query ||= build_table_stats_query(connection)
+    ensure
+      @table_stats_query = nil unless @cache_tables
+    end
+
+    def build_table_stats_query(connection)
+      tables = connection.select_values(<<-SQL)
+        SELECT table_name
+        FROM information_schema.tables
+        WHERE table_schema = database()
+        AND #{::DatabaseCleaner::ActiveRecord::Base.exclusion_condition('table_name')};
+      SQL
+      queries = tables.map do |table|
+        "(SELECT #{connection.quote(table)} FROM #{connection.quote_table_name(table)} LIMIT 1)"
       end
+      queries.join(' UNION ALL ')
     end
 
     def information_schema_exists? connection
