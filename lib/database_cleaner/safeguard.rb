@@ -39,7 +39,7 @@ module DatabaseCleaner
 
 
     class RemoteDatabaseUrl
-      LOCAL = %w(localhost .local 127.0.0.1 sqlite3:)
+      LOCAL = %w(localhost 127.0.0.1)
 
       def run
         raise Error::RemoteDatabaseUrl if !skip? && given?
@@ -52,7 +52,16 @@ module DatabaseCleaner
         end
 
         def remote?(url)
-          url && !LOCAL.any? { |str| url.include?(str) }
+          return false unless url
+
+          parsed = URI.parse(url)
+          return false if parsed.scheme == 'sqlite3:'
+
+          host = parsed.host
+          return false unless host
+          return false if LOCAL.include?(host)
+          return false if host.end_with? '.local'
+          true
         end
 
         def skip?

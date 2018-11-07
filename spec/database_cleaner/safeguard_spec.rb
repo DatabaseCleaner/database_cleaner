@@ -21,6 +21,14 @@ module DatabaseCleaner
         end
       end
 
+      describe 'to a local, empty-host url' do
+        let(:database_url) { 'postgres:///' }
+
+        it 'does not raise' do
+          expect { cleaner.start }.to_not raise_error
+        end
+      end
+
       describe 'to a local tld url' do
         let(:database_url) { 'postgres://postgres.local' }
 
