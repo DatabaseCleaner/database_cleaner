@@ -106,8 +106,8 @@ GEM
     faraday_middleware (0.9.1)
       faraday (>= 0.7.4, < 0.10)
     fastercsv (1.5.5)
-    ffi (1.9.23)
-    ffi (1.9.23-java)
+    ffi (1.9.25)
+    ffi (1.9.25-java)
     formatador (0.2.5)
     gherkin (2.11.6)
       json (>= 1.7.6)
@@ -263,4 +263,4 @@ DEPENDENCIES
   tzinfo
 
 BUNDLED WITH
-   1.16.1
+   1.17.1
