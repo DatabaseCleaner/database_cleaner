@@ -170,7 +170,8 @@ module DatabaseCleaner
     end
 
     def require_orm_strategy(orm, strategy)
-      require "database_cleaner/#{orm.to_s}/#{strategy.to_s}"
+      $LOAD_PATH.unshift File.expand_path("#{File.dirname(__FILE__)}/../../adapters/database_cleaner-#{orm}/lib/database_cleaner/#{orm}")
+      require "database_cleaner/#{orm}/#{strategy}"
     rescue LoadError
       raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!  Available strategies: #{orm_module.available_strategies.join(', ')}"
     end
