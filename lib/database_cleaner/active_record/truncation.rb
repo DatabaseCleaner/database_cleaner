@@ -27,7 +27,11 @@ module DatabaseCleaner
 
       def database_cleaner_table_cache
         # the adapters don't do caching (#130) but we make the assumption that the list stays the same in tests
-        @database_cleaner_tables ||= ::ActiveRecord::VERSION::MAJOR >= 5 ? data_sources : tables
+        @database_cleaner_tables ||= database_tables
+      end
+
+      def database_tables
+        ::ActiveRecord::VERSION::MAJOR >= 5 ? data_sources : tables
       end
 
       def truncate_table(table_name)
@@ -243,7 +247,7 @@ module DatabaseCleaner::ActiveRecord
     private
 
     def tables_to_truncate(connection)
-      tables_in_db = cache_tables? ? connection.database_cleaner_table_cache : connection.tables
+      tables_in_db = cache_tables? ? connection.database_cleaner_table_cache : connection.database_tables
       to_reject = (@tables_to_exclude + connection.database_cleaner_view_cache)
       (@only || tables_in_db).reject do |table|
         if ( m = table.match(/([^.]+)$/) )
