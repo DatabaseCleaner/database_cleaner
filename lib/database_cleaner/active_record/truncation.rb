@@ -129,16 +129,20 @@ module DatabaseCleaner
     end
 
     module PostgreSQLAdapter
-      def db_version
-        @db_version ||= postgresql_version
+      def database_version
+        if defined?(:super)
+          super
+        else
+          postgresql_version
+        end
       end
 
       def cascade
-        @cascade ||= db_version >=  80200 ? 'CASCADE' : ''
+        @cascade ||= database_version >=  80200 ? 'CASCADE' : ''
       end
 
       def restart_identity
-        @restart_identity ||= db_version >=  80400 ? 'RESTART IDENTITY' : ''
+        @restart_identity ||= database_version >=  80400 ? 'RESTART IDENTITY' : ''
       end
 
       def truncate_table(table_name)
