@@ -129,6 +129,10 @@ module DatabaseCleaner
     end
 
     module PostgreSQLAdapter
+      def cockroachdb?
+        @coackroachdb ||= adapter_name == 'CockroachDB'
+      end
+
       def db_version
         @db_version ||= postgresql_version
       end
@@ -138,7 +142,7 @@ module DatabaseCleaner
       end
 
       def restart_identity
-        @restart_identity ||= db_version >=  80400 ? 'RESTART IDENTITY' : ''
+        @restart_identity ||= db_version >= 80400 && !cockroachdb? ? 'RESTART IDENTITY' : ''
       end
 
       def truncate_table(table_name)
