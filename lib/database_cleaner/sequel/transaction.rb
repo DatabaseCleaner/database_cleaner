@@ -19,7 +19,7 @@ module DatabaseCleaner
         @fibers ||= []
         db = self.db
         f = Fiber.new do
-          db.transaction(:rollback => :always, :savepoint => true) do
+          db.transaction(:rollback => :always, :savepoint => true, :auto_savepoint => true) do
             Fiber.yield
           end
         end
@@ -33,7 +33,7 @@ module DatabaseCleaner
       end
 
       def cleaning
-        self.db.transaction(:rollback => :always, :savepoint => true) { yield }
+        self.db.transaction(:rollback => :always, :savepoint => true, :auto_savepoint => true) { yield }
       end
     end
   end
