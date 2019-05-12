@@ -314,7 +314,6 @@ module DatabaseCleaner
 
       it "loads and instantiates the described strategy" do
         stub_const "DatabaseCleaner::ActiveRecord::Cunningplan", strategy_class
-        expect(subject).to receive(:require).with("database_cleaner/active_record/cunningplan")
 
         subject.strategy = :cunningplan
         expect(subject.strategy).to be_a strategy_class

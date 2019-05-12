@@ -159,14 +159,21 @@ module DatabaseCleaner
     end
 
     def orm_strategy(strategy)
-      require "database_cleaner/#{orm.to_s}/#{strategy.to_s}"
       orm_module.const_get(strategy.to_s.capitalize)
+    rescue NameError
+      $stderr.puts <<-TEXT
+        Requiring the `database_cleaner` gem directly is deprecated, and will raise an error in database_cleaner 2.0. Instead, please require the specific gem (or gems) for your ORM.
+        For example, replace `gem "database_cleaner"` with `gem "database_cleaner-#{orm}"` in your Gemfile.
+      TEXT
+      require_orm_strategy(orm, strategy)
+      retry
+    end
+
+    def require_orm_strategy(orm, strategy)
+      $LOAD_PATH.unshift File.expand_path("#{File.dirname(__FILE__)}/../../adapters/database_cleaner-#{orm}/lib/database_cleaner/#{orm}")
+      require "database_cleaner/#{orm}/#{strategy}"
     rescue LoadError
-      if orm_module.respond_to? :available_strategies
-        raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!  Available strategies: #{orm_module.available_strategies.join(', ')}"
-      else
-        raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!"
-      end
+      raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!  Available strategies: #{orm_module.available_strategies.join(', ')}"
     end
 
     def autodetect

@@ -1,4 +1,4 @@
-require 'database_cleaner/shared_strategy'
+require 'database_cleaner/spec'
 require 'database_cleaner/generic/base'
 require 'active_record'
 
