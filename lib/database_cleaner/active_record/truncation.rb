@@ -201,6 +201,14 @@ module DatabaseCleaner
         rows.collect { |result| result.first }
       end
     end
+
+    module SQLServerAdapter
+      include TruncateOrDelete
+
+      def database_cleaner_view_cache
+        @views ||= select_values("select table_name from information_schema.views") rescue []
+      end
+    end
   end
 end
 
@@ -223,7 +231,7 @@ module ActiveRecord
     SQLite3Adapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::SQLiteAdapter } if defined?(SQLite3Adapter)
     PostgreSQLAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::PostgreSQLAdapter } if defined?(PostgreSQLAdapter)
     IBM_DBAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::IBM_DBAdapter } if defined?(IBM_DBAdapter)
-    SQLServerAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::TruncateOrDelete } if defined?(SQLServerAdapter)
+    SQLServerAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::SQLServerAdapter } if defined?(SQLServerAdapter)
     OracleEnhancedAdapter.class_eval { include ::DatabaseCleaner::ConnectionAdapters::OracleAdapter } if defined?(OracleEnhancedAdapter)
   end
 end
