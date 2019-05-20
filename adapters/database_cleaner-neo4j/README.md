@@ -1,30 +1,22 @@
-# DatabaseCleaner::Neo4j
+# Database Cleaner Adapter for Neo4j
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/database_cleaner/neo4j`. To experiment with that code, run `bin/console` for an interactive prompt.
+[![Build Status](https://travis-ci.org/DatabaseCleaner/database_cleaner-neo4j.svg?branch=master)](https://travis-ci.org/DatabaseCleaner/database_cleaner-neo4j)
+[![Code Climate](https://codeclimate.com/github/DatabaseCleaner/database_cleaner-neo4j/badges/gpa.svg)](https://codeclimate.com/github/DatabaseCleaner/database_cleaner-neo4j)
 
-TODO: Delete this and the text above, and describe your gem
+Clean your Neo4j databases with Database Cleaner.
+
+See https://github.com/DatabaseCleaner/database_cleaner for more information.
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
 ```ruby
-gem 'database_cleaner-neo4j'
+# Gemfile
+group :test do
+  gem 'database_cleaner-neo4j'
+end
 ```
 
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install database_cleaner-neo4j
-
-## Usage
-
-Truncation and Deletion strategies for Neo4j will just delete all nodes and relationships from the database.
-
-### Configuration options
+## Configuration options
 
 <table>
   <tbody>
@@ -41,31 +33,24 @@ Truncation and Deletion strategies for Neo4j will just delete all nodes and rela
   </tbody>
 </table>
 
+Note that Truncation and Deletion strategies for Neo4j will just delete all nodes and relationships from the database.
+
 ## Common Errors
 
 ### Model fails to load with Neo4j using transactions
 
 When you are using [neo4j](https://github.com/neo4jrb/neo4j) gem it creates schema and reads indexes upon loading models. These operations can't be done during a transaction. You have to preload your models before DatabaseCleaner starts a transaction.
 
-Add to your rails_helper or spec_helper after requiring database_cleaner:
+Add to your rails_helper or spec_helper after requiring database_cleaner-neo4j:
 
 ```ruby
-require 'database_cleaner-neo4j'
+require 'database_cleaner/neo4j'
+
 Dir["#{Rails.root}/app/models/**/*.rb"].each do |model|
   load model
 end
 ```
 
-## Development
+## COPYRIGHT
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/database_cleaner-neo4j.
-
-## License
-
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+See [LICENSE] for details.

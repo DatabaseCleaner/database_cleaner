@@ -1,14 +1,13 @@
-# Database Cleaner for ActiveRecord
+# Database Cleaner Adapter for ActiveRecord
 
 [![Build Status](https://travis-ci.org/DatabaseCleaner/database_cleaner-active_record.svg?branch=master)](https://travis-ci.org/DatabaseCleaner/database_cleaner-active_record)
 [![Code Climate](https://codeclimate.com/github/DatabaseCleaner/database_cleaner-active_record/badges/gpa.svg)](https://codeclimate.com/github/DatabaseCleaner/database_cleaner-active_record)
 
-Database Cleaner is a set of strategies for cleaning your database in Ruby.
+Clean your ActiveRecord databases with Database Cleaner.
 
-The original use case was to ensure a clean state during tests.
-Each strategy is a small amount of code but is code that is usually needed in any ruby app that is testing with a database.
+See https://github.com/DatabaseCleaner/database_cleaner for more information.
 
-## Gem Setup
+## Installation
 
 ```ruby
 # Gemfile
@@ -56,7 +55,7 @@ Some people report much faster speeds with `:deletion` while others say `:trunca
 
 If you are using ActiveRecord then take a look at the [additional options](#additional-activerecord-options-for-truncation) available for `:truncation`.
 
-### Configuration options
+## Configuration options
 
 <table>
   <tbody>
