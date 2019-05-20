@@ -73,10 +73,6 @@ Some people report much faster speeds with `:deletion` while others say `:trunca
 
 If you are using ActiveRecord then take a look at the [additional options](#additional-activerecord-options-for-truncation) available for `:truncation`.
 
-## Dependencies
-
-Because database_cleaner supports multiple ORMs, it doesn't make sense to include all the dependencies for each one in the gemspec. However, the DataMapper adapter does depend on dm-transactions. Therefore, if you use DataMapper, you must include dm-transactions in your Gemfile/bundle/gemset manually.
-
 ## How to use
 
 ```ruby
