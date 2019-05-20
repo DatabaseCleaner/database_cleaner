@@ -3,17 +3,30 @@
 [![Build Status](https://travis-ci.org/DatabaseCleaner/database_cleaner.svg?branch=master)](https://travis-ci.org/DatabaseCleaner/database_cleaner)
 [![Code Climate](https://codeclimate.com/github/DatabaseCleaner/database_cleaner/badges/gpa.svg)](https://codeclimate.com/github/DatabaseCleaner/database_cleaner)
 
-Database Cleaner is a set of strategies for cleaning your database in Ruby.
+Database Cleaner is a set of gems containing strategies for cleaning your database in Ruby.
 
 The original use case was to ensure a clean state during tests.
 Each strategy is a small amount of code but is code that is usually needed in any ruby app that is testing with a database.
 
 ## Gem Setup
 
+Instead of using the `database_cleaner` gem directly, each ORM has its own gem. Most projects will only need the `database_cleaner-active_record` gem:
+
 ```ruby
 # Gemfile
 group :test do
-  gem 'database_cleaner'
+  gem 'database_cleaner-active_record'
+end
+```
+
+If you are using multiple ORMs, just load multiple gems:
+
+
+```ruby
+# Gemfile
+group :test do
+  gem 'database_cleaner-active_record'
+  gem 'database_cleaner-redis'
 end
 ```
 
@@ -21,97 +34,21 @@ end
 
 ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, CouchPotato, Ohm and Redis are supported.
 
-Here is an overview of the strategies supported for each library:
+Here is an overview of the strategies supported for each ORM:
 
-<table>
-  <tbody>
-    <tr>
-      <th>ORM</th>
-      <th>Truncation</th>
-      <th>Transaction</th>
-      <th>Deletion</th>
-    </tr>
-    <tr>
-      <td> ActiveRecord </td>
-      <td> Yes</td>
-      <td> <b>Yes</b></td>
-      <td> Yes</td>
-    </tr>
-    <tr>
-      <td> DataMapper</td>
-      <td> Yes</td>
-      <td> <b>Yes</b></td>
-      <td> No</td>
-    </tr>
-    <tr>
-      <td> CouchPotato</td>
-      <td> <b>Yes</b></td>
-      <td> No</td>
-      <td> No</td>
-    </tr>
-    <tr>
-      <td> MongoMapper</td>
-      <td> <b>Yes</b></td>
-      <td> No</td>
-      <td> No</td>
-    </tr>
-    <tr>
-      <td> Mongoid</td>
-      <td> <b>Yes</b></td>
-      <td> No</td>
-      <td> No</td>
-    </tr>
-    <tr>
-      <td> Sequel</td>
-      <td> <b>Yes</b></td>
-      <td> Yes</td>
-      <td> Yes</td>
-    </tr>
-    <tr>
-      <td>Redis</td>
-      <td><b>Yes</b></td>
-      <td>No</td>
-      <td>No</td>
-    </tr>
-    <tr>
-      <td>Ohm</td>
-      <td><b>Yes</b></td>
-      <td>No</td>
-      <td>No</td>
-    </tr>
-    <tr>
-      <td>Neo4j</td>
-      <td>Yes</td>
-      <td>Yes*</td>
-      <td>Yes*</td>
-    </tr>
-  </tbody>
-</table>
-
-\* Truncation and Deletion strategies for Neo4j will just delete all nodes and relationships from the database.
-
-<table>
-  <tbody>
-    <tr>
-      <th>Driver</th>
-      <th>Truncation</th>
-      <th>Transaction</th>
-      <th>Deletion</th>
-    </tr>
-    <tr>
-      <td> Mongo</td>
-      <td> Yes</td>
-      <td> No</td>
-      <td> No</td>
-    </tr>
-    <tr>
-      <td> Moped</td>
-      <td> Yes</td>
-      <td> No</td>
-      <td> No</td>
-    </tr>
-  </tbody>
-</table>
+Gem | ORM | Truncation | Transaction | Deletion
+--- | --- | ---------- | ----------- | --------
+[database_cleaner-active_record](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-active_record) | ActiveRecord | Yes | **Yes** | Yes
+[database_cleaner-data_mapper](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-data_mapper) | DataMapper | Yes | **Yes** | No
+[database_cleaner-couch_potato](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-couch_potato) | CouchPotato | **Yes** | No | No
+[database_cleaner-mongo](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-mongo) | Mongo | **Yes** | No | No
+[database_cleaner-mongo_mapper](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-mongo_mapper) | MongoMapper | **Yes** | No | No
+[database_cleaner-mongoid](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-mongoid) | Mongoid | **Yes** | No | No
+[database_cleaner-moped](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-moped) | Moped | **Yes** | No | No
+[database_cleaner-sequel](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-sequel) | Sequel | **Yes** | Yes | Yes
+[database_cleaner-redis](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-redis) | Redis | **Yes** | No | No
+[database_cleaner-ohm](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-ohm) | Ohm | **Yes** | No | No
+[database_cleaner-neo4j](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-neo4j) | Neo4j | Yes | **Yes** | Yes
 
 (Default strategy for each library is denoted in bold)
 
@@ -143,7 +80,7 @@ Because database_cleaner supports multiple ORMs, it doesn't make sense to includ
 ## How to use
 
 ```ruby
-require 'database_cleaner'
+require 'database_cleaner/active_record'
 
 DatabaseCleaner.strategy = :truncation
 
@@ -169,7 +106,7 @@ passed to [`keys`](http://redis.io/commands/keys)).
 Some strategies need to be started before tests are run (for example the `:transaction` strategy needs to know to open up a transaction). This can be accomplished by calling `DatabaseCleaner.start` at the beginning of the run, or by running the tests inside a block to `DatabaseCleaner.cleaning`. So you would have:
 
 ```ruby
-require 'database_cleaner'
+require 'database_cleaner/active_record'
 
 DatabaseCleaner.strategy = :transaction
 
@@ -191,7 +128,7 @@ At times you may want to do a single clean with one strategy.
 For example, you may want to start the process by truncating all the tables, but then use the faster transaction strategy the remaining time. To accomplish this you can say:
 
 ```ruby
-require 'database_cleaner'
+require 'database_cleaner/active_record'
 
 DatabaseCleaner.clean_with :truncation
 
@@ -345,14 +282,9 @@ If you're using Cucumber with Rails, just use the generator that ships with cucu
 Otherwise, to add DatabaseCleaner to your project by hand, create a file `features/support/database_cleaner.rb` that looks like this:
 
 ```ruby
-begin
-  require 'database_cleaner'
-  require 'database_cleaner/cucumber'
+require 'database_cleaner/active_record'
 
-  DatabaseCleaner.strategy = :truncation
-rescue NameError
-  raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
-end
+DatabaseCleaner.strategy = :truncation
 
 Around do |scenario, block|
   DatabaseCleaner.cleaning(&block)
@@ -370,11 +302,14 @@ Sometimes you need to use multiple ORMs in your application.
 You can use DatabaseCleaner to clean multiple ORMs, and multiple connections for those ORMs.
 
 ```ruby
-#How to specify particular orms
+require 'database_cleaner/active_record'
+require 'database_cleaner/mongo_mapper'
+
+# How to specify particular orms
 DatabaseCleaner[:active_record].strategy = :transaction
 DatabaseCleaner[:mongo_mapper].strategy = :truncation
 
-#How to specify particular connections
+# How to specify particular connections
 DatabaseCleaner[:active_record, { :connection => :two }]
 
 # You may also pass in the model directly:
@@ -496,7 +431,7 @@ When you are using [neo4j](https://github.com/neo4jrb/neo4j) gem it creates sche
 Add to your rails_helper or spec_helper after requiring database_cleaner:
 
 ```ruby
-require 'database_cleaner'
+require 'database_cleaner-neo4j'
 Dir["#{Rails.root}/app/models/**/*.rb"].each do |model|
   load model
 end
@@ -545,4 +480,4 @@ DatabaseCleaner.logger = Rails.logger
 
 ## COPYRIGHT
 
-Copyright (c) 2014 Ben Mabey. See LICENSE for details.
+See [LICENSE] for details.
