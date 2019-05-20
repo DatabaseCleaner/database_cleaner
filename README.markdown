@@ -369,17 +369,6 @@ to one of the values specified in the url whitelist like so:
 DatabaseCleaner.url_whitelist = ['postgres://postgres@localhost', 'postgres://foo@bar']
 ```
 
-## Debugging
-
-In rare cases DatabaseCleaner will encounter errors that it will log.  By default it uses STDOUT set to the ERROR level but you can configure this to use whatever Logger you desire.
-
-Here's an example of using the `Rails.logger` in `env.rb`:
-
-```ruby
-DatabaseCleaner.logger = Rails.logger
-```
-
-
 ## COPYRIGHT
 
 See [LICENSE] for details.
