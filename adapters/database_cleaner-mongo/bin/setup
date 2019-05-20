@@ -4,4 +4,3 @@ IFS=$'\n\t'
 set -vx
 
 bundle check || bundle install
-
