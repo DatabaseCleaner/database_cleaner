@@ -22,7 +22,24 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Configuration options
+
+`:only` and `:except` take a list of strings to be passed to [`keys`](http://redis.io/commands/keys)).
+
+<table>
+  <tbody>
+    <tr>
+      <th>ORM</th>
+      <th>How to access</th>
+      <th>Notes</th>
+    </tr>
+    <tr>
+      <td>Ohm</td>
+      <td><code>DatabaseCleaner[:ohm]</code></td>
+      <td>Connection specified as Redis URI</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Development
 

@@ -22,7 +22,22 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Configuration options
+
+<table>
+  <tbody>
+    <tr>
+      <th>ORM</th>
+      <th>How to access</th>
+      <th>Notes</th>
+    </tr>
+    <tr>
+      <td> Moped</td>
+      <td> <code>DatabaseCleaner[:moped]</code></td>
+      <td> It is necessary to configure database name with <code>DatabaseCleaner[:moped].db = db_name</code> otherwise name `default` will be used.</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Development
 

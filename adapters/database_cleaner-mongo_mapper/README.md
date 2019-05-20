@@ -22,7 +22,22 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Configuration options
+
+<table>
+  <tbody>
+    <tr>
+      <th>ORM</th>
+      <th>How to access</th>
+      <th>Notes</th>
+    </tr>
+    <tr>
+      <td> Mongo Mapper</td>
+      <td> <code>DatabaseCleaner[:mongo_mapper]</code></td>
+      <td> Multiple connections not yet supported</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Development
 

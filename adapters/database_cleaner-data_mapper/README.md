@@ -22,7 +22,22 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Configuration options
+
+<table>
+  <tbody>
+    <tr>
+      <th>ORM</th>
+      <th>How to access</th>
+      <th>Notes</th>
+    </tr>
+    <tr>
+      <td> Data Mapper</td>
+      <td> <code>DatabaseCleaner[:data_mapper]</code></td>
+      <td> Connection specified as <code>:symbol</code> keys, loaded via Datamapper repositories </td>
+    </tr>
+  </tbody>
+</table>
 
 ## Development
 

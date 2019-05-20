@@ -32,8 +32,6 @@ end
 
 ## Supported Databases, Libraries and Strategies
 
-ActiveRecord, DataMapper, Sequel, MongoMapper, Mongoid, CouchPotato, Ohm and Redis are supported.
-
 Here is an overview of the strategies supported for each ORM:
 
 Gem | ORM | Truncation | Transaction | Deletion
@@ -54,6 +52,8 @@ Gem | ORM | Truncation | Transaction | Deletion
 
 Database Cleaner also includes a `null` strategy (that does no cleaning at all) which can be used with any ORM library.
 You can also explicitly use it by setting your strategy to `nil`.
+
+More details on available configuration options can be found in the README for the specific adapter gem that you're using.
 
 For support or to discuss development please use the [Google Group](http://groups.google.com/group/database_cleaner).
 
@@ -94,9 +94,6 @@ DatabaseCleaner.strategy = :truncation, {:only => %w[widgets dogs some_other_tab
 DatabaseCleaner.strategy = :truncation, {:except => %w[widgets]}
 ```
 
-With Ohm and Redis, `:only` and `:except` take a list of strings to be
-passed to [`keys`](http://redis.io/commands/keys)).
-
 (I should point out the truncation strategy will never truncate your schema_migrations table.)
 
 Some strategies need to be started before tests are run (for example the `:transaction` strategy needs to know to open up a transaction). This can be accomplished by calling `DatabaseCleaner.start` at the beginning of the run, or by running the tests inside a block to `DatabaseCleaner.cleaning`. So you would have:
@@ -132,18 +129,6 @@ DatabaseCleaner.strategy = :transaction
 
 # then make the DatabaseCleaner.start and DatabaseCleaner.clean calls appropriately
 ```
-
-### Additional ActiveRecord options for Truncation
-
-The following options are available for ActiveRecord's `:truncation` strategy _only_ for MySQL and Postgres. You set them the same as the other truncation options above (e.g. `DatabaseCleaner.strategy = :truncation, {:pre_count => true}`).
-
-* `:pre_count` - When set to `true` this will check each table for existing rows before truncating it.  This can speed up test suites when many of the tables to be truncated are never populated. Defaults to `:false`. (Also, see the section on [What strategy is fastest?](#what-strategy-is-fastest))
-* `:reset_ids` - This only matters when `:pre_count` is used, and it will make sure that a tables auto-incrementing id is reset even if there are no rows in the table (e.g. records were created in the test but also removed before DatabaseCleaner gets to it). Defaults to `true`.
-
-The following option is available for ActiveRecord's `:truncation` and `:deletion` strategy for any DB.
-
-* `:cache_tables` - When set to `true` the list of tables to truncate or delete from will only be read from the DB once, otherwise it will be read before each cleanup run. Set this to `false` if (1) you create and drop tables in your tests, or (2) you change Postgres schemas (`ActiveRecord::Base.connection.schema_search_path`) in your tests (for example, in a multitenancy setup with each tenant in a different Postgres schema). Defaults to `true`.
-
 
 ### RSpec Example
 
@@ -314,68 +299,6 @@ DatabaseCleaner[:active_record, { :model => ModelWithDifferentConnection }]
 
 Usage beyond that remains the same with `DatabaseCleaner.start` calling any setup on the different configured connections, and `DatabaseCleaner.clean` executing afterwards.
 
-### Configuration options
-
-<table>
-  <tbody>
-    <tr>
-      <th>ORM</th>
-      <th>How to access</th>
-      <th>Notes</th>
-    </tr>
-    <tr>
-      <td> Active Record </td>
-      <td> <code>DatabaseCleaner[:active_record]</code></td>
-      <td> Connection specified as <code>:symbol</code> keys, loaded from <code>config/database.yml</code>. You may also pass in the ActiveRecord model under the <code>:model</code> key.</td>
-    </tr>
-    <tr>
-      <td> Data Mapper</td>
-      <td> <code>DatabaseCleaner[:data_mapper]</code></td>
-      <td> Connection specified as <code>:symbol</code> keys, loaded via Datamapper repositories </td>
-    </tr>
-    <tr>
-      <td> Mongo Mapper</td>
-      <td> <code>DatabaseCleaner[:mongo_mapper]</code></td>
-      <td> Multiple connections not yet supported</td>
-    </tr>
-    <tr>
-      <td> Mongoid</td>
-      <td> <code>DatabaseCleaner[:mongoid]</code></td>
-      <td> Multiple databases supported for Mongoid 3. Specify <code>DatabaseCleaner[:mongoid, {:connection =&gt; :db_name}]</code> </td>
-    </tr>
-    <tr>
-      <td> Moped</td>
-      <td> <code>DatabaseCleaner[:moped]</code></td>
-      <td> It is necessary to configure database name with <code>DatabaseCleaner[:moped].db = db_name</code> otherwise name `default` will be used.</td>
-    </tr>
-    <tr>
-      <td> Couch Potato</td>
-      <td> <code>DatabaseCleaner[:couch_potato]</code></td>
-      <td> Multiple connections not yet supported</td>
-    </tr>
-    <tr>
-      <td> Sequel</td>
-      <td> <code>DatabaseCleaner[:sequel]</code></td>
-      <td> Multiple databases supported; specify <code>DatabaseCleaner[:sequel, {:connection =&gt; Sequel.connect(uri)}]</code></td>
-    </tr>
-    <tr>
-      <td>Redis</td>
-      <td><code>DatabaseCleaner[:redis]</code></td>
-      <td>Connection specified as Redis URI</td>
-    </tr>
-    <tr>
-      <td>Ohm</td>
-      <td><code>DatabaseCleaner[:ohm]</code></td>
-      <td>Connection specified as Redis URI</td>
-    </tr>
-    <tr>
-      <td>Neo4j</td>
-      <td><code>DatabaseCleaner[:neo4j]</code></td>
-      <td>Database type and path(URI) <code>DatabaseCleaner[:neo4j, connection: {type: :server_db, path: 'http://localhost:7475'}].</code></td>
-    </tr>
-  </tbody>
-</table>
-
 ## Why?
 
 One of my motivations for writing this library was to have an easy way to turn on what Rails calls "transactional_fixtures" in my non-rails ActiveRecord projects.
@@ -386,15 +309,15 @@ After copying and pasting code to do this several times I decided to package it 
 
 #### DatabaseCleaner is trying to use the wrong ORM
 
-DatabaseCleaner has an autodetect mechanism where if you do not explicitly define your ORM it will use the first ORM it can detect that is loaded.
+DatabaseCleaner has a deprecated autodetect mechanism where if you do not explicitly define your ORM it will use the first ORM it can detect that is loaded.
 
 Since ActiveRecord is the most common ORM used that is the first one checked for.
 
-Sometimes other libraries (e.g. ActiveAdmin) will load other ORMs (e.g. ActiveRecord) even though you are using a different ORM.  This will result in DatabaseCleaner trying to use the wrong ORM (e.g. ActiveRecord) unless you explicitly define your ORM like so:
+Sometimes other libraries (e.g. ActiveAdmin) will load other ORMs (e.g. ActiveRecord) even though you are using a different ORM.  This will result in DatabaseCleaner trying to use the wrong ORM (e.g. ActiveRecord) unless you explicitly require the correct adapter gem:
 
 ```ruby
-# How to setup your ORM explicitly
-DatabaseCleaner[:mongoid].strategy = :truncation
+# Gemfile
+gem "database_cleaner-mongoid"
 ```
 
 ### STDERR is being flooded when using Postgres
@@ -415,23 +338,6 @@ test:
   # ...
   min_messages: WARNING
 </pre>
-
-### Nothing happens in JRuby with Sequel using transactions
-
-Due to an inconsistency in JRuby's implementation of Fibers, Sequel gives a different connection to `DatabaseCleaner.start` than is used for tests run between `.start` and `.clean`. This can be worked around by running your tests in a block like `DatabaseCleaner.cleaning { run_my_tests }` instead, which does not use Fibers.
-
-### Model fails to load with Neo4j using transactions
-
-When you are using [neo4j](https://github.com/neo4jrb/neo4j) gem it creates schema and reads indexes upon loading models. These operations can't be done during a transaction. You have to preload your models before DatabaseCleaner starts a transaction.
-
-Add to your rails_helper or spec_helper after requiring database_cleaner:
-
-```ruby
-require 'database_cleaner-neo4j'
-Dir["#{Rails.root}/app/models/**/*.rb"].each do |model|
-  load model
-end
-```
 
 ## Safeguards
 

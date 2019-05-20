@@ -22,7 +22,22 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Configuration options
+
+<table>
+  <tbody>
+    <tr>
+      <th>ORM</th>
+      <th>How to access</th>
+      <th>Notes</th>
+    </tr>
+    <tr>
+      <td> Mongoid</td>
+      <td> <code>DatabaseCleaner[:mongoid]</code></td>
+      <td> Multiple databases supported for Mongoid 3. Specify <code>DatabaseCleaner[:mongoid, {:connection =&gt; :db_name}]</code> </td>
+    </tr>
+  </tbody>
+</table>
 
 ## Development
 
