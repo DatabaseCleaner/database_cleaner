@@ -16,6 +16,25 @@ group :test do
 end
 ```
 
+## Supported Strategies
+
+<table>
+  <tbody>
+    <tr>
+      <th>Truncation</th>
+      <th>Transaction</th>
+      <th>Deletion</th>
+    </tr>
+    <tr>
+      <td> <b>Yes</b></td>
+      <td> No</td>
+      <td> No</td>
+    </tr>
+  </tbody>
+</table>
+
+(Default strategy is denoted in bold)
+
 ## Configuration options
 
 `:only` and `:except` take a list of strings to be passed to [`keys`](http://redis.io/commands/keys)).

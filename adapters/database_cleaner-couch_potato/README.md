@@ -16,6 +16,27 @@ group :test do
 end
 ```
 
+## Supported Strategies
+
+Here is an overview of the supported strategies:
+
+<table>
+  <tbody>
+    <tr>
+      <th>Truncation</th>
+      <th>Transaction</th>
+      <th>Deletion</th>
+    </tr>
+    <tr>
+      <td> <b>Yes</b></td>
+      <td> No</td>
+      <td> No</td>
+    </tr>
+  </tbody>
+</table>
+
+(Default strategy is denoted in bold)
+
 ## Configuration options
 
 <table>

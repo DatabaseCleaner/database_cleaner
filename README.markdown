@@ -30,48 +30,34 @@ group :test do
 end
 ```
 
-## Supported Databases, Libraries and Strategies
+## List of adapters
 
-Here is an overview of the strategies supported for each ORM:
+Here is an overview of the databases and ORMs supported by each adapter:
 
-Gem | ORM | Truncation | Transaction | Deletion
---- | --- | ---------- | ----------- | --------
-[database_cleaner-active_record](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-active_record) | ActiveRecord | Yes | **Yes** | Yes
-[database_cleaner-data_mapper](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-data_mapper) | DataMapper | Yes | **Yes** | No
-[database_cleaner-couch_potato](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-couch_potato) | CouchPotato | **Yes** | No | No
-[database_cleaner-mongo](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-mongo) | Mongo | **Yes** | No | No
-[database_cleaner-mongo_mapper](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-mongo_mapper) | MongoMapper | **Yes** | No | No
-[database_cleaner-mongoid](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-mongoid) | Mongoid | **Yes** | No | No
-[database_cleaner-moped](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-moped) | Moped | **Yes** | No | No
-[database_cleaner-sequel](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-sequel) | Sequel | **Yes** | Yes | Yes
-[database_cleaner-redis](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-redis) | Redis | **Yes** | No | No
-[database_cleaner-ohm](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-ohm) | Ohm | **Yes** | No | No
-[database_cleaner-neo4j](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-neo4j) | Neo4j | Yes | **Yes** | Yes
+MySQL, PostgreSQL, SQLite, etc
+* [database_cleaner-active_record](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-active_record)
+* [database_cleaner-sequel](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-sequel)
+* [database_cleaner-data_mapper](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-data_mapper)
 
-(Default strategy for each library is denoted in bold)
+CouchDB
+* [database_cleaner-couch_potato](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-couch_potato)
 
-Database Cleaner also includes a `null` strategy (that does no cleaning at all) which can be used with any ORM library.
-You can also explicitly use it by setting your strategy to `nil`.
+MongoDB
+ * [database_cleaner-mongoid](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-mongoid)
+ * [database_cleaner-mongo_mapper](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-mongo_mapper)
+ * [database_cleaner-moped](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-moped)
+ * [database_cleaner-mongo](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-mongo)
+
+Redis
+ * [database_cleaner-redis](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-redis)
+ * [database_cleaner-ohm](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-ohm)
+
+Neo4j
+ * [database_cleaner-neo4j](https://github.com/DatabaseCleaner/database_cleaner/adapters/database_cleaner-neo4j)
 
 More details on available configuration options can be found in the README for the specific adapter gem that you're using.
 
 For support or to discuss development please use the [Google Group](http://groups.google.com/group/database_cleaner).
-
-## What strategy is fastest?
-
-For the SQL libraries the fastest option will be to use `:transaction` as transactions are simply rolled back. If you can use this strategy you should. However, if you wind up needing to use multiple database connections in your tests (i.e. your tests run in a different process than your application) then using this strategy becomes a bit more difficult. You can get around the problem a number of ways.
-
-One common approach is to force all processes to use the same database connection ([common ActiveRecord hack](http://blog.plataformatec.com.br/2011/12/three-tips-to-improve-the-performance-of-your-test-suite/)) however this approach has been reported to result in non-deterministic failures.
-
-Another approach is to have the transactions rolled back in the application's process and relax the isolation level of the database (so the tests can read the uncommitted transactions).
-
-An easier, but slower, solution is to use the `:truncation` or `:deletion` strategy.
-
-So what is fastest out of `:deletion` and `:truncation`? Well, it depends on your table structure and what percentage of tables you populate in an average test. The reasoning is out of the scope of this README but here is a [good SO answer on this topic for Postgres](http://stackoverflow.com/questions/11419536/postgresql-truncation-speed/11423886#11423886).
-
-Some people report much faster speeds with `:deletion` while others say `:truncation` is faster for them. The best approach therefore is it try all options on your test suite and see what is faster.
-
-If you are using ActiveRecord then take a look at the [additional options](#additional-activerecord-options-for-truncation) available for `:truncation`.
 
 ## How to use
 
@@ -129,6 +115,27 @@ DatabaseCleaner.strategy = :transaction
 
 # then make the DatabaseCleaner.start and DatabaseCleaner.clean calls appropriately
 ```
+
+## What strategy is fastest?
+
+For the SQL libraries the fastest option will be to use `:transaction` as transactions are simply rolled back. If you can use this strategy you should. However, if you wind up needing to use multiple database connections in your tests (i.e. your tests run in a different process than your application) then using this strategy becomes a bit more difficult. You can get around the problem a number of ways.
+
+One common approach is to force all processes to use the same database connection ([common ActiveRecord hack](http://blog.plataformatec.com.br/2011/12/three-tips-to-improve-the-performance-of-your-test-suite/)) however this approach has been reported to result in non-deterministic failures.
+
+Another approach is to have the transactions rolled back in the application's process and relax the isolation level of the database (so the tests can read the uncommitted transactions).
+
+An easier, but slower, solution is to use the `:truncation` or `:deletion` strategy.
+
+So what is fastest out of `:deletion` and `:truncation`? Well, it depends on your table structure and what percentage of tables you populate in an average test. The reasoning is out of the scope of this README but here is a [good SO answer on this topic for Postgres](http://stackoverflow.com/questions/11419536/postgresql-truncation-speed/11423886#11423886).
+
+Some people report much faster speeds with `:deletion` while others say `:truncation` is faster for them. The best approach therefore is it try all options on your test suite and see what is faster.
+
+If you are using ActiveRecord then take a look at the [additional options](#additional-activerecord-options-for-truncation) available for `:truncation`.
+
+Database Cleaner also includes a `null` strategy (that does no cleaning at all) which can be used with any ORM library.
+You can also explicitly use it by setting your strategy to `nil`.
+
+## Test Framework Examples
 
 ### RSpec Example
 
