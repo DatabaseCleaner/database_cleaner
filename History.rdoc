@@ -3,7 +3,7 @@
 === Bug Fixes
 === Changes
 
-== 1.7.0 2017-04-19
+== 1.7.0 2018-04-19
 
 === Bug Fixes
   * Remove unnecessary folders from gem: https://github.com/DatabaseCleaner/database_cleaner/pull/508
