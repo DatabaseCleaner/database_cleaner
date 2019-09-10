@@ -260,7 +260,10 @@ module DatabaseCleaner::ActiveRecord
 
     # overwritten
     def migration_storage_names
-      [::DatabaseCleaner::ActiveRecord::Base.migration_table_name]
+      [].tap do |arr|
+        arr << ::DatabaseCleaner::ActiveRecord::Base.migration_table_name
+        arr << ::ActiveRecord::Base.internal_metadata_table_name if ::ActiveRecord::VERSION::MAJOR >= 5
+      end
     end
 
     def cache_tables?

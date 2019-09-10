@@ -47,6 +47,14 @@ RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
             expect(count).to eq 2
           end
 
+          it "should not truncate ar_internal_metadata on Rails 5" do
+            stub_const("::ActiveRecord::VERSION::MAJOR", 5)
+            expect(connection)
+              .not_to receive(:truncate_table)
+              .with(::DatabaseCleaner::ActiveRecord::Base.internal_metadata_table_name)
+            subject.clean
+          end
+
           it "should only truncate the tables specified in the :only option when provided" do
             expect { described_class.new(only: ['agents']).clean }
               .to change { [User.count, Agent.count] }
