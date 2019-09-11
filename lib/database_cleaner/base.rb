@@ -1,4 +1,6 @@
 require 'database_cleaner/null_strategy'
+require 'database_cleaner/safeguard'
+
 module DatabaseCleaner
   class Base
     include Comparable
@@ -15,6 +17,7 @@ module DatabaseCleaner
       end
       self.db = opts[:connection] || opts[:model] if opts.has_key?(:connection) || opts.has_key?(:model)
       set_default_orm_strategy
+      Safeguard.new.run
     end
 
     def db=(desired_db)
@@ -73,7 +76,7 @@ module DatabaseCleaner
     end
 
     def strategy
-      @strategy ||= NullStrategy
+      @strategy ||= NullStrategy.new
     end
 
     def orm=(desired_orm)
@@ -129,18 +132,48 @@ module DatabaseCleaner
     private
 
     def orm_module
-      ::DatabaseCleaner.orm_module(orm)
+      case orm
+        when :active_record
+          DatabaseCleaner::ActiveRecord
+        when :data_mapper
+          DatabaseCleaner::DataMapper
+        when :mongo
+          DatabaseCleaner::Mongo
+        when :mongoid
+          DatabaseCleaner::Mongoid
+        when :mongo_mapper
+          DatabaseCleaner::MongoMapper
+        when :moped
+          DatabaseCleaner::Moped
+        when :couch_potato
+          DatabaseCleaner::CouchPotato
+        when :sequel
+          DatabaseCleaner::Sequel
+        when :ohm
+          DatabaseCleaner::Ohm
+        when :redis
+          DatabaseCleaner::Redis
+        when :neo4j
+          DatabaseCleaner::Neo4j
+      end
     end
 
     def orm_strategy(strategy)
-      require "database_cleaner/#{orm.to_s}/#{strategy.to_s}"
       orm_module.const_get(strategy.to_s.capitalize)
+    rescue NameError
+      $stderr.puts <<-TEXT
+        Requiring the `database_cleaner` gem directly is deprecated, and will raise an error in database_cleaner 2.0. Instead, please require the specific gem (or gems) for your ORM.
+        For example, replace `gem "database_cleaner"` with `gem "database_cleaner-#{orm}"` in your Gemfile.
+      TEXT
+      require_orm_strategy(orm, strategy)
+      retry
+    end
+
+    def require_orm_strategy(orm, strategy)
+      $LOAD_PATH.unshift File.expand_path("#{File.dirname(__FILE__)}/../../adapters/database_cleaner-#{orm}/lib/database_cleaner/#{orm}")
+      require "database_cleaner/#{orm}/#{strategy}"
     rescue LoadError
-      if orm_module.respond_to? :available_strategies
-        raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!  Available strategies: #{orm_module.available_strategies.join(', ')}"
-      else
-        raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!"
-      end
+      raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!  Available strategies: #{orm_module.available_strategies.join(', ')}"
     end
 
     def autodetect

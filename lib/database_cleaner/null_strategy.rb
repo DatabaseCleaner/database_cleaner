@@ -1,18 +1,18 @@
 module DatabaseCleaner
   class NullStrategy
-    def self.start
+    def start
       # no-op
     end
     
-     def self.db=(connection)
-       # no-op
-     end
+    def db=(connection)
+      # no-op
+    end
      
-    def self.clean
+    def clean
       # no-op
     end
 
-    def self.cleaning(&block)
+    def cleaning(&block)
       # no-op
       yield
     end

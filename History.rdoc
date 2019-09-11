@@ -1,5 +1,44 @@
 == Development (master)
 
+=== Bug Fixes
+=== Changes
+
+== 1.7.0 2018-04-19
+
+=== Bug Fixes
+  * Remove unnecessary folders from gem: https://github.com/DatabaseCleaner/database_cleaner/pull/508
+  * Properly quote table names: https://github.com/DatabaseCleaner/database_cleaner/pull/501
+  * Use more idiomatic Ruby in README: https://github.com/DatabaseCleaner/database_cleaner/pull/510
+  * Return ::ActiveRecord::Base from `establish_connection`: https://github.com/DatabaseCleaner/database_cleaner/pull/399
+
+=== Changes
+  * Safeguard against running in production or running against a remote database: https://github.com/DatabaseCleaner/database_cleaner/pull/521
+
+== 1.6.2 2017-10-29
+
+=== Bug Fixes
+  * ActiveRecord::Base namespace patch: https://github.com/DatabaseCleaner/database_cleaner/pull/490
+  * Better exclusion condition based on Rails version: https://github.com/DatabaseCleaner/database_cleaner/pull/487
+
+=== Changes
+  * Better documentation. Typos were fixed. Sequel deletion is supported: https://github.com/DatabaseCleaner/database_cleaner/pull/500
+
+== 1.6.1 2017-05-09
+
+=== Bug Fixes
+  * Deletion strategy fix for ActiveRecord (@kawamoto)
+
+== 1.6.0 2017-05-04
+
+=== New Features/Changes
+  * Rails 5.1 support: Remove deprecation warning (@activefx)
+  * MySQL 5.6+ InnoDB support (@ahorek)
+  * Better documentation (fixed typo) (@hoshinotsuyoshi)
+
+=== Bug Fixes
+  * Fix Redis db option (@soylent)
+  * Make NullStrategy API-complete (@anicholson)
+
 == 1.5.3 2016-04-22
 
 === Bug Fixes

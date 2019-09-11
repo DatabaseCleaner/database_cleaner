@@ -7,9 +7,11 @@ bundled_gems/
 vendor/
 examples/db/*.db
 examples/config/database.yml
-db/config.yml
-db/test.sqlite3
+spec/support/config.yml
+tmp/*
+!tmp/.keep
 .rbenv-version
 .rvmrc
 .ruby-version
 .vagrant
+.idea/

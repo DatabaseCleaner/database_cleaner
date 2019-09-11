@@ -8,9 +8,9 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.required_ruby_version = ">= 1.9.3"
   s.require_paths = ["lib"]
-  s.authors = ["Ben Mabey"]
+  s.authors = ["Ben Mabey", "Ernesto Tagwerker"]
   s.description = "Strategies for cleaning databases. Can be used to ensure a clean state for testing."
-  s.email = "ben@benmabey.com"
+  s.email = "ernesto@ombulabs.com"
   s.extra_rdoc_files = [
     "LICENSE",
     "README.markdown",
@@ -25,8 +25,8 @@ Gem::Specification.new do |s|
     "VERSION.yml",
     "cucumber.yml"]
 
-  s.files += Dir['examples/**/*'] + Dir['features/**/*'] + Dir['lib/**/*.rb'] +
-             Dir['spec/**/*']
+  s.files += Dir['lib/**/*.rb']
+  s.files += Dir['adapters/**/lib/**/*.rb']
 
   s.homepage = "http://github.com/DatabaseCleaner/database_cleaner"
   s.license = 'MIT'
@@ -46,13 +46,15 @@ Gem::Specification.new do |s|
   s.add_development_dependency "tzinfo"
   s.add_development_dependency "mongoid-tree"
   s.add_development_dependency "mongo_mapper"
+  s.add_development_dependency "mongo", "~> 1.12.0"
   s.add_development_dependency "moped"
   s.add_development_dependency "neo4j-core"
   s.add_development_dependency "couch_potato"
   s.add_development_dependency "sequel", "~> 3.21.0"
   s.add_development_dependency 'ohm', '~> 0.1.3'
   s.add_development_dependency 'guard-rspec'
-  s.add_development_dependency "rspec-rails", "~> 2.14.2"
+  s.add_development_dependency "listen", "~> 3.0.0" # 3.1 requires Ruby >= 2.2
+  s.add_development_dependency "rspec"
   s.add_development_dependency "cucumber"
 
   unless RUBY_PLATFORM =~ /java/

@@ -1,4 +1,3 @@
-require File.dirname(__FILE__) + '/../spec_helper'
 require 'database_cleaner/active_record/transaction'
 require 'database_cleaner/data_mapper/transaction'
 require 'database_cleaner/mongo_mapper/truncation'
@@ -7,442 +6,325 @@ require 'database_cleaner/couch_potato/truncation'
 require 'database_cleaner/neo4j/transaction'
 
 module DatabaseCleaner
-  describe Base do
-
-    let(:mock_strategy) {
-      double("strategy").tap{|strategy|
-        strategy.stub(:to_ary => [strategy])
-      }
-    }
-
+  RSpec.describe Base do
     describe "autodetect" do
+      before do
+        hide_const("ActiveRecord")
+        hide_const("DataMapper")
+        hide_const("MongoMapper")
+        hide_const("Mongoid")
+        hide_const("CouchPotato")
+        hide_const("Sequel")
+        hide_const("Moped")
+        hide_const("Redis")
+        hide_const("Ohm")
+        hide_const("Neo4j")
+      end
 
-       #Cache all ORMs, we'll need them later but not now.
-       before(:all) do
-         Temp_AR = ::ActiveRecord if defined?(::ActiveRecord) and not defined?(Temp_AR)
-         Temp_DM = ::DataMapper   if defined?(::DataMapper)   and not defined?(Temp_DM)
-         Temp_MM = ::MongoMapper  if defined?(::MongoMapper)  and not defined?(Temp_MM)
-         Temp_MO = ::Mongoid      if defined?(::Mongoid)      and not defined?(Temp_MO)
-         Temp_CP = ::CouchPotato  if defined?(::CouchPotato)  and not defined?(Temp_CP)
-         Temp_SQ = ::Sequel       if defined?(::Sequel)       and not defined?(Temp_SQ)
-         Temp_MP = ::Moped        if defined?(::Moped)        and not defined?(Temp_MP)
-         Temp_RS = ::Redis        if defined?(::Redis)        and not defined?(Temp_RS)
-         Temp_OH = ::Ohm          if defined?(::Ohm)          and not defined?(Temp_OH)
-         Temp_NJ = ::Neo4j        if defined?(::Neo4j)        and not defined?(Temp_NJ)
-       end
+      it "should raise an error when no ORM is detected" do
+        expect { subject }.to raise_error(DatabaseCleaner::NoORMDetected)
+      end
 
-       #Remove all ORM mocks and restore from cache
-       after(:all) do
-         Object.send(:remove_const, 'ActiveRecord') if defined?(::ActiveRecord)
-         Object.send(:remove_const, 'DataMapper')   if defined?(::DataMapper)
-         Object.send(:remove_const, 'MongoMapper')  if defined?(::MongoMapper)
-         Object.send(:remove_const, 'Mongoid')      if defined?(::Mongoid)
-         Object.send(:remove_const, 'CouchPotato')  if defined?(::CouchPotato)
-         Object.send(:remove_const, 'Sequel')       if defined?(::Sequel)
-         Object.send(:remove_const, 'Moped')        if defined?(::Moped)
-         Object.send(:remove_const, 'Ohm')          if defined?(::Ohm)
-         Object.send(:remove_const, 'Redis')        if defined?(::Redis)
-         Object.send(:remove_const, 'Neo4j')        if defined?(::Neo4j)
+      it "should detect ActiveRecord first" do
+        stub_const('ActiveRecord','Actively mocking records.')
+        stub_const('DataMapper',  'Mapping data mocks')
+        stub_const('MongoMapper', 'Mapping mock mongos')
+        stub_const('Mongoid',     'Mongoid mock')
+        stub_const('CouchPotato', 'Couching mock potatos')
+        stub_const('Sequel',      'Sequel mock')
+        stub_const('Moped',       'Moped mock')
+        stub_const('Ohm',         'Ohm mock')
+        stub_const('Redis',       'Redis mock')
+        stub_const('Neo4j',       'Neo4j mock')
 
+        expect(subject.orm).to eq :active_record
+        expect(subject).to be_auto_detected
+      end
 
-         # Restore ORMs
-         ::ActiveRecord = Temp_AR if defined? Temp_AR
-         ::DataMapper   = Temp_DM if defined? Temp_DM
-         ::MongoMapper  = Temp_MM if defined? Temp_MM
-         ::Mongoid      = Temp_MO if defined? Temp_MO
-         ::CouchPotato  = Temp_CP if defined? Temp_CP
-         ::Sequel       = Temp_SQ if defined? Temp_SQ
-         ::Moped        = Temp_MP if defined? Temp_MP
-         ::Ohm          = Temp_OH if defined? Temp_OH
-         ::Redis        = Temp_RS if defined? Temp_RS
-         ::Neo4j        = Temp_NJ if defined? Temp_NJ
-       end
+      it "should detect DataMapper second" do
+        stub_const('DataMapper',  'Mapping data mocks')
+        stub_const('MongoMapper', 'Mapping mock mongos')
+        stub_const('Mongoid',     'Mongoid mock')
+        stub_const('CouchPotato', 'Couching mock potatos')
+        stub_const('Sequel',      'Sequel mock')
+        stub_const('Moped',       'Moped mock')
+        stub_const('Ohm',         'Ohm mock')
+        stub_const('Redis',       'Redis mock')
+        stub_const('Neo4j',       'Neo4j mock')
 
-       #reset the orm mocks
-       before(:each) do
-         Object.send(:remove_const, 'ActiveRecord') if defined?(::ActiveRecord)
-         Object.send(:remove_const, 'DataMapper')   if defined?(::DataMapper)
-         Object.send(:remove_const, 'MongoMapper')  if defined?(::MongoMapper)
-         Object.send(:remove_const, 'Mongoid')      if defined?(::Mongoid)
-         Object.send(:remove_const, 'CouchPotato')  if defined?(::CouchPotato)
-         Object.send(:remove_const, 'Sequel')       if defined?(::Sequel)
-         Object.send(:remove_const, 'Moped')        if defined?(::Moped)
-         Object.send(:remove_const, 'Ohm')          if defined?(::Ohm)
-         Object.send(:remove_const, 'Redis')        if defined?(::Redis)
-         Object.send(:remove_const, 'Neo4j')        if defined?(::Neo4j)
-       end
+        expect(subject.orm).to eq :data_mapper
+        expect(subject).to be_auto_detected
+      end
 
-       let(:cleaner) { DatabaseCleaner::Base.new :autodetect }
+      it "should detect MongoMapper third" do
+        stub_const('MongoMapper', 'Mapping mock mongos')
+        stub_const('Mongoid',     'Mongoid mock')
+        stub_const('CouchPotato', 'Couching mock potatos')
+        stub_const('Sequel',      'Sequel mock')
+        stub_const('Moped',       'Moped mock')
+        stub_const('Ohm',         'Ohm mock')
+        stub_const('Redis',       'Redis mock')
+        stub_const('Neo4j',       'Neo4j mock')
 
-       it "should raise an error when no ORM is detected" do
-         running { cleaner }.should raise_error(DatabaseCleaner::NoORMDetected)
-       end
+        expect(subject.orm).to eq :mongo_mapper
+        expect(subject).to be_auto_detected
+      end
 
-       it "should detect ActiveRecord first" do
-         Object.const_set('ActiveRecord','Actively mocking records.')
-         Object.const_set('DataMapper',  'Mapping data mocks')
-         Object.const_set('MongoMapper', 'Mapping mock mongos')
-         Object.const_set('Mongoid',     'Mongoid mock')
-         Object.const_set('CouchPotato', 'Couching mock potatos')
-         Object.const_set('Sequel',      'Sequel mock')
-         Object.const_set('Moped',       'Moped mock')
-         Object.const_set('Ohm',         'Ohm mock')
-         Object.const_set('Redis',       'Redis mock')
-         Object.const_set('Neo4j',       'Neo4j mock')
+      it "should detect Mongoid fourth" do
+        stub_const('Mongoid',     'Mongoid mock')
+        stub_const('CouchPotato', 'Couching mock potatos')
+        stub_const('Sequel',      'Sequel mock')
+        stub_const('Moped',       'Moped mock')
+        stub_const('Ohm',         'Ohm mock')
+        stub_const('Redis',       'Redis mock')
+        stub_const('Neo4j',       'Neo4j mock')
 
-         cleaner.orm.should eq :active_record
-         cleaner.should be_auto_detected
-       end
+        expect(subject.orm).to eq :mongoid
+        expect(subject).to be_auto_detected
+      end
 
-       it "should detect DataMapper second" do
-         Object.const_set('DataMapper',  'Mapping data mocks')
-         Object.const_set('MongoMapper', 'Mapping mock mongos')
-         Object.const_set('Mongoid',     'Mongoid mock')
-         Object.const_set('CouchPotato', 'Couching mock potatos')
-         Object.const_set('Sequel',      'Sequel mock')
-         Object.const_set('Moped',       'Moped mock')
-         Object.const_set('Ohm',         'Ohm mock')
-         Object.const_set('Redis',       'Redis mock')
-         Object.const_set('Neo4j',       'Neo4j mock')
+      it "should detect CouchPotato fifth" do
+        stub_const('CouchPotato', 'Couching mock potatos')
+        stub_const('Sequel',      'Sequel mock')
+        stub_const('Moped',       'Moped mock')
+        stub_const('Ohm',         'Ohm mock')
+        stub_const('Redis',       'Redis mock')
+        stub_const('Neo4j',       'Neo4j mock')
 
-         cleaner.orm.should eq :data_mapper
-         cleaner.should be_auto_detected
-       end
+        expect(subject.orm).to eq :couch_potato
+        expect(subject).to be_auto_detected
+      end
 
-       it "should detect MongoMapper third" do
-         Object.const_set('MongoMapper', 'Mapping mock mongos')
-         Object.const_set('Mongoid',     'Mongoid mock')
-         Object.const_set('CouchPotato', 'Couching mock potatos')
-         Object.const_set('Sequel',      'Sequel mock')
-         Object.const_set('Moped',       'Moped mock')
-         Object.const_set('Ohm',         'Ohm mock')
-         Object.const_set('Redis',       'Redis mock')
-         Object.const_set('Neo4j',       'Neo4j mock')
+      it "should detect Sequel sixth" do
+        stub_const('Sequel', 'Sequel mock')
+        stub_const('Moped',  'Moped mock')
+        stub_const('Ohm',    'Ohm mock')
+        stub_const('Redis',  'Redis mock')
+        stub_const('Neo4j',  'Neo4j mock')
 
-         cleaner.orm.should eq :mongo_mapper
-         cleaner.should be_auto_detected
-       end
+        expect(subject.orm).to eq :sequel
+        expect(subject).to be_auto_detected
+      end
 
-       it "should detect Mongoid fourth" do
-         Object.const_set('Mongoid',     'Mongoid mock')
-         Object.const_set('CouchPotato', 'Couching mock potatos')
-         Object.const_set('Sequel',      'Sequel mock')
-         Object.const_set('Moped',       'Moped mock')
-         Object.const_set('Ohm',         'Ohm mock')
-         Object.const_set('Redis',       'Redis mock')
-         Object.const_set('Neo4j',       'Neo4j mock')
+      it 'detects Moped seventh' do
+        stub_const('Moped', 'Moped mock')
 
-         cleaner.orm.should eq :mongoid
-         cleaner.should be_auto_detected
-       end
+        expect(subject.orm).to eq :moped
+        expect(subject).to be_auto_detected
+      end
 
-       it "should detect CouchPotato fifth" do
-         Object.const_set('CouchPotato', 'Couching mock potatos')
-         Object.const_set('Sequel',      'Sequel mock')
-         Object.const_set('Moped',       'Moped mock')
-         Object.const_set('Ohm',         'Ohm mock')
-         Object.const_set('Redis',       'Redis mock')
-         Object.const_set('Neo4j',       'Neo4j mock')
+      it 'detects Ohm eighth' do
+        stub_const('Ohm',    'Ohm mock')
+        stub_const('Redis',  'Redis mock')
+        stub_const('Neo4j',  'Neo4j mock')
 
-         cleaner.orm.should eq :couch_potato
-         cleaner.should be_auto_detected
-       end
+        expect(subject.orm).to eq :ohm
+        expect(subject).to be_auto_detected
+      end
 
-       it "should detect Sequel sixth" do
-         Object.const_set('Sequel', 'Sequel mock')
-         Object.const_set('Moped',  'Moped mock')
-         Object.const_set('Ohm',    'Ohm mock')
-         Object.const_set('Redis',  'Redis mock')
-         Object.const_set('Neo4j',  'Neo4j mock')
+      it 'detects Redis ninth' do
+        stub_const('Redis', 'Redis mock')
+        stub_const('Neo4j', 'Neo4j mock')
 
-         cleaner.orm.should eq :sequel
-         cleaner.should be_auto_detected
-       end
+        expect(subject.orm).to eq :redis
+        expect(subject).to be_auto_detected
+      end
 
-       it 'detects Moped seventh' do
-         Object.const_set('Moped', 'Moped mock')
+      it 'detects Neo4j tenth' do
+        stub_const('Neo4j', 'Neo4j mock')
 
-         cleaner.orm.should eq :moped
-         cleaner.should be_auto_detected
-       end
-
-       it 'detects Ohm eighth' do
-         Object.const_set('Ohm',    'Ohm mock')
-         Object.const_set('Redis',  'Redis mock')
-         Object.const_set('Neo4j',  'Neo4j mock')
-
-         cleaner.orm.should eq :ohm
-         cleaner.should be_auto_detected
-       end
-
-       it 'detects Redis ninth' do
-         Object.const_set('Redis', 'Redis mock')
-         Object.const_set('Neo4j', 'Neo4j mock')
-
-         cleaner.orm.should eq :redis
-         cleaner.should be_auto_detected
-       end
-
-       it 'detects Neo4j tenth' do
-         Object.const_set('Neo4j', 'Neo4j mock')
-
-         cleaner.orm.should eq :neo4j
-         cleaner.should be_auto_detected
-       end
-    end
-
-    describe "orm_module" do
-      it "should ask ::DatabaseCleaner what the module is for its orm" do
-        orm = double("orm")
-        mockule = double("module")
-
-        cleaner = ::DatabaseCleaner::Base.new
-        cleaner.should_receive(:orm).and_return(orm)
-
-        ::DatabaseCleaner.should_receive(:orm_module).with(orm).and_return(mockule)
-
-        cleaner.send(:orm_module).should eq mockule
+        expect(subject.orm).to eq :neo4j
+        expect(subject).to be_auto_detected
       end
     end
 
     describe "comparison" do
-      it "should be equal if orm, connection and strategy are the same" do
-        one = DatabaseCleaner::Base.new(:active_record,:connection => :default)
-        one.strategy = mock_strategy
+      it "should be equal if orm and connection are the same" do
+        one = DatabaseCleaner::Base.new(:active_record, :connection => :default)
+        two = DatabaseCleaner::Base.new(:active_record, :connection => :default)
 
-        two = DatabaseCleaner::Base.new(:active_record,:connection => :default)
-        two.strategy = mock_strategy
-
-        one.should eq two
-        two.should eq one
+        expect(one).to eq two
+        expect(two).to eq one
       end
 
       it "should not be equal if orm are not the same" do
         one = DatabaseCleaner::Base.new(:mongo_id, :connection => :default)
-        one.strategy = mock_strategy
-
         two = DatabaseCleaner::Base.new(:active_record, :connection => :default)
-        two.strategy = mock_strategy
 
-        one.should_not eq two
-        two.should_not eq one
+        expect(one).not_to eq two
+        expect(two).not_to eq one
       end
 
       it "should not be equal if connection are not the same" do
-
         one = DatabaseCleaner::Base.new(:active_record, :connection => :default)
-        one.strategy = :truncation
-
         two = DatabaseCleaner::Base.new(:active_record, :connection => :other)
-        two.strategy = :truncation
 
-        one.should_not eq two
-        two.should_not eq one
+        expect(one).not_to eq two
+        expect(two).not_to eq one
       end
     end
 
     describe "initialization" do
       context "db specified" do
-        subject { ::DatabaseCleaner::Base.new(:active_record,:connection => :my_db) }
+        subject { ::DatabaseCleaner::Base.new(:active_record, :connection => :my_db) }
 
         it "should store db from :connection in params hash" do
-          subject.db.should eq :my_db
+          expect(subject.db).to eq :my_db
         end
       end
 
       describe "orm" do
         it "should store orm" do
           cleaner = ::DatabaseCleaner::Base.new :a_orm
-          cleaner.orm.should eq :a_orm
+          expect(cleaner.orm).to eq :a_orm
         end
 
         it "converts string to symbols" do
           cleaner = ::DatabaseCleaner::Base.new "mongoid"
-          cleaner.orm.should eq :mongoid
+          expect(cleaner.orm).to eq :mongoid
         end
 
         it "is autodetected if orm is not provided" do
           cleaner = ::DatabaseCleaner::Base.new
-          cleaner.should be_auto_detected
+          expect(cleaner).to be_auto_detected
         end
 
         it "is autodetected if you specify :autodetect" do
           cleaner = ::DatabaseCleaner::Base.new "autodetect"
-          cleaner.should be_auto_detected
+          expect(cleaner).to be_auto_detected
         end
 
         it "should default to autodetect upon initalisation" do
-          subject.should be_auto_detected
+          expect(subject).to be_auto_detected
         end
       end
     end
 
     describe "db" do
       it "should default to :default" do
-        subject.db.should eq :default
+        expect(subject.db).to eq :default
       end
 
       it "should return any stored db value" do
-        subject.stub(:strategy_db=)
         subject.db = :test_db
-        subject.db.should eq :test_db
-      end
-
-      it "should pass db to any specified strategy" do
-        subject.should_receive(:strategy_db=).with(:a_new_db)
-        subject.db = :a_new_db
+        expect(subject.db).to eq :test_db
       end
     end
 
-    describe "strategy_db=" do
-      let(:strategy) { mock_strategy }
-
-      before(:each) do
-        subject.strategy = strategy
-      end
-
-      it "should check that strategy supports db specification" do
-        strategy.should_receive(:respond_to?).with(:db=).and_return(true)
-        strategy.stub(:db=)
-        subject.strategy_db = :a_db
-      end
-
+    describe "db=" do
       context "when strategy supports db specification" do
-        before(:each) { strategy.stub(:respond_to?).with(:db=).and_return true }
-
-        it "should pass db to the strategy" do
-          strategy.should_receive(:db=).with(:a_db)
-          subject.strategy_db = :a_db
+        it "should pass db down to its current strategy" do
+          expect(subject.strategy).to receive(:db=).with(:a_new_db)
+          subject.db = :a_new_db
         end
       end
 
-      context "when strategy doesn't supports db specification" do
-        before(:each) { strategy.stub(:respond_to?).with(:db=).and_return false }
+      context "when strategy doesn't support db specification" do
+        let(:strategy) { double(respond_to?: false) }
+        before { subject.strategy = strategy }
 
-        it "should check to see if db is :default" do
-          db = double("default")
-          db.should_receive(:==).with(:default).and_return(true)
-
-          subject.strategy_db = db
+        it "doesn't pass the default db down to it" do
+          expect(strategy).to_not receive(:db=)
+          subject.db = :default
         end
 
         it "should raise an argument error when db isn't default" do
-          db = double("a db")
-          expect{ subject.strategy_db = db }.to raise_error ArgumentError
+          expect { subject.db = :test }.to raise_error ArgumentError
         end
       end
     end
 
     describe "clean_with" do
-      let (:strategy) { double("strategy",:clean => true) }
+      let (:strategy) { double("strategy", clean: true) }
 
-      before(:each) { subject.stub(:create_strategy).with(anything).and_return(strategy) }
-
-      it "should pass all arguments to create_strategy" do
-        subject.should_receive(:create_strategy).with(:lorum, :dollar, :amet, :ipsum => "random").and_return(strategy)
-        subject.clean_with :lorum, :dollar, :amet, { :ipsum => "random" }
-      end
-
-      it "should invoke clean on the created strategy" do
-        strategy.should_receive(:clean)
-        subject.clean_with :strategy
-      end
-
-      it "should return the strategy" do
-        subject.clean_with( :strategy ).should eq strategy
+      before do
+        allow(subject).to receive(:create_strategy).with(anything).and_return(strategy)
       end
     end
 
-    describe "clean_with!" do
-      let (:strategy) { double("strategy",:clean => true) }
+    describe "clean_with" do
+      # FIXME hacky null strategy
+      # because you can't pass a NullStrategy to #clean_with
 
-      before(:each) { subject.stub(:create_strategy).with(anything).and_return(strategy) }
+      let(:strategy) { double(clean: true) }
 
-      it "should pass all arguments to create_strategy" do
-        subject.should_receive(:create_strategy).with(:lorum, :dollar, :amet, :ipsum => "random").and_return(strategy)
-        subject.clean_with! :lorum, :dollar, :amet, { :ipsum => "random" }
+      let(:strategy_class) do
+        require "database_cleaner/active_record/truncation"
+        DatabaseCleaner::ActiveRecord::Truncation
+      end
+
+      before do
+        allow(::ActiveRecord::Base).to receive(:connection).and_return(double.as_null_object)
+        allow(strategy_class).to receive(:new).and_return(strategy)
+      end
+
+      it "should pass all arguments to strategy initializer" do
+        expect(strategy_class).to receive(:new).with(:dollar, :amet, ipsum: "random").and_return(strategy)
+        subject.clean_with :truncation, :dollar, :amet, ipsum: "random"
       end
 
       it "should invoke clean on the created strategy" do
-        strategy.should_receive(:clean)
-        subject.clean_with! :strategy
+        expect(strategy).to receive(:clean)
+        subject.clean_with :truncation
       end
 
-      it "should return the strategy" do
-        subject.clean_with!( :strategy ).should eq strategy
-      end
-    end
-
-    describe "create_strategy" do
-      let(:strategy_class) { double("strategy_class",:new => double("instance")) }
-
-      before :each do
-        subject.stub(:orm_strategy).and_return(strategy_class)
-      end
-
-      it "should pass the first argument to orm_strategy" do
-        subject.should_receive(:orm_strategy).with(:strategy).and_return(Object)
-        subject.create_strategy :strategy
-      end
-      it "should pass the remainding argument to orm_strategy.new" do
-        strategy_class.should_receive(:new).with(:params => {:lorum => "ipsum"})
-
-        subject.create_strategy :strategy, {:params => {:lorum => "ipsum"}}
-      end
-      it "should return the resulting strategy" do
-        subject.create_strategy( :strategy ).should eq strategy_class.new
+      it "should return the created strategy" do
+        expect(subject.clean_with(:truncation)).to eq strategy
       end
     end
 
     describe "strategy=" do
-      it "should proxy symbolised strategies to create_strategy" do
-        subject.should_receive(:create_strategy).with(:symbol)
-        subject.strategy = :symbol
+      let(:strategy_class) do
+        require "database_cleaner/active_record/truncation"
+        DatabaseCleaner::ActiveRecord::Truncation
+      end
+
+      it "should look up and create a the named strategy for the current ORM" do
+        subject.strategy = :truncation
+        expect(subject.strategy).to be_a(strategy_class)
       end
 
       it "should proxy params with symbolised strategies" do
-        subject.should_receive(:create_strategy).with(:symbol,:param => "one")
-        subject.strategy= :symbol, {:param => "one"}
+        expect(strategy_class).to receive(:new).with(param: "one")
+        subject.strategy = :truncation, { param: "one" }
       end
 
       it "should accept strategy objects" do
-        expect{ subject.strategy = mock_strategy }.to_not raise_error
+        strategy = double
+        subject.strategy = strategy
+        expect(subject.strategy).to eq strategy
       end
 
-      it "should raise argument error when params given with strategy Object" do
-        expect{ subject.strategy = double("object"), {:param => "one"} }.to raise_error ArgumentError
+      it "should raise argument error when params given with strategy object" do
+        expect do
+          subject.strategy = double, { param: "one" }
+        end.to raise_error ArgumentError
       end
 
       it "should attempt to set strategy db" do
-        subject.stub(:db).and_return(:my_db)
-        subject.should_receive(:set_strategy_db).with(mock_strategy, :my_db)
-        subject.strategy = mock_strategy
+        strategy = double
+        expect(strategy).to receive(:db=).with(:default)
+        subject.strategy = strategy
       end
 
-      it "should return the stored strategy" do
-        result = subject.strategy = mock_strategy
-        result.should eq mock_strategy
+      it "raises UnknownStrategySpecified on a bad strategy, and lists available strategies" do
+        expect { subject.strategy = :horrible_plan }.to \
+          raise_error(UnknownStrategySpecified, "The 'horrible_plan' strategy does not exist for the active_record ORM!  Available strategies: truncation, transaction, deletion")
+      end
+
+      it "loads and instantiates the described strategy" do
+        stub_const "DatabaseCleaner::ActiveRecord::Cunningplan", strategy_class
+
+        subject.strategy = :cunningplan
+        expect(subject.strategy).to be_a strategy_class
       end
     end
 
     describe "strategy" do
-      subject { ::DatabaseCleaner::Base.new :a_orm }
+      subject { described_class.new(:a_orm) }
 
       it "returns a null strategy when strategy is not set and undetectable" do
-        subject.strategy.should eq DatabaseCleaner::NullStrategy
-      end
-
-      it "returns the set strategy" do
-        subject.strategy = mock_strategy
-        subject.strategy.should eq mock_strategy
-      end
-    end
-
-    describe "orm=" do
-      it "should stored the desired orm" do
-        subject.orm.should_not eq :desired_orm
-        subject.orm = :desired_orm
-        subject.orm.should eq :desired_orm
+        expect(subject.strategy).to be_a(DatabaseCleaner::NullStrategy)
       end
     end
 
@@ -450,21 +332,19 @@ module DatabaseCleaner
       let(:mock_orm) { double("orm") }
 
       it "should return orm if orm set" do
-        subject.instance_variable_set "@orm", mock_orm
-        subject.orm.should eq mock_orm
+        subject.orm = :desired_orm
+        expect(subject.orm).to eq :desired_orm
       end
 
       context "orm isn't set" do
-        before(:each) { subject.instance_variable_set "@orm", nil }
+        subject { described_class.new }
 
         it "should run autodetect if orm isn't set" do
-          subject.should_receive(:autodetect)
-          subject.orm
+          expect(subject).to be_auto_detected
         end
 
         it "should return the result of autodetect if orm isn't set" do
-          subject.stub(:autodetect).and_return(mock_orm)
-          subject.orm.should eq mock_orm
+          expect(subject.orm).to eq :active_record
         end
       end
     end
@@ -473,145 +353,92 @@ module DatabaseCleaner
       let (:strategy) { double("strategy") }
 
       before(:each) do
-        subject.stub(:strategy).and_return(strategy)
+        subject.strategy = strategy
       end
 
       describe "start" do
         it "should proxy start to the strategy" do
-          strategy.should_receive(:start)
+          expect(strategy).to receive(:start)
           subject.start
         end
       end
 
       describe "clean" do
         it "should proxy clean to the strategy" do
-          strategy.should_receive(:clean)
+          expect(strategy).to receive(:clean)
           subject.clean
-        end
-      end
-
-      describe "clean!" do
-        it "should proxy clean! to the strategy clean" do
-          strategy.should_receive(:clean)
-          subject.clean!
         end
       end
 
       describe "cleaning" do
         it "should proxy cleaning to the strategy" do
-          strategy.should_receive(:cleaning)
+          expect(strategy).to receive(:cleaning)
           subject.cleaning { }
         end
       end
     end
 
     describe "auto_detected?" do
-      it "should return true unless @autodetected is nil" do
-        subject.instance_variable_set("@autodetected","not nil")
-        subject.auto_detected?.should be_true
+      it "is true if auto detection was used" do
+        expect(subject).to be_auto_detected
       end
 
-      it "should return false if @autodetect is nil" do
-        subject.instance_variable_set("@autodetected",nil)
-        subject.auto_detected?.should be_false
+      it "is false if orm was specified" do
+        subject = described_class.new(:a_orm)
+        expect(subject).to_not be_auto_detected
       end
-    end
-
-    describe "orm_strategy" do
-      let (:strategy_class) { double("strategy_class") }
-
-      before(:each) do
-        subject.stub(:orm_module).and_return(strategy_class)
-      end
-
-      context "in response to a LoadError" do
-        before(:each) { subject.should_receive(:require).with(anything).and_raise(LoadError) }
-
-        it "should raise UnknownStrategySpecified" do
-          expect { subject.send(:orm_strategy,:a_strategy) }.to raise_error UnknownStrategySpecified
-        end
-
-        it "should ask orm_module if it will list available_strategies" do
-          strategy_class.should_receive(:respond_to?).with(:available_strategies)
-
-          subject.stub(:orm_module).and_return(strategy_class)
-
-          expect { subject.send(:orm_strategy,:a_strategy) }.to raise_error UnknownStrategySpecified
-        end
-
-        it "should use available_strategies (for the error message) if its available" do
-          strategy_class.stub(:respond_to?).with(:available_strategies).and_return(true)
-          strategy_class.should_receive(:available_strategies).and_return([])
-
-          subject.stub(:orm_module).and_return(strategy_class)
-
-          expect { subject.send(:orm_strategy,:a_strategy) }.to raise_error UnknownStrategySpecified
-        end
-      end
-
-      it "should return the constant of the Strategy class requested" do
-        strategy_strategy_class = double("strategy strategy_class")
-
-        subject.stub(:require).with(anything).and_return(true)
-
-        strategy_class.should_receive(:const_get).with("Cunningplan").and_return(strategy_strategy_class)
-
-        subject.send(:orm_strategy, :cunningplan).should eq strategy_strategy_class
-      end
-
     end
 
     describe 'set_default_orm_strategy' do
       it 'sets strategy to :transaction for ActiveRecord' do
         cleaner = DatabaseCleaner::Base.new(:active_record)
-        cleaner.strategy.should be_instance_of DatabaseCleaner::ActiveRecord::Transaction
+        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::ActiveRecord::Transaction
       end
 
       it 'sets strategy to :transaction for DataMapper' do
         cleaner = DatabaseCleaner::Base.new(:data_mapper)
-        cleaner.strategy.should be_instance_of DatabaseCleaner::DataMapper::Transaction
+        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::DataMapper::Transaction
       end
 
       it 'sets strategy to :truncation for MongoMapper' do
         cleaner = DatabaseCleaner::Base.new(:mongo_mapper)
-        cleaner.strategy.should be_instance_of DatabaseCleaner::MongoMapper::Truncation
+        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::MongoMapper::Truncation
       end
 
       it 'sets strategy to :truncation for Mongoid' do
         cleaner = DatabaseCleaner::Base.new(:mongoid)
-        cleaner.strategy.should be_instance_of DatabaseCleaner::Mongoid::Truncation
+        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::Mongoid::Truncation
       end
 
       it 'sets strategy to :truncation for CouchPotato' do
         cleaner = DatabaseCleaner::Base.new(:couch_potato)
-        cleaner.strategy.should be_instance_of DatabaseCleaner::CouchPotato::Truncation
+        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::CouchPotato::Truncation
       end
 
       it 'sets strategy to :transaction for Sequel' do
         cleaner = DatabaseCleaner::Base.new(:sequel)
-        cleaner.strategy.should be_instance_of DatabaseCleaner::Sequel::Transaction
+        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::Sequel::Transaction
       end
 
       it 'sets strategy to :truncation for Moped' do
         cleaner = DatabaseCleaner::Base.new(:moped)
-        cleaner.strategy.should be_instance_of DatabaseCleaner::Moped::Truncation
+        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::Moped::Truncation
       end
 
       it 'sets strategy to :truncation for Ohm' do
         cleaner = DatabaseCleaner::Base.new(:ohm)
-        cleaner.strategy.should be_instance_of DatabaseCleaner::Ohm::Truncation
+        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::Ohm::Truncation
       end
 
       it 'sets strategy to :truncation for Redis' do
         cleaner = DatabaseCleaner::Base.new(:redis)
-        cleaner.strategy.should be_instance_of DatabaseCleaner::Redis::Truncation
+        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::Redis::Truncation
       end
 
       it 'sets strategy to :transaction for Neo4j' do
         cleaner = DatabaseCleaner::Base.new(:neo4j)
-        cleaner.strategy.should be_instance_of DatabaseCleaner::Neo4j::Transaction
+        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::Neo4j::Transaction
       end
     end
-
   end
 end

@@ -11,8 +11,7 @@ upstream:
 ## 2. Make sure the tests run fine
 
 - `bundle install`
-- Copy `db/sample.config.yml` to `db/config.yml` and edit it
-- Make sure to create the databases specified in `db/config.yml`
+- Copy `spec/support/sample.config.yml` to `spec/support/config.yml` and edit it
 - Run the tests with `bundle exec rspec`
 
 Note that if you don't have all the supported databases installed and running,
