@@ -8,6 +8,9 @@ Database Cleaner is a set of gems containing strategies for cleaning your databa
 The original use case was to ensure a clean state during tests.
 Each strategy is a small amount of code but is code that is usually needed in any ruby app that is testing with a database.
 
+**NB** Please note that this README is for the unreleased development version of Database Cleaner. With it, you may
+find inconsistencies compared to the latest released development version, [v1.7.0](https://github.com/DatabaseCleaner/database_cleaner/blob/v1.7.0/README.markdown)
+
 ## Gem Setup
 
 Instead of using the `database_cleaner` gem directly, each ORM has its own gem. Most projects will only need the `database_cleaner-active_record` gem:
