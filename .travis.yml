@@ -7,6 +7,7 @@ rvm:
   - 2.1
   - 2.2
 before_install:
+  - gem install bundler -v 1.17.3
   - | # cached install of Neo4j locally:
     if [ ! -d neo4j-community-2.3.3/bin ];
     then
