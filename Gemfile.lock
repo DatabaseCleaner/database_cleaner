@@ -15,6 +15,7 @@ PATH
     database_cleaner-data_mapper (1.8.0)
       database_cleaner (~> 1.8.0)
       datamapper
+      dm-transactions
     database_cleaner-mongo (1.8.0)
       database_cleaner (~> 1.8.0)
       mongo
@@ -321,4 +322,4 @@ DEPENDENCIES
   tzinfo
 
 BUNDLED WITH
-   1.17.1
+   1.17.3
