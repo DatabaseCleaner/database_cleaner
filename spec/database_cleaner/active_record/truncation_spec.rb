@@ -51,7 +51,7 @@ RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
             stub_const("::ActiveRecord::VERSION::MAJOR", 5)
             expect(connection)
               .not_to receive(:truncate_table)
-              .with(::DatabaseCleaner::ActiveRecord::Base.internal_metadata_table_name)
+              .with(::ActiveRecord::Base.internal_metadata_table_name)
             subject.clean
           end
 
