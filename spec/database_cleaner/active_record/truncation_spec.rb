@@ -48,6 +48,7 @@ RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
           end
 
           it "should not truncate ar_internal_metadata on Rails 5" do
+            allow(::ActiveRecord::Base).to receive(:internal_metadata_table_name).and_return('ar_internal_metadata')
             stub_const("::ActiveRecord::VERSION::MAJOR", 5)
             expect(connection)
               .not_to receive(:truncate_table)
