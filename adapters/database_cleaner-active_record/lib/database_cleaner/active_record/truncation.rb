@@ -56,7 +56,7 @@ module DatabaseCleaner
 
       def pre_count_truncate_tables(tables, options = {:reset_ids => true})
         filter = options[:reset_ids] ? method(:has_been_used?) : method(:has_rows?)
-        truncate_tables(tables.select(&filter))
+        truncate_tables(*tables.select(&filter))
       end
 
       private
@@ -239,7 +239,7 @@ module DatabaseCleaner::ActiveRecord
         if pre_count? && connection.respond_to?(:pre_count_truncate_tables)
           connection.pre_count_truncate_tables(tables_to_truncate(connection), {:reset_ids => reset_ids?})
         else
-          connection.truncate_tables(tables_to_truncate(connection))
+          connection.truncate_tables(*tables_to_truncate(connection))
         end
       end
     end
