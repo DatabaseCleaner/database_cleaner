@@ -160,7 +160,7 @@ module DatabaseCleaner
 
       def pre_count_truncate_tables(tables, options = {:reset_ids => true})
         filter = options[:reset_ids] ? method(:has_been_used?) : method(:has_rows?)
-        truncate_tables(tables.select(&filter))
+        truncate_tables(*tables.select(&filter))
       end
 
       def database_cleaner_table_cache
