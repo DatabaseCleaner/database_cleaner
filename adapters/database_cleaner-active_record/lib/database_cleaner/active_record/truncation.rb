@@ -50,7 +50,7 @@ module DatabaseCleaner
         execute("TRUNCATE TABLE #{quote_table_name(table_name)};")
       end
 
-      def truncate_tables(tables)
+      def truncate_tables(*tables)
         tables.each { |t| truncate_table(t) }
       end
 
