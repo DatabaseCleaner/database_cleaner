@@ -114,6 +114,22 @@ RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
             described_class.new(cache_tables: false).clean
           end
         end
+
+        context 'truncate tables with different arg inputs' do
+          it "should truncate given a list of tables" do
+            expect { connection.truncate_tables(['users', 'agents']) }
+              .to change { [User.count, Agent.count] }
+              .from([2,2])
+              .to([0,0])
+          end
+
+          it "should truncate given tables as args" do
+            expect { connection.truncate_tables('users', 'agents') }
+              .to change { [User.count, Agent.count] }
+              .from([2,2])
+              .to([0,0])
+          end
+        end
       end
     end
   end
