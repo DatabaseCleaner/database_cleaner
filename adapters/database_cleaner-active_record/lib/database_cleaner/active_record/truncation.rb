@@ -38,7 +38,8 @@ module DatabaseCleaner
         raise NotImplementedError
       end
 
-      def truncate_tables(tables)
+      def truncate_tables(*tables)
+        tables.flatten!
         tables.each do |table_name|
           self.truncate_table(table_name)
         end
@@ -51,6 +52,7 @@ module DatabaseCleaner
       end
 
       def truncate_tables(*tables)
+        tables.flatten!
         tables.each { |t| truncate_table(t) }
       end
 
@@ -104,7 +106,8 @@ module DatabaseCleaner
       end
       alias truncate_table delete_table
 
-      def truncate_tables(tables)
+      def truncate_tables(*tables)
+        tables.flatten!
         tables.each { |t| truncate_table(t) }
       end
 
@@ -149,7 +152,8 @@ module DatabaseCleaner
         truncate_tables([table_name])
       end
 
-      def truncate_tables(table_names)
+      def truncate_tables(*table_names)
+        table_names.flatten!
         return if table_names.nil? || table_names.empty?
         execute("TRUNCATE TABLE #{table_names.map{|name| quote_table_name(name)}.join(', ')} #{restart_identity} #{cascade};")
       end
