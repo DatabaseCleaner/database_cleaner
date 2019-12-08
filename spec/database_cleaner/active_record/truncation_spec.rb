@@ -116,6 +116,11 @@ RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
         end
 
         context 'truncate tables with different arg inputs' do
+          before do
+            2.times { User.create! }
+            2.times { Agent.create! }
+          end
+
           it "should truncate given a list of tables" do
             expect { connection.truncate_tables(['users', 'agents']) }
               .to change { [User.count, Agent.count] }
