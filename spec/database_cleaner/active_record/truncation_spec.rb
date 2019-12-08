@@ -75,7 +75,7 @@ RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
             allow(connection).to receive(:database_cleaner_table_cache).and_return(%w[widgets dogs])
             allow(connection).to receive(:database_cleaner_view_cache).and_return(["widgets"])
 
-            expect(connection).to receive(:truncate_tables).with(['dogs'])
+            expect(connection).to receive(:truncate_tables).with('dogs')
 
             subject.clean
           end
@@ -90,7 +90,7 @@ RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
 
             User.create!
 
-            expect(connection).to receive(:truncate_tables).with(['users'])
+            expect(connection).to receive(:truncate_tables).with('users')
             subject.clean
           end
         end
