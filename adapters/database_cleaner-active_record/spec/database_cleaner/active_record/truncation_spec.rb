@@ -75,7 +75,7 @@ RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
             allow(connection).to receive(:database_cleaner_table_cache).and_return(%w[widgets dogs])
             allow(connection).to receive(:database_cleaner_view_cache).and_return(["widgets"])
 
-            expect(connection).to receive(:truncate_tables).with(['dogs'])
+            expect(connection).to receive(:truncate_tables).with('dogs')
 
             subject.clean
           end
@@ -90,7 +90,7 @@ RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
 
             User.create!
 
-            expect(connection).to receive(:truncate_tables).with(['users'])
+            expect(connection).to receive(:truncate_tables).with('users')
             subject.clean
           end
         end
@@ -112,6 +112,27 @@ RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
 
             allow(connection).to receive(:truncate_tables)
             described_class.new(cache_tables: false).clean
+          end
+        end
+
+        context 'truncate tables with different arg inputs' do
+          before do
+            2.times { User.create! }
+            2.times { Agent.create! }
+          end
+
+          it "should truncate given a list of tables" do
+            expect { connection.truncate_tables(['users', 'agents']) }
+              .to change { [User.count, Agent.count] }
+              .from([2,2])
+              .to([0,0])
+          end
+
+          it "should truncate given tables as args" do
+            expect { connection.truncate_tables('users', 'agents') }
+              .to change { [User.count, Agent.count] }
+              .from([2,2])
+              .to([0,0])
           end
         end
       end
