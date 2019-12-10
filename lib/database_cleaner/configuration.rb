@@ -2,21 +2,20 @@ require 'database_cleaner/base'
 
 module DatabaseCleaner
 
-  class NoORMDetected < StandardError;   end
-  class UnknownStrategySpecified < ArgumentError;   end
+  class NoORMDetected < StandardError; end
+  class UnknownStrategySpecified < ArgumentError; end
 
   class Configuration
-    def [](orm,opts = {})
+    def initialize
+      @cleaners ||= {}
+    end
+
+    # FIXME this method conflates creation with lookup... both a command and a query. yuck.
+    def [](orm, opts = {})
       raise NoORMDetected unless orm
-      init_cleaners
-      # TODO: deprecate
-      # this method conflates creation with lookup.  Both a command and a query. Yuck.
-      if @cleaners.has_key? [orm, opts]
-        @cleaners[[orm, opts]]
-      else
-        add_cleaner(orm, opts)
-      end
+      @cleaners.fetch([orm, opts]) { add_cleaner(orm, opts) }
     end 
+
     attr_accessor :app_root, :logger
 
     def app_root
@@ -45,8 +44,6 @@ module DatabaseCleaner
       connections.each { |connection| connection.clean }
     end
 
-    alias clean! clean
-
     def cleaning(&inner_block)
       connections.inject(inner_block) do |curr_block, connection|
         proc { connection.cleaning(&curr_block) }
@@ -57,39 +54,31 @@ module DatabaseCleaner
       connections.each { |connection| connection.clean_with(*args) }
     end
 
+    # TODO deprecate and remove the following aliases:
+
+    alias clean! clean
     alias clean_with! clean_with
 
     # TODO deprecate and then privatize the following methods:
 
     def init_cleaners
-      @cleaners ||= {}
-      # ghetto ordered hash.. maintains 1.8 compat and old API
-      @connections ||= []
+      $stderr.puts "Calling `DatabaseCleaner.init_cleaners` is deprecated, and will be removed in database_cleaner 2.0 with no replacement."
     end
 
-    def add_cleaner(orm,opts = {})
-      init_cleaners
-      cleaner = DatabaseCleaner::Base.new(orm,opts)
-      @cleaners[[orm, opts]] = cleaner
-      @connections << cleaner
-      cleaner
+    def add_cleaner(orm, opts = {})
+      @cleaners[[orm, opts]] = ::DatabaseCleaner::Base.new(orm, opts)
     end
 
     def connections
-      # double yuck.. can't wait to deprecate this whole class...
-      unless defined?(@cleaners) && @cleaners
-        autodetected = ::DatabaseCleaner::Base.new
-        add_cleaner(autodetected.orm)
-      end
-      @connections
+      add_cleaner(:autodetect) if @cleaners.none?
+      @cleaners.values
     end
 
     def remove_duplicates
-      temp = []
-      connections.each do |connect|
-        temp.push connect unless temp.include? connect
+      @cleaners = @cleaners.reduce({}) do |cleaners, (key, value)|
+        cleaners[key] = value unless cleaners.values.include?(value)
+        cleaners
       end
-      @connections = temp
     end
   end
 end
