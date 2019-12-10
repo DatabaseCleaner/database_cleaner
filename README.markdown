@@ -1,3 +1,8 @@
+**If you're viewing this at https://github.com/DatabaseCleaner/database_cleaner,
+you're reading the documentation for the `master` branch.
+[View documentation for the latest release
+(1.7.0).](https://github.com/DatabaseCleaner/database_cleaner/blob/v1.7.0/README.markdown)**
+
 # Database Cleaner
 
 [![Build Status](https://travis-ci.org/DatabaseCleaner/database_cleaner.svg?branch=master)](https://travis-ci.org/DatabaseCleaner/database_cleaner)
@@ -7,9 +12,6 @@ Database Cleaner is a set of gems containing strategies for cleaning your databa
 
 The original use case was to ensure a clean state during tests.
 Each strategy is a small amount of code but is code that is usually needed in any ruby app that is testing with a database.
-
-**NB** Please note that this README is for the unreleased development version of Database Cleaner. With it, you may
-find inconsistencies compared to the latest released development version, [v1.7.0](https://github.com/DatabaseCleaner/database_cleaner/blob/v1.7.0/README.markdown)
 
 ## Gem Setup
 
