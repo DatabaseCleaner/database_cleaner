@@ -37,7 +37,7 @@ end
 
 ## Configuration options
 
-`:only` and `:except` take a list of strings to be passed to [`keys`](http://redis.io/commands/keys)).
+`:only` and `:except` take a list of strings to be passed to [`keys`](https://redis.io/commands/keys)).
 
 <table>
   <tbody>

@@ -37,7 +37,7 @@ Here is an overview of the supported strategies:
 
 (Default strategy is denoted in bold)
 
-For support or to discuss development please use the [Google Group](http://groups.google.com/group/database_cleaner).
+For support or to discuss development please use the [Google Group](https://groups.google.com/group/database_cleaner).
 
 ## What strategy is fastest?
 
@@ -49,7 +49,7 @@ Another approach is to have the transactions rolled back in the application's pr
 
 An easier, but slower, solution is to use the `:truncation` or `:deletion` strategy.
 
-So what is fastest out of `:deletion` and `:truncation`? Well, it depends on your table structure and what percentage of tables you populate in an average test. The reasoning is out of the scope of this README but here is a [good SO answer on this topic for Postgres](http://stackoverflow.com/questions/11419536/postgresql-truncation-speed/11423886#11423886).
+So what is fastest out of `:deletion` and `:truncation`? Well, it depends on your table structure and what percentage of tables you populate in an average test. The reasoning is out of the scope of this README but here is a [good SO answer on this topic for Postgres](https://stackoverflow.com/questions/11419536/postgresql-truncation-speed/11423886#11423886).
 
 Some people report much faster speeds with `:deletion` while others say `:truncation` is faster for them. The best approach therefore is it try all options on your test suite and see what is faster.
 

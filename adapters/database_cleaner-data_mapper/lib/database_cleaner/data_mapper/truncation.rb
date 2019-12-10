@@ -21,7 +21,7 @@ module DataMapper
 
     class MysqlAdapter < DataObjectsAdapter
 
-      # taken from http://github.com/godfat/dm-mapping/tree/master
+      # taken from https://github.com/godfat/dm-mapping/tree/master
       def storage_names(repository = :default)
         select 'SHOW TABLES'
       end
@@ -45,7 +45,7 @@ module DataMapper
 
     module SqliteAdapterMethods
 
-      # taken from http://github.com/godfat/dm-mapping/tree/master
+      # taken from https://github.com/godfat/dm-mapping/tree/master
       def storage_names(repository = :default)
         # activerecord-2.1.0/lib/active_record/connection_adapters/sqlite_adapter.rb: 177
         sql = <<-SQL
@@ -93,7 +93,7 @@ module DataMapper
     # maybe codes below gets some postgres/datamapper user going, though.
     class PostgresAdapter < DataObjectsAdapter
 
-      # taken from http://github.com/godfat/dm-mapping/tree/master
+      # taken from https://github.com/godfat/dm-mapping/tree/master
       def storage_names(repository = :default)
         sql = <<-SQL
           SELECT table_name FROM "information_schema"."tables"
