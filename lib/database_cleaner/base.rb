@@ -6,7 +6,7 @@ module DatabaseCleaner
     include Comparable
 
     def <=>(other)
-      (self.orm <=> other.orm) == 0 ? self.db <=> other.db : self.orm <=> other.orm
+      [orm, db] <=> [other.orm, other.db]
     end
 
     def initialize(desired_orm = nil,opts = {})
