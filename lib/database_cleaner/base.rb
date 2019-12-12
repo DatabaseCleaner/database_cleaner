@@ -15,7 +15,7 @@ module DatabaseCleaner
       @orm_autodetector = ORMAutodetector.new
       self.orm = desired_orm
       self.db = opts[:connection] || opts[:model] if opts.has_key?(:connection) || opts.has_key?(:model)
-      self.strategy = default_orm_strategy
+      self.strategy = orm_module && orm_module.default_strategy
       Safeguard.new.run
     end
 
@@ -103,6 +103,8 @@ module DatabaseCleaner
 
     def orm_module
       return unless [:active_record, :data_mapper, :mongo, :mongoid, :mongo_mapper, :moped, :couch_potato, :sequel, :ohm, :redis, :neo4j].include?(orm)
+      $LOAD_PATH.unshift File.expand_path("#{File.dirname(__FILE__)}/../../adapters/database_cleaner-#{orm}/lib")
+      require "database_cleaner/#{orm}"
       DatabaseCleaner.const_get(orm.to_s.camelize)
     end
 
@@ -118,19 +120,10 @@ module DatabaseCleaner
     end
 
     def require_orm_strategy(orm, strategy)
-      $LOAD_PATH.unshift File.expand_path("#{File.dirname(__FILE__)}/../../adapters/database_cleaner-#{orm}/lib/database_cleaner/#{orm}")
+      $LOAD_PATH.unshift File.expand_path("#{File.dirname(__FILE__)}/../../adapters/database_cleaner-#{orm}/lib")
       require "database_cleaner/#{orm}/#{strategy}"
     rescue LoadError
       raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!  Available strategies: #{orm_module.available_strategies.join(', ')}"
-    end
-
-    def default_orm_strategy
-      case orm
-      when :active_record, :data_mapper, :sequel, :neo4j
-        :transaction
-      when :mongo_mapper, :mongoid, :couch_potato, :moped, :ohm, :redis
-        :truncation
-      end
     end
   end
 end

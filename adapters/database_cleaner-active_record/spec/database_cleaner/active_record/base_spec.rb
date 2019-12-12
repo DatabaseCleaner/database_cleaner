@@ -11,6 +11,10 @@ end
 RSpec.describe DatabaseCleaner::ActiveRecord do
   it { is_expected.to respond_to(:available_strategies) }
 
+  it "has a default_strategy of transaction" do
+    expect(described_class.default_strategy).to eq(:transaction)
+  end
+
   describe "config_file_location" do
     after do
       # prevent global state leakage
