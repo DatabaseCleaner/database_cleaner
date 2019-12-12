@@ -3,6 +3,7 @@ require 'database_cleaner/null_strategy'
 require 'database_cleaner/safeguard'
 require 'database_cleaner/orm_autodetector'
 require 'active_support/core_ext/string/inflections'
+require 'forwardable'
 
 module DatabaseCleaner
   class Base
@@ -52,17 +53,8 @@ module DatabaseCleaner
       @orm = @orm_autodetector.orm if @orm == :autodetect
     end
 
-    def start
-      strategy.start
-    end
-
-    def clean
-      strategy.clean
-    end
-
-    def cleaning(&block)
-      strategy.cleaning(&block)
-    end
+    extend Forwardable
+    delegate [:start, :clean, :cleaning] => :strategy
 
     def clean_with(*args)
       strategy = create_strategy(*args)
