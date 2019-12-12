@@ -1,5 +1,6 @@
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__))) unless $LOAD_PATH.include?(File.expand_path(File.dirname(__FILE__)))
 require 'database_cleaner/configuration'
+require 'database_cleaner/deprecation'
 require 'forwardable'
 
 module DatabaseCleaner
@@ -32,6 +33,7 @@ module DatabaseCleaner
     attr_accessor :allow_remote_database_url, :allow_production, :url_whitelist
 
     def can_detect_orm?
+      DatabaseCleaner.deprecate "Calling `DatabaseCleaner.can_detect_orm?` is deprecated, and will be removed in database_cleaner 2.0 with no replacement."
       DatabaseCleaner::Base.autodetect_orm
     end
 
