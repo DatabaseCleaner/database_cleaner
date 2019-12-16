@@ -54,14 +54,20 @@ module DatabaseCleaner
       :remove_duplicates,
     ] => :cleaners
 
-    attr_accessor :app_root, :logger, :cleaners
+    attr_accessor :app_root, :cleaners
 
     def app_root
       @app_root ||= Dir.pwd
     end
 
     def logger
+      $stderr.puts "Calling `DatabaseCleaner.logger` is deprecated, and will be removed in database_cleaner 2.0 with no replacement."
       @logger ||= Logger.new(STDOUT).tap { |l| l.level = Logger::ERROR }
+    end
+
+    def logger= value
+      $stderr.puts "Calling `DatabaseCleaner.logger=` is deprecated, and will be removed in database_cleaner 2.0 with no replacement."
+      @logger= value
     end
 
     def start
