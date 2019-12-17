@@ -125,10 +125,11 @@ module DatabaseCleaner
     def orm_strategy(strategy)
       orm_module.const_get(strategy.to_s.capitalize)
     rescue NameError
-      DatabaseCleaner.deprecate <<-TEXT
-        Requiring the `database_cleaner` gem directly is deprecated, and will raise an error in database_cleaner 2.0. Instead, please require the specific gem (or gems) for your ORM.
-        For example, replace `gem "database_cleaner"` with `gem "database_cleaner-#{orm}"` in your Gemfile.
-      TEXT
+      if orm != :active_record
+        DatabaseCleaner.deprecate <<-TEXT
+          The #{orm_module} adapter has been extracted to its own gem: database_cleaner-#{orm}, and will be removed from database_cleaner in 2.0. To silence this message, please replace `gem "database_cleaner"` with `gem "database_cleaner-#{orm}"` in your Gemfile.
+        TEXT
+      end
       require_orm_strategy(orm, strategy)
       retry
     end
