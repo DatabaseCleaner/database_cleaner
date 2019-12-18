@@ -1,7 +1,9 @@
+require 'database_cleaner/deprecation'
 require 'database_cleaner/null_strategy'
 require 'database_cleaner/safeguard'
 require 'database_cleaner/orm_autodetector'
 require 'active_support/core_ext/string/inflections'
+require 'forwardable'
 
 module DatabaseCleaner
   class Base
@@ -23,34 +25,8 @@ module DatabaseCleaner
       @db = self.strategy_db = desired_db
     end
 
-    def strategy_db=(desired_db)
-      set_strategy_db(strategy, desired_db)
-    end
-
     def db
       @db ||= :default
-    end
-
-    def create_strategy(*args)
-      strategy, *strategy_args = args
-      orm_strategy(strategy).new(*strategy_args)
-    end
-
-    def clean_with(*args)
-      strategy = create_strategy(*args)
-      set_strategy_db strategy, db
-      strategy.clean
-      strategy
-    end
-
-    alias clean_with! clean_with
-
-    def set_strategy_db(strategy, desired_db)
-      if strategy.respond_to? :db=
-        strategy.db = desired_db
-      elsif desired_db != :default
-        raise ArgumentError, "You must provide a strategy object that supports non default databases when you specify a database"
-      end
     end
 
     def strategy=(args)
@@ -77,26 +53,64 @@ module DatabaseCleaner
       @orm = @orm_autodetector.orm if @orm == :autodetect
     end
 
+    extend Forwardable
+    delegate [:start, :clean, :cleaning] => :strategy
+
+    def clean_with(*args)
+      strategy = create_strategy(*args)
+      set_strategy_db strategy, db
+      strategy.clean
+      strategy
+    end
+
+    # TODO remove the following methods in 2.0
+
     def auto_detected?
+      DatabaseCleaner.deprecate "Calling `DatabaseCleaner[...].auto_detected?` is deprecated, and will be removed in database_cleaner 2.0 with no replacement."
       @orm_autodetector.autodetected?
     end
 
     def autodetect_orm
+      DatabaseCleaner.deprecate "Calling `DatabaseCleaner[...].autodetect_orm` is deprecated, and will be removed in database_cleaner 2.0 with no replacement."
       @orm_autodetector.orm
     end
 
-    def start
-      strategy.start
+    def clean!
+      DatabaseCleaner.deprecate "Calling `DatabaseCleaner[...].clean!` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner[...].clean instead."
+      clean
     end
 
-    def clean
-      strategy.clean
+    def clean_with!
+      DatabaseCleaner.deprecate "Calling `DatabaseCleaner[...].clean_with!` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner[...].clean_with instead."
+      clean_with
     end
 
-    alias clean! clean
+    # TODO privatize the following methods in 2.0
 
-    def cleaning(&block)
-      strategy.cleaning(&block)
+    def strategy_db=(desired_db)
+      if called_externally?(caller)
+        DatabaseCleaner.deprecate "Calling `DatabaseCleaner[...].strategy_db=` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner[...].db=` instead."
+      end
+      set_strategy_db(strategy, desired_db)
+    end
+
+    def set_strategy_db(strategy, desired_db)
+      if called_externally?(caller)
+        DatabaseCleaner.deprecate "Calling `DatabaseCleaner[...].set_strategy_db=` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner[...].db=` instead."
+      end
+      if strategy.respond_to? :db=
+        strategy.db = desired_db
+      elsif desired_db != :default
+        raise ArgumentError, "You must provide a strategy object that supports non default databases when you specify a database"
+      end
+    end
+
+    def create_strategy(*args)
+      if called_externally?(caller)
+        DatabaseCleaner.deprecate "Calling `DatabaseCleaner[...].create_strategy` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner[...].strategy=` instead."
+      end
+      strategy, *strategy_args = args
+      orm_strategy(strategy).new(*strategy_args)
     end
 
     private
@@ -109,7 +123,7 @@ module DatabaseCleaner
     def orm_strategy(strategy)
       orm_module.const_get(strategy.to_s.capitalize)
     rescue NameError
-      $stderr.puts <<-TEXT
+      DatabaseCleaner.deprecate <<-TEXT
         Requiring the `database_cleaner` gem directly is deprecated, and will raise an error in database_cleaner 2.0. Instead, please require the specific gem (or gems) for your ORM.
         For example, replace `gem "database_cleaner"` with `gem "database_cleaner-#{orm}"` in your Gemfile.
       TEXT
@@ -131,6 +145,10 @@ module DatabaseCleaner
       when :mongo_mapper, :mongoid, :couch_potato, :moped, :ohm, :redis
         :truncation
       end
+    end
+
+    def called_externally?(caller)
+      __FILE__ != caller.first.split(":").first
     end
   end
 end
