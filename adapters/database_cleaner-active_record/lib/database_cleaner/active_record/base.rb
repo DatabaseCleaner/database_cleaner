@@ -4,9 +4,12 @@ require 'erb'
 
 module DatabaseCleaner
   module ActiveRecord
-
     def self.available_strategies
       %w[truncation transaction deletion]
+    end
+
+    def self.default_strategy
+      :transaction
     end
 
     def self.config_file_location=(path)
