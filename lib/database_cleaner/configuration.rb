@@ -52,10 +52,16 @@ module DatabaseCleaner
       :orm=,
     ] => :cleaners
 
-    attr_accessor :app_root, :logger, :cleaners
+    attr_accessor :logger, :cleaners
 
     def app_root
+      $stderr.puts "Calling `DatabaseCleaner.app_root` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner::ActiveRecord.config_file_location`, instead."
       @app_root ||= Dir.pwd
+    end
+
+    def app_root= value
+      $stderr.puts "Calling `DatabaseCleaner.app_root=` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner::ActiveRecord.config_file_location=`, instead."
+      @app_root = value
     end
 
     def logger
