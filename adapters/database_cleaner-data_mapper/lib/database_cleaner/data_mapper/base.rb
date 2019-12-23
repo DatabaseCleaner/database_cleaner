@@ -5,6 +5,10 @@ module DatabaseCleaner
       %w[truncation transaction]
     end
 
+    def self.default_strategy
+      :transaction
+    end
+
     module Base
       include ::DatabaseCleaner::Generic::Base
 

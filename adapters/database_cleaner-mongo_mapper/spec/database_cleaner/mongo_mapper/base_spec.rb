@@ -4,6 +4,10 @@ require 'database_cleaner/spec'
 module DatabaseCleaner
   RSpec.describe MongoMapper do
     it { is_expected.to respond_to(:available_strategies) }
+
+    it "has a default_strategy of truncation" do
+      expect(described_class.default_strategy).to eq(:truncation)
+    end
   end
 
   module MongoMapper

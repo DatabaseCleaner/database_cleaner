@@ -6,6 +6,10 @@ module DatabaseCleaner
       %w{truncation}
     end
 
+    def self.default_strategy
+      :truncation
+    end
+
     module Base
       include ::DatabaseCleaner::Generic::Base
 

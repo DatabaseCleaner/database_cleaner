@@ -4,9 +4,12 @@ require 'erb'
 
 module DatabaseCleaner
   module ActiveRecord
-
     def self.available_strategies
       %w[truncation transaction deletion]
+    end
+
+    def self.default_strategy
+      :transaction
     end
 
     def self.config_file_location=(path)
@@ -14,7 +17,12 @@ module DatabaseCleaner
     end
 
     def self.config_file_location
-      @config_file_location ||= "#{DatabaseCleaner.app_root}/config/database.yml"
+      @config_file_location ||= begin
+        # Has DC.app_root been set? Check in this intrusive way to avoid triggering deprecation warnings if it hasn't.
+        app_root = DatabaseCleaner.send(:configuration).instance_variable_get(:@app_root)
+        root = app_root || Dir.pwd
+        "#{root}/config/database.yml"
+      end
     end
 
     module Base
