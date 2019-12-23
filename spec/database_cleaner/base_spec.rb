@@ -1,140 +1,126 @@
-require 'database_cleaner/active_record/transaction'
-require 'database_cleaner/data_mapper/transaction'
-require 'database_cleaner/mongo_mapper/truncation'
-require 'database_cleaner/mongoid/truncation'
-require 'database_cleaner/couch_potato/truncation'
-require 'database_cleaner/neo4j/transaction'
+require 'active_record'
+require 'data_mapper'
+require 'mongo_mapper'
+require 'mongoid'
+require 'couch_potato'
+require 'couch_potato'
+require 'sequel'
+require 'moped'
+require 'ohm'
+require 'redis'
+require 'neo4j-core'
 
 module DatabaseCleaner
   RSpec.describe Base do
     describe "autodetect" do
-      before do
-        hide_const("ActiveRecord")
-        hide_const("DataMapper")
-        hide_const("MongoMapper")
-        hide_const("Mongoid")
-        hide_const("CouchPotato")
-        hide_const("Sequel")
-        hide_const("Moped")
-        hide_const("Redis")
-        hide_const("Ohm")
-        hide_const("Neo4j")
-      end
-
       it "should raise an error when no ORM is detected" do
+        hide_const "ActiveRecord"
+        hide_const "DataMapper"
+        hide_const "MongoMapper"
+        hide_const "Mongoid"
+        hide_const "CouchPotato"
+        hide_const "Sequel"
+        hide_const "Moped"
+        hide_const "Redis"
+        hide_const "Ohm"
+        hide_const "Neo4j"
+
         expect { subject }.to raise_error(DatabaseCleaner::NoORMDetected, <<-ERROR.chomp)
 No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, CouchPotato, Sequel, Moped, Ohm, Redis, or Neo4j loaded?
         ERROR
       end
 
       it "should detect ActiveRecord first" do
-        stub_const('ActiveRecord','Actively mocking records.')
-        stub_const('DataMapper',  'Mapping data mocks')
-        stub_const('MongoMapper', 'Mapping mock mongos')
-        stub_const('Mongoid',     'Mongoid mock')
-        stub_const('CouchPotato', 'Couching mock potatos')
-        stub_const('Sequel',      'Sequel mock')
-        stub_const('Moped',       'Moped mock')
-        stub_const('Ohm',         'Ohm mock')
-        stub_const('Redis',       'Redis mock')
-        stub_const('Neo4j',       'Neo4j mock')
-
         expect(subject.orm).to eq :active_record
         expect(subject).to be_auto_detected
       end
 
       it "should detect DataMapper second" do
-        stub_const('DataMapper',  'Mapping data mocks')
-        stub_const('MongoMapper', 'Mapping mock mongos')
-        stub_const('Mongoid',     'Mongoid mock')
-        stub_const('CouchPotato', 'Couching mock potatos')
-        stub_const('Sequel',      'Sequel mock')
-        stub_const('Moped',       'Moped mock')
-        stub_const('Ohm',         'Ohm mock')
-        stub_const('Redis',       'Redis mock')
-        stub_const('Neo4j',       'Neo4j mock')
-
+        hide_const "ActiveRecord"
         expect(subject.orm).to eq :data_mapper
         expect(subject).to be_auto_detected
       end
 
       it "should detect MongoMapper third" do
-        stub_const('MongoMapper', 'Mapping mock mongos')
-        stub_const('Mongoid',     'Mongoid mock')
-        stub_const('CouchPotato', 'Couching mock potatos')
-        stub_const('Sequel',      'Sequel mock')
-        stub_const('Moped',       'Moped mock')
-        stub_const('Ohm',         'Ohm mock')
-        stub_const('Redis',       'Redis mock')
-        stub_const('Neo4j',       'Neo4j mock')
-
+        hide_const "ActiveRecord"
+        hide_const "DataMapper"
         expect(subject.orm).to eq :mongo_mapper
         expect(subject).to be_auto_detected
       end
 
       it "should detect Mongoid fourth" do
-        stub_const('Mongoid',     'Mongoid mock')
-        stub_const('CouchPotato', 'Couching mock potatos')
-        stub_const('Sequel',      'Sequel mock')
-        stub_const('Moped',       'Moped mock')
-        stub_const('Ohm',         'Ohm mock')
-        stub_const('Redis',       'Redis mock')
-        stub_const('Neo4j',       'Neo4j mock')
-
+        hide_const "ActiveRecord"
+        hide_const "DataMapper"
+        hide_const "MongoMapper"
         expect(subject.orm).to eq :mongoid
         expect(subject).to be_auto_detected
       end
 
       it "should detect CouchPotato fifth" do
-        stub_const('CouchPotato', 'Couching mock potatos')
-        stub_const('Sequel',      'Sequel mock')
-        stub_const('Moped',       'Moped mock')
-        stub_const('Ohm',         'Ohm mock')
-        stub_const('Redis',       'Redis mock')
-        stub_const('Neo4j',       'Neo4j mock')
-
+        hide_const "ActiveRecord"
+        hide_const "DataMapper"
+        hide_const "MongoMapper"
+        hide_const "Mongoid"
         expect(subject.orm).to eq :couch_potato
         expect(subject).to be_auto_detected
       end
 
       it "should detect Sequel sixth" do
-        stub_const('Sequel', 'Sequel mock')
-        stub_const('Moped',  'Moped mock')
-        stub_const('Ohm',    'Ohm mock')
-        stub_const('Redis',  'Redis mock')
-        stub_const('Neo4j',  'Neo4j mock')
-
+        hide_const "ActiveRecord"
+        hide_const "DataMapper"
+        hide_const "MongoMapper"
+        hide_const "Mongoid"
+        hide_const "CouchPotato"
         expect(subject.orm).to eq :sequel
         expect(subject).to be_auto_detected
       end
 
       it 'detects Moped seventh' do
-        stub_const('Moped', 'Moped mock')
-
+        hide_const "ActiveRecord"
+        hide_const "DataMapper"
+        hide_const "MongoMapper"
+        hide_const "Mongoid"
+        hide_const "CouchPotato"
+        hide_const "Sequel"
         expect(subject.orm).to eq :moped
         expect(subject).to be_auto_detected
       end
 
       it 'detects Ohm eighth' do
-        stub_const('Ohm',    'Ohm mock')
-        stub_const('Redis',  'Redis mock')
-        stub_const('Neo4j',  'Neo4j mock')
-
+        hide_const "ActiveRecord"
+        hide_const "DataMapper"
+        hide_const "MongoMapper"
+        hide_const "Mongoid"
+        hide_const "CouchPotato"
+        hide_const "Sequel"
+        hide_const "Moped"
         expect(subject.orm).to eq :ohm
         expect(subject).to be_auto_detected
       end
 
       it 'detects Redis ninth' do
-        stub_const('Redis', 'Redis mock')
-        stub_const('Neo4j', 'Neo4j mock')
-
+        hide_const "ActiveRecord"
+        hide_const "DataMapper"
+        hide_const "MongoMapper"
+        hide_const "Mongoid"
+        hide_const "CouchPotato"
+        hide_const "Sequel"
+        hide_const "Moped"
+        hide_const "Ohm"
         expect(subject.orm).to eq :redis
         expect(subject).to be_auto_detected
       end
 
       it 'detects Neo4j tenth' do
-        stub_const('Neo4j', 'Neo4j mock')
-
+        hide_const "ActiveRecord"
+        hide_const "DataMapper"
+        hide_const "MongoMapper"
+        hide_const "Mongoid"
+        hide_const "CouchPotato"
+        hide_const "Sequel"
+        hide_const "Moped"
+        hide_const "Ohm"
+        hide_const "Redis"
         expect(subject.orm).to eq :neo4j
         expect(subject).to be_auto_detected
       end
