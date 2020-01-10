@@ -2,8 +2,8 @@ require 'database_cleaner/generic/base'
 
 module DatabaseCleaner
   module Redis
-    def self.available_strategies
-      %w{truncation}
+    def self.default_strategy
+      :truncation
     end
 
     module Base
@@ -35,8 +35,6 @@ module DatabaseCleaner
             ::Redis.new
           elsif db.is_a?(::Redis) # pass directly the connection
             db
-          elsif cluster_mode
-            ::Redis.new(cluster: [url])
           else
             ::Redis.new(:url => url)
           end
