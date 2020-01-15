@@ -17,14 +17,6 @@ module DatabaseCleaner
         @db ||= :default
       end
 
-      def cluster_mode=(flag)
-        @cluster_mode = flag
-      end
-
-      def cluster_mode
-        @cluster_mode ||= false
-      end
-
       alias url db
 
       private
@@ -35,6 +27,8 @@ module DatabaseCleaner
             ::Redis.new
           elsif db.is_a?(::Redis) # pass directly the connection
             db
+          elsif db.is_a?(:String) && db =~ /^cluster/
+            ::Redis.new(cluster => db.sub(/^cluster/, 'redis'))
           else
             ::Redis.new(:url => url)
           end
