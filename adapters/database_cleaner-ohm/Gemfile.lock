@@ -1,33 +1,38 @@
 PATH
   remote: ../..
   specs:
-    database_cleaner (1.8.0)
+    database_cleaner (1.8.0.beta)
 
 PATH
   remote: ..
   specs:
-    database_cleaner-redis (1.8.0)
-      database_cleaner (~> 1.8.0)
+    database_cleaner-redis (1.8.0.beta)
+      database_cleaner (~> 1.8.0.beta)
       redis
 
 PATH
   remote: .
   specs:
-    database_cleaner-ohm (1.8.0)
-      database_cleaner (~> 1.8.0)
-      database_cleaner-redis (~> 1.8.0)
+    database_cleaner-ohm (1.8.0.beta)
+      database_cleaner (~> 1.8.0.beta)
+      database_cleaner-redis (~> 1.8.0.beta)
       ohm
 
 GEM
   remote: https://rubygems.org/
   specs:
     diff-lcs (1.3)
-    nest (1.1.2)
-      redis
-    ohm (0.1.5)
-      nest (~> 1.0)
+    hiredis (0.6.3)
+    nest (3.2.0)
+      redic
+    ohm (3.1.1)
+      nest (~> 3)
+      redic (~> 1.5.0)
+      stal
     rake (10.4.2)
-    redis (3.1.0)
+    redic (1.5.3)
+      hiredis
+    redis (4.1.1)
     rspec (3.7.0)
       rspec-core (~> 3.7.0)
       rspec-expectations (~> 3.7.0)
@@ -41,6 +46,8 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.7.0)
     rspec-support (3.7.1)
+    stal (0.3.0)
+      redic (~> 1.5)
 
 PLATFORMS
   ruby
@@ -54,4 +61,4 @@ DEPENDENCIES
   rspec (~> 3.0)
 
 BUNDLED WITH
-   1.17.2
+   1.17.3
