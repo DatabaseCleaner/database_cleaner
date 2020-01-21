@@ -1,71 +1,72 @@
-require 'yaml'
-version = YAML.load_file 'VERSION.yml'
 
-Gem::Specification.new do |s|
-  s.name = "database_cleaner"
-  s.version = "#{version[:major]}.#{version[:minor]}.#{version[:patch]}"
+lib = File.expand_path("../lib", __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require "database_cleaner/version"
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.required_ruby_version = ">= 1.9.3"
-  s.require_paths = ["lib"]
-  s.authors = ["Ben Mabey", "Ernesto Tagwerker"]
-  s.description = "Strategies for cleaning databases. Can be used to ensure a clean state for testing."
-  s.email = "ernesto@ombulabs.com"
-  s.extra_rdoc_files = [
-    "LICENSE",
-    "README.markdown",
-    "TODO"
-  ]
-  s.files = [
+Gem::Specification.new do |spec|
+  spec.name        = "database_cleaner"
+  spec.version     = DatabaseCleaner::VERSION
+  spec.authors     = ["Ben Mabey", "Ernesto Tagwerker"]
+  spec.email       = ["ernesto@ombulabs.com"]
+
+  spec.summary     = "Strategies for cleaning databases. Can be used to ensure a clean slate for testing."
+  spec.description = "Strategies for cleaning databases. Can be used to ensure a clean slate for testing."
+  spec.homepage    = "https://github.com/DatabaseCleaner/database_cleaner"
+  spec.license     = "MIT"
+
+  spec.files = [
     "CONTRIBUTE.markdown",
     "Gemfile.lock",
     "History.rdoc",
     "README.markdown",
     "Rakefile",
-    "VERSION.yml",
     "cucumber.yml"]
+  spec.files += Dir['lib/**/*.rb']
+  spec.files += Dir['adapters/**/lib/**/*.rb']
 
-  s.files += Dir['lib/**/*.rb']
-  s.files += Dir['adapters/**/lib/**/*.rb']
+  spec.extra_rdoc_files = [
+    "LICENSE",
+    "README.markdown",
+    "TODO"
+  ]
 
-  s.homepage = "https://github.com/DatabaseCleaner/database_cleaner"
-  s.license = 'MIT'
+  spec.require_paths = ["lib"]
 
-  s.rubygems_version = "2.4.5"
-  s.summary = "Strategies for cleaning databases.  Can be used to ensure a clean state for testing."
+  spec.rubygems_version = "2.4.5"
+  spec.required_ruby_version = ">= 1.9.3"
 
-  s.add_development_dependency "rake"
-  s.add_development_dependency "bundler"
-  s.add_development_dependency "json_pure"
-  s.add_development_dependency "activerecord-mysql2-adapter" unless RUBY_PLATFORM =~ /java/
-  s.add_development_dependency "activerecord"
-  s.add_development_dependency "datamapper"
-  s.add_development_dependency "dm-migrations"
-  s.add_development_dependency "dm-sqlite-adapter"
-  s.add_development_dependency "mongoid"
-  s.add_development_dependency "tzinfo"
-  s.add_development_dependency "mongoid-tree"
-  s.add_development_dependency "mongo_mapper"
-  s.add_development_dependency "mongo", "~> 1.12.0"
-  s.add_development_dependency "moped"
-  s.add_development_dependency "neo4j-core"
-  s.add_development_dependency "couch_potato"
-  s.add_development_dependency "sequel", "~> 3.21.0"
-  s.add_development_dependency 'ohm', '~> 0.1.3'
-  s.add_development_dependency 'guard-rspec'
-  s.add_development_dependency "listen", "~> 3.0.0" # 3.1 requires Ruby >= 2.2
-  s.add_development_dependency "rspec"
-  s.add_development_dependency "cucumber"
+  spec.add_development_dependency "rake"
+  spec.add_development_dependency "bundler"
+  spec.add_development_dependency "json_pure"
+  spec.add_development_dependency "activerecord-mysql2-adapter" unless RUBY_PLATFORM =~ /java/
+  spec.add_development_dependency "activerecord"
+  spec.add_development_dependency "datamapper"
+  spec.add_development_dependency "dm-migrations"
+  spec.add_development_dependency "dm-sqlite-adapter"
+  spec.add_development_dependency "mongoid"
+  spec.add_development_dependency "tzinfo"
+  spec.add_development_dependency "mongoid-tree"
+  spec.add_development_dependency "mongo_mapper"
+  spec.add_development_dependency "mongo", "~> 1.12.0"
+  spec.add_development_dependency "moped"
+  spec.add_development_dependency "neo4j-core"
+  spec.add_development_dependency "couch_potato"
+  spec.add_development_dependency "sequel", "~> 3.21.0"
+  spec.add_development_dependency 'ohm', '~> 0.1.3'
+  spec.add_development_dependency 'guard-rspec'
+  spec.add_development_dependency "listen", "~> 3.0.0" # 3.1 requires Ruby >= 2.2
+  spec.add_development_dependency "rspec"
+  spec.add_development_dependency "cucumber"
 
   unless RUBY_PLATFORM =~ /java/
-    s.add_development_dependency "mongo_ext"
-    s.add_development_dependency "bson_ext"
-    s.add_development_dependency 'mysql', '~> 2.9.1'
-    s.add_development_dependency 'mysql2'
-    s.add_development_dependency 'pg'
-    s.add_development_dependency "sqlite3-ruby" if RUBY_VERSION < "1.9"
-    s.add_development_dependency "sqlite3" if RUBY_VERSION >= "1.9"
+    spec.add_development_dependency "mongo_ext"
+    spec.add_development_dependency "bson_ext"
+    spec.add_development_dependency 'mysql', '~> 2.9.1'
+    spec.add_development_dependency 'mysql2'
+    spec.add_development_dependency 'pg'
+    spec.add_development_dependency "sqlite3-ruby" if RUBY_VERSION < "1.9"
+    spec.add_development_dependency "sqlite3" if RUBY_VERSION >= "1.9"
   else
-    s.add_development_dependency "activerecord-jdbc-adapter"
+    spec.add_development_dependency "activerecord-jdbc-adapter"
   end
 end
