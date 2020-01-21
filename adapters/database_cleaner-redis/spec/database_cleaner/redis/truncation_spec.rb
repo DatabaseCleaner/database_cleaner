@@ -1,5 +1,6 @@
 require 'redis'
 require 'database_cleaner/redis/truncation'
+require 'yaml'
 
 RSpec.describe DatabaseCleaner::Redis::Truncation do
   around do |example|

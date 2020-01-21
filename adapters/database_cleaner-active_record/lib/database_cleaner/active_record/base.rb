@@ -1,6 +1,7 @@
 require 'active_record'
 require 'database_cleaner/generic/base'
 require 'erb'
+require 'yaml'
 
 module DatabaseCleaner
   module ActiveRecord

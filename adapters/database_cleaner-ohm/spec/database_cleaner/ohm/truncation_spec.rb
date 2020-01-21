@@ -1,5 +1,6 @@
 require 'ohm'
 require 'database_cleaner/ohm/truncation'
+require 'yaml'
 
 module OhmTests
   class Widget < ::Ohm::Model
