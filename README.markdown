@@ -1,8 +1,9 @@
+<!--
 **If you're viewing this at https://github.com/DatabaseCleaner/database_cleaner,
 you're reading the documentation for the `master` branch.
 [View documentation for the latest release
 (1.7.0).](https://github.com/DatabaseCleaner/database_cleaner/blob/v1.7.0/README.markdown)**
-
+-->
 # Database Cleaner
 
 [![Build Status](https://travis-ci.org/DatabaseCleaner/database_cleaner.svg?branch=master)](https://travis-ci.org/DatabaseCleaner/database_cleaner)
