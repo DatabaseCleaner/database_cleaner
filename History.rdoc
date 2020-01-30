@@ -1,7 +1,22 @@
 == Development (master)
-
 === Bug Fixes
 === Changes
+
+== 1.8.0 2018-04-19
+
+=== Bug Fixes
+  * Fix MySQL deprecation warnings with Rails 5: https://github.com/DatabaseCleaner/database_cleaner/pull/574
+  * Fix MySQL truncation with `pre_count: true`: https://github.com/DatabaseCleaner/database_cleaner/pull/498
+  * Fix primary key sequence resetting in Sequel with Postgres and SQLite: https://github.com/DatabaseCleaner/database_cleaner/pull/538/files
+  * ActiveRecord truncation adapter doesn't work with Oracle: https://github.com/DatabaseCleaner/database_cleaner/pull/542
+
+=== Changes
+  * Extract ORM adapters into gems: https://github.com/DatabaseCleaner/database_cleaner/pull/560
+  * Allow postgres:///dbname as a local url: https://github.com/DatabaseCleaner/database_cleaner/pull/569
+  * Add an optional URL whitelist safeguard: https://github.com/DatabaseCleaner/database_cleaner/pull/526
+  * Add `local` tld to safeguard check: https://github.com/DatabaseCleaner/database_cleaner/pull/547
+  * Speed up ActiveRecord deletion strategy: https://github.com/DatabaseCleaner/database_cleaner/pull/534
+  * Consider `sqlite:` database urls to be local: https://github.com/DatabaseCleaner/database_cleaner/pull/529
 
 == 1.7.0 2018-04-19
 
