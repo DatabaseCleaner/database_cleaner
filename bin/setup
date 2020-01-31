@@ -6,7 +6,3 @@ set -vx
 bundle check || bundle install
 cp spec/support/sample.config.yml spec/support/config.yml
 
-for adapter in adapters/*; do
-  (cd $adapter && bin/setup)
-done
-
