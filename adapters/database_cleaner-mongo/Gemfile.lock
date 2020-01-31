@@ -1,7 +1,7 @@
 PATH
   remote: ../..
   specs:
-    database_cleaner (1.8.0)
+    database_cleaner (1.8.1)
 
 PATH
   remote: .
@@ -43,4 +43,4 @@ DEPENDENCIES
   rspec (~> 3.0)
 
 BUNDLED WITH
-   1.17.2
+   1.17.3
