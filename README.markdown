@@ -384,4 +384,4 @@ DatabaseCleaner.url_whitelist = ['postgres://postgres@localhost', 'postgres://fo
 
 ## COPYRIGHT
 
-See [LICENSE] for details.
+See [LICENSE](LICENSE) for details.
