@@ -2,7 +2,12 @@
 === Bug Fixes
 === Changes
 
-== 1.8.0 2018-04-19
+== 1.8.1 2020-01-30
+
+=== Bug Fixes
+  * Remove undeclared active_support dependency: https://github.com/DatabaseCleaner/database_cleaner/pull/612
+
+== 1.8.0 2020-01-29
 
 === Bug Fixes
   * Fix MySQL deprecation warnings with Rails 5: https://github.com/DatabaseCleaner/database_cleaner/pull/574
