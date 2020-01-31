@@ -1,47 +1,7 @@
 PATH
   remote: .
   specs:
-    database_cleaner (1.8.2)
-
-PATH
-  remote: adapters
-  specs:
-    database_cleaner-active_record (1.8.0)
-      activerecord
-      database_cleaner (~> 1.8.0)
-    database_cleaner-couch_potato (1.8.0)
-      couch_potato
-      database_cleaner (~> 1.8.0)
-    database_cleaner-data_mapper (1.8.0)
-      database_cleaner (~> 1.8.0)
-      datamapper
-      dm-transactions
-    database_cleaner-mongo (1.8.0)
-      database_cleaner (~> 1.8.0)
-      mongo
-    database_cleaner-mongo_mapper (1.8.1)
-      database_cleaner (~> 1.8.0)
-      mongo_mapper
-    database_cleaner-mongoid (1.8.1)
-      database_cleaner (~> 1.8.0)
-      database_cleaner-mongo (~> 1.8.0)
-      mongoid
-    database_cleaner-moped (1.8.0)
-      database_cleaner (~> 1.8.0)
-      moped
-    database_cleaner-neo4j (1.8.0)
-      database_cleaner (~> 1.8.0)
-      neo4j-core
-    database_cleaner-ohm (1.8.1)
-      database_cleaner (~> 1.8.0)
-      database_cleaner-redis (~> 1.8.0)
-      ohm
-    database_cleaner-redis (1.8.0)
-      database_cleaner (~> 1.8.0)
-      redis
-    database_cleaner-sequel (1.8.0)
-      database_cleaner (~> 1.8.0)
-      sequel
+    database_cleaner (2.0.0.beta)
 
 GEM
   remote: https://rubygems.org/
@@ -287,17 +247,6 @@ DEPENDENCIES
   couch_potato
   cucumber
   database_cleaner!
-  database_cleaner-active_record!
-  database_cleaner-couch_potato!
-  database_cleaner-data_mapper!
-  database_cleaner-mongo!
-  database_cleaner-mongo_mapper!
-  database_cleaner-mongoid!
-  database_cleaner-moped!
-  database_cleaner-neo4j!
-  database_cleaner-ohm!
-  database_cleaner-redis!
-  database_cleaner-sequel!
   datamapper
   dm-migrations
   dm-sqlite-adapter

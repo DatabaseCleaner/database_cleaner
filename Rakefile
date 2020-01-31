@@ -18,16 +18,7 @@ end
 require 'cucumber/rake/task'
 Cucumber::Rake::Task.new(:features)
 
-desc "Run adapter test suites"
-task :adapters do
-  Dir["adapters/*"].each do |adapter_dir|
-    Dir.chdir adapter_dir do
-      sh "bundle exec rake"
-    end
-  end
-end
-
-task :default => [:spec, :features, :adapters]
+task :default => [:spec, :features]
 
 desc "Cleans the project of any tmp file that should not be included in the gemspec."
 task :clean do
