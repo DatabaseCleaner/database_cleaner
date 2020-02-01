@@ -1,7 +1,6 @@
 module DatabaseCleaner
-  module Mongo2
-    module TruncationMixin
-
+  module Mongoid
+    module Mongo2TruncationMixin
       def clean
         if @only
           collections.each { |c| database[c].find.delete_many if @only.include?(c) }
@@ -33,7 +32,7 @@ module DatabaseCleaner
         #   name
         # end
       end
-
     end
   end
 end
+

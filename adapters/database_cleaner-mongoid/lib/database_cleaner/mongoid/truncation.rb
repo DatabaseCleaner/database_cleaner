@@ -1,8 +1,8 @@
 require 'database_cleaner/mongoid/base'
 require 'database_cleaner/generic/truncation'
-require 'database_cleaner/mongo/truncation_mixin'
-require 'database_cleaner/mongo2/truncation_mixin'
-require 'database_cleaner/moped/truncation_base'
+require 'database_cleaner/mongoid/mongo1_truncation_mixin'
+require 'database_cleaner/mongoid/mongo2_truncation_mixin'
+require 'database_cleaner/mongoid/mongoid_truncation_mixin'
 require 'mongoid/version'
 
 module DatabaseCleaner
@@ -13,7 +13,7 @@ module DatabaseCleaner
 
       if ::Mongoid::VERSION < '3'
 
-        include ::DatabaseCleaner::Mongo::TruncationMixin
+        include ::DatabaseCleaner::Mongoid::Mongo1TruncationMixin
 
         private
 
@@ -23,7 +23,7 @@ module DatabaseCleaner
 
       elsif ::Mongoid::VERSION < '5'
 
-        include ::DatabaseCleaner::Moped::TruncationBase
+        include ::DatabaseCleaner::Mongoid::MongoidTruncationMixin
 
         private
 
@@ -41,7 +41,7 @@ module DatabaseCleaner
 
       else
 
-        include ::DatabaseCleaner::Mongo2::TruncationMixin
+        include ::DatabaseCleaner::Mongoid::Mongo2TruncationMixin
 
       end
     end
