@@ -1,6 +1,15 @@
 == Development (master)
+
+== 1.8.2 2020-02-01
+
 === Bug Fixes
+  * Fix database_cleaner-ohm autodetected adapter loading: https://github.com/DatabaseCleaner/database_cleaner/pull/619
+  * Fix database_cleaner-mongo_mapper autodetected adapter loading: @botandrose
+  * Fix database_cleaner-mongoid autodetected adapter loading: https://github.com/DatabaseCleaner/database_cleaner/pull/617
+  * Exclude ar_internal_metadata from truncation on Rails 5: https://github.com/DatabaseCleaner/database_cleaner/pull/588
+
 === Changes
+  * Deprecate ohm adapter: https://github.com/DatabaseCleaner/database_cleaner/pull/619
 
 == 1.8.1 2020-01-30
 
