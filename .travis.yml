@@ -1,27 +1,13 @@
-dist: trusty
 language: ruby
 rvm:
-  - 1.9.3
-  - 2.0.0
-  - 2.1
-  - 2.2
+  - 2.4
+  - 2.5
+  - 2.6
+  - 2.7
 before_install:
   - gem install bundler -v 1.17.3
-  - | # cached install of Neo4j locally:
-    if [ ! -d neo4j-community-2.3.3/bin ];
-    then
-      wget dist.neo4j.org/neo4j-community-2.3.3-unix.tar.gz;
-      tar -xzf neo4j-community-2.3.3-unix.tar.gz;
-      sed -i.bak s/dbms.security.auth_enabled=true/dbms.security.auth_enabled=false/g neo4j-community-2.3.3/conf/neo4j-server.properties;
-    fi
 before_script:
-  - neo4j-community-2.3.3/bin/neo4j start
   - bin/setup
-services:
-  - redis-server
-  - mongodb
 cache:
   bundler: true
-  directories:
-    - neo4j-community-2.3.3
 
