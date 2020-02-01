@@ -21,22 +21,9 @@ module DatabaseCleaner
       :clean,
       :clean_with,
       :cleaning,
-
-      # TODO remove in 2.0
-      :clean!,
-      :clean_with!,
-      :init_cleaners,
-      :add_cleaner,
-      :connections,
-      :remove_duplicates,
     ] => :configuration
 
     attr_accessor :allow_remote_database_url, :allow_production, :url_whitelist
-
-    def can_detect_orm?
-      DatabaseCleaner.deprecate "Calling `DatabaseCleaner.can_detect_orm?` is deprecated, and will be removed in database_cleaner 2.0 with no replacement."
-      DatabaseCleaner::Base.autodetect_orm
-    end
 
     private
 

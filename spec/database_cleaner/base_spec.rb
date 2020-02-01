@@ -1,131 +1,5 @@
-require 'active_record'
-require 'data_mapper'
-require 'mongo_mapper'
-require 'mongoid'
-require 'couch_potato'
-require 'couch_potato'
-require 'sequel'
-require 'moped'
-require 'ohm'
-require 'redis'
-require 'neo4j-core'
-
 module DatabaseCleaner
   RSpec.describe Base do
-    describe "autodetect" do
-      it "should raise an error when no ORM is detected" do
-        hide_const "ActiveRecord"
-        hide_const "DataMapper"
-        hide_const "MongoMapper"
-        hide_const "Mongoid"
-        hide_const "CouchPotato"
-        hide_const "Sequel"
-        hide_const "Moped"
-        hide_const "Redis"
-        hide_const "Ohm"
-        hide_const "Neo4j"
-
-        expect { subject }.to raise_error(DatabaseCleaner::NoORMDetected, <<-ERROR.chomp)
-No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, CouchPotato, Sequel, Moped, Ohm, Redis, or Neo4j loaded?
-        ERROR
-      end
-
-      it "should detect ActiveRecord first" do
-        expect(subject.orm).to eq :active_record
-        expect(subject).to be_auto_detected
-      end
-
-      it "should detect DataMapper second" do
-        hide_const "ActiveRecord"
-        expect(subject.orm).to eq :data_mapper
-        expect(subject).to be_auto_detected
-      end
-
-      it "should detect MongoMapper third" do
-        hide_const "ActiveRecord"
-        hide_const "DataMapper"
-        expect(subject.orm).to eq :mongo_mapper
-        expect(subject).to be_auto_detected
-      end
-
-      it "should detect Mongoid fourth" do
-        hide_const "ActiveRecord"
-        hide_const "DataMapper"
-        hide_const "MongoMapper"
-        expect(subject.orm).to eq :mongoid
-        expect(subject).to be_auto_detected
-      end
-
-      it "should detect CouchPotato fifth" do
-        hide_const "ActiveRecord"
-        hide_const "DataMapper"
-        hide_const "MongoMapper"
-        hide_const "Mongoid"
-        expect(subject.orm).to eq :couch_potato
-        expect(subject).to be_auto_detected
-      end
-
-      it "should detect Sequel sixth" do
-        hide_const "ActiveRecord"
-        hide_const "DataMapper"
-        hide_const "MongoMapper"
-        hide_const "Mongoid"
-        hide_const "CouchPotato"
-        expect(subject.orm).to eq :sequel
-        expect(subject).to be_auto_detected
-      end
-
-      it 'detects Moped seventh' do
-        hide_const "ActiveRecord"
-        hide_const "DataMapper"
-        hide_const "MongoMapper"
-        hide_const "Mongoid"
-        hide_const "CouchPotato"
-        hide_const "Sequel"
-        expect(subject.orm).to eq :moped
-        expect(subject).to be_auto_detected
-      end
-
-      it 'detects Ohm eighth' do
-        hide_const "ActiveRecord"
-        hide_const "DataMapper"
-        hide_const "MongoMapper"
-        hide_const "Mongoid"
-        hide_const "CouchPotato"
-        hide_const "Sequel"
-        hide_const "Moped"
-        expect(subject.orm).to eq :ohm
-        expect(subject).to be_auto_detected
-      end
-
-      it 'detects Redis ninth' do
-        hide_const "ActiveRecord"
-        hide_const "DataMapper"
-        hide_const "MongoMapper"
-        hide_const "Mongoid"
-        hide_const "CouchPotato"
-        hide_const "Sequel"
-        hide_const "Moped"
-        hide_const "Ohm"
-        expect(subject.orm).to eq :redis
-        expect(subject).to be_auto_detected
-      end
-
-      it 'detects Neo4j tenth' do
-        hide_const "ActiveRecord"
-        hide_const "DataMapper"
-        hide_const "MongoMapper"
-        hide_const "Mongoid"
-        hide_const "CouchPotato"
-        hide_const "Sequel"
-        hide_const "Moped"
-        hide_const "Ohm"
-        hide_const "Redis"
-        expect(subject.orm).to eq :neo4j
-        expect(subject).to be_auto_detected
-      end
-    end
-
     describe "comparison" do
       it "should be equal if orm and connection are the same" do
         one = DatabaseCleaner::Base.new(:active_record, :connection => :default)
@@ -172,18 +46,8 @@ No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, C
           expect(cleaner.orm).to eq :mongoid
         end
 
-        it "is autodetected if orm is not provided" do
-          cleaner = ::DatabaseCleaner::Base.new
-          expect(cleaner).to be_auto_detected
-        end
-
-        it "is autodetected if you specify :autodetect" do
-          cleaner = ::DatabaseCleaner::Base.new "autodetect"
-          expect(cleaner).to be_auto_detected
-        end
-
-        it "should default to autodetect upon initalisation" do
-          expect(subject).to be_auto_detected
+        it "should default to nil" do
+          expect(subject.orm).to be_nil
         end
       end
     end
@@ -231,23 +95,29 @@ No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, C
     end
 
     describe "clean_with" do
-      # FIXME hacky null strategy
-      # because you can't pass a NullStrategy to #clean_with
+      subject { described_class.new(:active_record) }
 
-      let(:strategy) { double(clean: true) }
-
-      let(:strategy_class) do
-        require "database_cleaner/active_record/truncation"
-        DatabaseCleaner::ActiveRecord::Truncation
-      end
+      let(:strategy_class) { Class.new }
 
       before do
-        allow(::ActiveRecord::Base).to receive(:connection).and_return(double.as_null_object)
+        orm_module = Module.new do
+          def self.available_strategies
+            %i[truncation transaction deletion]
+          end
+        end
+        stub_const "DatabaseCleaner::ActiveRecord", orm_module
+        stub_const "DatabaseCleaner::ActiveRecord::Truncation", strategy_class
+      end
+
+      let(:strategy) { double }
+
+      before do
         allow(strategy_class).to receive(:new).and_return(strategy)
       end
 
       it "should pass all arguments to strategy initializer" do
         expect(strategy_class).to receive(:new).with(:dollar, :amet, ipsum: "random").and_return(strategy)
+        expect(strategy).to receive(:clean)
         subject.clean_with :truncation, :dollar, :amet, ipsum: "random"
       end
 
@@ -257,14 +127,24 @@ No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, C
       end
 
       it "should return the created strategy" do
+        expect(strategy).to receive(:clean)
         expect(subject.clean_with(:truncation)).to eq strategy
       end
     end
 
     describe "strategy=" do
-      let(:strategy_class) do
-        require "database_cleaner/active_record/truncation"
-        DatabaseCleaner::ActiveRecord::Truncation
+      subject { described_class.new(:active_record) }
+
+      let(:strategy_class) { Class.new }
+
+      before do
+        orm_module = Module.new do
+          def self.available_strategies
+            %i[truncation transaction deletion]
+          end
+        end
+        stub_const "DatabaseCleaner::ActiveRecord", orm_module
+        stub_const "DatabaseCleaner::ActiveRecord::Truncation", strategy_class
       end
 
       it "should look up and create a the named strategy for the current ORM" do
@@ -299,13 +179,6 @@ No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, C
         expect { subject.strategy = :horrible_plan }.to \
           raise_error(UnknownStrategySpecified, "The 'horrible_plan' strategy does not exist for the active_record ORM!  Available strategies: truncation, transaction, deletion")
       end
-
-      it "loads and instantiates the described strategy" do
-        stub_const "DatabaseCleaner::ActiveRecord::Cunningplan", strategy_class
-
-        subject.strategy = :cunningplan
-        expect(subject.strategy).to be_a strategy_class
-      end
     end
 
     describe "strategy" do
@@ -322,18 +195,6 @@ No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, C
       it "should return orm if orm set" do
         subject.orm = :desired_orm
         expect(subject.orm).to eq :desired_orm
-      end
-
-      context "orm isn't set" do
-        subject { described_class.new }
-
-        it "should run autodetect if orm isn't set" do
-          expect(subject).to be_auto_detected
-        end
-
-        it "should return the result of autodetect if orm isn't set" do
-          expect(subject.orm).to eq :active_record
-        end
       end
     end
 
@@ -363,69 +224,6 @@ No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, C
           expect(strategy).to receive(:cleaning)
           subject.cleaning { }
         end
-      end
-    end
-
-    describe "autodetected?" do
-      it "is true if auto detection was used" do
-        expect(subject).to be_auto_detected
-      end
-
-      it "is false if orm was specified" do
-        subject = described_class.new(:a_orm)
-        expect(subject).to_not be_auto_detected
-      end
-    end
-
-    describe 'set_default_orm_strategy' do
-      it 'sets strategy to :transaction for ActiveRecord' do
-        cleaner = DatabaseCleaner::Base.new(:active_record)
-        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::ActiveRecord::Transaction
-      end
-
-      it 'sets strategy to :transaction for DataMapper' do
-        cleaner = DatabaseCleaner::Base.new(:data_mapper)
-        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::DataMapper::Transaction
-      end
-
-      it 'sets strategy to :truncation for MongoMapper' do
-        cleaner = DatabaseCleaner::Base.new(:mongo_mapper)
-        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::MongoMapper::Truncation
-      end
-
-      it 'sets strategy to :truncation for Mongoid' do
-        cleaner = DatabaseCleaner::Base.new(:mongoid)
-        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::Mongoid::Truncation
-      end
-
-      it 'sets strategy to :truncation for CouchPotato' do
-        cleaner = DatabaseCleaner::Base.new(:couch_potato)
-        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::CouchPotato::Truncation
-      end
-
-      it 'sets strategy to :transaction for Sequel' do
-        cleaner = DatabaseCleaner::Base.new(:sequel)
-        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::Sequel::Transaction
-      end
-
-      it 'sets strategy to :truncation for Moped' do
-        cleaner = DatabaseCleaner::Base.new(:moped)
-        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::Moped::Truncation
-      end
-
-      it 'sets strategy to :truncation for Ohm' do
-        cleaner = DatabaseCleaner::Base.new(:ohm)
-        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::Ohm::Truncation
-      end
-
-      it 'sets strategy to :truncation for Redis' do
-        cleaner = DatabaseCleaner::Base.new(:redis)
-        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::Redis::Truncation
-      end
-
-      it 'sets strategy to :transaction for Neo4j' do
-        cleaner = DatabaseCleaner::Base.new(:neo4j)
-        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::Neo4j::Transaction
       end
     end
   end

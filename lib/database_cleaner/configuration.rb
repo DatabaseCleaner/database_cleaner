@@ -26,7 +26,7 @@ module DatabaseCleaner
       remove_duplicates
     end
 
-    # TODO privatize the following methods in 2.0
+    private
 
     def add_cleaner(orm, opts = {})
       self[[orm, opts]] = ::DatabaseCleaner::Base.new(orm, opts)
@@ -54,26 +54,6 @@ module DatabaseCleaner
 
     attr_accessor :cleaners
 
-    def app_root
-      DatabaseCleaner.deprecate "Calling `DatabaseCleaner.app_root` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner::ActiveRecord.config_file_location`, instead."
-      @app_root ||= Dir.pwd
-    end
-
-    def app_root= value
-      DatabaseCleaner.deprecate "Calling `DatabaseCleaner.app_root=` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner::ActiveRecord.config_file_location=`, instead."
-      @app_root = value
-    end
-
-    def logger
-      DatabaseCleaner.deprecate "Calling `DatabaseCleaner.logger` is deprecated, and will be removed in database_cleaner 2.0 with no replacement."
-      @logger ||= Logger.new(STDOUT).tap { |l| l.level = Logger::ERROR }
-    end
-
-    def logger= value
-      DatabaseCleaner.deprecate "Calling `DatabaseCleaner.logger=` is deprecated, and will be removed in database_cleaner 2.0 with no replacement."
-      @logger = value
-    end
-
     def start
       connections.each { |connection| connection.start }
     end
@@ -92,50 +72,18 @@ module DatabaseCleaner
       connections.each { |connection| connection.clean_with(*args) }
     end
 
-    # TODO remove the following methods in 2.0
-
-    def clean!
-      DatabaseCleaner.deprecate "Calling `DatabaseCleaner.clean!` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner.clean`, instead."
-      clean
-    end
-
-    def clean_with!(*args)
-      DatabaseCleaner.deprecate "Calling `DatabaseCleaner.clean_with!` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner.clean_with`, instead."
-      clean_with(*args)
-    end
-
-    def init_cleaners
-      DatabaseCleaner.deprecate "Calling `DatabaseCleaner.init_cleaners` is deprecated, and will be removed in database_cleaner 2.0 with no replacement."
-    end
+    private
 
     def connections
-      if called_externally?(caller)
-        DatabaseCleaner.deprecate "Calling `DatabaseCleaner.connections` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner.cleaners`, instead."
-      end
-      add_cleaner(:autodetect) if @cleaners.none?
       @cleaners.values
     end
 
-    # TODO privatize the following methods in 2.0
-
     def add_cleaner(orm, opts = {})
-      if called_externally?(caller)
-        DatabaseCleaner.deprecate "Calling `DatabaseCleaner.add_cleaner` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner.[]`, instead."
-      end
       @cleaners.add_cleaner(orm, opts = {})
     end
 
     def remove_duplicates
-      if called_externally?(caller)
-        DatabaseCleaner.deprecate "Calling `DatabaseCleaner.remove_duplicates` is deprecated, and will be removed in database_cleaner 2.0 with no replacement."
-      end
       @cleaners.remove_duplicates
-    end
-
-    private
-
-    def called_externally?(caller)
-      __FILE__ != caller.first.split(":").first
     end
   end
 end

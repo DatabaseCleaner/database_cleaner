@@ -14,13 +14,6 @@ RSpec.describe DatabaseCleaner::Configuration do
       expect { subject[nil] }.to raise_error(DatabaseCleaner::NoORMDetected)
     end
 
-    it "should default to autodetection" do
-      require "active_record"
-      subject.strategy = :truncation
-      cleaner = subject.cleaners.values.first
-      expect(cleaner.orm).to eq :active_record
-    end
-
     it "should accept :active_record" do
       cleaner = subject[:active_record]
       expect(cleaner).to be_a(DatabaseCleaner::Base)
@@ -93,6 +86,9 @@ RSpec.describe DatabaseCleaner::Configuration do
     end
 
     it "should retrieve a db rather than create a new one" do
+      stub_const "DatabaseCleaner::ActiveRecord", Module.new
+      stub_const "DatabaseCleaner::ActiveRecord::Truncation", Class.new
+
       connection = subject[:active_record]
       subject[:active_record].strategy = :truncation
       expect(subject[:active_record]).to equal connection
@@ -243,17 +239,6 @@ RSpec.describe DatabaseCleaner::Configuration do
           end
         end
       end
-    end
-  end
-
-  describe "app_root" do
-    it "should default to Dir.pwd" do
-      expect(subject.app_root).to eq Dir.pwd
-    end
-
-    it "should store specific paths" do
-      subject.app_root = '/path/to'
-      expect(subject.app_root).to eq '/path/to'
     end
   end
 end

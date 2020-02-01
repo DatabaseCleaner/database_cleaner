@@ -1,9 +1,8 @@
-<!--
 **If you're viewing this at https://github.com/DatabaseCleaner/database_cleaner,
 you're reading the documentation for the `master` branch.
 [View documentation for the latest release
-(1.7.0).](https://github.com/DatabaseCleaner/database_cleaner/blob/v1.7.0/README.markdown)**
--->
+(1.8.1).](https://github.com/DatabaseCleaner/database_cleaner/blob/v1.8.1/README.markdown)**
+
 # Database Cleaner
 
 [![Build Status](https://travis-ci.org/DatabaseCleaner/database_cleaner.svg?branch=master)](https://travis-ci.org/DatabaseCleaner/database_cleaner)
@@ -58,7 +57,6 @@ MongoDB
 
 Redis
  * [database_cleaner-redis](adapters/database_cleaner-redis)
- * [database_cleaner-ohm](adapters/database_cleaner-ohm)
 
 Neo4j
  * [database_cleaner-neo4j](adapters/database_cleaner-neo4j)
@@ -319,40 +317,6 @@ Usage beyond that remains the same with `DatabaseCleaner.start` calling any setu
 One of my motivations for writing this library was to have an easy way to turn on what Rails calls "transactional_fixtures" in my non-rails ActiveRecord projects.
 
 After copying and pasting code to do this several times I decided to package it up as a gem and save everyone a bit of time.
-
-## Common Errors
-
-#### DatabaseCleaner is trying to use the wrong ORM
-
-DatabaseCleaner has a deprecated autodetect mechanism where if you do not explicitly define your ORM it will use the first ORM it can detect that is loaded.
-
-Since ActiveRecord is the most common ORM used that is the first one checked for.
-
-Sometimes other libraries (e.g. ActiveAdmin) will load other ORMs (e.g. ActiveRecord) even though you are using a different ORM.  This will result in DatabaseCleaner trying to use the wrong ORM (e.g. ActiveRecord) unless you explicitly require the correct adapter gem:
-
-```ruby
-# Gemfile
-gem "database_cleaner-mongoid"
-```
-
-### STDERR is being flooded when using Postgres
-
-If you are using Postgres and have foreign key constraints, the truncation strategy will cause a lot of extra noise to appear on STDERR (in the form of "NOTICE truncate cascades" messages).
-
-To silence these warnings set the following log level in your `postgresql.conf` file:
-
-```ruby
-client_min_messages = warning
-```
-
-For ActiveRecord, you add the following parameter in your database.yml file:
-
-<pre>
-test:
-  adapter: postgresql
-  # ...
-  min_messages: WARNING
-</pre>
 
 ## Safeguards
 
