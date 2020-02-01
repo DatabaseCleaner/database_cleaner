@@ -15,3 +15,4 @@ tmp/*
 .ruby-version
 .vagrant
 .idea/
+.byebug_history
