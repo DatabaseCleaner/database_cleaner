@@ -1,5 +1,6 @@
 require "bundler/setup"
-require 'database_cleaner'
+require "database_cleaner"
+require "byebug"
 
 RSpec.configure do |config|
   # These two settings work together to allow you to limit a spec run

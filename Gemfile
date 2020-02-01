@@ -1,2 +1,3 @@
 gemspec
 
+gem "byebug"

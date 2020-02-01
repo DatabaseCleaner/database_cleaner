@@ -32,6 +32,7 @@ GEM
     bson_ext (1.12.5)
       bson (~> 1.12.5)
     builder (2.1.2)
+    byebug (10.0.2)
     coderay (1.1.2)
     couch_potato (1.3.0)
       activemodel
@@ -244,6 +245,7 @@ DEPENDENCIES
   activerecord-mysql2-adapter
   bson_ext
   bundler
+  byebug
   couch_potato
   cucumber
   database_cleaner!
