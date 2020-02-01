@@ -15,10 +15,7 @@ RSpec::Core::RakeTask.new(:rcov) do |spec|
   spec.rcov = true
 end
 
-require 'cucumber/rake/task'
-Cucumber::Rake::Task.new(:features)
-
-task :default => [:spec, :features]
+task :default => :spec
 
 desc "Cleans the project of any tmp file that should not be included in the gemspec."
 task :clean do
