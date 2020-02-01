@@ -19,7 +19,7 @@ PATH
     database_cleaner-mongo (1.8.0)
       database_cleaner (~> 1.8.0)
       mongo
-    database_cleaner-mongo_mapper (1.8.0)
+    database_cleaner-mongo_mapper (1.8.1)
       database_cleaner (~> 1.8.0)
       mongo_mapper
     database_cleaner-mongoid (1.8.1)
