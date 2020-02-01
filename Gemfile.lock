@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    database_cleaner (2.0.0.beta)
+    database_cleaner-core (2.0.0.beta)
 
 GEM
   remote: https://rubygems.org/
@@ -84,7 +84,7 @@ DEPENDENCIES
   bundler
   byebug
   cucumber
-  database_cleaner!
+  database_cleaner-core!
   guard-rspec
   listen
   rake
