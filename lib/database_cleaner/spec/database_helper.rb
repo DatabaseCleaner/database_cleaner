@@ -4,7 +4,7 @@ module DatabaseCleaner
   module Spec
     class DatabaseHelper < Struct.new(:db)
       def self.with_all_dbs &block
-        %w[mysql mysql2 sqlite3 postgres].map(&:to_sym).each do |db|
+        %w[mysql2 sqlite3 postgres].map(&:to_sym).each do |db|
           yield new(db)
         end
       end
