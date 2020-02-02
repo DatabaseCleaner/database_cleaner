@@ -32,7 +32,7 @@ PATH
     database_cleaner-neo4j (1.8.0)
       database_cleaner (~> 1.8.0)
       neo4j-core
-    database_cleaner-ohm (1.8.0)
+    database_cleaner-ohm (1.8.1)
       database_cleaner (~> 1.8.0)
       database_cleaner-redis (~> 1.8.0)
       ohm

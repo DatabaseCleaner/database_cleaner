@@ -13,7 +13,7 @@ PATH
 PATH
   remote: .
   specs:
-    database_cleaner-ohm (1.8.0)
+    database_cleaner-ohm (1.8.1)
       database_cleaner (~> 1.8.0)
       database_cleaner-redis (~> 1.8.0)
       ohm
