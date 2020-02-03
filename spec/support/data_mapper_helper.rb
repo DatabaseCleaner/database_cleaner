@@ -33,4 +33,3 @@ class DataMapperHelper < DatabaseCleaner::Spec::DatabaseHelper
     DataMapper.setup(:default, config)
   end
 end
-

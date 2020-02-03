@@ -20,4 +20,3 @@ Feature: example
     When I create a widget in another db
     Then I should see 0 widget in one db
      And I should see 1 widget in another db
-
