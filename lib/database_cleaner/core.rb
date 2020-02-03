@@ -27,4 +27,3 @@ module DatabaseCleaner
     end
   end
 end
-

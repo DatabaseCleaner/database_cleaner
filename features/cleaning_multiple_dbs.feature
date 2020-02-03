@@ -38,4 +38,3 @@ Feature: multiple database cleaning
     | DataMapper   | transaction   |
     | ActiveRecord | transaction   |
     | Sequel       | transaction   |
-
