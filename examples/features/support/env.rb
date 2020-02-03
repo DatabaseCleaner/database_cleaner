@@ -1,12 +1,11 @@
 #Hilarious as it seems, this is necessary so bundle exec cucumber works for mongoid cukeage (I'm assuming mongomapper is automatically present because its a git repo)
 Object.send(:remove_const, 'MongoMapper')  if defined?(::MongoMapper)
 
-require 'rubygems'
 require 'bundler'
 
 Bundler.setup
 require 'rspec/expectations'
-#require 'ruby-debug'
+#require 'byebug'
 
 DB_DIR = "#{File.dirname(__FILE__)}/../../db"
 
@@ -29,7 +28,7 @@ if orm && strategy
     require "database_cleaner-#{orm.underscore}"
   else
     $:.unshift(File.dirname(__FILE__) + '/../../../lib')
-    require "database_cleaner"
+    require "database_cleaner-core"
   end
 
   if another_orm

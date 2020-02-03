@@ -11,5 +11,8 @@ Gem::Specification.new do |spec|
   spec.homepage    = "https://github.com/DatabaseCleaner/database_cleaner"
   spec.license     = "MIT"
 
+  spec.files       = ["lib/database_cleaner.rb"]
+  spec.require_paths = ["lib"]
+
   spec.add_dependency "database_cleaner-active_record"
 end
