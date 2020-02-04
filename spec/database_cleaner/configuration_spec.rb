@@ -88,12 +88,13 @@ RSpec.describe DatabaseCleaner::Configuration do
     end
 
     it "should retrieve a db rather than create a new one" do
-      stub_const "DatabaseCleaner::ActiveRecord", Module.new
-      stub_const "DatabaseCleaner::ActiveRecord::Truncation", Class.new
+      class_double("DatabaseCleaner::ActiveRecord").as_stubbed_const
+      strategy_class = class_double("DatabaseCleaner::ActiveRecord::Truncation").as_stubbed_const
+      allow(strategy_class).to receive(:new)
 
-      connection = config[:active_record]
+      cleaner = config[:active_record]
       config[:active_record].strategy = :truncation
-      expect(config[:active_record]).to equal connection
+      expect(config[:active_record]).to equal cleaner
     end
   end
 
