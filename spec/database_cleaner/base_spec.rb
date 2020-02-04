@@ -28,69 +28,72 @@ module DatabaseCleaner
 
     describe "initialization" do
       context "db specified" do
-        subject(:active_record_cleaner_with_specified_connection) do
-          Base.new(:active_record, connection: :my_db)
-        end
+        subject(:cleaner) { Base.new(:active_record, connection: :my_db) }
 
         it "should store db from :connection in params hash" do
-          expect(subject.db).to eq :my_db
+          expect(cleaner.db).to eq :my_db
         end
       end
 
       describe "orm" do
         it "should store orm" do
-          cleaner = Base.new :a_orm
+          cleaner = Base.new(:a_orm)
           expect(cleaner.orm).to eq :a_orm
         end
 
         it "converts string to symbols" do
-          cleaner = Base.new "mongoid"
+          cleaner = Base.new("mongoid")
           expect(cleaner.orm).to eq :mongoid
         end
 
         it "should default to nil" do
-          expect(subject.orm).to be_nil
+          cleaner = Base.new
+          expect(cleaner.orm).to be_nil
         end
       end
     end
 
     describe "db" do
+      subject(:cleaner) { Base.new }
+
       it "should default to :default" do
-        expect(subject.db).to eq :default
+        expect(cleaner.db).to eq :default
       end
 
       it "should return any stored db value" do
-        subject.db = :test_db
-        expect(subject.db).to eq :test_db
+        cleaner.db = :test_db
+        expect(cleaner.db).to eq :test_db
       end
     end
 
     describe "db=" do
+      subject(:cleaner) { Base.new }
+
       context "when strategy supports db specification" do
         it "should pass db down to its current strategy" do
-          expect(subject.strategy).to receive(:db=).with(:a_new_db)
-          subject.db = :a_new_db
+          expect(cleaner.strategy).to receive(:db=).with(:a_new_db)
+          cleaner.db = :a_new_db
         end
       end
 
       context "when strategy doesn't support db specification" do
         let(:strategy) { double(respond_to?: false) }
 
-        before { subject.strategy = strategy }
+        before { cleaner.strategy = strategy }
 
         it "doesn't pass the default db down to it" do
           expect(strategy).to_not receive(:db=)
-          subject.db = :default
+          cleaner.db = :default
         end
 
         it "should raise an argument error when db isn't default" do
-          expect { subject.db = :test }.to raise_error ArgumentError
+          expect { cleaner.db = :test }.to raise_error ArgumentError
         end
       end
     end
 
     describe "clean_with" do
-      subject(:active_record_cleaner) { Base.new(:active_record) }
+      subject(:cleaner) { Base.new(:active_record) }
 
       let(:strategy_class) { Class.new }
       let(:strategy) { double }
@@ -103,22 +106,22 @@ module DatabaseCleaner
       it "should pass all arguments to strategy initializer" do
         expect(strategy_class).to receive(:new).with(:dollar, :amet, ipsum: "random").and_return(strategy)
         expect(strategy).to receive(:clean)
-        subject.clean_with :truncation, :dollar, :amet, ipsum: "random"
+        cleaner.clean_with :truncation, :dollar, :amet, ipsum: "random"
       end
 
       it "should invoke clean on the created strategy" do
         expect(strategy).to receive(:clean)
-        subject.clean_with :truncation
+        cleaner.clean_with :truncation
       end
 
       it "should return the created strategy" do
         expect(strategy).to receive(:clean)
-        expect(subject.clean_with(:truncation)).to eq strategy
+        expect(cleaner.clean_with(:truncation)).to eq strategy
       end
     end
 
     describe "strategy=" do
-      subject(:active_record_cleaner) { Base.new(:active_record) }
+      subject(:cleaner) { Base.new(:active_record) }
 
       let(:strategy_class) { Class.new }
 
@@ -133,44 +136,44 @@ module DatabaseCleaner
       end
 
       it "should look up and create a the named strategy for the current ORM" do
-        subject.strategy = :truncation
-        expect(subject.strategy).to be_a(strategy_class)
+        cleaner.strategy = :truncation
+        expect(cleaner.strategy).to be_a(strategy_class)
       end
 
       it "should proxy params with symbolised strategies" do
         expect(strategy_class).to receive(:new).with(param: "one")
-        subject.strategy = :truncation, { param: "one" }
+        cleaner.strategy = :truncation, { param: "one" }
       end
 
       it "should accept strategy objects" do
         strategy = double
-        subject.strategy = strategy
-        expect(subject.strategy).to eq strategy
+        cleaner.strategy = strategy
+        expect(cleaner.strategy).to eq strategy
       end
 
       it "should raise argument error when params given with strategy object" do
         expect do
-          subject.strategy = double, { param: "one" }
+          cleaner.strategy = double, { param: "one" }
         end.to raise_error ArgumentError
       end
 
       it "should attempt to set strategy db" do
         strategy = double
         expect(strategy).to receive(:db=).with(:default)
-        subject.strategy = strategy
+        cleaner.strategy = strategy
       end
 
       it "raises UnknownStrategySpecified on a bad strategy, and lists available strategies" do
-        expect { subject.strategy = :horrible_plan }.to \
+        expect { cleaner.strategy = :horrible_plan }.to \
           raise_error(UnknownStrategySpecified, "The 'horrible_plan' strategy does not exist for the active_record ORM!  Available strategies: truncation, transaction, deletion")
       end
     end
 
     describe "strategy" do
-      subject(:invalid_cleaner) { Base.new(:a_orm) }
+      subject(:cleaner) { Base.new(:a_orm) }
 
       it "returns a null strategy when strategy is not set and undetectable" do
-        expect(subject.strategy).to be_a(DatabaseCleaner::NullStrategy)
+        expect(cleaner.strategy).to be_a(DatabaseCleaner::NullStrategy)
       end
     end
 
@@ -178,34 +181,37 @@ module DatabaseCleaner
       let(:mock_orm) { double("orm") }
 
       it "should return orm if orm set" do
-        subject.orm = :desired_orm
-        expect(subject.orm).to eq :desired_orm
+        cleaner = Base.new
+        cleaner.orm = :desired_orm
+        expect(cleaner.orm).to eq :desired_orm
       end
     end
 
     describe "proxy methods" do
+      subject(:cleaner) { Base.new }
+
       let(:strategy) { double(:strategy) }
 
-      before { subject.strategy = strategy }
+      before { cleaner.strategy = strategy }
 
       describe "start" do
         it "should proxy start to the strategy" do
           expect(strategy).to receive(:start)
-          subject.start
+          cleaner.start
         end
       end
 
       describe "clean" do
         it "should proxy clean to the strategy" do
           expect(strategy).to receive(:clean)
-          subject.clean
+          cleaner.clean
         end
       end
 
       describe "cleaning" do
         it "should proxy cleaning to the strategy" do
           expect(strategy).to receive(:cleaning)
-          subject.cleaning { }
+          cleaner.cleaning { }
         end
       end
     end
