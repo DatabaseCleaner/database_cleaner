@@ -36,34 +36,36 @@ group :test do
   gem 'database_cleaner-redis'
 end
 ```
-
 ## List of adapters
 
 Here is an overview of the databases and ORMs supported by each adapter:
 
 MySQL, PostgreSQL, SQLite, etc
-* [database_cleaner-active_record](adapters/database_cleaner-active_record)
-* [database_cleaner-sequel](adapters/database_cleaner-sequel)
-* [database_cleaner-data_mapper](adapters/database_cleaner-data_mapper)
-
-CouchDB
-* [database_cleaner-couch_potato](adapters/database_cleaner-couch_potato)
+ * [database_cleaner-active_record](https://github.com/DatabaseCleaner/database_cleaner-active_record)
+ * [database_cleaner-sequel](https://github.com/DatabaseCleaner/database_cleaner-sequel)
 
 MongoDB
- * [database_cleaner-mongoid](adapters/database_cleaner-mongoid)
- * [database_cleaner-mongo_mapper](adapters/database_cleaner-mongo_mapper)
- * [database_cleaner-moped](adapters/database_cleaner-moped)
- * [database_cleaner-mongo](adapters/database_cleaner-mongo)
+ * [database_cleaner-mongoid](https://github.com/DatabaseCleaner/database_cleaner-mongoid)
 
 Redis
- * [database_cleaner-redis](adapters/database_cleaner-redis)
+ * [database_cleaner-redis](https://github.com/DatabaseCleaner/database_cleaner-redis)
 
 Neo4j
- * [database_cleaner-neo4j](adapters/database_cleaner-neo4j)
+ * [database_cleaner-neo4j](https://github.com/DatabaseCleaner/database_cleaner-neo4j)
 
 More details on available configuration options can be found in the README for the specific adapter gem that you're using.
 
 For support or to discuss development please use the [Google Group](https://groups.google.com/group/database_cleaner).
+
+### Discontinued adapters
+
+The following adapters have been discontinued, as their libraries appear to be unmaintained. Please let us know on the [Google Group](https://groups.google.com/group/database_cleaner) if you think one of these should be resurrected!
+
+ * [database_cleaner-data_mapper](https://github.com/DatabaseCleaner/database_cleaner-data_mapper)
+ * [database_cleaner-couch_potato](https://github.com/DatabaseCleaner/database_cleaner-couch_potato)
+ * [database_cleaner-mongo_mapper](https://github.com/DatabaseCleaner/database_cleaner-mongo_mapper)
+ * [database_cleaner-moped](https://github.com/DatabaseCleaner/database_cleaner-moped)
+ * [database_cleaner-mongo](https://github.com/DatabaseCleaner/database_cleaner-mongo)
 
 ## How to use
 
