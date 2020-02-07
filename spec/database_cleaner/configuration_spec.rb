@@ -23,41 +23,6 @@ RSpec.describe DatabaseCleaner::Configuration do
       expect(config.cleaners.values).to eq [cleaner]
     end
 
-    it "should accept :data_mapper" do
-      cleaner = config[:data_mapper]
-      expect(cleaner).to be_a(DatabaseCleaner::Base)
-      expect(cleaner.orm).to eq :data_mapper
-      expect(config.cleaners.values).to eq [cleaner]
-    end
-
-    it "should accept :mongo_mapper" do
-      cleaner = config[:mongo_mapper]
-      expect(cleaner).to be_a(DatabaseCleaner::Base)
-      expect(cleaner.orm).to eq :mongo_mapper
-      expect(config.cleaners.values).to eq [cleaner]
-    end
-
-    it "should accept :couch_potato" do
-      cleaner = config[:couch_potato]
-      expect(cleaner).to be_a(DatabaseCleaner::Base)
-      expect(cleaner.orm).to eq :couch_potato
-      expect(config.cleaners.values).to eq [cleaner]
-    end
-
-    it "should accept :moped" do
-      cleaner = config[:moped]
-      expect(cleaner).to be_a(DatabaseCleaner::Base)
-      expect(cleaner.orm).to eq :moped
-      expect(config.cleaners.values).to eq [cleaner]
-    end
-
-    it 'accepts :ohm' do
-      cleaner = config[:ohm]
-      expect(cleaner).to be_a(DatabaseCleaner::Base)
-      expect(cleaner.orm).to eq :ohm
-      expect(config.cleaners.values).to eq [cleaner]
-    end
-
     it "should accept multiple orm's" do
       cleaners = [config[:couch_potato], config[:data_mapper]]
       expect(config.cleaners.values.map(&:orm)).to eq [:couch_potato, :data_mapper]
