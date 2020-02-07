@@ -3,7 +3,7 @@ require_relative "./lib/database_cleaner/version"
 Gem::Specification.new do |spec|
   spec.name        = "database_cleaner"
   spec.version     = DatabaseCleaner::VERSION
-  spec.authors     = ["Ben Mabey", "Ernesto Tagwerker"]
+  spec.authors     = ["Ben Mabey", "Ernesto Tagwerker", "Micah Geisel"]
   spec.email       = ["ernesto@ombulabs.com"]
 
   spec.summary     = "Strategies for cleaning databases. Can be used to ensure a clean slate for testing."
