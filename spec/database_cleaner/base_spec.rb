@@ -50,6 +50,12 @@ module DatabaseCleaner
           cleaner = Base.new
           expect(cleaner.orm).to be_nil
         end
+
+        it "can handle being set to nil" do
+          cleaner = Base.new
+          cleaner.orm = nil
+          expect(cleaner.orm).to be_nil
+        end
       end
     end
 
