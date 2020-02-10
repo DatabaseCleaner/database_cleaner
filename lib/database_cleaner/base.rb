@@ -116,15 +116,23 @@ module DatabaseCleaner
 
     def orm_module
       return unless [:active_record, :data_mapper, :mongo, :mongoid, :mongo_mapper, :moped, :couch_potato, :sequel, :ohm, :redis, :neo4j].include?(orm)
+      load_adapter(orm) if !adapter_loaded?(orm)
+      orm_module_name = ORMAutodetector::ORMS[orm]
+      DatabaseCleaner.const_get(orm_module_name, false)
+    end
+
+    def adapter_loaded? orm
+      $LOADED_FEATURES.grep(%r{/lib/database_cleaner/#{orm}\.rb$}).any?
+    end
+
+    def load_adapter orm
       $LOAD_PATH.unshift File.expand_path("#{File.dirname(__FILE__)}/../../adapters/database_cleaner-#{orm}/lib")
       require "database_cleaner/#{orm}"
-      orm_module_name = ORMAutodetector::ORMS[orm]
-      DatabaseCleaner.const_get(orm_module_name)
     end
 
     def orm_strategy(strategy)
       strategy_module_name = strategy.to_s.capitalize
-      orm_module.const_get(strategy_module_name)
+      orm_module.const_get(strategy_module_name, false)
     rescue NameError
       if orm != :active_record
         DatabaseCleaner.deprecate <<-TEXT
