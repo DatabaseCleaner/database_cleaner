@@ -10,6 +10,7 @@ examples/config/database.yml
 spec/support/config.yml
 tmp/*
 !tmp/.keep
+Gemfile.lock
 .rbenv-version
 .rvmrc
 .ruby-version
