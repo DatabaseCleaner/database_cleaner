@@ -11,8 +11,8 @@ module DatabaseCleaner
       [orm, db] <=> [other.orm, other.db]
     end
 
-    def initialize(desired_orm = nil, opts = {})
-      self.orm = desired_orm
+    def initialize(orm = :null, opts = {})
+      self.orm = orm
       self.db = opts[:connection] || opts[:model] if opts.has_key?(:connection) || opts.has_key?(:model)
       Safeguard.new.run
     end
@@ -44,8 +44,9 @@ module DatabaseCleaner
 
     attr_reader :orm
 
-    def orm=(desired_orm)
-      @orm = desired_orm && desired_orm.to_sym
+    def orm= orm
+      raise ArgumentError if orm.nil?
+      @orm = orm.to_sym
     end
 
     extend Forwardable

@@ -4,13 +4,12 @@ require 'forwardable'
 
 module DatabaseCleaner
 
-  class NoORMDetected < StandardError; end
   class UnknownStrategySpecified < ArgumentError; end
 
   class Cleaners < Hash
     # FIXME this method conflates creation with lookup... both a command and a query. yuck.
     def [](orm, opts = {})
-      raise NoORMDetected unless orm
+      raise ArgumentError if orm.nil?
       fetch([orm, opts]) { add_cleaner(orm, opts) }
     end 
 
