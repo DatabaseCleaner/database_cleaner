@@ -46,15 +46,14 @@ module DatabaseCleaner
           expect(cleaner.orm).to eq :mongoid
         end
 
-        it "should default to nil" do
+        it "should default to :null" do
           cleaner = Base.new
-          expect(cleaner.orm).to be_nil
+          expect(cleaner.orm).to eq :null
         end
 
-        it "can handle being set to nil" do
+        it "raises ArgumentError when explicitly set to nil" do
           cleaner = Base.new
-          cleaner.orm = nil
-          expect(cleaner.orm).to be_nil
+          expect { cleaner.orm = nil }.to raise_error(ArgumentError)
         end
       end
     end

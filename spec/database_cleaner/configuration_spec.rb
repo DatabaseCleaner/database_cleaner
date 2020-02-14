@@ -12,8 +12,8 @@ RSpec.describe DatabaseCleaner::Configuration do
   subject(:config) { described_class.new }
 
   context "orm specification" do
-    it "should not accept unrecognised orms" do
-      expect { config[nil] }.to raise_error(DatabaseCleaner::NoORMDetected)
+    it "should not accept nil orms" do
+      expect { config[nil] }.to raise_error(ArgumentError)
     end
 
     it "should accept :active_record" do
