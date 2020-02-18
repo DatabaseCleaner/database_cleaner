@@ -66,7 +66,6 @@ The following adapters have been discontinued, as their libraries appear to be u
  * [database_cleaner-couch_potato](https://github.com/DatabaseCleaner/database_cleaner-couch_potato)
  * [database_cleaner-mongo_mapper](https://github.com/DatabaseCleaner/database_cleaner-mongo_mapper)
  * [database_cleaner-moped](https://github.com/DatabaseCleaner/database_cleaner-moped)
- * [database_cleaner-mongo](https://github.com/DatabaseCleaner/database_cleaner-mongo)
 
 ## How to use
 
