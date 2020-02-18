@@ -45,6 +45,7 @@ MySQL, PostgreSQL, SQLite, etc
  * [database_cleaner-sequel](https://github.com/DatabaseCleaner/database_cleaner-sequel)
 
 MongoDB
+ * [database_cleaner-mongo](https://github.com/DatabaseCleaner/database_cleaner-mongo)
  * [database_cleaner-mongoid](https://github.com/DatabaseCleaner/database_cleaner-mongoid)
 
 Redis
