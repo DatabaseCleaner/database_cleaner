@@ -1,5 +1,7 @@
 == Development (master)
 
+== 1.8.3 2020-02-18
+
 === Bug Fixes
   * Fix performance issue of DatabaseCleaner::Base#orm_module: https://github.com/DatabaseCleaner/database_cleaner/pull/625
 
