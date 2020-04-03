@@ -87,14 +87,14 @@ module DatabaseCleaner
     # TODO privatize the following methods in 2.0
 
     def strategy_db=(desired_db)
-      if called_externally?(caller)
+      if DatabaseCleaner.called_externally?(__FILE__, caller)
         DatabaseCleaner.deprecate "Calling `DatabaseCleaner[...].strategy_db=` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner[...].db=` instead."
       end
       set_strategy_db(strategy, desired_db)
     end
 
     def set_strategy_db(strategy, desired_db)
-      if called_externally?(caller)
+      if DatabaseCleaner.called_externally?(__FILE__, caller)
         DatabaseCleaner.deprecate "Calling `DatabaseCleaner[...].set_strategy_db=` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner[...].db=` instead."
       end
       if strategy.respond_to? :db=
@@ -105,7 +105,7 @@ module DatabaseCleaner
     end
 
     def create_strategy(*args)
-      if called_externally?(caller)
+      if DatabaseCleaner.called_externally?(__FILE__, caller)
         DatabaseCleaner.deprecate "Calling `DatabaseCleaner[...].create_strategy` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner[...].strategy=` instead."
       end
       strategy, *strategy_args = args
@@ -148,10 +148,6 @@ module DatabaseCleaner
       require "database_cleaner/#{orm}/#{strategy}"
     rescue LoadError
       raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!  Available strategies: #{orm_module.available_strategies.join(', ')}"
-    end
-
-    def called_externally?(caller)
-      __FILE__ != caller.first.split(":").first
     end
   end
 end

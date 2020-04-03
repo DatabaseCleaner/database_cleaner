@@ -109,7 +109,7 @@ module DatabaseCleaner
     end
 
     def connections
-      if called_externally?(caller)
+      if DatabaseCleaner.called_externally?(__FILE__, caller)
         DatabaseCleaner.deprecate "Calling `DatabaseCleaner.connections` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner.cleaners`, instead."
       end
       add_cleaner(:autodetect) if @cleaners.none?
@@ -119,23 +119,17 @@ module DatabaseCleaner
     # TODO privatize the following methods in 2.0
 
     def add_cleaner(orm, opts = {})
-      if called_externally?(caller)
+      if DatabaseCleaner.called_externally?(__FILE__, caller)
         DatabaseCleaner.deprecate "Calling `DatabaseCleaner.add_cleaner` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner.[]`, instead."
       end
       @cleaners.add_cleaner(orm, opts = {})
     end
 
     def remove_duplicates
-      if called_externally?(caller)
+      if DatabaseCleaner.called_externally?(__FILE__, caller)
         DatabaseCleaner.deprecate "Calling `DatabaseCleaner.remove_duplicates` is deprecated, and will be removed in database_cleaner 2.0 with no replacement."
       end
       @cleaners.remove_duplicates
-    end
-
-    private
-
-    def called_externally?(caller)
-      __FILE__ != caller.first.split(":").first
     end
   end
 end
