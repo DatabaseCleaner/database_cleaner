@@ -7,7 +7,7 @@ module DatabaseCleaner
   module_function :deprecate
 
   def called_externally?(file, caller)
-    file != caller.first.split(":").first
+    file != caller.first[/^(.+\.rb):\d+/, 1]
   end
   module_function :called_externally?
 
