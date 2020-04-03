@@ -6,6 +6,11 @@ module DatabaseCleaner
   end
   module_function :deprecate
 
+  def called_externally?(file, caller)
+    file != caller.first.split(":").first
+  end
+  module_function :called_externally?
+
   class Deprecator
     def initialize
       @methods_already_warned = {}
