@@ -1,5 +1,10 @@
 == Development (master)
 
+== 1.8.4 2020-04-02
+
+=== Bug Fixes
+  * Fix false positive deprecation warnings on Windows: https://github.com/DatabaseCleaner/database_cleaner/pull/633
+
 == 1.8.3 2020-02-18
 
 === Bug Fixes
