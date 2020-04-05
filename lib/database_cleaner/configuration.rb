@@ -52,27 +52,21 @@ module DatabaseCleaner
     attr_accessor :cleaners
 
     def start
-      connections.each { |connection| connection.start }
+      @cleaners.values.each { |connection| connection.start }
     end
 
     def clean
-      connections.each { |connection| connection.clean }
+      @cleaners.values.each { |connection| connection.clean }
     end
 
     def cleaning(&inner_block)
-      connections.inject(inner_block) do |curr_block, connection|
+      @cleaners.values.inject(inner_block) do |curr_block, connection|
         proc { connection.cleaning(&curr_block) }
       end.call
     end
 
     def clean_with(*args)
-      connections.each { |connection| connection.clean_with(*args) }
-    end
-
-    private
-
-    def connections
-      @cleaners.values
+      @cleaners.values.each { |connection| connection.clean_with(*args) }
     end
   end
 end
