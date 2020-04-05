@@ -23,6 +23,24 @@ module DatabaseCleaner
       remove_duplicates
     end
 
+    def start
+      values.each { |connection| connection.start }
+    end
+
+    def clean
+      values.each { |connection| connection.clean }
+    end
+
+    def cleaning(&inner_block)
+      values.inject(inner_block) do |curr_block, connection|
+        proc { connection.cleaning(&curr_block) }
+      end.call
+    end
+
+    def clean_with(*args)
+      values.each { |connection| connection.clean_with(*args) }
+    end
+
     private
 
     def add_cleaner(orm, opts = {})
@@ -47,26 +65,12 @@ module DatabaseCleaner
       :[],
       :strategy=,
       :orm=,
+      :start,
+      :clean,
+      :cleaning,
+      :clean_with,
     ] => :cleaners
 
     attr_accessor :cleaners
-
-    def start
-      @cleaners.values.each { |connection| connection.start }
-    end
-
-    def clean
-      @cleaners.values.each { |connection| connection.clean }
-    end
-
-    def cleaning(&inner_block)
-      @cleaners.values.inject(inner_block) do |curr_block, connection|
-        proc { connection.cleaning(&curr_block) }
-      end.call
-    end
-
-    def clean_with(*args)
-      @cleaners.values.each { |connection| connection.clean_with(*args) }
-    end
   end
 end
