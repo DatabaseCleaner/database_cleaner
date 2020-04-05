@@ -1,5 +1,5 @@
 Feature: example
- In order to test DataBase Cleaner
+ In order to test DatabaseCleaner
  Here are some scenarios that rely on the DB being clean!
 
   Scenario: dirty the db

@@ -13,30 +13,5 @@ Feature: database cleaning
   Examples:
     | ORM          |
     | ActiveRecord |
-    | CouchPotato  |
-    | DataMapper   |
-    | Mongoid      |
-    | MongoMapper  |
-    | Neo4j        |
-    | Ohm          |
     | Redis        |
-    | Sequel       |
 
-  Scenario Outline: ruby app
-    Given I am using <ORM>
-    And the default cleaning strategy
-
-    When I run my scenarios that rely on a clean database
-    Then I should see all green
-
-  Examples:
-    | ORM          |
-    | ActiveRecord |
-    | DataMapper   |
-    | Sequel       |
-    | MongoMapper  |
-    | Mongoid      |
-    | CouchPotato  |
-    | Redis        |
-    | Ohm          |
-    | Neo4j        |
