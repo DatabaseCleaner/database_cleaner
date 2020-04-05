@@ -4,8 +4,6 @@ require 'forwardable'
 
 module DatabaseCleaner
 
-  class UnknownStrategySpecified < ArgumentError; end
-
   class Cleaners < Hash
     # FIXME this method conflates creation with lookup... both a command and a query. yuck.
     def [](orm, opts = {})

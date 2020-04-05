@@ -4,6 +4,8 @@ require 'database_cleaner/safeguard'
 require 'forwardable'
 
 module DatabaseCleaner
+  class UnknownStrategySpecified < ArgumentError; end
+
   class Base
     include Comparable
 
