@@ -1,5 +1,27 @@
 == Development (master)
 
+=== Breaking changes
+  * drop support for Ruby 2.4 which is EOL as of 2020-03-31: https://github.com/DatabaseCleaner/database_cleaner/pull/635
+
+== 2.0.0.beta 2020-04-05
+
+=== Breaking changes
+  * Replace old shared RSpec examples with new "database_cleaner adapter" example: https://github.com/DatabaseCleaner/database_cleaner/pull/629
+  * split gem into database_cleaner-core and database_cleaner metagem.
+  * Support Ruby versions 2.4, 2.5, 2.6, and 2.7, and drop support for older Rubies.
+  * remove all deprecated code and get the specs passing again.
+  * Split off all adapter gems into their own repos: https://github.com/DatabaseCleaner/database_cleaner/pull/620
+
+== 1.8.4 2020-04-02
+
+=== Bug Fixes
+  * Fix false positive deprecation warnings on Windows: https://github.com/DatabaseCleaner/database_cleaner/pull/633
+
+== 1.8.3 2020-02-18
+
+=== Bug Fixes
+  * Fix performance issue of DatabaseCleaner::Base#orm_module: https://github.com/DatabaseCleaner/database_cleaner/pull/625
+
 == 1.8.2 2020-02-01
 
 === Bug Fixes
