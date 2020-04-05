@@ -74,13 +74,5 @@ module DatabaseCleaner
     def connections
       @cleaners.values
     end
-
-    def add_cleaner(orm, opts = {})
-      @cleaners.add_cleaner(orm, opts = {})
-    end
-
-    def remove_duplicates
-      @cleaners.remove_duplicates
-    end
   end
 end
