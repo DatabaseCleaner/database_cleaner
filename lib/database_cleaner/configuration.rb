@@ -5,6 +5,10 @@ require 'forwardable'
 module DatabaseCleaner
 
   class Cleaners < Hash
+    def initialize hash={}
+      super.replace(hash)
+    end
+
     # FIXME this method conflates creation with lookup... both a command and a query. yuck.
     def [](orm, opts = {})
       raise ArgumentError if orm.nil?
