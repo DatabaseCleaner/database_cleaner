@@ -1,14 +1,12 @@
 orms_pattern = /(ActiveRecord|DataMapper|Sequel|MongoMapper|Mongoid|CouchPotato|Redis|Ohm|Neo4j)/
 
-Given /^I am using #{orms_pattern}( from its adapter gem)?$/ do |orm, from_gems|
+Given /^I am using #{orms_pattern} from its adapter gem$/ do |orm|
   @feature_runner = FeatureRunner.new
-  @feature_runner.use_gems = !!from_gems
   @feature_runner.orm = orm
 end
 
-Given /^I am using #{orms_pattern} and #{orms_pattern}( from their adapter gems)?$/ do |orm1, orm2, from_gems|
+Given /^I am using #{orms_pattern} and #{orms_pattern} from their adapter gems$/ do |orm1, orm2|
   @feature_runner = FeatureRunner.new
-  @feature_runner.use_gems = !!from_gems
   @feature_runner.orm         = orm1
   @feature_runner.another_orm = orm2
 end

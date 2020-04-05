@@ -15,42 +15,4 @@ Feature: database cleaning
     | ActiveRecord | transaction |
     | ActiveRecord | truncation  |
     | ActiveRecord | deletion    |
-    | CouchPotato  | truncation  |
-    | DataMapper   | transaction |
-    | DataMapper   | truncation  |
-    | Mongoid      | truncation  |
-    | MongoMapper  | truncation  |
-    | Neo4j        | deletion    |
-    | Neo4j        | truncation  |
-    | Neo4j        | transaction |
-    | Ohm          | truncation  |
     | Redis        | truncation  |
-    | Sequel       | transaction |
-    | Sequel       | truncation  |
-    | Sequel       | deletion    |
-
-  Scenario Outline: ruby app
-    Given I am using <ORM>
-    And the <Strategy> cleaning strategy
-
-    When I run my scenarios that rely on a clean database
-    Then I should see all green
-
-  Examples:
-    | ORM          | Strategy    |
-    | ActiveRecord | transaction |
-    | ActiveRecord | truncation  |
-    | ActiveRecord | deletion    |
-    | DataMapper   | transaction |
-    | DataMapper   | truncation  |
-    | Sequel       | transaction |
-    | Sequel       | truncation  |
-    | Sequel       | deletion    |
-    | MongoMapper  | truncation  |
-    | Mongoid      | truncation  |
-    | CouchPotato  | truncation  |
-    | Redis        | truncation  |
-    | Ohm          | truncation  |
-    | Neo4j        | deletion    |
-    | Neo4j        | truncation  |
-    | Neo4j        | transaction |

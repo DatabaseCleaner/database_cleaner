@@ -25,5 +25,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'guard-rspec'
   spec.add_development_dependency "listen"
   spec.add_development_dependency "rspec"
+
   spec.add_development_dependency "cucumber"
+  spec.add_development_dependency "activesupport"
+  spec.add_development_dependency "database_cleaner-active_record"
+  spec.add_development_dependency "sqlite3"
+  spec.add_development_dependency "database_cleaner-redis"
 end
