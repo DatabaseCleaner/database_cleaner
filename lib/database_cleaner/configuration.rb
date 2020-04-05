@@ -14,13 +14,11 @@ module DatabaseCleaner
     end 
 
     def strategy=(strategy)
-      add_cleaner(:autodetect) if none?
       values.each { |cleaner| cleaner.strategy = strategy }
       remove_duplicates
     end
 
     def orm=(orm)
-      add_cleaner(:autodetect) if none?
       values.each { |cleaner| cleaner.orm = orm }
       remove_duplicates
     end
