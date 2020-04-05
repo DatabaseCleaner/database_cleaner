@@ -6,7 +6,7 @@ require 'forwardable'
 module DatabaseCleaner
   class UnknownStrategySpecified < ArgumentError; end
 
-  class Base
+  class Cleaner
     include Comparable
 
     def <=>(other)
