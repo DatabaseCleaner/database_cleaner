@@ -1,13 +1,3 @@
-module DatabaseCleaner
-  class Configuration
-    def stub_cleaners(array)
-      @cleaners = array.each.with_index.reduce(Cleaners.new) do |cleaners, (cleaner, index)|
-        cleaners.merge index => cleaner
-      end
-    end
-  end
-end
-
 RSpec.describe DatabaseCleaner::Configuration do
   subject(:config) { described_class.new }
 
@@ -109,14 +99,17 @@ RSpec.describe DatabaseCleaner::Configuration do
         let(:data_mapper)   { double("data_mock")   }
 
         before do
-          config.stub_cleaners([active_record,data_mapper])
+          config.cleaners = DatabaseCleaner::Cleaners.new.replace({
+            active_record: active_record,
+            data_mapper: data_mapper,
+          })
         end
 
         it "should proxy orm to all cleaners" do
           expect(active_record).to receive(:orm=)
           expect(data_mapper).to receive(:orm=)
 
-          config.orm = double("orm")
+          config.orm = :orm
         end
 
         it "should proxy start to all cleaners" do
@@ -180,7 +173,11 @@ RSpec.describe DatabaseCleaner::Configuration do
           let(:data_mapper_1)   { FakeStrategy.new(:data_mapper) }
 
           before do
-            config.stub_cleaners [active_record_1,active_record_2,data_mapper_1]
+            config.cleaners = DatabaseCleaner::Cleaners.new.replace({
+              active_record_1: active_record_1,
+              active_record_2: active_record_2,
+              data_mapper_1: data_mapper_1,
+            })
           end
 
           it "should proxy #orm= to all cleaners and remove duplicate cleaners" do
@@ -196,7 +193,10 @@ RSpec.describe DatabaseCleaner::Configuration do
           let(:active_record_2) { FakeStrategy.new(:active_record, :default, :transaction) }
 
           before do
-            config.stub_cleaners [active_record_1,active_record_2]
+            config.cleaners = DatabaseCleaner::Cleaners.new.replace({
+              active_record_1: active_record_1,
+              active_record_2: active_record_2,
+            })
           end
 
           it "should proxy #strategy= to all cleaners and remove duplicate cleaners" do
