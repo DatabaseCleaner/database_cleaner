@@ -99,7 +99,7 @@ RSpec.describe DatabaseCleaner::Configuration do
         let(:data_mapper)   { double("data_mock")   }
 
         before do
-          config.cleaners = DatabaseCleaner::Cleaners.new.replace({
+          config.cleaners = DatabaseCleaner::Cleaners.new({
             active_record: active_record,
             data_mapper: data_mapper,
           })
@@ -173,7 +173,7 @@ RSpec.describe DatabaseCleaner::Configuration do
           let(:data_mapper_1)   { FakeStrategy.new(:data_mapper) }
 
           before do
-            config.cleaners = DatabaseCleaner::Cleaners.new.replace({
+            config.cleaners = DatabaseCleaner::Cleaners.new({
               active_record_1: active_record_1,
               active_record_2: active_record_2,
               data_mapper_1: data_mapper_1,
@@ -193,7 +193,7 @@ RSpec.describe DatabaseCleaner::Configuration do
           let(:active_record_2) { FakeStrategy.new(:active_record, :default, :transaction) }
 
           before do
-            config.cleaners = DatabaseCleaner::Cleaners.new.replace({
+            config.cleaners = DatabaseCleaner::Cleaners.new({
               active_record_1: active_record_1,
               active_record_2: active_record_2,
             })
