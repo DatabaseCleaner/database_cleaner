@@ -1,9 +1,6 @@
 require 'database_cleaner/base'
-require 'database_cleaner/deprecation'
-require 'forwardable'
 
 module DatabaseCleaner
-
   class Cleaners < Hash
     def initialize hash={}
       super.replace(hash)
@@ -55,24 +52,5 @@ module DatabaseCleaner
         cleaners
       end)
     end
-  end
-
-  class Configuration
-    def initialize
-      @cleaners ||= Cleaners.new
-    end
-
-    extend Forwardable
-    delegate [
-      :[],
-      :strategy=,
-      :orm=,
-      :start,
-      :clean,
-      :cleaning,
-      :clean_with,
-    ] => :cleaners
-
-    attr_accessor :cleaners
   end
 end

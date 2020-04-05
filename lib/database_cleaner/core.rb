@@ -8,8 +8,6 @@ module DatabaseCleaner
     extend Forwardable
     delegate [
       :[],
-      :cleaners,
-      :cleaners=,
       :strategy=,
       :orm=,
       :start,
@@ -20,10 +18,9 @@ module DatabaseCleaner
 
     attr_accessor :allow_remote_database_url, :allow_production, :url_whitelist
 
-    private
-
-    def configuration
-      @configuration ||= Configuration.new
+    def cleaners
+      @cleaners ||= Cleaners.new
     end
+    attr_writer :cleaners
   end
 end
