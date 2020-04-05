@@ -1,4 +1,4 @@
-require 'database_cleaner/base'
+require 'database_cleaner/cleaner'
 
 module DatabaseCleaner
   class Cleaners < Hash
@@ -43,7 +43,7 @@ module DatabaseCleaner
     private
 
     def add_cleaner(orm, opts = {})
-      self[[orm, opts]] = ::DatabaseCleaner::Base.new(orm, opts)
+      self[[orm, opts]] = Cleaner.new(orm, opts)
     end
 
     def remove_duplicates

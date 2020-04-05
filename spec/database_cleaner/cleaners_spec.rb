@@ -8,7 +8,7 @@ RSpec.describe DatabaseCleaner::Cleaners do
 
     it "should accept :active_record" do
       cleaner = cleaners[:active_record]
-      expect(cleaner).to be_a(DatabaseCleaner::Base)
+      expect(cleaner).to be_a(DatabaseCleaner::Cleaner)
       expect(cleaner.orm).to eq :active_record
       expect(cleaners.values).to eq [cleaner]
     end
@@ -21,7 +21,7 @@ RSpec.describe DatabaseCleaner::Cleaners do
 
     it "should accept a connection parameter and store it" do
       cleaner = cleaners[:active_record, connection: :first_connection]
-      expect(cleaner).to be_a(DatabaseCleaner::Base)
+      expect(cleaner).to be_a(DatabaseCleaner::Cleaner)
       expect(cleaner.orm).to eq :active_record
       expect(cleaner.db).to eq :first_connection
     end

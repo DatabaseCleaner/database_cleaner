@@ -1,25 +1,25 @@
 module DatabaseCleaner
-  RSpec.describe Base do
+  RSpec.describe Cleaner do
     describe "comparison" do
       it "should be equal if orm and connection are the same" do
-        one = Base.new(:active_record, connection: :default)
-        two = Base.new(:active_record, connection: :default)
+        one = Cleaner.new(:active_record, connection: :default)
+        two = Cleaner.new(:active_record, connection: :default)
 
         expect(one).to eq two
         expect(two).to eq one
       end
 
       it "should not be equal if orm are not the same" do
-        one = Base.new(:mongo_id, connection: :default)
-        two = Base.new(:active_record, connection: :default)
+        one = Cleaner.new(:mongo_id, connection: :default)
+        two = Cleaner.new(:active_record, connection: :default)
 
         expect(one).not_to eq two
         expect(two).not_to eq one
       end
 
       it "should not be equal if connection are not the same" do
-        one = Base.new(:active_record, connection: :default)
-        two = Base.new(:active_record, connection: :other)
+        one = Cleaner.new(:active_record, connection: :default)
+        two = Cleaner.new(:active_record, connection: :other)
 
         expect(one).not_to eq two
         expect(two).not_to eq one
@@ -28,7 +28,7 @@ module DatabaseCleaner
 
     describe "initialization" do
       context "db specified" do
-        subject(:cleaner) { Base.new(:active_record, connection: :my_db) }
+        subject(:cleaner) { Cleaner.new(:active_record, connection: :my_db) }
 
         it "should store db from :connection in params hash" do
           expect(cleaner.db).to eq :my_db
@@ -37,29 +37,29 @@ module DatabaseCleaner
 
       describe "orm" do
         it "should store orm" do
-          cleaner = Base.new(:a_orm)
+          cleaner = Cleaner.new(:a_orm)
           expect(cleaner.orm).to eq :a_orm
         end
 
         it "converts string to symbols" do
-          cleaner = Base.new("mongoid")
+          cleaner = Cleaner.new("mongoid")
           expect(cleaner.orm).to eq :mongoid
         end
 
         it "should default to :null" do
-          cleaner = Base.new
+          cleaner = Cleaner.new
           expect(cleaner.orm).to eq :null
         end
 
         it "raises ArgumentError when explicitly set to nil" do
-          cleaner = Base.new
+          cleaner = Cleaner.new
           expect { cleaner.orm = nil }.to raise_error(ArgumentError)
         end
       end
     end
 
     describe "db" do
-      subject(:cleaner) { Base.new }
+      subject(:cleaner) { Cleaner.new }
 
       it "should default to :default" do
         expect(cleaner.db).to eq :default
@@ -72,7 +72,7 @@ module DatabaseCleaner
     end
 
     describe "db=" do
-      subject(:cleaner) { Base.new }
+      subject(:cleaner) { Cleaner.new }
 
       context "when strategy supports db specification" do
         it "should pass db down to its current strategy" do
@@ -98,7 +98,7 @@ module DatabaseCleaner
     end
 
     describe "clean_with" do
-      subject(:cleaner) { Base.new(:active_record) }
+      subject(:cleaner) { Cleaner.new(:active_record) }
 
       let(:strategy_class) { Class.new }
       let(:strategy) { double }
@@ -126,7 +126,7 @@ module DatabaseCleaner
     end
 
     describe "strategy=" do
-      subject(:cleaner) { Base.new(:active_record) }
+      subject(:cleaner) { Cleaner.new(:active_record) }
 
       let(:strategy_class) { Class.new }
 
@@ -175,7 +175,7 @@ module DatabaseCleaner
     end
 
     describe "strategy" do
-      subject(:cleaner) { Base.new(:a_orm) }
+      subject(:cleaner) { Cleaner.new(:a_orm) }
 
       it "returns a null strategy when strategy is not set and undetectable" do
         expect(cleaner.strategy).to be_a(DatabaseCleaner::NullStrategy)
@@ -186,14 +186,14 @@ module DatabaseCleaner
       let(:mock_orm) { double("orm") }
 
       it "should return orm if orm set" do
-        cleaner = Base.new
+        cleaner = Cleaner.new
         cleaner.orm = :desired_orm
         expect(cleaner.orm).to eq :desired_orm
       end
     end
 
     describe "proxy methods" do
-      subject(:cleaner) { Base.new }
+      subject(:cleaner) { Cleaner.new }
 
       let(:strategy) { double(:strategy) }
 
