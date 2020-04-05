@@ -1,5 +1,4 @@
 class FeatureRunner
-  attr_accessor :use_gems
   attr_accessor :orm
   attr_accessor :another_orm
   attr_accessor :multiple_databases
@@ -16,7 +15,6 @@ class FeatureRunner
     Dir.chdir(full_dir) do
 
 
-      ENV['USE_GEMS']     = use_gems ? "true" : nil
       ENV['ORM']          = orm
       ENV['STRATEGY']     = strategy
 
@@ -32,7 +30,7 @@ class FeatureRunner
         ENV['MULTIPLE_DBS'] = nil
       end
 
-      self.output = `#{"jruby -S " if defined?(JRUBY_VERSION)}cucumber features/#{feature}.feature`
+      self.output = `cucumber features/#{feature}.feature`
 
       self.exit_status = $?.exitstatus
     end
