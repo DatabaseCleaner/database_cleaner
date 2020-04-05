@@ -1,6 +1,5 @@
 require 'database_cleaner/version'
-require 'database_cleaner/configuration'
-require 'database_cleaner/deprecation'
+require 'database_cleaner/cleaners'
 require 'forwardable'
 
 module DatabaseCleaner
@@ -14,7 +13,7 @@ module DatabaseCleaner
       :clean,
       :clean_with,
       :cleaning,
-    ] => :configuration
+    ] => :cleaners
 
     attr_accessor :allow_remote_database_url, :allow_production, :url_whitelist
 
