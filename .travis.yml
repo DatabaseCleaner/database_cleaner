@@ -3,8 +3,6 @@ rvm:
   - 2.5
   - 2.6
   - 2.7
-before_install:
-  - gem install bundler -v 1.17.3
 before_script:
   - bin/setup
 cache:
