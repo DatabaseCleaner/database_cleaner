@@ -8,7 +8,6 @@ module DatabaseCleaner
     delegate [
       :[],
       :strategy=,
-      :orm=,
       :start,
       :clean,
       :clean_with,
