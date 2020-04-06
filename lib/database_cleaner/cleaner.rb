@@ -13,11 +13,13 @@ module DatabaseCleaner
       [orm, db] <=> [other.orm, other.db]
     end
 
-    def initialize(orm = :null, opts = {})
-      self.orm = orm
+    def initialize(orm, opts = {})
+      @orm = orm
       self.db = opts[:connection] || opts[:model] if opts.has_key?(:connection) || opts.has_key?(:model)
       Safeguard.new.run
     end
+
+    attr_reader :orm
 
     def db=(desired_db)
       @db = self.strategy_db = desired_db
@@ -42,13 +44,6 @@ module DatabaseCleaner
 
     def strategy
       @strategy ||= NullStrategy.new
-    end
-
-    attr_reader :orm
-
-    def orm= orm
-      raise ArgumentError if orm.nil?
-      @orm = orm.to_sym
     end
 
     extend Forwardable

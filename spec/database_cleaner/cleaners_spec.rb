@@ -63,12 +63,6 @@ RSpec.describe DatabaseCleaner::Cleaners do
         cleaners.strategy = stratagem
       end
 
-      it "should proxy orm=" do
-        orm = double("orm")
-        expect(cleaner).to receive(:orm=).with(orm)
-        cleaners.orm = orm
-      end
-
       it "should proxy start" do
         expect(cleaner).to receive(:start)
         cleaners.start
@@ -103,13 +97,6 @@ RSpec.describe DatabaseCleaner::Cleaners do
             active_record: active_record,
             data_mapper: data_mapper,
           })
-        end
-
-        it "should proxy orm to all cleaners" do
-          expect(active_record).to receive(:orm=)
-          expect(data_mapper).to receive(:orm=)
-
-          cleaners.orm = :orm
         end
 
         it "should proxy start to all cleaners" do
@@ -163,30 +150,9 @@ RSpec.describe DatabaseCleaner::Cleaners do
       end
 
       # ah now we have some difficulty, we mustn't allow duplicate cleaners to exist, but they could
-      # plausably want to force orm/strategy change on two sets of orm that differ only on db
+      # plausably want to force strategy change on two sets of orm that differ only on db
       context "multiple orm proxy methods" do
         class FakeStrategy < Struct.new(:orm, :db, :strategy); end
-
-        context "with differing orms and dbs" do
-          let(:active_record_1) { FakeStrategy.new(:active_record) }
-          let(:active_record_2) { FakeStrategy.new(:active_record, :different) }
-          let(:data_mapper_1)   { FakeStrategy.new(:data_mapper) }
-
-          subject(:cleaners) do
-            DatabaseCleaner::Cleaners.new({
-              active_record_1: active_record_1,
-              active_record_2: active_record_2,
-              data_mapper_1: data_mapper_1,
-            })
-          end
-
-          it "should proxy #orm= to all cleaners and remove duplicate cleaners" do
-            expect { cleaners.orm = :data_mapper }
-              .to change { cleaners.values }
-              .from([active_record_1,active_record_2,data_mapper_1])
-              .to([active_record_1,active_record_2])
-          end
-        end
 
         context "with differing strategies" do
           let(:active_record_1) { FakeStrategy.new(:active_record, :default, :truncation) }

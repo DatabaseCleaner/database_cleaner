@@ -17,11 +17,6 @@ module DatabaseCleaner
       remove_duplicates
     end
 
-    def orm=(orm)
-      values.each { |cleaner| cleaner.orm = orm }
-      remove_duplicates
-    end
-
     def start
       values.each { |connection| connection.start }
     end

@@ -41,25 +41,14 @@ module DatabaseCleaner
           expect(cleaner.orm).to eq :a_orm
         end
 
-        it "converts string to symbols" do
-          cleaner = Cleaner.new("mongoid")
-          expect(cleaner.orm).to eq :mongoid
-        end
-
-        it "should default to :null" do
-          cleaner = Cleaner.new
-          expect(cleaner.orm).to eq :null
-        end
-
-        it "raises ArgumentError when explicitly set to nil" do
-          cleaner = Cleaner.new
-          expect { cleaner.orm = nil }.to raise_error(ArgumentError)
+        it "raises ArgumentError when no orm is specified" do
+          expect { Cleaner.new }.to raise_error(ArgumentError)
         end
       end
     end
 
     describe "db" do
-      subject(:cleaner) { Cleaner.new }
+      subject(:cleaner) { Cleaner.new(:orm) }
 
       it "should default to :default" do
         expect(cleaner.db).to eq :default
@@ -72,7 +61,7 @@ module DatabaseCleaner
     end
 
     describe "db=" do
-      subject(:cleaner) { Cleaner.new }
+      subject(:cleaner) { Cleaner.new(:orm) }
 
       context "when strategy supports db specification" do
         it "should pass db down to its current strategy" do
@@ -182,18 +171,8 @@ module DatabaseCleaner
       end
     end
 
-    describe "orm" do
-      let(:mock_orm) { double("orm") }
-
-      it "should return orm if orm set" do
-        cleaner = Cleaner.new
-        cleaner.orm = :desired_orm
-        expect(cleaner.orm).to eq :desired_orm
-      end
-    end
-
     describe "proxy methods" do
-      subject(:cleaner) { Cleaner.new }
+      subject(:cleaner) { Cleaner.new(:orm) }
 
       let(:strategy) { double(:strategy) }
 
