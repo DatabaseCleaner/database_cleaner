@@ -2,6 +2,19 @@ require "bundler/setup"
 require "database_cleaner-core"
 require "byebug"
 
+if ENV['COVERAGE'] == 'true'
+  require "simplecov"
+
+  if ENV['CI'] == 'true'
+    require 'codecov'
+    SimpleCov.formatter = SimpleCov::Formatter::Codecov
+    puts "required codecov"
+  end
+
+  SimpleCov.start
+  puts "required simplecov"
+end
+
 RSpec.configure do |config|
   # These two settings work together to allow you to limit a spec run
   # to individual examples or groups you care about by tagging them with
