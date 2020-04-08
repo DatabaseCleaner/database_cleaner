@@ -21,6 +21,7 @@ module DatabaseCleaner
     end
 
     def orm=(orm)
+      DatabaseCleaner.deprecate "Calling `DatabaseCleaner.orm=` is deprecated, and will be removed in database_cleaner 2.0 with no replacement."
       add_cleaner(:autodetect) if none?
       values.each { |cleaner| cleaner.orm = orm }
       remove_duplicates

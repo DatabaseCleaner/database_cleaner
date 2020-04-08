@@ -1,4 +1,9 @@
-== Development (master)
+== 1.99.0 (v1.99-deprecation)
+
+== Deprecations
+  * Deprecate all #orm= setter methods: https://github.com/DatabaseCleaner/database_cleaner/pull/643
+
+== Bugfixes
 
 == 1.8.5 2020-05-04
 
