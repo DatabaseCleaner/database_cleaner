@@ -1,5 +1,5 @@
 module DatabaseCleaner
   module MongoMapper
-    VERSION = "1.8.1"
+    VERSION = "1.99.0"
   end
 end

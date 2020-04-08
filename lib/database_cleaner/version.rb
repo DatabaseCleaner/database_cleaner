@@ -1,3 +1,3 @@
 module DatabaseCleaner
-  VERSION = "1.8.5"
+  VERSION = "1.99.0"
 end

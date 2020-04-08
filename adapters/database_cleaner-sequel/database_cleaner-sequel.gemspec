@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/DatabaseCleaner/database_cleaner-sequel"
   spec.license       = "MIT"
 
-  spec.add_dependency "database_cleaner", "~> 1.8.0"
+  spec.add_dependency "database_cleaner", "~> 1.99.0"
   spec.add_dependency "sequel"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|

@@ -1,5 +1,5 @@
 module DatabaseCleaner
   module Redis
-    VERSION = "1.8.0"
+    VERSION = "1.99.0"
   end
 end

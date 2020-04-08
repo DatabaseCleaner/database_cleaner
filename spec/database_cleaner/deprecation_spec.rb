@@ -26,11 +26,11 @@ RSpec.describe DatabaseCleaner do
     end
 
     context "on a windows filesystem" do
-      let(:path) { "C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/database_cleaner-1.8.3/lib/database_cleaner/base.rb" }
+      let(:path) { "C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/database_cleaner-1.99.0/lib/database_cleaner/base.rb" }
 
       it "returns false if the supplied file is the first file in the backtrace" do
         backtrace = [
-          "C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/database_cleaner-1.8.3/lib/database_cleaner/base.rb:34:in `strategy='",
+          "C:/Ruby25-x64/lib/ruby/gems/2.5.0/gems/database_cleaner-1.99.0/lib/database_cleaner/base.rb:34:in `strategy='",
           "C:/Ruby25-x64/database_cleaner/spec/database_cleaner/deprecation_spec.rb:9 in `it'",
           "C:/Ruby25-x64/lib/rspec/core/configuration.rb:1954:in `load'",
           "C:/Ruby25-x64/lib/rspec/core/configuration.rb:1954:in `load_spec_file_handling_errors'",

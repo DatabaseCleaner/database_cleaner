@@ -1,13 +1,13 @@
 PATH
   remote: ../..
   specs:
-    database_cleaner (1.8.5)
+    database_cleaner (1.99.0)
 
 PATH
   remote: .
   specs:
-    database_cleaner-mongo_mapper (1.8.1)
-      database_cleaner (~> 1.8.0)
+    database_cleaner-mongo_mapper (1.99.0)
+      database_cleaner (~> 1.99.0)
       mongo_mapper
 
 GEM
