@@ -4,49 +4,49 @@
 
 _Note the following tutorial is for database_cleaner version 2 and above_
 
-Every adapter is a separate gem. So a creation of an adapter will follow the general rules of a gem making
+Every adapter is a separate gem, the first step in the creation of an adapter is to create a new gem.
 
 ### Naming
-A convention for naming a gem extesions is with [dash](use-dashes-for-extensions).
-For example, `database_cleaner-redis` or `database_cleaner-neo4j`
+Please follow the [Rubygems convention for gem naming](https://guides.rubygems.org/name-your-gem/). The namespace you will be working within is `DatabaseCleaner::Namespace` where Namespace is the name of the ORM you are creation an adapter for.
+For example, `database_cleaner-active_record` provides `DatabaseCleaner::ActiveRecord`, and `database_cleaner-redis` provides `DatabaseCleaner::Redis`, etc.
 
 ### Bootstrapping a gem
-We will use `bundle` to bootstrap a gem. This will produce all the initial files needed for a gem creation
+We will use `bundle` to bootstrap the new gem. This will produce all the initial files needed.
 
 ```
-bundle gem database_cleaner-adapter
+bundle gem database_cleaner-orm_name
 ```
-#### Modifying .gempspec
-You need to add a couple of dependecies to `.gempspec`:
+#### Modifying .gemspec
+You need to add a couple of dependecies to `.gemspec`:
 * `database_cleaner-core`
 * Adapter you're creating this gem for
 
 ```
-  spec.add_dependency "database_cleaner-core", "2.0.0"
-  spec.add_dependency "adapter", "some version if required"
+  spec.add_dependency "database_cleaner-core"
+  spec.add_dependency "orm_name", "some version if required"
 ```
 
 #### 
 
 ### File structure
 
-Inside `lib/database_cleaner/adapter`. You will need to create a few files
+Inside the `lib/database_cleaner/orm_name` directory, you will need to create a few files:
 
 * `base.rb`
 * Separate files for each strategy you have
 
-The file structure you end up with look something like this
+The file structure you end up with will look something like this
 
 ```
 \-lib
   \-database_cleaner
-    \- adapter
+    \- orm_name
       \- base.rb
       \- truncation.rb
       \- deletion.rb
       \- transaction.rb
       \- version.rb
-    \- adapter.rb
+    \- orm_name.rb
 ```
 
 #### base.rb
@@ -62,7 +62,7 @@ So, in the end you may end up with the class that will look something like this
 ```ruby
 require 'database_cleaner/generic/base'
 module DatabaseCleaner
-  module Adapter
+  module OrmName
     def self.available_strategies
       %w[transaction truncation deletion]
     end
@@ -92,50 +92,46 @@ Each strategy **must** have the following instance methods
   *  `#clean` -- where the cleaning happens
   *  `#start` -- added for compatability reasons, do nothing if you don't need to. This method might be included with `::DatabaseCleaner::Generic::Truncation` or `::DatabaseCleaner::Generic::Transaction`
 
-Given that we a creating a strategy for truncation. You may end up with the following class
+Given that we're creating a strategy for truncation, you may end up with the following class:
 
 ```ruby
 module DatabaseCleaner
-  module Adatper
+  module OrmName
     class Truncation
-      include ::DatabaseCleaner::Adatper::Base
+      include ::DatabaseCleaner::OrmName::Base
       include ::DatabaseCleaner::Generic::Truncation
 
       def clean
+        # actual database cleaning code goes here
       end
     end
   end
 end
 ```
 
-Thats about it for the code needed to have your own adapter
+That's about it for the code needed to create your own adapter!
 
 ### Testing
 
-To make sure that custom adapter adheres to the Database Cleaner API database_cleaner provides an rspec shared example.
-
-You need to create a file `database_cleaner/adapter/base.rb`
-
-With the following content
+To make sure that your new adapter adheres to the Database Cleaner API, database_cleaner-core provides an RSpec shared example.
 
 ```ruby
-require 'database_cleaner/adapter'
+# spec/database_cleaner/orm_name_spec.rb
+
+require 'database_cleaner/orm_name'
 require 'database_cleaner/spec'
 
-module DatabaseCleaner
-  RSpec.describe Adapter do
-    it_should_behave_like "a database_cleaner strategy"
-  end
+RSpec.describe DatabaseCleaner::OrmName do
+  it_should_behave_like "a database_cleaner strategy"
 end
 ```
 
 ### What's next
-Now you should be well set up to create you own database_cleaner adatper.
-Also don't forget to take a look at the already created adapters if you encounter any problems.
 
-When you are done with the your adapter, only a few things left to do
+Now you should be set up to create you own database_cleaner ORM adapter.
+Also, don't forget to take a look at the already created adapters, if you encounter any problems.
+
+When you are done with your adapter gem, only a few things left to do
   * Create a repository with your code
   * Push code to rubygems
   * Add your adapter to the [list](https://github.com/DatabaseCleaner/database_cleaner#list-of-adapters)
-
-
