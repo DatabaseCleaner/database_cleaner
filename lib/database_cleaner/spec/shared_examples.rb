@@ -8,11 +8,6 @@ end
 
 RSpec.shared_examples_for "a database_cleaner adapter" do
   it { expect(described_class).to respond_to(:available_strategies) }
-  it { expect(described_class).to respond_to(:default_strategy) }
-
-  it 'default_strategy should be part of available_strategies' do
-    expect(described_class.available_strategies).to include(described_class.default_strategy)
-  end
 
   describe 'all strategies should adhere to a database_cleaner strategy interface' do
     described_class.available_strategies.each do |strategy|
