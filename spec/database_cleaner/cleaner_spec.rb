@@ -118,15 +118,16 @@ module DatabaseCleaner
       subject(:cleaner) { Cleaner.new(:active_record) }
 
       let(:strategy_class) { Class.new }
+      let(:orm_module) { Module.new }
 
       before do
-        orm_module = Module.new do
-          def self.available_strategies
-            %i[truncation transaction deletion]
-          end
-        end
         stub_const "DatabaseCleaner::ActiveRecord", orm_module
         stub_const "DatabaseCleaner::ActiveRecord::Truncation", strategy_class
+        # stub consts that shouldn't show up in strategy list
+        stub_const "DatabaseCleaner::ActiveRecord::VERSION", "2.0.0"
+        stub_const "DatabaseCleaner::ActiveRecord::Base", Module.new
+        stub_const "DatabaseCleaner::ActiveRecord::Helpers", Module.new
+        orm_module.private_constant :Helpers
       end
 
       it "should look up and create a the named strategy for the current ORM" do
@@ -159,7 +160,7 @@ module DatabaseCleaner
 
       it "raises UnknownStrategySpecified on a bad strategy, and lists available strategies" do
         expect { cleaner.strategy = :horrible_plan }.to \
-          raise_error(UnknownStrategySpecified, "The 'horrible_plan' strategy does not exist for the active_record ORM!  Available strategies: truncation, transaction, deletion")
+          raise_error(UnknownStrategySpecified, "The 'horrible_plan' strategy does not exist for the active_record ORM!  Available strategies: truncation")
       end
     end
 

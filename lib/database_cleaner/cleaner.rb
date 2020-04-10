@@ -7,6 +7,12 @@ module DatabaseCleaner
   class UnknownStrategySpecified < ArgumentError; end
 
   class Cleaner
+    def self.available_strategies(orm_module)
+      # introspect publically available constants to get list of strategies, leaving out common but obviously non-strategy constants.
+      # if you're writing an adapter and this method is finding a constant in it that is not a valid strategy, consider making it private with Module#private_constant.
+      (orm_module.constants - [:Base, :VERSION]).map(&:downcase)
+    end
+
     include Comparable
 
     def <=>(other)
@@ -79,7 +85,8 @@ module DatabaseCleaner
       strategy_module_name = strategy.to_s.capitalize
       orm_module.const_get(strategy_module_name)
     rescue NameError
-      raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!  Available strategies: #{orm_module.available_strategies.join(', ')}"
+      available_strategies = self.class.available_strategies(orm_module)
+      raise UnknownStrategySpecified, "The '#{strategy}' strategy does not exist for the #{orm} ORM!  Available strategies: #{available_strategies.join(', ')}"
     end
 
     def orm_module

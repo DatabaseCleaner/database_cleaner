@@ -50,9 +50,9 @@ The file structure you end up with will look something like this
 #### orm_name.rb
 
 File `orm_name.rb` **must** do the following:
-  * define module method `.available_strategies` on DatabaseCleaner::OrmName.
-  * require all the gems strategies
-  * configure DatabaseCleaner with the default strategy for the ORM.
+  * require `database_cleaner-core`
+  * require all the strategies
+  * configure `DatabaseCleaner` with the default strategy for the ORM.
 
 So, in the end you will end up with a file that might look something like this:
 
@@ -64,14 +64,6 @@ require 'database_cleaner/core'
 require 'database_cleaner/orm_name/transaction'
 require 'database_cleaner/orm_name/truncation'
 require 'database_cleaner/orm_name/deletion'
-
-module DatabaseCleaner
-  module OrmName
-    def self.available_strategies
-      %i[transaction truncation deletion]
-    end
-  end
-end
 
 DatabaseCleaner[:orm_name].strategy = :transaction
 ```
