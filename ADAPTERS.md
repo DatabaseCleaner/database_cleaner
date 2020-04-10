@@ -32,7 +32,6 @@ You need to add a couple of dependecies to `.gemspec`:
 
 Inside the `lib/database_cleaner/orm_name` directory, you will need to create a few files:
 
-* `base.rb`
 * Separate files for each strategy you have
 
 The file structure you end up with will look something like this
@@ -41,7 +40,6 @@ The file structure you end up with will look something like this
 \-lib
   \-database_cleaner
     \- orm_name
-      \- base.rb
       \- truncation.rb
       \- deletion.rb
       \- transaction.rb
@@ -49,19 +47,23 @@ The file structure you end up with will look something like this
     \- orm_name.rb
 ```
 
-#### base.rb
+#### orm_name.rb
 
-File `base.rb` **must** have do the following:
+File `orm_name.rb` **must** do the following:
   * define module methods `.default_strategy` and `.available_strategies` on DatabaseCleaner::OrmName.
-  * define instance methods `#db=`, `#db`, `#cleaning` within DatabaseCleaner::OrmName::Base.
+  * require all the gems strategies
   * configure DatabaseCleaner with the default strategy for the ORM.
 
-`DatabaseCleaner::Generic::Base` will add some of those don't forget to include it.
-
-So, in the end you may end up with the class that will look something like this
+So, in the end you will end up with a file that might look something like this:
 
 ```ruby
-require 'database_cleaner/generic/base'
+# lib/database_cleaner/orm_name.rb
+
+require 'database_cleaner/orm_name/version'
+require 'database_cleaner/core'
+require 'database_cleaner/orm_name/transaction'
+require 'database_cleaner/orm_name/truncation'
+require 'database_cleaner/orm_name/deletion'
 
 module DatabaseCleaner
   module OrmName
@@ -70,19 +72,7 @@ module DatabaseCleaner
     end
 
     def self.default_strategy
-      :truncation
-    end
-
-    module Base
-      include ::DatabaseCleaner::Generic::Base
-
-      def db=(desired_db)
-        @db = desired_db
-      end
-
-      def db
-        @db || :default
-      end
+      :transaction
     end
   end
 end
@@ -92,21 +82,25 @@ DatabaseCleaner[:orm_name].strategy = :transaction
 
 ### Strategy classes
 
+Each strategy class can inherit from DatabaseCleaner::Strategy to get it most of the way there. If you do, you only need to define one method!
+
 Each strategy **must** have the following instance methods
   *  `#clean` -- where the cleaning happens
 
 Optionally, depending on how your strategy works you may define
-  *  `#start` -- if your strategy is transactional, this is where you would start the database transaction that `#clean` later rolls back. This method might be included with `::DatabaseCleaner::Generic::Truncation` or `::DatabaseCleaner::Generic::Transaction`
+  *  `#start` -- if your strategy is transactional, this is where you would start the database transaction that `#clean` later rolls back.
 
 Given that we're creating a strategy for truncation, you may end up with something like the following class:
 
 ```ruby
+# lib/database_cleaner/orm_name/truncation.rb
+
+require 'database_cleaner/strategy'
+require 'orm'
+
 module DatabaseCleaner
   module OrmName
-    class Truncation
-      include ::DatabaseCleaner::OrmName::Base
-      include ::DatabaseCleaner::Generic::Truncation
-
+    class Truncation < Strategy
       def clean
         # actual database cleaning code goes here
         ORM.truncate_all_tables!
