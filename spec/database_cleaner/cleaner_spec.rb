@@ -89,8 +89,8 @@ module DatabaseCleaner
     describe "clean_with" do
       subject(:cleaner) { Cleaner.new(:active_record) }
 
-      let(:strategy_class) { Class.new }
-      let(:strategy) { double }
+      let(:strategy_class) { Class.new(DatabaseCleaner::Strategy) }
+      let(:strategy) { strategy_class.new }
       before { allow(strategy_class).to receive(:new).and_return(strategy) }
 
       before do
@@ -117,7 +117,7 @@ module DatabaseCleaner
     describe "strategy=" do
       subject(:cleaner) { Cleaner.new(:active_record) }
 
-      let(:strategy_class) { Class.new }
+      let(:strategy_class) { Class.new(DatabaseCleaner::Strategy) }
       let(:orm_module) { Module.new }
 
       before do
@@ -125,9 +125,10 @@ module DatabaseCleaner
         stub_const "DatabaseCleaner::ActiveRecord::Truncation", strategy_class
         # stub consts that shouldn't show up in strategy list
         stub_const "DatabaseCleaner::ActiveRecord::VERSION", "2.0.0"
-        stub_const "DatabaseCleaner::ActiveRecord::Base", Module.new
         stub_const "DatabaseCleaner::ActiveRecord::Helpers", Module.new
-        orm_module.private_constant :Helpers
+        stub_const "DatabaseCleaner::ActiveRecord::Base", Class.new(strategy_class)
+        stub_const "DatabaseCleaner::ActiveRecord::ExtendedBase", Class.new(strategy_class)
+        orm_module.private_constant :ExtendedBase
       end
 
       it "should look up and create a the named strategy for the current ORM" do

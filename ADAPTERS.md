@@ -70,12 +70,12 @@ DatabaseCleaner[:orm_name].strategy = :transaction
 
 ### Strategy classes
 
-Each strategy class can inherit from DatabaseCleaner::Strategy to get it most of the way there. If you do, you only need to define one method!
+Each strategy class **must** inherit from `DatabaseCleaner::Strategy`.
 
-Each strategy **must** have the following instance methods
+Each strategy **must** have the following instance methods:
   *  `#clean` -- where the cleaning happens
 
-Optionally, depending on how your strategy works you may define
+Optionally, depending on how your strategy works you may also need to define
   *  `#start` -- if your strategy is transactional, this is where you would start the database transaction that `#clean` later rolls back.
 
 Given that we're creating a strategy for truncation, you may end up with something like the following class:
@@ -117,7 +117,7 @@ end
 
 ### What's next
 
-Now you should be set up to with your own database_cleaner ORM adapter.
+Now you should be all set up with your very own database_cleaner ORM adapter!
 Also, don't forget to take a look at the already created adapters, if you encounter any problems.
 
 When you are done with your adapter gem, only a few things left to do

@@ -1,6 +1,7 @@
 require 'database_cleaner/deprecation'
 require 'database_cleaner/null_strategy'
 require 'database_cleaner/safeguard'
+require 'database_cleaner/strategy'
 require 'forwardable'
 
 module DatabaseCleaner
@@ -8,9 +9,15 @@ module DatabaseCleaner
 
   class Cleaner
     def self.available_strategies(orm_module)
-      # introspect publically available constants to get list of strategies, leaving out common but obviously non-strategy constants.
-      # if you're writing an adapter and this method is finding a constant in it that is not a valid strategy, consider making it private with Module#private_constant.
-      (orm_module.constants - [:Base, :VERSION]).map(&:downcase)
+      # introspect publically available constants for descendents of Strategy to get list of strategies
+      # ignore classes named Base, because its a common name for a shared base class that adds ORM access stuff to Strategy before being inherited by final concrete class
+      # if you're writing an adapter and this method is falsely returning an internal constant that isn't a valid strategy, consider making it private with Module#private_constant.
+      orm_module.constants.select do |constant_name|
+        ancestors = orm_module.const_get(constant_name).ancestors rescue []
+        ancestors.include?(DatabaseCleaner::Strategy)
+      end.map do |constant_name|
+        underscore(constant_name).to_sym
+      end - [:base]
     end
 
     include Comparable
@@ -94,6 +101,8 @@ module DatabaseCleaner
       DatabaseCleaner.const_get(orm_module_name)
     end
 
+    # copied from ActiveSupport to avoid adding it as a dependency
+
     def camelize(term)
       string = term.to_s
       string = string.sub(/^[a-z\d]*/) { |match| match.capitalize }
@@ -101,5 +110,16 @@ module DatabaseCleaner
       string.gsub!("/", "::")
       string
     end
+
+    def self.underscore(camel_cased_word)
+      return camel_cased_word unless /[A-Z-]|::/.match?(camel_cased_word)
+      word = camel_cased_word.to_s.gsub("::", "/")
+      word.gsub!(/([A-Z\d]+)([A-Z][a-z])/, '\1_\2')
+      word.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
+      word.tr!("-", "_")
+      word.downcase!
+      word
+    end
+    private_class_method :underscore
   end
 end
