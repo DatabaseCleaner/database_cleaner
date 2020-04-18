@@ -32,19 +32,5 @@ module DatabaseCleaner
         clean
       end
     end
-
-    private
-
-    # Optional helper method for use in strategies with :only and :except options
-    def tables_to_clean all_tables, only: [], except: []
-      if only.any?
-        if except.any?
-          raise ArgumentError, "You may only specify either :only or :except.  Doing both doesn't really make sense does it?"
-        end
-        only
-      else
-        all_tables - except
-      end
-    end
   end
 end
