@@ -111,7 +111,7 @@ require 'database_cleaner/orm_name'
 require 'database_cleaner/spec'
 
 RSpec.describe DatabaseCleaner::OrmName do
-  it_should_behave_like "a database_cleaner strategy"
+  it_should_behave_like "a database_cleaner adapter"
 end
 ```
 
