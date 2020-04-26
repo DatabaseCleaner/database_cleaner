@@ -1,8 +1,19 @@
-require 'bundler'
+require "bundler/setup"
+require "byebug"
+require "rspec/expectations"
 
-Bundler.setup
-require 'rspec/expectations'
-#require 'byebug'
+if ENV['COVERAGE'] == 'true'
+  require "simplecov"
+
+  if ENV['CI'] == 'true'
+    require 'codecov'
+    SimpleCov.formatter = SimpleCov::Formatter::Codecov
+    puts "required codecov"
+  end
+
+  SimpleCov.start
+  puts "required simplecov"
+end
 
 DB_DIR = "#{File.dirname(__FILE__)}/../../db"
 
