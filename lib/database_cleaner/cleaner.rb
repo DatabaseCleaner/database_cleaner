@@ -1,4 +1,3 @@
-require 'database_cleaner/deprecation'
 require 'database_cleaner/null_strategy'
 require 'database_cleaner/safeguard'
 require 'database_cleaner/strategy'
