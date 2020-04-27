@@ -1,4 +1,4 @@
-orms_pattern = /(ActiveRecord|DataMapper|Sequel|MongoMapper|Mongoid|CouchPotato|Redis|Ohm|Neo4j)/
+orms_pattern = /(ActiveRecord|Redis)/
 
 Given /^I am using #{orms_pattern} from its adapter gem$/ do |orm|
   @feature_runner = FeatureRunner.new
