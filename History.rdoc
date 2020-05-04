@@ -1,5 +1,10 @@
 == Development (master)
 
+== 1.8.5 2020-05-04
+
+=== Bug Fixes
+  * Fix :mongo strategy: https://github.com/DatabaseCleaner/database_cleaner/pull/645
+
 == 1.8.4 2020-04-02
 
 === Bug Fixes
