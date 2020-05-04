@@ -5,6 +5,7 @@ module DatabaseCleaner
       data_mapper: "DataMapper",
       mongo_mapper: "MongoMapper",
       mongoid: "Mongoid",
+      mongo: "Mongo",
       couch_potato: "CouchPotato",
       sequel: "Sequel",
       moped: "Moped",

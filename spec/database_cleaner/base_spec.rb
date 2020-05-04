@@ -1,5 +1,6 @@
 require 'active_record'
 require 'data_mapper'
+require 'mongo'
 require 'mongo_mapper'
 require 'mongoid'
 require 'couch_potato'
@@ -18,6 +19,7 @@ module DatabaseCleaner
         hide_const "DataMapper"
         hide_const "MongoMapper"
         hide_const "Mongoid"
+        hide_const "Mongo"
         hide_const "CouchPotato"
         hide_const "Sequel"
         hide_const "Moped"
@@ -26,7 +28,7 @@ module DatabaseCleaner
         hide_const "Neo4j"
 
         expect { subject }.to raise_error(DatabaseCleaner::NoORMDetected, <<-ERROR.chomp)
-No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, CouchPotato, Sequel, Moped, Ohm, Redis, or Neo4j loaded?
+No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, Mongo, CouchPotato, Sequel, Moped, Ohm, Redis, or Neo4j loaded?
         ERROR
       end
 
@@ -56,41 +58,54 @@ No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, C
         expect(subject).to be_auto_detected
       end
 
-      it "should detect CouchPotato fifth" do
+      it "should detect Mongo fifth" do
         hide_const "ActiveRecord"
         hide_const "DataMapper"
         hide_const "MongoMapper"
         hide_const "Mongoid"
+        expect(subject.orm).to eq :mongo
+        expect(subject).to be_auto_detected
+      end
+
+      it "should detect CouchPotato sixth" do
+        hide_const "ActiveRecord"
+        hide_const "DataMapper"
+        hide_const "MongoMapper"
+        hide_const "Mongoid"
+        hide_const "Mongo"
         expect(subject.orm).to eq :couch_potato
         expect(subject).to be_auto_detected
       end
 
-      it "should detect Sequel sixth" do
+      it "should detect Sequel seventh" do
         hide_const "ActiveRecord"
         hide_const "DataMapper"
         hide_const "MongoMapper"
         hide_const "Mongoid"
+        hide_const "Mongo"
         hide_const "CouchPotato"
         expect(subject.orm).to eq :sequel
         expect(subject).to be_auto_detected
       end
 
-      it 'detects Moped seventh' do
+      it 'detects Moped eighth' do
         hide_const "ActiveRecord"
         hide_const "DataMapper"
         hide_const "MongoMapper"
         hide_const "Mongoid"
+        hide_const "Mongo"
         hide_const "CouchPotato"
         hide_const "Sequel"
         expect(subject.orm).to eq :moped
         expect(subject).to be_auto_detected
       end
 
-      it 'detects Ohm eighth' do
+      it 'detects Ohm ninth' do
         hide_const "ActiveRecord"
         hide_const "DataMapper"
         hide_const "MongoMapper"
         hide_const "Mongoid"
+        hide_const "Mongo"
         hide_const "CouchPotato"
         hide_const "Sequel"
         hide_const "Moped"
@@ -98,11 +113,12 @@ No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, C
         expect(subject).to be_auto_detected
       end
 
-      it 'detects Redis ninth' do
+      it 'detects Redis tenth' do
         hide_const "ActiveRecord"
         hide_const "DataMapper"
         hide_const "MongoMapper"
         hide_const "Mongoid"
+        hide_const "Mongo"
         hide_const "CouchPotato"
         hide_const "Sequel"
         hide_const "Moped"
@@ -111,11 +127,12 @@ No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, C
         expect(subject).to be_auto_detected
       end
 
-      it 'detects Neo4j tenth' do
+      it 'detects Neo4j eleventh' do
         hide_const "ActiveRecord"
         hide_const "DataMapper"
         hide_const "MongoMapper"
         hide_const "Mongoid"
+        hide_const "Mongo"
         hide_const "CouchPotato"
         hide_const "Sequel"
         hide_const "Moped"

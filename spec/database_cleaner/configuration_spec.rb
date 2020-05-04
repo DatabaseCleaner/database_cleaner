@@ -35,6 +35,13 @@ RSpec.describe DatabaseCleaner::Configuration do
       expect(subject.cleaners.values).to eq [cleaner]
     end
 
+    it "should accept :mongo" do
+      cleaner = subject[:mongo]
+      expect(cleaner).to be_a(DatabaseCleaner::Base)
+      expect(cleaner.orm).to eq :mongo
+      expect(subject.cleaners.values).to eq [cleaner]
+    end
+
     it "should accept :mongo_mapper" do
       cleaner = subject[:mongo_mapper]
       expect(cleaner).to be_a(DatabaseCleaner::Base)
