@@ -19,31 +19,63 @@ RSpec.describe DatabaseCleaner::Mongo::Truncation do
     MongoTest::Gadget.new(name: 'some gadget').save!
   end
 
-  context "by default" do
-    it "truncates all collections" do
-      expect { subject.clean }.to change {
-        [MongoTest::Widget.count, MongoTest::Gadget.count]
-      }.from([1,1]).to([0,0])
+  describe "#clean" do
+    context "by default" do
+      it "truncates all collections" do
+        expect { subject.clean }.to change {
+          [MongoTest::Widget.count, MongoTest::Gadget.count]
+        }.from([1,1]).to([0,0])
+      end
+    end
+
+    context "when collections are provided to the :only option" do
+      subject { described_class.new(only: ['MongoTest::Widget']) }
+
+      it "only truncates the specified collections" do
+        expect { subject.clean }.to change {
+          [MongoTest::Widget.count, MongoTest::Gadget.count]
+        }.from([1,1]).to([0,1])
+      end
+    end
+
+    context "when collections are provided to the :except option" do
+      subject { described_class.new(except: ['MongoTest::Widget']) }
+
+      it "truncates all but the specified collections" do
+        expect { subject.clean }.to change {
+          [MongoTest::Widget.count, MongoTest::Gadget.count]
+        }.from([1,1]).to([1,0])
+      end
     end
   end
 
-  context "when collections are provided to the :only option" do
-    subject { described_class.new(only: ['MongoTest::Widget']) }
-
-    it "only truncates the specified collections" do
-      expect { subject.clean }.to change {
-        [MongoTest::Widget.count, MongoTest::Gadget.count]
-      }.from([1,1]).to([0,1])
+  describe "#cleaning" do
+    context "by default" do
+      it "truncates all collections" do
+        expect { subject.cleaning {} }.to change {
+          [MongoTest::Widget.count, MongoTest::Gadget.count]
+        }.from([1,1]).to([0,0])
+      end
     end
-  end
 
-  context "when collections are provided to the :except option" do
-    subject { described_class.new(except: ['MongoTest::Widget']) }
+    context "when collections are provided to the :only option" do
+      subject { described_class.new(only: ['MongoTest::Widget']) }
 
-    it "truncates all but the specified collections" do
-      expect { subject.clean }.to change {
-        [MongoTest::Widget.count, MongoTest::Gadget.count]
-      }.from([1,1]).to([1,0])
+      it "only truncates the specified collections" do
+        expect { subject.cleaning {} }.to change {
+          [MongoTest::Widget.count, MongoTest::Gadget.count]
+        }.from([1,1]).to([0,1])
+      end
+    end
+
+    context "when collections are provided to the :except option" do
+      subject { described_class.new(except: ['MongoTest::Widget']) }
+
+      it "truncates all but the specified collections" do
+        expect { subject.cleaning {} }.to change {
+          [MongoTest::Widget.count, MongoTest::Gadget.count]
+        }.from([1,1]).to([1,0])
+      end
     end
   end
 end
