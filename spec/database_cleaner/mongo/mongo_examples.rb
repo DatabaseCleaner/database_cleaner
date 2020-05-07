@@ -23,4 +23,6 @@ module MongoTest
   end
   class Gadget < Base
   end
+  class Gizmo < Base
+  end
 end

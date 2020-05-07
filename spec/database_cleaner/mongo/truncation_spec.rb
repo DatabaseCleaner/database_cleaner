@@ -28,6 +28,20 @@ RSpec.describe DatabaseCleaner::Mongo::Truncation do
       end
     end
 
+    context "when new collection is created after clean" do
+      before do
+        subject.clean
+
+        MongoTest::Gizmo.new(name: 'some gizmo').save!
+      end
+
+      it "truncates new collection" do
+        expect { subject.clean }.to change {
+          MongoTest::Gizmo.count
+        }.from(1).to(0)
+      end
+    end
+
     context "when collections are provided to the :only option" do
       subject { described_class.new(only: ['MongoTest::Widget']) }
 
