@@ -1,13 +1,8 @@
 require 'redis'
 
 class RedisWidget
-
   def self.redis
     threaded ||= Redis.new
-  end
-
-  def self.redis=(connection)
-    threaded = connection
   end
 
   def self.threaded
@@ -38,12 +33,10 @@ class RedisWidget
 
   def self.create!
     new(:name => 'some widget').save
-
   end
 end
 
 class RedisWidgetUsingDatabaseOne < RedisWidget
-
   def self.redis
     threaded[self.class.to_s] ||= Redis.new :url => ENV['REDIS_URL_ONE']
   end
@@ -54,7 +47,6 @@ class RedisWidgetUsingDatabaseOne < RedisWidget
 end
 
 class RedisWidgetUsingDatabaseTwo < RedisWidget
-
   def self.redis
     threaded[self.class.to_s] ||= Redis.new :url => ENV['REDIS_URL_TWO']
   end
