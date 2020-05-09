@@ -1,5 +1,18 @@
 require 'rspec/expectations'
 
+if ENV['COVERAGE'] == 'true'
+  require "simplecov"
+
+  if ENV['CI'] == 'true'
+    require 'codecov'
+    SimpleCov.formatter = SimpleCov::Formatter::Codecov
+    puts "required codecov"
+  end
+
+  SimpleCov.start
+  puts "required simplecov"
+end
+
 class FeatureRunner
   attr_accessor :orm
   attr_accessor :another_orm

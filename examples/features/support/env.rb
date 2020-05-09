@@ -2,8 +2,15 @@ require "bundler/setup"
 require "byebug"
 require "rspec/expectations"
 
+orm         = ENV['ORM']
+another_orm = ENV['ANOTHER_ORM']
+strategy    = ENV['STRATEGY']
+multiple_db = ENV['MULTIPLE_DBS']
+
 if ENV['COVERAGE'] == 'true'
   require "simplecov"
+  simple_cov_key = "Inner Cucumber with #{[orm, another_orm, strategy, multiple_db].compact.join(", ")}"
+  SimpleCov.command_name simple_cov_key
 
   if ENV['CI'] == 'true'
     require 'codecov'
@@ -16,11 +23,6 @@ if ENV['COVERAGE'] == 'true'
 end
 
 DB_DIR = "#{File.dirname(__FILE__)}/../../db"
-
-orm         = ENV['ORM']
-another_orm = ENV['ANOTHER_ORM']
-strategy    = ENV['STRATEGY']
-multiple_db = ENV['MULTIPLE_DBS']
 
 config = YAML::load(File.open("#{File.dirname(__FILE__)}/../../config/redis.yml"))
 ENV['REDIS_URL'] = config['test']['url']
