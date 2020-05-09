@@ -40,9 +40,17 @@ module DatabaseCleaner
       end
 
       def load_schema
+        id_column = case db
+          when :sqlite3
+            "id INTEGER PRIMARY KEY AUTOINCREMENT"
+          when :mysql2
+            "id INTEGER PRIMARY KEY AUTO_INCREMENT"
+          when :postgres
+            "id SERIAL PRIMARY KEY"
+          end
         connection.execute <<-SQL
           CREATE TABLE IF NOT EXISTS users (
-            id SERIAL PRIMARY KEY,
+            #{id_column},
             name INTEGER
           );
         SQL
