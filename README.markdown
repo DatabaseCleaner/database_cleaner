@@ -1,7 +1,7 @@
 **If you're viewing this at https://github.com/DatabaseCleaner/database_cleaner,
 you're reading the documentation for the `master` branch.
 [View documentation for the latest release
-(1.8.4).](https://github.com/DatabaseCleaner/database_cleaner/blob/v1.8.4/README.markdown)**
+(1.8.5).](https://github.com/DatabaseCleaner/database_cleaner/blob/v1.8.5/README.markdown)**
 
 # Database Cleaner
 
