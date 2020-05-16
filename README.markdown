@@ -52,21 +52,19 @@ MongoDB
 Redis
  * [database_cleaner-redis](https://github.com/DatabaseCleaner/database_cleaner-redis)
 
-Neo4j
- * [database_cleaner-neo4j](https://github.com/DatabaseCleaner/database_cleaner-neo4j)
-
 More details on available configuration options can be found in the README for the specific adapter gem that you're using.
 
 For support or to discuss development please use the [Google Group](https://groups.google.com/group/database_cleaner).
 
 ### Discontinued adapters
 
-The following adapters have been discontinued, as their libraries appear to be unmaintained. Please let us know on the [Google Group](https://groups.google.com/group/database_cleaner) if you think one of these should be resurrected!
+The following adapters have been discontinued. Please let us know on the [Google Group](https://groups.google.com/group/database_cleaner) if you think one of these should be resurrected!
 
  * [database_cleaner-data_mapper](https://github.com/DatabaseCleaner/database_cleaner-data_mapper)
  * [database_cleaner-couch_potato](https://github.com/DatabaseCleaner/database_cleaner-couch_potato)
  * [database_cleaner-mongo_mapper](https://github.com/DatabaseCleaner/database_cleaner-mongo_mapper)
  * [database_cleaner-moped](https://github.com/DatabaseCleaner/database_cleaner-moped)
+ * [database_cleaner-neo4j](https://github.com/DatabaseCleaner/database_cleaner-neo4j)
 
 ## How to use
 
