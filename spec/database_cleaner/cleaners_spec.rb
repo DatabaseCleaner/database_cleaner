@@ -19,25 +19,25 @@ RSpec.describe DatabaseCleaner::Cleaners do
       expect(cleaners.values).to eq cleaners_values
     end
 
-    it "should accept a connection parameter and store it" do
-      cleaner = cleaners[:active_record, connection: :first_connection]
+    it "should accept a db parameter and store it" do
+      cleaner = cleaners[:active_record, db: :first_db]
       expect(cleaner).to be_a(DatabaseCleaner::Cleaner)
       expect(cleaner.orm).to eq :active_record
-      expect(cleaner.db).to eq :first_connection
+      expect(cleaner.db).to eq :first_db
     end
 
-    it "should accept multiple connections for a single orm" do
-      cleaners[:data_mapper, connection: :first_db]
-      cleaners[:data_mapper, connection: :second_db]
+    it "should accept multiple dbs for a single orm" do
+      cleaners[:data_mapper, db: :first_db]
+      cleaners[:data_mapper, db: :second_db]
       expect(cleaners.values.map(&:orm)).to eq [:data_mapper, :data_mapper]
       expect(cleaners.values.map(&:db)).to eq [:first_db, :second_db]
     end
 
-    it "should accept multiple connections and multiple orms" do
-      cleaners[:data_mapper,   connection: :first_db ]
-      cleaners[:active_record, connection: :second_db]
-      cleaners[:active_record, connection: :first_db ]
-      cleaners[:data_mapper,   connection: :second_db]
+    it "should accept multiple dbs and multiple orms" do
+      cleaners[:data_mapper,   db: :first_db ]
+      cleaners[:active_record, db: :second_db]
+      cleaners[:active_record, db: :first_db ]
+      cleaners[:data_mapper,   db: :second_db]
       expect(cleaners.values.map(&:orm)).to eq [:data_mapper, :active_record, :active_record, :data_mapper]
       expect(cleaners.values.map(&:db)).to eq [:first_db, :second_db, :first_db, :second_db]
     end
@@ -54,7 +54,7 @@ RSpec.describe DatabaseCleaner::Cleaners do
   end
 
   context "top level api methods" do
-    context "single orm single connection" do
+    context "single orm single db" do
       let(:cleaner) { cleaners[:active_record] }
 
       it "should proxy strategy=" do
@@ -121,9 +121,9 @@ RSpec.describe DatabaseCleaner::Cleaners do
           cleaners.clean_with stratagem
         end
 
-        it "should initiate cleaning on each connection, yield, and finish cleaning each connection" do
-          [active_record, data_mapper].each do |connection|
-            class << connection
+        it "should initiate cleaning on each db, yield, and finish cleaning each db" do
+          [active_record, data_mapper].each do |db|
+            class << db
               attr_reader :started, :cleaned
 
               def cleaning &block

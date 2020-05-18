@@ -4,7 +4,7 @@ module DatabaseCleaner
       # no-op
     end
     
-    def db=(connection)
+    def db=(db)
       # no-op
     end
      

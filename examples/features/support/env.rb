@@ -47,11 +47,11 @@ if orm && strategy
 
     case orm_sym
     when :redis
-      DatabaseCleaner[orm_sym, connection: ENV['REDIS_URL_ONE']].strategy = strategy.to_sym
-      DatabaseCleaner[orm_sym, connection: ENV['REDIS_URL_TWO']].strategy = strategy.to_sym
+      DatabaseCleaner[orm_sym, db: ENV['REDIS_URL_ONE']].strategy = strategy.to_sym
+      DatabaseCleaner[orm_sym, db: ENV['REDIS_URL_TWO']].strategy = strategy.to_sym
     when :active_record
-      DatabaseCleaner[:active_record, model: ActiveRecordWidgetUsingDatabaseOne].strategy = strategy.to_sym
-      DatabaseCleaner[:active_record, model: ActiveRecordWidgetUsingDatabaseTwo].strategy = strategy.to_sym
+      DatabaseCleaner[:active_record, db: ActiveRecordWidgetUsingDatabaseOne].strategy = strategy.to_sym
+      DatabaseCleaner[:active_record, db: ActiveRecordWidgetUsingDatabaseTwo].strategy = strategy.to_sym
     end
 
   elsif another_orm
