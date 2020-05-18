@@ -26,22 +26,15 @@ class FeatureRunner
   end
 
   def go(feature)
-    ENV['ORM']          = orm
-    ENV['STRATEGY']     = strategy
+    command = ""
+    command << "ORM=#{orm} " if orm
+    command << "STRATEGY=#{strategy} " if strategy
+    command << "ANOTHER_ORM=#{another_orm} " if another_orm
+    command << "MULTIPLE_DBS=#{true} " if multiple_databases
+    command << "cucumber --strict examples/features/#{feature}.feature --require examples/features/support --require examples/features/step_definitions"
+    # puts command
 
-    if another_orm
-     ENV['ANOTHER_ORM']  = another_orm
-    else
-      ENV['ANOTHER_ORM'] = nil
-    end
-
-    if multiple_databases
-      ENV['MULTIPLE_DBS'] = "true"
-    else
-      ENV['MULTIPLE_DBS'] = nil
-    end
-
-    self.output = `cucumber --strict examples/features/#{feature}.feature --require examples/features/support --require examples/features/step_definitions`
+    self.output = `#{command}`
 
     self.exit_status = $?.exitstatus
   end
