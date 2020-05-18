@@ -1,25 +1,25 @@
 module DatabaseCleaner
   RSpec.describe Cleaner do
     describe "comparison" do
-      it "should be equal if orm and connection are the same" do
-        one = Cleaner.new(:active_record, connection: :default)
-        two = Cleaner.new(:active_record, connection: :default)
+      it "should be equal if orm and db are the same" do
+        one = Cleaner.new(:active_record, db: :default)
+        two = Cleaner.new(:active_record, db: :default)
 
         expect(one).to eq two
         expect(two).to eq one
       end
 
       it "should not be equal if orm are not the same" do
-        one = Cleaner.new(:mongo_id, connection: :default)
-        two = Cleaner.new(:active_record, connection: :default)
+        one = Cleaner.new(:mongo_id, db: :default)
+        two = Cleaner.new(:active_record, db: :default)
 
         expect(one).not_to eq two
         expect(two).not_to eq one
       end
 
-      it "should not be equal if connection are not the same" do
-        one = Cleaner.new(:active_record, connection: :default)
-        two = Cleaner.new(:active_record, connection: :other)
+      it "should not be equal if db are not the same" do
+        one = Cleaner.new(:active_record, db: :default)
+        two = Cleaner.new(:active_record, db: :other)
 
         expect(one).not_to eq two
         expect(two).not_to eq one
@@ -28,9 +28,9 @@ module DatabaseCleaner
 
     describe "initialization" do
       context "db specified" do
-        subject(:cleaner) { Cleaner.new(:active_record, connection: :my_db) }
+        subject(:cleaner) { Cleaner.new(:active_record, db: :my_db) }
 
-        it "should store db from :connection in params hash" do
+        it "should store db from :db in params hash" do
           expect(cleaner.db).to eq :my_db
         end
       end

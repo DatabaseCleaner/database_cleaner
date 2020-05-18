@@ -25,9 +25,9 @@ module DatabaseCleaner
       [orm, db] <=> [other.orm, other.db]
     end
 
-    def initialize(orm, opts = {})
+    def initialize(orm, db: nil)
       @orm = orm
-      self.db = opts[:connection] || opts[:model] if opts.has_key?(:connection) || opts.has_key?(:model)
+      self.db = db
       Safeguard.new.run
     end
 

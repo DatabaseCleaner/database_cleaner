@@ -294,7 +294,7 @@ For more examples see the section ["Why?"](#why).
 
 Sometimes you need to use multiple ORMs in your application.
 
-You can use DatabaseCleaner to clean multiple ORMs, and multiple connections for those ORMs.
+You can use DatabaseCleaner to clean multiple ORMs, and multiple databases for those ORMs.
 
 ```ruby
 require 'database_cleaner/active_record'
@@ -304,14 +304,14 @@ require 'database_cleaner/mongo_mapper'
 DatabaseCleaner[:active_record].strategy = :transaction
 DatabaseCleaner[:mongo_mapper].strategy = :truncation
 
-# How to specify particular connections
-DatabaseCleaner[:active_record, { :connection => :two }]
+# How to specify particular databases
+DatabaseCleaner[:active_record, { db: :two }]
 
 # You may also pass in the model directly:
-DatabaseCleaner[:active_record, { :model => ModelWithDifferentConnection }]
+DatabaseCleaner[:active_record, { db: ModelWithDifferentConnection }]
 ```
 
-Usage beyond that remains the same with `DatabaseCleaner.start` calling any setup on the different configured connections, and `DatabaseCleaner.clean` executing afterwards.
+Usage beyond that remains the same with `DatabaseCleaner.start` calling any setup on the different configured databases, and `DatabaseCleaner.clean` executing afterwards.
 
 ## Why?
 

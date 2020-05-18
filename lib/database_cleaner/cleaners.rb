@@ -18,21 +18,21 @@ module DatabaseCleaner
     end
 
     def start
-      values.each { |connection| connection.start }
+      values.each { |cleaner| cleaner.start }
     end
 
     def clean
-      values.each { |connection| connection.clean }
+      values.each { |cleaner| cleaner.clean }
     end
 
     def cleaning(&inner_block)
-      values.inject(inner_block) do |curr_block, connection|
-        proc { connection.cleaning(&curr_block) }
+      values.inject(inner_block) do |curr_block, cleaner|
+        proc { cleaner.cleaning(&curr_block) }
       end.call
     end
 
     def clean_with(*args)
-      values.each { |connection| connection.clean_with(*args) }
+      values.each { |cleaner| cleaner.clean_with(*args) }
     end
 
     private
