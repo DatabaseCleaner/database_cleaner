@@ -49,7 +49,7 @@ Here is an overview of the supported strategies:
     <tr>
       <td> Sequel</td>
       <td> <code>DatabaseCleaner[:sequel]</code></td>
-      <td> Multiple databases supported; specify <code>DatabaseCleaner[:sequel, {:connection =&gt; Sequel.connect(uri)}]</code></td>
+      <td> Multiple databases supported; specify <code>DatabaseCleaner[:sequel, {:db =&gt; Sequel.connect(uri)}]</code></td>
     </tr>
   </tbody>
 </table>

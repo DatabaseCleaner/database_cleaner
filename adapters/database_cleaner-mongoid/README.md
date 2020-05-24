@@ -47,7 +47,7 @@ end
     <tr>
       <td> Mongoid</td>
       <td> <code>DatabaseCleaner[:mongoid]</code></td>
-      <td> Multiple databases supported for Mongoid 3. Specify <code>DatabaseCleaner[:mongoid, {:connection =&gt; :db_name}]</code> </td>
+      <td> Multiple databases supported for Mongoid 3. Specify <code>DatabaseCleaner[:mongoid, {:db =&gt; :db_name}]</code> </td>
     </tr>
   </tbody>
 </table>

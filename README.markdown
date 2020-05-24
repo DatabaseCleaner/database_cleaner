@@ -306,10 +306,10 @@ DatabaseCleaner[:active_record].strategy = :transaction
 DatabaseCleaner[:mongo_mapper].strategy = :truncation
 
 # How to specify particular connections
-DatabaseCleaner[:active_record, { :connection => :two }]
+DatabaseCleaner[:active_record, { :db => :two }]
 
 # You may also pass in the model directly:
-DatabaseCleaner[:active_record, { :model => ModelWithDifferentConnection }]
+DatabaseCleaner[:active_record, { :db => ModelWithDifferentConnection }]
 ```
 
 Usage beyond that remains the same with `DatabaseCleaner.start` calling any setup on the different configured connections, and `DatabaseCleaner.clean` executing afterwards.
