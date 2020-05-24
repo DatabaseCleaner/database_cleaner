@@ -1,5 +1,8 @@
 == 1.99.0 (v1.99-deprecation)
 
+== Changes
+  * Remove unnecessary dependency on database_cleaner-mongo from database_cleaner-mongoid @botandrose
+
 == Deprecations
   * Deprecate all #orm= setter methods: https://github.com/DatabaseCleaner/database_cleaner/pull/643
 
