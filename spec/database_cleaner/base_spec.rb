@@ -458,5 +458,27 @@ No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, M
         cleaner.orm = :mongoid
       end
     end
+
+    describe "deprecations regarding renaming truncation to deletion" do
+      it "shows a deprecation warning if truncation strategy is explicitly specified" do
+        expect(DatabaseCleaner).to receive(:deprecate)
+        cleaner = DatabaseCleaner::Base.new(:mongoid)
+        cleaner.strategy = :truncation
+        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::Mongoid::Truncation
+      end
+
+      it "defaults to truncation without a deprecation warning strategy is not specified" do
+        expect(DatabaseCleaner).to_not receive(:deprecate)
+        cleaner = DatabaseCleaner::Base.new(:mongoid)
+        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::Mongoid::Truncation
+      end
+
+      it "accepts new deletion strategy without a deprecation warning" do
+        expect(DatabaseCleaner).to_not receive(:deprecate)
+        cleaner = DatabaseCleaner::Base.new(:mongoid)
+        cleaner.strategy = :deletion
+        expect(cleaner.strategy).to be_instance_of DatabaseCleaner::Mongoid::Deletion
+      end
+    end
   end
 end

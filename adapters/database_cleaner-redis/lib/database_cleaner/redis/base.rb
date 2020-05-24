@@ -4,7 +4,7 @@ require 'database_cleaner/deprecation'
 module DatabaseCleaner
   module Redis
     def self.available_strategies
-      %w{truncation}
+      %w{truncation deletion}
     end
 
     def self.default_strategy
@@ -23,7 +23,7 @@ module DatabaseCleaner
       end
 
       def url
-        DatabaseCleaner.deprecate "The redis truncation strategy's #url method is deprecated. It will be removed in database_cleaner-redis 2.0 in favor of #db."
+        DatabaseCleaner.deprecate "The redis deletion strategy's #url method is deprecated. It will be removed in database_cleaner-redis 2.0 in favor of #db."
         db
       end
 

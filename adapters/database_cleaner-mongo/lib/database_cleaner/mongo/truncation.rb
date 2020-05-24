@@ -15,7 +15,7 @@ module DatabaseCleaner
       def initialize(opts={})
         super
         if !opts.has_key?(:cache_tables) || opts[:cache_tables]
-          DatabaseCleaner.deprecate "The mongo adapter caches collection names between cleanings. However, this behavior can introduce test-order-dependency issues, because the collections that exist after the first test has executed are saved and used for the remainder of the suite. This means that any collection created during the subsequent tests are not cleaned! This is fixed in database_cleaner-mongo 2.0 by removing this collection caching functionality altogether. To ease the transition into this new behavior, it can be opted into by specifying the `:cache_tables` option to false: `DatabaseCleaner[:mongo].strategy = :truncation, cache_tables: false`. For more information, see https://github.com/DatabaseCleaner/database_cleaner/pull/646"
+          DatabaseCleaner.deprecate "The mongo adapter caches collection names between cleanings. However, this behavior can introduce test-order-dependency issues, because the collections that exist after the first test has executed are saved and used for the remainder of the suite. This means that any collection created during the subsequent tests are not cleaned! This is fixed in database_cleaner-mongo 2.0 by removing this collection caching functionality altogether. To ease the transition into this new behavior, it can be opted into by specifying the `:cache_tables` option to false: `DatabaseCleaner[:mongo].strategy = :deletion, cache_tables: false`. For more information, see https://github.com/DatabaseCleaner/database_cleaner/pull/646"
         end
       end
 
