@@ -19,7 +19,7 @@ module DatabaseCleaner
         else
           connection.flushdb
         end
-        connection.quit unless url == :default
+        connection.quit unless db == :default
       end
     end
   end
