@@ -1,11 +1,13 @@
 == 1.99.0 (v1.99-deprecation)
 
 == Changes
-  * Remove unnecessary dependency on database_cleaner-mongo from database_cleaner-mongoid @botandrose
+  * Remove unnecessary dependency on database_cleaner-mongo from database_cleaner-mongoid: @botandrose
+  * Enable the :cache_tables option for the mongo truncation strategy, and default to true: https://github.com/DatabaseCleaner/database_cleaner/pull/646"
 
 == Deprecations
   * Deprecate all #orm= setter methods: https://github.com/DatabaseCleaner/database_cleaner/pull/643
   * Deprecate non-functional :reset_ids option in ActiveRecord truncation strategy: https://github.com/DatabaseCleaner/database_cleaner/issues/559
+  * Deprecate mongo truncation's `:cache_tables => true` option in favor of `false`, to prep for caching removal in v2.0: https://github.com/DatabaseCleaner/database_cleaner/pull/646"
 
 == Bugfixes
 

@@ -78,5 +78,40 @@ RSpec.describe DatabaseCleaner::Mongo::Truncation do
       end
     end
   end
+
+  describe ":cache_tables option" do
+    describe "unset" do
+      it "does not clean collections created after instantiation" do
+        subject.clean
+        MongoTest::Base.new(name: 'test').save!
+        subject.clean
+        expect([MongoTest::Widget.count, MongoTest::Gadget.count, MongoTest::Base.count]).to eq([0,0,1])
+      end
+    end
+
+    describe "set to true" do
+      it "does not clean collections created after instantiation" do
+        db = subject.db
+        subject = described_class.new(cache_tables: true)
+        subject.db = db
+        subject.clean
+        MongoTest::Base.new(name: 'test').save!
+        subject.clean
+        expect([MongoTest::Widget.count, MongoTest::Gadget.count, MongoTest::Base.count]).to eq([0,0,1])
+      end
+    end
+
+    describe "set to false" do
+      it "cleans all collections, even those created after instantiation" do
+        db = subject.db
+        subject = described_class.new(cache_tables: false)
+        subject.db = db
+        subject.clean
+        MongoTest::Base.new(name: 'test').save!
+        subject.clean
+        expect([MongoTest::Widget.count, MongoTest::Gadget.count, MongoTest::Base.count]).to eq([0,0,0])
+      end
+    end
+  end
 end
 
