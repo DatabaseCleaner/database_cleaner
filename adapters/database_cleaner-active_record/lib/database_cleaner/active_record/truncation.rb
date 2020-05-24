@@ -1,6 +1,7 @@
 require 'active_record/base'
 require 'database_cleaner/active_record/base'
 require 'active_record/connection_adapters/abstract_adapter'
+require 'database_cleaner/deprecation'
 
 #Load available connection adapters
 %w(
@@ -232,6 +233,13 @@ module DatabaseCleaner::ActiveRecord
   class Truncation
     include ::DatabaseCleaner::ActiveRecord::Base
     include ::DatabaseCleaner::Generic::Truncation
+
+    def initialize(*)
+      super
+      if !@reset_ids.nil?
+        DatabaseCleaner.deprecate "The `:reset_ids` option for the ActiveRecord truncation strategy has no effect, and is deprecated. It will be removed in database_cleaner 2.0 with no replacement."
+      end
+    end
 
     def clean
       connection = connection_class.connection

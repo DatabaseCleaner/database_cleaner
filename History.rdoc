@@ -5,6 +5,7 @@
 
 == Deprecations
   * Deprecate all #orm= setter methods: https://github.com/DatabaseCleaner/database_cleaner/pull/643
+  * Deprecate non-functional :reset_ids option in ActiveRecord truncation strategy: https://github.com/DatabaseCleaner/database_cleaner/issues/559
 
 == Bugfixes
 
