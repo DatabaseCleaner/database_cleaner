@@ -115,6 +115,18 @@ RSpec.describe DatabaseCleaner::ActiveRecord::Truncation do
           end
         end
       end
+
+      describe ":reset_ids removal deprecation" do
+        it "displays a deprecation warning if reset_ids is set" do
+          expect(DatabaseCleaner).to receive(:deprecate)
+          described_class.new(reset_ids: true)
+        end
+
+        it "does not display a deprecation warning if not called" do
+          expect(DatabaseCleaner).to_not receive(:deprecate)
+          described_class.new
+        end
+      end
     end
   end
 end
