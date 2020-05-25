@@ -18,11 +18,11 @@ module DatabaseCleaner
       it { is_expected.to respond_to(:db) }
       it { is_expected.to respond_to(:db=) }
 
-      context "when passing url" do
+      context "when passing db" do
         it "should store my describe db" do
-          url = 'redis://localhost:6379/2'
+          db = 'redis://localhost:6379/2'
           subject.db = 'redis://localhost:6379/2'
-          expect(subject.db).to eq url
+          expect(subject.db).to eq db
         end
       end
 
@@ -36,6 +36,18 @@ module DatabaseCleaner
 
       it "should default to :default" do
         expect(subject.db).to eq :default
+      end
+
+      describe "#url deprecation" do
+        it "shows a deprecation warning when called" do
+          expect(DatabaseCleaner).to receive(:deprecate)
+          expect(subject.url).to eq(subject.db)
+        end
+
+        it "doesn't show a deprecation warning when db is used" do
+          expect(DatabaseCleaner).to_not receive(:deprecate)
+          subject.db
+        end
       end
     end
   end
