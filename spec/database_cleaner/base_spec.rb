@@ -445,5 +445,18 @@ No known ORM was detected!  Is ActiveRecord, DataMapper, MongoMapper, Mongoid, M
         expect(cleaner.strategy).to be_instance_of DatabaseCleaner::Neo4j::Transaction
       end
     end
+
+    describe "#orm= deprecation" do
+      it "does not show a deprecation warning if #orm= is invoked internally" do
+        expect(DatabaseCleaner).to_not receive(:deprecate)
+        cleaner = DatabaseCleaner::Base.new(:redis)
+      end
+
+      it "shows a deprecation warning if #orm= is explicitly called" do
+        expect(DatabaseCleaner).to receive(:deprecate)
+        cleaner = DatabaseCleaner::Base.new(:redis)
+        cleaner.orm = :mongoid
+      end
+    end
   end
 end

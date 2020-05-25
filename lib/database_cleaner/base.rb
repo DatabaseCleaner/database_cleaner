@@ -48,7 +48,9 @@ module DatabaseCleaner
     attr_reader :orm
 
     def orm=(desired_orm)
-      DatabaseCleaner.deprecate "Calling `DatabaseCleaner[:orm].orm=` is deprecated, and will be removed in database_cleaner 2.0 with no replacement."
+      if DatabaseCleaner.called_externally?(__FILE__, caller)
+        DatabaseCleaner.deprecate "Calling `DatabaseCleaner[:orm].orm=` is deprecated, and will be removed in database_cleaner 2.0 with no replacement."
+      end
       @orm = (desired_orm || :autodetect).to_sym
       @orm = @orm_autodetector.orm if @orm == :autodetect
     end
