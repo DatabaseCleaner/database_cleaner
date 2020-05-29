@@ -111,7 +111,7 @@ module DatabaseCleaner
 
     def connections
       if DatabaseCleaner.called_externally?(__FILE__, caller)
-        DatabaseCleaner.deprecate "Calling `DatabaseCleaner.connections` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner.cleaners`, instead."
+        DatabaseCleaner.deprecate "Calling `DatabaseCleaner.connections` is deprecated, and will be removed in database_cleaner 2.0. Use `DatabaseCleaner.cleaners.values`, instead."
       end
       add_cleaner(:autodetect) if @cleaners.none?
       @cleaners.values
