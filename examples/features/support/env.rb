@@ -47,16 +47,22 @@ if orm && strategy
 
     case orm_sym
     when :redis
-      DatabaseCleaner[orm_sym, db: ENV['REDIS_URL_ONE']].strategy = strategy.to_sym
-      DatabaseCleaner[orm_sym, db: ENV['REDIS_URL_TWO']].strategy = strategy.to_sym
+      cleaner = DatabaseCleaner[orm_sym, db: ENV['REDIS_URL_ONE']]
+      cleaner.strategy = strategy.to_sym unless strategy == "default"
+      cleaner = DatabaseCleaner[orm_sym, db: ENV['REDIS_URL_TWO']]
+      cleaner.strategy = strategy.to_sym unless strategy == "default"
     when :active_record
-      DatabaseCleaner[:active_record, db: ActiveRecordWidgetUsingDatabaseOne].strategy = strategy.to_sym
-      DatabaseCleaner[:active_record, db: ActiveRecordWidgetUsingDatabaseTwo].strategy = strategy.to_sym
+      cleaner = DatabaseCleaner[:active_record, db: ActiveRecordWidgetUsingDatabaseOne]
+      cleaner.strategy = strategy.to_sym unless strategy == "default"
+      cleaner = DatabaseCleaner[:active_record, db: ActiveRecordWidgetUsingDatabaseTwo]
+      cleaner.strategy = strategy.to_sym unless strategy == "default"
     end
 
   elsif another_orm
-    DatabaseCleaner[        orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym].strategy = strategy.to_sym
-    DatabaseCleaner[another_orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym].strategy = strategy.to_sym
+    cleaner = DatabaseCleaner[        orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym]
+    cleaner.strategy = strategy.to_sym unless strategy == "default"
+    cleaner = DatabaseCleaner[another_orm.gsub(/(.)([A-Z]+)/,'\1_\2').downcase.to_sym]
+    cleaner.strategy = strategy.to_sym unless strategy == "default"
   else
     DatabaseCleaner.strategy = strategy.to_sym unless strategy == "default"
   end

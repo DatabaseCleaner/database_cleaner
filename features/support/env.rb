@@ -22,7 +22,7 @@ class FeatureRunner
   attr_accessor :output
 
   def strategy
-    @strategy || 'truncation'
+    @strategy ||= "default"
   end
 
   def go(feature)

@@ -15,4 +15,4 @@ Feature: database cleaning
     | ActiveRecord | transaction |
     | ActiveRecord | truncation  |
     | ActiveRecord | deletion    |
-    | Redis        | truncation  |
+    | Redis        | deletion    |

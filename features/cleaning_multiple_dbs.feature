@@ -15,5 +15,5 @@ Feature: multiple database cleaning
     | ActiveRecord | truncation  |
     | ActiveRecord | deletion    |
     | ActiveRecord | transaction |
-    | Redis        | truncation  |
+    | Redis        | deletion    |
 
