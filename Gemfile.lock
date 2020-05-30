@@ -1,45 +1,45 @@
 PATH
   remote: .
   specs:
-    database_cleaner (1.99.0)
+    database_cleaner (1.99.0.beta)
 
 PATH
   remote: adapters
   specs:
-    database_cleaner-active_record (1.99.0)
+    database_cleaner-active_record (1.99.0.beta)
       activerecord
-      database_cleaner (~> 1.99.0)
-    database_cleaner-couch_potato (1.99.0)
+      database_cleaner (~> 1.99.0.beta)
+    database_cleaner-couch_potato (1.99.0.beta)
       couch_potato
-      database_cleaner (~> 1.99.0)
-    database_cleaner-data_mapper (1.99.0)
-      database_cleaner (~> 1.99.0)
+      database_cleaner (~> 1.99.0.beta)
+    database_cleaner-data_mapper (1.99.0.beta)
+      database_cleaner (~> 1.99.0.beta)
       datamapper
       dm-transactions
-    database_cleaner-mongo (1.99.0)
-      database_cleaner (~> 1.99.0)
+    database_cleaner-mongo (1.99.0.beta)
+      database_cleaner (~> 1.99.0.beta)
       mongo
-    database_cleaner-mongo_mapper (1.99.0)
-      database_cleaner (~> 1.99.0)
+    database_cleaner-mongo_mapper (1.99.0.beta)
+      database_cleaner (~> 1.99.0.beta)
       mongo_mapper
-    database_cleaner-mongoid (1.99.0)
-      database_cleaner (~> 1.99.0)
+    database_cleaner-mongoid (1.99.0.beta)
+      database_cleaner (~> 1.99.0.beta)
       mongoid
-    database_cleaner-moped (1.99.0)
-      database_cleaner (~> 1.99.0)
+    database_cleaner-moped (1.99.0.beta)
+      database_cleaner (~> 1.99.0.beta)
       moped
-    database_cleaner-neo4j (1.99.0)
-      database_cleaner (~> 1.99.0)
+    database_cleaner-neo4j (1.99.0.beta)
+      database_cleaner (~> 1.99.0.beta)
       neo4j-core
-    database_cleaner-ohm (1.99.0)
-      database_cleaner (~> 1.99.0)
-      database_cleaner-redis (~> 1.99.0)
+    database_cleaner-ohm (1.99.0.beta)
+      database_cleaner (~> 1.99.0.beta)
+      database_cleaner-redis (~> 1.99.0.beta)
       ohm
-    database_cleaner-redis (1.99.0)
-      database_cleaner (~> 1.99.0)
+    database_cleaner-redis (1.99.0.beta)
+      database_cleaner (~> 1.99.0.beta)
       redis
-    database_cleaner-sequel (1.99.0)
-      database_cleaner (~> 1.99.0)
+    database_cleaner-sequel (1.99.0.beta)
+      database_cleaner (~> 1.99.0.beta)
       sequel
 
 GEM

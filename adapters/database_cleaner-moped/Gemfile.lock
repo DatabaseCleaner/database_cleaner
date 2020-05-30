@@ -1,13 +1,13 @@
 PATH
   remote: ../..
   specs:
-    database_cleaner (1.99.0)
+    database_cleaner (1.99.0.beta)
 
 PATH
   remote: .
   specs:
-    database_cleaner-moped (1.99.0)
-      database_cleaner (~> 1.99.0)
+    database_cleaner-moped (1.99.0.beta)
+      database_cleaner (~> 1.99.0.beta)
       moped
 
 GEM
