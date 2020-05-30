@@ -36,6 +36,13 @@ module DatabaseCleaner
 
     def strategy=(args)
       strategy, *strategy_args = args
+
+      if DatabaseCleaner.called_externally?(__FILE__, caller) \
+        && [:redis, :mongo, :mongoid].include?(orm) \
+        && strategy == :truncation
+        DatabaseCleaner.deprecate "The #{orm} adapter's :truncation strategy will be renamed to :deletion in database_cleaner-#{orm} 2.0. Please specify the :deletion adapter to resolve this deprecation notice."
+      end
+
       @strategy = if strategy.is_a?(Symbol)
         create_strategy(*args)
       elsif strategy_args.empty?

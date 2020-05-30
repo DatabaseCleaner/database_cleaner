@@ -3,6 +3,7 @@
 == Changes
   * Remove unnecessary dependency on database_cleaner-mongo from database_cleaner-mongoid: @botandrose
   * Enable the :cache_tables option for the mongo truncation strategy, and default to true: https://github.com/DatabaseCleaner/database_cleaner/pull/646"
+  * Introduce deletion aliases for truncation strategies for mongo, mongoid, and redis adapters. https://github.com/DatabaseCleaner/database_cleaner/pull/654
   * Add new :db orm configuration key, for consistency with #db and #db=. https://github.com/DatabaseCleaner/database_cleaner/pull/649
 
 == Deprecations
@@ -10,6 +11,7 @@
   * Deprecate non-functional :reset_ids option in ActiveRecord truncation strategy: https://github.com/DatabaseCleaner/database_cleaner/issues/559
   * Deprecate mongo truncation's `:cache_tables => true` option in favor of `false`, to prep for caching removal in v2.0: https://github.com/DatabaseCleaner/database_cleaner/pull/646"
   * Deprecate redis truncation's #url method in favor of #db: @botandrose
+  * Deprecate mongo, mongoid, and redis truncation strategies in favor of deletion. https://github.com/DatabaseCleaner/database_cleaner/pull/654
   * Deprecate :connection and :model configuration options in favor of :db for consistency: https://github.com/DatabaseCleaner/database_cleaner/pull/650
 
 == Bugfixes
