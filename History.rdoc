@@ -1,6 +1,11 @@
-== Development (master)
+== 2.0.0.beta2 2020-05-30
+
+=== Features
+  * New API for ORM Adapter gems: https://github.com/DatabaseCleaner/database_cleaner/pull/644
 
 === Breaking changes
+  * Rename :connection configuration option to :db for consistency: https://github.com/DatabaseCleaner/database_cleaner/pull/650
+  * Remove all #orm= setter methods: https://github.com/DatabaseCleaner/database_cleaner/pull/643/files
   * drop support for Ruby 2.4 which is EOL as of 2020-03-31: https://github.com/DatabaseCleaner/database_cleaner/pull/635
 
 == 2.0.0.beta 2020-04-05
@@ -11,6 +16,25 @@
   * Support Ruby versions 2.4, 2.5, 2.6, and 2.7, and drop support for older Rubies.
   * remove all deprecated code and get the specs passing again.
   * Split off all adapter gems into their own repos: https://github.com/DatabaseCleaner/database_cleaner/pull/620
+
+== 1.99.0.beta 2020-05-30
+
+== Changes
+  * Remove unnecessary dependency on database_cleaner-mongo from database_cleaner-mongoid: @botandrose
+  * Enable the :cache_tables option for the mongo truncation strategy, and default to true: https://github.com/DatabaseCleaner/database_cleaner/pull/646"
+  * Introduce deletion aliases for truncation strategies for mongo, mongoid, and redis adapters. https://github.com/DatabaseCleaner/database_cleaner/pull/654
+  * Add new :db orm configuration key, for consistency with #db and #db=. https://github.com/DatabaseCleaner/database_cleaner/pull/649
+
+== Deprecations
+  * Deprecate all #orm= setter methods: https://github.com/DatabaseCleaner/database_cleaner/pull/643
+  * Deprecate non-functional :reset_ids option in ActiveRecord truncation strategy: https://github.com/DatabaseCleaner/database_cleaner/issues/559
+  * Deprecate mongo truncation's `:cache_tables => true` option in favor of `false`, to prep for caching removal in v2.0: https://github.com/DatabaseCleaner/database_cleaner/pull/646"
+  * Deprecate redis truncation's #url method in favor of #db: @botandrose
+  * Deprecate mongo, mongoid, and redis truncation strategies in favor of deletion. https://github.com/DatabaseCleaner/database_cleaner/pull/654
+  * Deprecate :connection and :model configuration options in favor of :db for consistency: https://github.com/DatabaseCleaner/database_cleaner/pull/650
+
+== Bugfixes
+  * Fix deprecation warning about `DatabaseCleaner.connections` to recommend a better alternative: https://github.com/DatabaseCleaner/database_cleaner/pull/656
 
 == 1.8.5 2020-05-04
 
