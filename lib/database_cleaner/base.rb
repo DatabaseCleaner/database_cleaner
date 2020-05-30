@@ -15,7 +15,13 @@ module DatabaseCleaner
     def initialize(desired_orm = nil, opts = {})
       @orm_autodetector = ORMAutodetector.new
       self.orm = desired_orm
-      self.db = opts[:connection] || opts[:model] if opts.has_key?(:connection) || opts.has_key?(:model)
+      if opts.has_key?(:model)
+        DatabaseCleaner.deprecate "Using the `:model` key in `DatabaseCleaner[:orm, model: ...]` is deprecated, and will be removed in database_cleaner 2.0. Please use the new `:db` key, instead, which has identical behavior: `DatabaseCleaner[:orm, db: ...]`."
+      end
+      if opts.has_key?(:connection)
+        DatabaseCleaner.deprecate "Using the `:connection` key in `DatabaseCleaner[:orm, connection: ...]` is deprecated, and will be removed in database_cleaner 2.0. Please use the new `:db` key, instead, which has identical behavior: `DatabaseCleaner[:orm, db: ...]`."
+      end
+      self.db = opts[:db] || opts[:connection] || opts[:model] if opts.has_key?(:db) || opts.has_key?(:connection) || opts.has_key?(:model)
       self.strategy = orm_module && orm_module.default_strategy
       Safeguard.new.run
     end
