@@ -47,7 +47,7 @@ end
     <tr>
       <td>Neo4j</td>
       <td><code>DatabaseCleaner[:neo4j]</code></td>
-      <td>Database type and path(URI) <code>DatabaseCleaner[:neo4j, connection: {type: :server_db, path: 'http://localhost:7475'}].</code></td>
+      <td>Database type and path(URI) <code>DatabaseCleaner[:neo4j, db: {type: :server_db, path: 'http://localhost:7475'}].</code></td>
     </tr>
   </tbody>
 </table>
