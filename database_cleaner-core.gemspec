@@ -1,6 +1,4 @@
-lib = File.expand_path("../lib", __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "database_cleaner/version"
+require_relative "./lib/database_cleaner/version"
 
 Gem::Specification.new do |spec|
   spec.name        = "database_cleaner-core"

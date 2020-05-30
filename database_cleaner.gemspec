@@ -2,7 +2,9 @@ require_relative "./lib/database_cleaner/version"
 
 Gem::Specification.new do |spec|
   spec.name        = "database_cleaner"
-  spec.version     = DatabaseCleaner::VERSION
+# FIXME temporarily hardcode to different version since core is at 2.0.0.beta2, but this gem only is at 2.0.0.beta
+# spec.version     = DatabaseCleaner::VERSION
+  spec.version     = "2.0.0.beta"
   spec.authors     = ["Ben Mabey", "Ernesto Tagwerker", "Micah Geisel"]
   spec.email       = ["ernesto@ombulabs.com"]
 
@@ -16,5 +18,5 @@ Gem::Specification.new do |spec|
   spec.files       = ["lib/database_cleaner.rb"]
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "database_cleaner-active_record"
+  spec.add_dependency "database_cleaner-active_record", "~>2.0.0.beta2"
 end
