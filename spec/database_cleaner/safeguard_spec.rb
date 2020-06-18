@@ -72,43 +72,56 @@ module DatabaseCleaner
         end
       end
 
-      describe 'DatabaseCleaner.url_whitelist is set' do
-        let(:url_whitelist) { ['postgres://postgres@localhost', 'postgres://foo.bar'] }
+      describe 'DatabaseCleaner.url_allowlist is set' do
 
-        before { DatabaseCleaner.url_whitelist = url_whitelist }
-        after  { DatabaseCleaner.url_whitelist = nil }
+        shared_examples 'allowlist assigned' do
+          describe 'A remote url is on the allowlist' do
+            let(:database_url) { 'postgres://foo.bar' }
 
-        describe 'A remote url is on the whitelist' do
-          let(:database_url) { 'postgres://foo.bar' }
+            it 'does not raise' do
+              expect { cleaner.start }.to_not raise_error
+            end
+          end
 
-          it 'does not raise' do
-            expect { cleaner.start }.to_not raise_error
+          describe 'A remote url is not on the allowlist' do
+            let(:database_url) { 'postgress://bar.baz' }
+
+            it 'raises a allowlist error' do
+              expect { cleaner.start }.to raise_error(Safeguard::Error::UrlNotAllowed)
+            end
+          end
+
+          describe 'A local url is on the allowlist' do
+            let(:database_url) { 'postgres://postgres@localhost' }
+
+            it 'does not raise' do
+              expect { cleaner.start }.to_not raise_error
+            end
+          end
+
+          describe 'A local url is not on the allowlist' do
+            let(:database_url) { 'postgres://localhost' }
+
+            it 'raises a not allowed error' do
+              expect { cleaner.start }.to raise_error(Safeguard::Error::UrlNotAllowed)
+            end
           end
         end
 
-        describe 'A remote url is not on the whitelist' do
-          let(:database_url) { 'postgress://bar.baz' }
+        let(:url_allowlist) { ['postgres://postgres@localhost', 'postgres://foo.bar'] }
 
-          it 'raises a whitelist error' do
-            expect { cleaner.start }.to raise_error(Safeguard::Error::NotWhitelistedUrl)
-          end
+        describe 'url_allowlist' do
+          before { DatabaseCleaner.url_allowlist = url_allowlist }
+          after  { DatabaseCleaner.url_allowlist = nil }
+          it_behaves_like 'allowlist assigned'
         end
 
-        describe 'A local url is on the whitelist' do
-          let(:database_url) { 'postgres://postgres@localhost' }
-
-          it 'does not raise' do
-            expect { cleaner.start }.to_not raise_error
-          end
+        describe 'url_whitelist' do
+          before { DatabaseCleaner.url_whitelist = url_allowlist }
+          after  { DatabaseCleaner.url_whitelist = nil }
+          it_behaves_like 'allowlist assigned'
         end
 
-        describe 'A local url is not on the whitelist' do
-          let(:database_url) { 'postgres://localhost' }
-
-          it 'raises a whitelist error' do
-            expect { cleaner.start }.to raise_error(Safeguard::Error::NotWhitelistedUrl)
-          end
-        end
       end
     end
 
