@@ -14,7 +14,10 @@ module DatabaseCleaner
       :cleaning,
     ] => :cleaners
 
-    attr_accessor :allow_remote_database_url, :allow_production, :url_whitelist
+    attr_accessor :allow_remote_database_url, :allow_production, :url_allowlist
+
+    alias :url_whitelist :url_allowlist
+    alias :url_whitelist= :url_allowlist=
 
     def cleaners
       @cleaners ||= Cleaners.new

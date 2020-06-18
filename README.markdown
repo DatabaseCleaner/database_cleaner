@@ -342,11 +342,11 @@ DatabaseCleaner.allow_production = true
 DatabaseCleaner.allow_remote_database_url = true
 ```
 
-In Ruby, a URL whitelist can be specified. When specified, DatabaseCleaner will only allow `DATABASE_URL` to be equal
-to one of the values specified in the url whitelist like so:
+In Ruby, a URL allowlist can be specified. When specified, DatabaseCleaner will only allow `DATABASE_URL` to be equal
+to one of the values specified in the url allowlist like so:
 
 ```ruby
-DatabaseCleaner.url_whitelist = ['postgres://postgres@localhost', 'postgres://foo@bar']
+DatabaseCleaner.url_allowlist = ['postgres://postgres@localhost', 'postgres://foo@bar']
 ```
 
 ## COPYRIGHT
