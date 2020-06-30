@@ -349,6 +349,12 @@ to one of the values specified in the url allowlist like so:
 DatabaseCleaner.url_allowlist = ['postgres://postgres@localhost', 'postgres://foo@bar']
 ```
 
+Allowlist elements may be specified as regular expressions if extra flexibility is required::
+
+```ruby
+DatabaseCleaner.url_allowlist = [%r{^postgres://postgres@localhost}]
+```
+
 ## COPYRIGHT
 
 See [LICENSE](LICENSE) for details.

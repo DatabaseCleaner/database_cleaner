@@ -86,7 +86,7 @@ module DatabaseCleaner
           describe 'A remote url is not on the allowlist' do
             let(:database_url) { 'postgress://bar.baz' }
 
-            it 'raises a allowlist error' do
+            it 'raises a not allowed error' do
               expect { cleaner.start }.to raise_error(Safeguard::Error::UrlNotAllowed)
             end
           end
@@ -94,7 +94,7 @@ module DatabaseCleaner
           describe 'A similar url not explicitly matched as a pattern' do
             let(:database_url) { 'postgres://foo.bar?pool=8' }
 
-            it 'raises an allowlist error' do
+            it 'raises a not allowed error' do
               expect { cleaner.start }.to raise_error(Safeguard::Error::UrlNotAllowed)
             end
           end
