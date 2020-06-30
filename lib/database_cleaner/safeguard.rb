@@ -29,7 +29,7 @@ module DatabaseCleaner
       private
 
         def database_url_not_allowed?
-          !DatabaseCleaner.url_allowlist.include?(ENV['DATABASE_URL'])
+          !DatabaseCleaner.url_allowlist.any? {|allowed| allowed === ENV['DATABASE_URL'] }
         end
 
         def skip?
