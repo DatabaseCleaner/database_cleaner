@@ -349,10 +349,13 @@ to one of the values specified in the url allowlist like so:
 DatabaseCleaner.url_allowlist = ['postgres://postgres@localhost', 'postgres://foo@bar']
 ```
 
-Allowlist elements may be specified as regular expressions if extra flexibility is required::
+Allowlist elements are matched with case equality (`===`), so regular expressions or procs may be used:
 
 ```ruby
-DatabaseCleaner.url_allowlist = [%r{^postgres://postgres@localhost}]
+DatabaseCleaner.url_allowlist = [
+  %r{^postgres://postgres@localhost},         # match any db with this prefix
+  proc {|uri| URI.parse(uri).user == "test" } # match any db authenticating with the 'test' user
+]
 ```
 
 ## COPYRIGHT

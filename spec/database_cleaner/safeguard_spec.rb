@@ -122,9 +122,24 @@ module DatabaseCleaner
               expect { cleaner.start }.to raise_error(Safeguard::Error::UrlNotAllowed)
             end
           end
+
+          describe 'A url that matches a proc' do
+            let(:database_url) { 'redis://test:test@foo.bar' }
+
+            it 'does not raise' do
+              expect { cleaner.start }.to_not raise_error
+            end
+          end
         end
 
-        let(:url_allowlist) { ['postgres://postgres@localhost', 'postgres://foo.bar', %r{^postgres://bar.baz}] }
+        let(:url_allowlist) do
+          [
+            'postgres://postgres@localhost',
+            'postgres://foo.bar',
+            %r{^postgres://bar.baz},
+            proc { |x| URI.parse(x).user == 'test' }
+          ]
+        end
 
         describe 'url_allowlist' do
           before { DatabaseCleaner.url_allowlist = url_allowlist }

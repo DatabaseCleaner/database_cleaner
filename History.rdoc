@@ -2,6 +2,7 @@
 
 === Changes
   * Rename `url_whitelist` to `url_allowlist`
+  * Allowlist now supports regular expressions
 
 === Breaking changes
   * Failed checks against the allowlist now raise `UrlNotAllowed` rather than `NotWhitelistedUrl`
