@@ -72,7 +72,7 @@ module DatabaseCleaner
     end
 
     class Production
-      KEYS = %w(ENV RACK_ENV RAILS_ENV)
+      KEYS = %w(ENV APP_ENV RACK_ENV RAILS_ENV)
 
       def run
         raise Error::ProductionEnv.new(key) if !skip? && given?
