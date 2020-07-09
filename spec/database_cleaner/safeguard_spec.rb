@@ -126,7 +126,7 @@ module DatabaseCleaner
     end
 
     describe 'ENV is set to production' do
-      %w(ENV RACK_ENV RAILS_ENV).each do |key|
+      %w(ENV APP_ENV RACK_ENV RAILS_ENV).each do |key|
         describe "on #{key}" do
           before { stub_const('ENV', key => "production") }
 
