@@ -7,9 +7,9 @@ module DatabaseCleaner
     end
 
     # FIXME this method conflates creation with lookup... both a command and a query. yuck.
-    def [](orm, opts = {})
+    def [](orm, **opts)
       raise ArgumentError if orm.nil?
-      fetch([orm, opts]) { add_cleaner(orm, opts) }
+      fetch([orm, opts]) { add_cleaner(orm, **opts) }
     end 
 
     def strategy=(strategy)
@@ -37,8 +37,8 @@ module DatabaseCleaner
 
     private
 
-    def add_cleaner(orm, opts = {})
-      self[[orm, opts]] = Cleaner.new(orm, opts)
+    def add_cleaner(orm, **opts)
+      self[[orm, opts]] = Cleaner.new(orm, **opts)
     end
 
     def remove_duplicates
