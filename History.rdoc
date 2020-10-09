@@ -2,6 +2,7 @@
 
 === Changes
   * Rename `url_whitelist` to `url_allowlist`
+  * Allowlist now supports regular expressions
   * Fixed Ruby 2.7 deprecation warnings
 
 === Breaking changes
