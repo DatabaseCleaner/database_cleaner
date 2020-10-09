@@ -137,7 +137,7 @@ So what is fastest out of `:deletion` and `:truncation`? Well, it depends on you
 
 Some people report much faster speeds with `:deletion` while others say `:truncation` is faster for them. The best approach therefore is it try all options on your test suite and see what is faster.
 
-If you are using ActiveRecord then take a look at the [additional options](#additional-activerecord-options-for-truncation) available for `:truncation`.
+If you are using ActiveRecord then take a look at the [additional options](https://github.com/DatabaseCleaner/database_cleaner-active_record#strategy-configuration-options) available for `:truncation`.
 
 Database Cleaner also includes a `null` strategy (that does no cleaning at all) which can be used with any ORM library.
 You can also explicitly use it by setting your strategy to `nil`.
