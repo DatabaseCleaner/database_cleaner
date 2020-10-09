@@ -137,7 +137,7 @@ So what is fastest out of `:deletion` and `:truncation`? Well, it depends on you
 
 Some people report much faster speeds with `:deletion` while others say `:truncation` is faster for them. The best approach therefore is it try all options on your test suite and see what is faster.
 
-If you are using ActiveRecord then take a look at the [additional options](#additional-activerecord-options-for-truncation) available for `:truncation`.
+If you are using ActiveRecord then take a look at the [additional options](https://github.com/DatabaseCleaner/database_cleaner-active_record#strategy-configuration-options) available for `:truncation`.
 
 Database Cleaner also includes a `null` strategy (that does no cleaning at all) which can be used with any ORM library.
 You can also explicitly use it by setting your strategy to `nil`.
@@ -323,7 +323,7 @@ After copying and pasting code to do this several times I decided to package it 
 
 DatabaseCleaner comes with safeguards against:
 
-* Running in production (checking for `ENV`, `RACK_ENV`, and `RAILS_ENV`)
+* Running in production (checking for `ENV`, `APP_ENV`, `RACK_ENV`, and `RAILS_ENV`)
 * Running against a remote database (checking for a `DATABASE_URL` that does not include `localhost`, `.local` or `127.0.0.1`)
 
 Both safeguards can be disabled separately as follows.
