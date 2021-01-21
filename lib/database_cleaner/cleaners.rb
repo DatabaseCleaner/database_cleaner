@@ -10,7 +10,7 @@ module DatabaseCleaner
     def [](orm, **opts)
       raise ArgumentError if orm.nil?
       fetch([orm, opts]) { add_cleaner(orm, **opts) }
-    end 
+    end
 
     def strategy=(strategy)
       values.each { |cleaner| cleaner.strategy = strategy }
