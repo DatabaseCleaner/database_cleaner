@@ -26,8 +26,6 @@ You need to add a couple of dependecies to `.gemspec`:
   spec.add_dependency "orm_name", "some version if required"
 ```
 
-#### 
-
 ### File structure
 
 Inside the `lib/database_cleaner/orm_name` directory, you will need to create a few files:
