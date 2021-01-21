@@ -3,11 +3,11 @@ module DatabaseCleaner
     def start
       # no-op
     end
-    
+
     def db=(db)
       # no-op
     end
-     
+
     def clean
       # no-op
     end
