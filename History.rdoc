@@ -1,5 +1,7 @@
 == Development (unreleased)
 
+== 2.0.0 2021-01-31
+
 === Changes
   * Rename `url_whitelist` to `url_allowlist`
   * Allowlist now supports regular expressions
@@ -27,7 +29,7 @@
   * remove all deprecated code and get the specs passing again.
   * Split off all adapter gems into their own repos: https://github.com/DatabaseCleaner/database_cleaner/pull/620
 
-== 1.99.0.beta 2020-05-30
+== 1.99.0 2021-01-31
 
 == Changes
   * Remove unnecessary dependency on database_cleaner-mongo from database_cleaner-mongoid: @botandrose
