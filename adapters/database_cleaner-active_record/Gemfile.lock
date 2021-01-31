@@ -1,14 +1,14 @@
 PATH
   remote: ../..
   specs:
-    database_cleaner (1.99.0.beta)
+    database_cleaner (1.99.0)
 
 PATH
   remote: .
   specs:
-    database_cleaner-active_record (1.99.0.beta)
+    database_cleaner-active_record (1.99.0)
       activerecord
-      database_cleaner (~> 1.99.0.beta)
+      database_cleaner (~> 1.99.0)
 
 GEM
   remote: https://rubygems.org/

@@ -1,13 +1,13 @@
 PATH
   remote: ../..
   specs:
-    database_cleaner (1.99.0.beta)
+    database_cleaner (1.99.0)
 
 PATH
   remote: .
   specs:
-    database_cleaner-neo4j (1.99.0.beta)
-      database_cleaner (~> 1.99.0.beta)
+    database_cleaner-neo4j (1.99.0)
+      database_cleaner (~> 1.99.0)
       neo4j-core
 
 GEM

@@ -1,14 +1,14 @@
 PATH
   remote: ../..
   specs:
-    database_cleaner (1.99.0.beta)
+    database_cleaner (1.99.0)
 
 PATH
   remote: .
   specs:
-    database_cleaner-couch_potato (1.99.0.beta)
+    database_cleaner-couch_potato (1.99.0)
       couch_potato
-      database_cleaner (~> 1.99.0.beta)
+      database_cleaner (~> 1.99.0)
 
 GEM
   remote: https://rubygems.org/

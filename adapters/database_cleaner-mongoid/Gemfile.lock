@@ -1,20 +1,20 @@
 PATH
   remote: ../..
   specs:
-    database_cleaner (1.99.0.beta)
+    database_cleaner (1.99.0)
 
 PATH
   remote: ..
   specs:
-    database_cleaner-mongo (1.99.0.beta)
-      database_cleaner (~> 1.99.0.beta)
+    database_cleaner-mongo (1.99.0)
+      database_cleaner (~> 1.99.0)
       mongo
 
 PATH
   remote: .
   specs:
-    database_cleaner-mongoid (1.99.0.beta)
-      database_cleaner (~> 1.99.0.beta)
+    database_cleaner-mongoid (1.99.0)
+      database_cleaner (~> 1.99.0)
       mongoid
 
 GEM

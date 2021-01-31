@@ -1,21 +1,21 @@
 PATH
   remote: ../..
   specs:
-    database_cleaner (1.99.0.beta)
+    database_cleaner (1.99.0)
 
 PATH
   remote: ..
   specs:
-    database_cleaner-redis (1.99.0.beta)
-      database_cleaner (~> 1.99.0.beta)
+    database_cleaner-redis (1.99.0)
+      database_cleaner (~> 1.99.0)
       redis
 
 PATH
   remote: .
   specs:
-    database_cleaner-ohm (1.99.0.beta)
-      database_cleaner (~> 1.99.0.beta)
-      database_cleaner-redis (~> 1.99.0.beta)
+    database_cleaner-ohm (1.99.0)
+      database_cleaner (~> 1.99.0)
+      database_cleaner-redis (~> 1.99.0)
       ohm
 
 GEM
