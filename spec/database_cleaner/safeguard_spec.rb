@@ -1,6 +1,6 @@
 module DatabaseCleaner
   RSpec.describe Safeguard do
-    let(:cleaner)  { Cleaner.new(:null) }
+    let(:cleaner)  { Cleaners.new }
 
     describe 'DATABASE_URL is set' do
       before { stub_const('ENV', 'DATABASE_URL' => database_url) }

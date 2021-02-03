@@ -1,4 +1,5 @@
 require 'database_cleaner/cleaner'
+require 'database_cleaner/safeguard'
 
 module DatabaseCleaner
   class Cleaners < Hash
@@ -18,20 +19,24 @@ module DatabaseCleaner
     end
 
     def start
+      Safeguard.new.run
       values.each { |cleaner| cleaner.start }
     end
 
     def clean
+      Safeguard.new.run
       values.each { |cleaner| cleaner.clean }
     end
 
     def cleaning(&inner_block)
+      Safeguard.new.run
       values.inject(inner_block) do |curr_block, cleaner|
         proc { cleaner.cleaning(&curr_block) }
       end.call
     end
 
     def clean_with(*args)
+      Safeguard.new.run
       values.each { |cleaner| cleaner.clean_with(*args) }
     end
 

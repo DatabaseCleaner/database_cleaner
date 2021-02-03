@@ -1,5 +1,4 @@
 require 'database_cleaner/null_strategy'
-require 'database_cleaner/safeguard'
 require 'database_cleaner/strategy'
 require 'forwardable'
 
@@ -28,7 +27,6 @@ module DatabaseCleaner
     def initialize(orm, db: nil)
       @orm = orm
       self.db = db
-      Safeguard.new.run
     end
 
     attr_reader :orm
