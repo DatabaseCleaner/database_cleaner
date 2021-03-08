@@ -6,6 +6,7 @@ rvm:
   - 2.5
   - 2.6
   - 2.7
+  - 3.0
 before_script:
   - bin/setup
 cache:
