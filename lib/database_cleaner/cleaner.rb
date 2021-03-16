@@ -86,7 +86,7 @@ module DatabaseCleaner
     end
 
     def orm_strategy(strategy)
-      strategy_module_name = strategy.to_s.capitalize
+      strategy_module_name = camelize(strategy)
       orm_module.const_get(strategy_module_name)
     rescue NameError
       available_strategies = self.class.available_strategies(orm_module)

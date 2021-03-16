@@ -120,9 +120,12 @@ module DatabaseCleaner
       let(:strategy_class) { Class.new(DatabaseCleaner::Strategy) }
       let(:orm_module) { Module.new }
 
+      let(:available_strategies) { DatabaseCleaner::Cleaner.available_strategies(orm_module) }
+
       before do
         stub_const "DatabaseCleaner::ActiveRecord", orm_module
         stub_const "DatabaseCleaner::ActiveRecord::Truncation", strategy_class
+        stub_const "DatabaseCleaner::ActiveRecord::MyStrategy", strategy_class
         # stub consts that shouldn't show up in strategy list
         stub_const "DatabaseCleaner::ActiveRecord::VERSION", "2.0.0"
         stub_const "DatabaseCleaner::ActiveRecord::Helpers", Module.new
@@ -133,6 +136,11 @@ module DatabaseCleaner
 
       it "should look up and create a the named strategy for the current ORM" do
         cleaner.strategy = :truncation
+        expect(cleaner.strategy).to be_a(strategy_class)
+      end
+
+      it "should look up and create a custom strategy for the current ORM" do
+        cleaner.strategy = :my_strategy
         expect(cleaner.strategy).to be_a(strategy_class)
       end
 
@@ -161,7 +169,7 @@ module DatabaseCleaner
 
       it "raises UnknownStrategySpecified on a bad strategy, and lists available strategies" do
         expect { cleaner.strategy = :horrible_plan }.to \
-          raise_error(UnknownStrategySpecified, "The 'horrible_plan' strategy does not exist for the active_record ORM!  Available strategies: truncation")
+          raise_error(UnknownStrategySpecified, "The 'horrible_plan' strategy does not exist for the active_record ORM!  Available strategies: #{available_strategies.join(', ')}")
       end
     end
 
