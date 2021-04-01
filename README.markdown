@@ -75,11 +75,11 @@ DatabaseCleaner.clean
 With the `:truncation` strategy you can also pass in options, for example:
 
 ```ruby
-DatabaseCleaner.strategy = :truncation, only: %w[widgets dogs some_other_table]
+DatabaseCleaner.strategy = [:truncation, only: %w[widgets dogs some_other_table]]
 ```
 
 ```ruby
-DatabaseCleaner.strategy = :truncation, except: %w[widgets]
+DatabaseCleaner.strategy = [:truncation, except: %w[widgets]]
 ```
 
 (I should point out the truncation strategy will never truncate your schema_migrations table.)
