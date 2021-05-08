@@ -144,7 +144,12 @@ module DatabaseCleaner
         expect(cleaner.strategy).to be_a(strategy_class)
       end
 
-      it "should proxy params with symbolised strategies" do
+      it "should proxy params with symbolised strategies in an array" do
+        expect(strategy_class).to receive(:new).with(param: "one")
+        cleaner.strategy = [:truncation, param: "one"]
+      end
+
+      it "should proxy params with symbolised strategies in a separate hash" do
         expect(strategy_class).to receive(:new).with(param: "one")
         cleaner.strategy = :truncation, { param: "one" }
       end
