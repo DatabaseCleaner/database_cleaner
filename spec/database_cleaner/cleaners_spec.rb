@@ -57,10 +57,6 @@ RSpec.describe DatabaseCleaner::Cleaners do
     context "single orm single db" do
       let!(:cleaner) { cleaners[:active_record] }
 
-      it "should proxy strategy" do
-        expect(cleaners.strategy).to eq(cleaner.strategy)
-      end
-
       it "should proxy strategy=" do
         stratagem = double("stratagem")
         expect(cleaner).to receive(:strategy=).with(stratagem)
@@ -171,11 +167,16 @@ RSpec.describe DatabaseCleaner::Cleaners do
             })
           end
 
+          let(:result) do
+            {
+              :active_record_1 => :truncation,
+              :active_record_2 => :truncation,
+              :data_mapper_1 => :truncation
+            }
+          end
+
           it "should proxy #strategy to all cleaners and return a single result" do
-            expect(cleaners.strategy)
-              .to eq(active_record_1.strategy)
-              .and eq(active_record_2.strategy)
-              .and eq(data_mapper_1.strategy)
+            expect(cleaners.strategy).to eq(result)
           end
         end
 
