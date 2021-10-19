@@ -13,17 +13,23 @@ module DatabaseCleaner
       fetch([orm, opts]) { add_cleaner(orm, **opts) }
     end
 
+    # It returns a hash with all the strategies associated with
+    # all the cleaners.
+    #
+    # For example:
+    #
+    # ```
+    # cleaners.strategy
+    # => {
+    #      :active_record_1 => :truncation,
+    #      :active_record_2 => :truncation,
+    #      :data_mapper_1 => :truncation
+    # }
+    # ```
+    #
+    # @return [Hash]
     def strategy
-      strategies = transform_values(&:strategy)
-
-      case strategies.values.uniq.compact.count
-      when 0
-        nil
-      when 1
-        strategies.values.first
-      else
-        strategies
-      end
+      transform_values(&:strategy)
     end
 
     def strategy=(strategy)
