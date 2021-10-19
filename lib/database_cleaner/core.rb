@@ -7,6 +7,7 @@ module DatabaseCleaner
     extend Forwardable
     delegate [
       :[],
+      :strategy,
       :strategy=,
       :start,
       :clean,
