@@ -353,6 +353,10 @@ DatabaseCleaner.url_allowlist = [
 ]
 ```
 
+## CHANGELOG
+
+See [HISTORY](History.rdoc) for details.
+
 ## COPYRIGHT
 
 See [LICENSE](LICENSE) for details.
