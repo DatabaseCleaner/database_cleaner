@@ -53,12 +53,11 @@ module DatabaseCleaner
 
         def remote?(url)
           return false unless url
-
           parsed = URI.parse(url)
           return false if parsed.scheme == 'sqlite3:'
 
           host = parsed.host
-          return false unless host
+          return false if host.nil? || host.empty?
           return false if LOCAL.include?(host)
           return false if host.end_with? '.local'
           true

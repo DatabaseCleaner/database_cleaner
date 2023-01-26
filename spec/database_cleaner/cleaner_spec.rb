@@ -98,7 +98,7 @@ module DatabaseCleaner
       end
 
       it "should pass all arguments to strategy initializer" do
-        expect(strategy_class).to receive(:new).with(:dollar, :amet, ipsum: "random").and_return(strategy)
+        expect(strategy_class).to receive(:new).with(:dollar, :amet, { ipsum: "random" }).and_return(strategy)
         expect(strategy).to receive(:clean)
         cleaner.clean_with :truncation, :dollar, :amet, ipsum: "random"
       end
@@ -145,12 +145,12 @@ module DatabaseCleaner
       end
 
       it "should proxy params with symbolised strategies in an array" do
-        expect(strategy_class).to receive(:new).with(param: "one")
+        expect(strategy_class).to receive(:new).with({ param: "one" })
         cleaner.strategy = [:truncation, param: "one"]
       end
 
       it "should proxy params with symbolised strategies in a separate hash" do
-        expect(strategy_class).to receive(:new).with(param: "one")
+        expect(strategy_class).to receive(:new).with({ param: "one" })
         cleaner.strategy = :truncation, { param: "one" }
       end
 
