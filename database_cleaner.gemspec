@@ -16,5 +16,5 @@ Gem::Specification.new do |spec|
   spec.files       = ["lib/database_cleaner.rb"]
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "database_cleaner-active_record", "~>2.0.0"
+  spec.add_dependency "database_cleaner-active_record", ">= 2", "< 3"
 end
