@@ -1,5 +1,10 @@
 == Development (unreleased)
 
+== 2.0.2 2023-03-10
+
+== Bugfixes
+  * Dependency configuration -- relax dependencies with database_cleaner-active_record:
+
 == 2.0.1 2021-02-04
 
 == Bugfixes
