@@ -7,9 +7,9 @@ module DatabaseCleaner
         end
       end
 
-      class ProductionEnv < Error
+      class NonTestEnv < Error
         def initialize(env)
-          super("ENV['#{env}'] is set to production. Please refer to https://github.com/DatabaseCleaner/database_cleaner#safeguards")
+          super("ENV['#{env}'] is set to non-test environment. Please refer to https://github.com/DatabaseCleaner/database_cleaner#safeguards")
         end
       end
 
@@ -70,11 +70,11 @@ module DatabaseCleaner
         end
     end
 
-    class Production
+    class NonTest
       KEYS = %w(ENV APP_ENV RACK_ENV RAILS_ENV)
 
       def run
-        raise Error::ProductionEnv.new(key) if !skip? && given?
+        raise Error::NonTestEnv.new(key) if !skip? && given?
       end
 
       private
@@ -84,18 +84,18 @@ module DatabaseCleaner
         end
 
         def key
-          @key ||= KEYS.detect { |key| ENV[key] == 'production' }
+          @key ||= KEYS.detect { |key| ENV[key] && ENV[key] != 'test' }
         end
 
         def skip?
-          ENV['DATABASE_CLEANER_ALLOW_PRODUCTION'] ||
-            DatabaseCleaner.allow_production
+          ENV['DATABASE_CLEANER_ALLOW_NON_TEST_ENV'] ||
+            DatabaseCleaner.allow_non_test_env
         end
     end
 
     CHECKS = [
       RemoteDatabaseUrl,
-      Production,
+      NonTest,
       AllowedUrl
     ]
 

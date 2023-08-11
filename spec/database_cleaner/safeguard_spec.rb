@@ -156,30 +156,32 @@ module DatabaseCleaner
       end
     end
 
-    describe 'ENV is set to production' do
+    describe 'ENV is set to non-test environment' do
       %w(ENV APP_ENV RACK_ENV RAILS_ENV).each do |key|
-        describe "on #{key}" do
-          before { stub_const('ENV', key => "production") }
+        %w(production development foobar).each do |env|
+          describe "on #{key}=#{env}" do
+            before { stub_const('ENV', key => env) }
 
-          it 'raises' do
-            expect { cleaner.start }.to raise_error(Safeguard::Error::ProductionEnv)
+            it 'raises' do
+              expect { cleaner.start }.to raise_error(Safeguard::Error::NonTestEnv)
+            end
           end
-        end
 
-        describe 'DATABASE_CLEANER_ALLOW_PRODUCTION is set' do
-          before { stub_const('ENV', 'DATABASE_CLEANER_ALLOW_PRODUCTION' => true) }
+          describe 'DATABASE_CLEANER_ALLOW_NON_TEST_ENV is set' do
+            before { stub_const('ENV', 'DATABASE_CLEANER_ALLOW_NON_TEST_ENV' => true) }
 
-          it 'does not raise' do
-            expect { cleaner.start }.to_not raise_error
+            it 'does not raise' do
+              expect { cleaner.start }.to_not raise_error
+            end
           end
-        end
 
-        describe 'DatabaseCleaner.allow_production is true' do
-          before { DatabaseCleaner.allow_production = true }
-          after  { DatabaseCleaner.allow_production = nil }
+          describe 'DatabaseCleaner.allow_non_test_env is true' do
+            before { DatabaseCleaner.allow_non_test_env = true }
+            after  { DatabaseCleaner.allow_non_test_env = nil }
 
-          it 'does not raise' do
-            expect { cleaner.start }.to_not raise_error
+            it 'does not raise' do
+              expect { cleaner.start }.to_not raise_error
+            end
           end
         end
       end

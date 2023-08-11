@@ -318,7 +318,7 @@ After copying and pasting code to do this several times I decided to package it 
 
 DatabaseCleaner comes with safeguards against:
 
-* Running in production (checking for `ENV`, `APP_ENV`, `RACK_ENV`, and `RAILS_ENV`)
+* Running in non-test environment (checking for `ENV`, `APP_ENV`, `RACK_ENV`, and `RAILS_ENV`)
 * Running against a remote database (checking for a `DATABASE_URL` that does not include `localhost`, `.local` or `127.0.0.1`)
 
 Both safeguards can be disabled separately as follows.
@@ -326,14 +326,14 @@ Both safeguards can be disabled separately as follows.
 Using environment variables:
 
 ```
-export DATABASE_CLEANER_ALLOW_PRODUCTION=true
+export DATABASE_CLEANER_ALLOW_NON_TEST_ENV=true
 export DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true
 ```
 
 In Ruby:
 
 ```ruby
-DatabaseCleaner.allow_production = true
+DatabaseCleaner.allow_non_test_env = true
 DatabaseCleaner.allow_remote_database_url = true
 ```
 
