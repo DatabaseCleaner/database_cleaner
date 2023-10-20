@@ -7,6 +7,15 @@ mysql2:
   port: 3306
   encoding: utf8
 
+trilogy:
+  adapter: trilogy
+  database: database_cleaner_test
+  username: root
+  password:
+  host: 127.0.0.1
+  port: 3306
+  encoding: utf8
+
 postgres:
   adapter: postgresql
   database: database_cleaner_test
