@@ -1,6 +1,6 @@
 # Database Cleaner
 
-[![Build Status](https://travis-ci.org/DatabaseCleaner/database_cleaner.svg?branch=master)](https://travis-ci.org/DatabaseCleaner/database_cleaner)
+[![Build Status](https://github.com/DatabaseCleaner/database_cleaner/actions/workflows/ci.yml/badge.svg)](https://github.com/DatabaseCleaner/database_cleaner/actions/workflows/ci.yml)
 [![Code Climate](https://codeclimate.com/github/DatabaseCleaner/database_cleaner/badges/gpa.svg)](https://codeclimate.com/github/DatabaseCleaner/database_cleaner)
 [![codecov](https://codecov.io/gh/DatabaseCleaner/database_cleaner/branch/master/graph/badge.svg)](https://codecov.io/gh/DatabaseCleaner/database_cleaner)
 ![Gem Version](https://badge.fury.io/rb/database_cleaner.svg)
