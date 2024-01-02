@@ -4,7 +4,7 @@ module DatabaseCleaner
   module Spec
     class DatabaseHelper < Struct.new(:db)
       def self.with_all_dbs &block
-        %w[mysql2 sqlite3 postgres].map(&:to_sym).each do |db|
+        %w[mysql2 sqlite3 postgres trilogy].map(&:to_sym).each do |db|
           yield new(db)
         end
       end
@@ -43,7 +43,7 @@ module DatabaseCleaner
         id_column = case db
           when :sqlite3
             "id INTEGER PRIMARY KEY AUTOINCREMENT"
-          when :mysql2
+          when :mysql2, :trilogy
             "id INTEGER PRIMARY KEY AUTO_INCREMENT"
           when :postgres
             "id SERIAL PRIMARY KEY"
