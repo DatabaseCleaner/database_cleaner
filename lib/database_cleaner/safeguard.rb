@@ -1,3 +1,5 @@
+require "uri"
+
 module DatabaseCleaner
   class Safeguard
     class Error < Exception
@@ -42,7 +44,8 @@ module DatabaseCleaner
       LOCAL = %w(localhost 127.0.0.1)
 
       def run
-        raise Error::RemoteDatabaseUrl if !skip? && given?
+        return if skip?
+        raise Error::RemoteDatabaseUrl if given?
       end
 
       private
@@ -54,7 +57,7 @@ module DatabaseCleaner
         def remote?(url)
           return false unless url
           parsed = URI.parse(url)
-          return false if parsed.scheme == 'sqlite3:'
+          return false if parsed.scheme == 'sqlite' || parsed.scheme == 'sqlite3'
 
           host = parsed.host
           return false if host.nil? || host.empty?
