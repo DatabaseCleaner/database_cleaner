@@ -45,7 +45,23 @@ module DatabaseCleaner
         end
       end
 
-      describe 'to a sqlite db' do
+      describe 'to a sqlite url' do
+        let(:database_url) { 'sqlite://tmp/db.sqlite3' }
+
+        it 'does not raise' do
+          expect { cleaner.start }.to_not raise_error
+        end
+      end
+
+      describe 'to a sqlite3 url' do
+        let(:database_url) { 'sqlite3://tmp/db.sqlite3' }
+
+        it 'does not raise' do
+          expect { cleaner.start }.to_not raise_error
+        end
+      end
+
+      describe 'to a sqlite3 url with no slashes after the scheme' do
         let(:database_url) { 'sqlite3:tmp/db.sqlite3' }
 
         it 'does not raise' do
