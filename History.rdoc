@@ -1,5 +1,15 @@
 == Development (unreleased)
 
+== 2.1.0 2024-10-24
+
+=== Changes
+  * Add support for trilogy: https://github.com/DatabaseCleaner/database_cleaner/pull/707
+=== Chores
+  * Start testing with Ruby 3.3 in CI: https://github.com/DatabaseCleaner/database_cleaner/pull/710
+  * Point CI badge to GitHub Actions: https://github.com/DatabaseCleaner/database_cleaner/pull/706
+=== Breaking changes
+  * Skip conventional sqlite:// URLs from safeguards: https://github.com/DatabaseCleaner/database_cleaner/pull/715
+
 == 2.0.2 2023-03-10
 
 == Bugfixes
