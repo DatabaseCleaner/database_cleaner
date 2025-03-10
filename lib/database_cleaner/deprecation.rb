@@ -1,6 +1,6 @@
 module DatabaseCleaner
   def deprecate message
-    method = caller.first[/\d+:in `(.*)'$/, 1].to_sym
+    method = caller.first[/\d+:in [`'](.*)'$/, 1].to_sym
     @@deprecator ||= Deprecator.new
     @@deprecator.deprecate method, message
   end
