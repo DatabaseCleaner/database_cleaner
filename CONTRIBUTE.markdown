@@ -12,10 +12,10 @@ upstream:
 
 - `bundle install`
 - Copy `spec/support/sample.config.yml` to `spec/support/config.yml` and edit it
-- Run the tests with `bundle exec rspec`
+- Run the tests with `bundle exec rspec` and `bundle exec cucumber`
 
-Note that if you don't have all the supported databases installed and running,
-some tests will fail.
+Note that the Cucumber specs require `redis` to be running, you can either run it globally
+on your system or use the provided `docker-compose.yml` file and run `docker compose up`.
 
 ## 3. Prepare your contribution
 
