@@ -1,5 +1,8 @@
 == Development (unreleased)
 
+== Chores
+  * Update CONTRIBUTE.md to mention Cucumber specs and Redis dependency https://github.com/DatabaseCleaner/database_cleaner/pull/721
+
 == 2.1.0 2024-10-24
 
 === Changes
