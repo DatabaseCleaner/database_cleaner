@@ -337,7 +337,7 @@ DatabaseCleaner.allow_production = true
 DatabaseCleaner.allow_remote_database_url = true
 ```
 
-In Ruby, a URL allowlist can be specified. When specified, DatabaseCleaner will only allow `DATABASE_URL` to be equal
+In Ruby, a URL allowlist can be specified. When specified, DatabaseCleaner will require `DATABASE_URL` to be set and equal
 to one of the values specified in the url allowlist like so:
 
 ```ruby
@@ -348,8 +348,9 @@ Allowlist elements are matched with case equality (`===`), so regular expression
 
 ```ruby
 DatabaseCleaner.url_allowlist = [
-  %r{^postgres://postgres@localhost},         # match any db with this prefix
-  proc {|uri| URI.parse(uri).user == "test" } # match any db authenticating with the 'test' user
+  %r{^postgres://postgres@localhost},          # match any db with this prefix
+  proc {|uri| URI.parse(uri).user == "test" }, # match any db authenticating with the 'test' user
+  nil                                          # allow DATABASE_URL to be unset
 ]
 ```
 
