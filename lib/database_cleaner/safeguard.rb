@@ -45,14 +45,10 @@ module DatabaseCleaner
 
       def run
         return if skip?
-        raise Error::RemoteDatabaseUrl if given?
+        raise Error::RemoteDatabaseUrl if remote?(ENV['DATABASE_URL'])
       end
 
       private
-
-        def given?
-          remote?(ENV['DATABASE_URL'])
-        end
 
         def remote?(url)
           return false unless url
