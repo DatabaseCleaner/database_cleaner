@@ -1,5 +1,6 @@
 require 'database_cleaner/null_strategy'
 require 'database_cleaner/strategy'
+require 'database_cleaner/string_helper'
 require 'forwardable'
 
 module DatabaseCleaner
@@ -7,15 +8,21 @@ module DatabaseCleaner
 
   class Cleaner
     def self.available_strategies(orm_module)
-      # introspect publically available constants for descendents of Strategy to get list of strategies
-      # ignore classes named Base, because its a common name for a shared base class that adds ORM access stuff to Strategy before being inherited by final concrete class
+      strategies = []
+
+      # introspect publicly available constants for descendents of Strategy to get list of strategies
+      # ignore classes named Base, because it's a common name for a shared base class that adds ORM access stuff to Strategy before being inherited by final concrete class
       # if you're writing an adapter and this method is falsely returning an internal constant that isn't a valid strategy, consider making it private with Module#private_constant.
-      orm_module.constants.select do |constant_name|
+      orm_module.constants.each do |constant_name|
+        next if constant_name == :Base
+
         ancestors = orm_module.const_get(constant_name).ancestors rescue []
-        ancestors.include?(DatabaseCleaner::Strategy)
-      end.map do |constant_name|
-        underscore(constant_name).to_sym
-      end - [:base]
+        next unless ancestors.include?(DatabaseCleaner::Strategy)
+
+        strategies << StringHelper.underscore(constant_name).to_sym
+      end
+
+      strategies
     end
 
     include Comparable
@@ -86,7 +93,7 @@ module DatabaseCleaner
     end
 
     def orm_strategy(strategy)
-      strategy_module_name = camelize(strategy)
+      strategy_module_name = StringHelper.camelize(strategy)
       orm_module.const_get(strategy_module_name)
     rescue NameError
       available_strategies = self.class.available_strategies(orm_module)
@@ -94,29 +101,8 @@ module DatabaseCleaner
     end
 
     def orm_module
-      orm_module_name = camelize(orm)
+      orm_module_name = StringHelper.camelize(orm)
       DatabaseCleaner.const_get(orm_module_name)
     end
-
-    # copied from ActiveSupport to avoid adding it as a dependency
-
-    def camelize(term)
-      string = term.to_s
-      string = string.sub(/^[a-z\d]*/) { |match| match.capitalize }
-      string.gsub!(/(?:_|(\/))([a-z\d]*)/i) { "#{$1}#{$2.capitalize}" }
-      string.gsub!("/", "::")
-      string
-    end
-
-    def self.underscore(camel_cased_word)
-      return camel_cased_word unless /[A-Z-]|::/.match?(camel_cased_word)
-      word = camel_cased_word.to_s.gsub("::", "/")
-      word.gsub!(/([A-Z\d]+)([A-Z][a-z])/, '\1_\2')
-      word.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
-      word.tr!("-", "_")
-      word.downcase!
-      word
-    end
-    private_class_method :underscore
   end
 end
