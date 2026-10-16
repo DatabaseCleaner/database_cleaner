@@ -49,7 +49,7 @@ module DatabaseCleaner
         raise ArgumentError, "You must provide a strategy object, or a symbol for a known strategy along with initialization params."
       end
 
-      set_strategy_db @strategy, db
+      set_strategy_db self.strategy, db
     end
 
     def strategy

@@ -154,6 +154,14 @@ module DatabaseCleaner
         cleaner.strategy = :truncation, { param: "one" }
       end
 
+      it "accepts nil as the null strategy for a non-default database" do
+        cleaner.db = :test_db
+        cleaner.strategy = nil
+
+        expect(cleaner.strategy).to be_a(DatabaseCleaner::NullStrategy)
+        expect(cleaner.cleaning { :result }).to eq :result
+      end
+
       it "should accept strategy objects" do
         strategy = double
         cleaner.strategy = strategy

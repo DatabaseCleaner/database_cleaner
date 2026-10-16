@@ -53,6 +53,16 @@ RSpec.describe DatabaseCleaner::Cleaners do
     end
   end
 
+  it "sets the null strategy across default and non-default databases" do
+    cleaners[:active_record]
+    cleaners[:active_record, db: :second_db]
+
+    cleaners.strategy = nil
+
+    expect(cleaners.strategy.values).to all(be_a(DatabaseCleaner::NullStrategy))
+    expect(cleaners.cleaning { :result }).to eq :result
+  end
+
   context "top level api methods" do
     context "single orm single db" do
       let!(:cleaner) { cleaners[:active_record] }
